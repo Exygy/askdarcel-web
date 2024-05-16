@@ -5,10 +5,8 @@ import { Helmet } from "react-helmet-async";
 import algoliasearch from "algoliasearch/lite";
 import { InstantSearch, Configure, SearchBox } from "react-instantsearch/dom";
 import qs, { ParsedQs } from "qs";
-
 import { GeoCoordinates, useAppContext, whiteLabel } from "utils";
 import { post } from "utils/DataService";
-
 import { Loader } from "components/ui";
 import SearchResults from "components/search/SearchResults/SearchResults";
 import Sidebar from "components/search/Sidebar/Sidebar";
