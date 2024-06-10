@@ -4,6 +4,7 @@ import { client } from "../../sanity";
 import { Masthead } from "../../components/ui/Masthead/Masthead";
 import { EmailSignup } from "../../components/EmailSignup/Emailsignup";
 import { TwoColumnContentSection } from "../../components/ui/TwoColumnContentSection/TwoColumnContentSection";
+import { Footer } from "../../components/ui/Footer/Footer";
 
 interface TwoColumnContentSection {
   mediaAlignment: string;
@@ -59,6 +60,7 @@ export const AboutPage = () => {
         }
       )}
       <EmailSignup />
+      <Footer />
     </>
   );
 };
