@@ -152,6 +152,8 @@ There are two protected branches - development and main. Main is the default bra
 
 There are two live instances - a [staging instance](https://our415-staging-a91cdc6d7b2b.herokuapp.com/) and a [production instance](https://our415-abb7eecb7449.herokuapp.com/). Merges onto the development branch deploys the development branch to the staging isntance. Merges onto the main branch deploys the main branch to the production instance. See the [github workflows](https://github.com/Exygy/askdarcel-web/tree/main/.github/workflows) for the details. 
 
+Both live instances of the app (staging and production) are attached to Sanity Production, however, staging is configured to display drafts from the Sanity Production Studio.
+
 ## Pull Requests
 
 Pull requests are opened to the development branch. When opening a pull request please fill out the as much of the pull request template you can, which includes tagging the issue your PR is related to, a description of your PR, indicating the type of change, including details for the reviewer about how to test your PR, and a testing checklist. Additionally, officially link the notion ticket to the PR using GitHub's linking UI.
