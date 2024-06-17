@@ -80,7 +80,7 @@ export const EmailSignup = () => {
           style={{ display: "none" }}
           name="emma_signup_iframe"
           title="Emma Signup Iframe"
-        ></iframe>
+        />
       </div>
     </div>
   );
