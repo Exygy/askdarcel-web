@@ -16,6 +16,7 @@ import {
 } from "components/listing";
 import { Datatable, Footer, Loader } from "components/ui";
 import whiteLabel from "../utils/whitelabel";
+import { removeAsterisksAndHashes } from "utils/strings";
 import {
   fetchService,
   generateServiceDetails,
@@ -55,6 +56,9 @@ export const ServiceListingPage = () => {
 
   const { resource, recurringSchedule } = service;
   const locations = getServiceLocations(service, resource, recurringSchedule);
+  const formattedLongDescription = removeAsterisksAndHashes(
+    service.long_description
+  );
   const allActions = getOrganizationActions(resource);
   const sidebarActions = allActions.filter((a) =>
     ["print", "directions"].includes(a.icon)
@@ -76,7 +80,7 @@ export const ServiceListingPage = () => {
     <div className="listing-container">
       <Helmet>
         <title>{`${service.name} | ${whiteLabelTitle}`}</title>
-        <meta name="description" content={service.long_description} />
+        <meta name="description" content={formattedLongDescription} />
       </Helmet>
       <article className="listing" id="service">
         <div className="listing--main weglot-dynamic">
@@ -104,7 +108,7 @@ export const ServiceListingPage = () => {
             >
               <ReactMarkdown
                 className="rendered-markdown"
-                source={service.long_description}
+                source={formattedLongDescription}
                 linkTarget="_blank"
               />
               <ServiceAttribution
