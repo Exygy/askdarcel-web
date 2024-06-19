@@ -1,6 +1,7 @@
+@import "../../styles/utils/_helpers.scss";
+
 //////////////////////////////////////////////////////////////////////////////////////////
 // ORGANIZATION PAGE STYLES
-
 .listing-container {
   background: $color-grey1;
   padding: 0;
@@ -8,29 +9,29 @@
 
 .listing {
   background: $color-white;
+  color: $text-secondary;
 
   h1,
   h2,
-  h3 {
-    font-weight: bold;
-    padding: $padding-default;
+  h3,
+  h4 {
+    color: $text-primary;
   }
 
   h1 {
-    font-size: 26px;
+    font-size: 3rem;
     text-transform: capitalize;
     margin-bottom: $padding-default;
   }
 
   h2 {
-    color: $color-textfade;
-    font-size: 22px; // TODO Centralize these sizes across all pages
-    padding-bottom: $padding-xlarge;
+    font-size: 2rem; // TODO Centralize these sizes across all pages
+    padding-bottom: $general-spacing-lg;
   }
 
   p {
-    color: $color-textfade;
-    padding: $padding-default;
+    padding-left: 0;
+    line-height: 150%;
   }
 
   header {
@@ -39,18 +40,46 @@
     }
   }
 
+  a {
+    color: $link-blue-default;
+
+    &:hover {
+      color: $link-blue-hover;
+    }
+  }
+
   section {
     border-bottom: 1px solid #eee;
-    padding: $padding-xlarge 0;
+    padding: $general-spacing-xl 0;
 
     p {
       white-space: pre-line;
+    }
+
+    th,
+    td {
+      padding: $general-spacing-s 0;
+
+      p {
+        padding: $spacing-0;
+      }
+    }
+
+    th {
+      font-family: "Montserrat";
+      font-size: 18px;
+      width: 150px;
+      padding-right: $general-spacing-lg;
+    }
+
+    tr:hover {
+      background-color: inherit;
     }
   }
 
   @include r_max($break-tablet-s) {
     h2 {
-      padding-bottom: $padding-default;
+      padding-bottom: $general-spacing-xxl;
       font-size: calc-em(16px);
     }
     header {
@@ -60,10 +89,6 @@
       padding: calc-em(20px) 0;
     }
   }
-}
-
-.service--program--details {
-  padding: $padding-default;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -85,7 +110,7 @@
   margin: calc-em(34px) auto 0;
   display: flex;
   &--left {
-    width: calc-em(660px);
+    width: calc-em(672px);
     padding-right: $padding-large;
     position: relative;
     display: flex;
@@ -146,6 +171,11 @@
       margin-top: calc-em(10px);
     }
   }
+}
+
+.service--program--details {
+  font-family: "Montserrat";
+  font-size: 18px;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -240,7 +270,7 @@
     margin-top: calc-em(30px);
     display: flex;
     width: calc-em(600px);
-    flew-wrap: wrap;
+    flex-wrap: wrap;
     &--column {
       width: 50%;
       @include r_max($break-tablet-s) {
@@ -277,9 +307,11 @@
 
 .listing--aside {
   max-height: 100vh;
-  padding: 0 0 0 1.875rem;
-  width: 100%;
-  max-width: 15rem;
+  display: flex;
+  flex-direction: column;
+  align-self: start;
+  gap: 0.5rem;
+
   @include r_max($break-tablet-s) {
     display: none;
   }

@@ -15,7 +15,7 @@ import {
   TableOfOpeningTimes,
 } from "components/listing";
 import { Datatable, Footer, Loader } from "components/ui";
-import whiteLabel from "../utils/whitelabel";
+import whiteLabel from "../../utils/whitelabel";
 import { removeAsterisksAndHashes } from "utils/strings";
 import {
   fetchService,
@@ -25,7 +25,22 @@ import {
   Organization,
   OrganizationAction,
   Service,
-} from "../models";
+} from "../../models";
+import styles from "./ServiceListingPage.module.scss";
+
+/*
+TODO:
+- [x] Links blue
+- [x] Headers colors and sizes
+- [x] Padding
+- [x] turn buttons to Button component
+- [] Figure out what to do with modal / tooltip thing on hover
+- [] Other services section
+- [] Pass aria labels to buttons?
+- [] Add call button to desktop
+- [] Is this max width fine? It is narrower than homepage content
+- [] Remove things that aren't being used in here and in scss file
+*/
 
 const { title: whiteLabelTitle, footerOptions: whiteLabelFooterOpts } =
   whiteLabel;
@@ -55,10 +70,10 @@ export const ServiceListingPage = () => {
   }
 
   const { resource, recurringSchedule } = service;
-  const locations = getServiceLocations(service, resource, recurringSchedule);
   const formattedLongDescription = removeAsterisksAndHashes(
     service.long_description
   );
+  const locations = getServiceLocations(service, resource, recurringSchedule);
   const allActions = getOrganizationActions(resource);
   const sidebarActions = allActions.filter((a) =>
     ["print", "directions"].includes(a.icon)
@@ -76,17 +91,29 @@ export const ServiceListingPage = () => {
     }
   };
 
+  const tempDetails = [
+    { title: "How to Apply", value: "Visit the website to apply." },
+    { title: "Required Documents", value: "ID, proof of address" },
+    { title: "Fees", value: "None" },
+    {
+      title: "Notes",
+      value: "This is a note about the service.\nAnother important note.",
+    },
+  ];
+
   return (
-    <div className="listing-container">
+    <div className={styles[`listing-container`]}>
       <Helmet>
         <title>{`${service.name} | ${whiteLabelTitle}`}</title>
         <meta name="description" content={formattedLongDescription} />
       </Helmet>
-      <article className="listing" id="service">
-        <div className="listing--main weglot-dynamic">
-          <div className="listing--main--left">
+      <article className={styles[`listing`]} id="service">
+        <div
+          className={`${styles["listing--main"]} ${styles["weglot-dynamic"]}`}
+        >
+          <div className={styles["listing--main--left"]}>
             <header>
-              <div className="org--main--header--title-container">
+              <div className={styles["org--main--header--title-container"]}>
                 <h1 data-cy="service-page-title">{service.name}</h1>
                 <MOHCDBadge resource={resource} />
               </div>
@@ -97,13 +124,14 @@ export const ServiceListingPage = () => {
               />
             </header>
 
+            {/* Should action bar desktop and mobile have different actions? */}
             <ActionBarMobile
               actions={mobileActions}
               onClickAction={onClickAction}
             />
 
             <ServiceListingSection
-              title="About This Service"
+              title="About"
               data-cy="service-about-section"
             >
               <ReactMarkdown
@@ -119,21 +147,21 @@ export const ServiceListingPage = () => {
 
             {details.length > 0 && (
               <ServiceListingSection
-                title="Service Details"
+                title="Details"
                 data-cy="service-details-section"
               >
                 <Datatable
-                  rowRenderer={(d) => (
-                    <tr key={d.title}>
-                      <th>{d.title}</th>
+                  rowRenderer={(detail) => (
+                    <tr key={detail.title}>
+                      <th>{detail.title}</th>
                       <td>
                         <ReactMarkdown className="rendered-markdown">
-                          {d.value}
+                          {detail.value}
                         </ReactMarkdown>
                       </td>
                     </tr>
                   )}
-                  rows={details}
+                  rows={tempDetails}
                 />
               </ServiceListingSection>
             )}
@@ -181,12 +209,12 @@ export const ServiceListingPage = () => {
               </section>
             */}
           </div>
-          <div className="listing--aside">
+          <aside className={styles["listing--aside"]}>
             <ActionSidebar
               actions={sidebarActions}
               onClickAction={onClickAction}
             />
-          </div>
+          </aside>
         </div>
       </article>
       {whiteLabelFooterOpts.showOnListingPages && <Footer />}
@@ -221,7 +249,7 @@ export const ServiceProgramDetails = ({
   service,
   organization,
 }: ServiceProgramDetailsProps) => (
-  <span className="service--program--details">
+  <span className={styles["service--program--details"]}>
     A service
     {service.program ? ` in the ${service.program.name} program` : null}
     {" offered by "}
