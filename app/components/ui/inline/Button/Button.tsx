@@ -16,10 +16,13 @@ export const Button = ({
   size = "base",
   variant = "primary",
   arrowVariant,
+  iconVariant = "before",
+  iconName,
   tabIndex,
   disabled,
   href,
   mobileFullWidth = true,
+  ariaLabel,
 }: {
   children: string | JSX.Element;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
@@ -31,8 +34,11 @@ export const Button = ({
   tabIndex?: number;
   disabled?: boolean;
   arrowVariant?: "before" | "after";
+  iconVariant?: "before" | "after";
+  iconName?: string; // use font awesome icon name without 'fa-'
   href?: string;
   mobileFullWidth?: boolean;
+  ariaLabel?: string;
 }) => {
   const buttonClass = classNames(
     styles.button,
@@ -40,12 +46,30 @@ export const Button = ({
     styles[`button--${size}`],
     styles[`button--${variant}`],
     styles[`button--arrow-${arrowVariant}`],
-
     {
       [styles["mobile-full-width"]]: mobileFullWidth,
       [`${styles["button--link"]} ${styles[`button--link-${variant}`]}`]: href,
     }
   );
+
+  const content = () => {
+    const iconClass = classNames(
+      `fas fa-${iconName}`,
+      styles[`icon-${iconVariant}`]
+    );
+
+    return (
+      <>
+        {iconName && iconVariant === "before" && (
+          <span className={iconClass}></span>
+        )}
+        {children}
+        {iconName && iconVariant === "after" && (
+          <span className={iconClass}></span>
+        )}
+      </>
+    );
+  };
 
   // Links that follow same visual guidelines as buttons
   if (href) {
@@ -54,7 +78,7 @@ export const Button = ({
     const linkProps = isExternalLink && { target: "_blank", rel: "noreferrer" };
     return (
       <a href={href} className={buttonClass} {...linkProps}>
-        {children}
+        {content()}
       </a>
     );
   }
@@ -70,7 +94,7 @@ export const Button = ({
       className={`${buttonClass} ${addClass || ""}`}
       disabled={disabled}
     >
-      {children}
+      {content()}
     </button>
   );
 };
