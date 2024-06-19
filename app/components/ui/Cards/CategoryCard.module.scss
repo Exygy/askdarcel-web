@@ -25,6 +25,11 @@
     text-decoration: none;
   }
 
+  &:active,
+  &:focus {
+    outline: 3px solid $secondary-button-active-background;
+  }
+
   .categoryTitle {
     font-family: Montserrat;
     font-size: 1.25rem;
