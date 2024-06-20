@@ -156,7 +156,7 @@ export const ServiceListingPage = () => {
             )}
 
             <ServiceListingSection
-              title="Contact Info"
+              title="Contact"
               data-cy="service-contact-section"
             >
               <TableOfContactInfo service={service} />
