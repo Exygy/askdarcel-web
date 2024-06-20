@@ -109,6 +109,8 @@
   padding: calc-em(20px);
   margin: calc-em(34px) auto 0;
   display: flex;
+  justify-content: center;
+
   &--left {
     width: calc-em(672px);
     padding-right: $padding-large;
@@ -311,6 +313,7 @@
   flex-direction: column;
   align-self: start;
   gap: 0.5rem;
+  width: fit-content;
 
   @include r_max($break-tablet-s) {
     display: none;
