@@ -6,7 +6,6 @@ import qs from "qs";
 import {
   ActionBarMobile,
   ActionSidebar,
-  ListingTitleLink,
   MapOfLocations,
   MOHCDBadge,
   ServiceAttribution,
@@ -39,7 +38,7 @@ TODO:
 - [] Pass aria labels to buttons?
 - [] Add call button to desktop
 - [] Is this max width fine? It is narrower than homepage content
-- [] Remove things that aren't being used in here and in scss file
+- [] Remove things that aren't being used in here and in scss
 */
 
 const { title: whiteLabelTitle, footerOptions: whiteLabelFooterOpts } =
@@ -253,6 +252,6 @@ export const ServiceProgramDetails = ({
     A service
     {service.program ? ` in the ${service.program.name} program` : null}
     {" offered by "}
-    <ListingTitleLink type="org" listing={organization} />
+    <a href={`/organizations/${organization.id}`}>{organization.name}</a>
   </span>
 );
