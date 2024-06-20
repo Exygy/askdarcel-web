@@ -161,7 +161,6 @@ export const HomePage = () => {
           value={searchValue}
         />
       </HomePageSection>
-
       <Partners />
       <Footer />
     </>
