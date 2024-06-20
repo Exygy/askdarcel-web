@@ -90,16 +90,6 @@ export const ServiceListingPage = () => {
     }
   };
 
-  const tempDetails = [
-    { title: "How to Apply", value: "Visit the website to apply." },
-    { title: "Required Documents", value: "ID, proof of address" },
-    { title: "Fees", value: "None" },
-    {
-      title: "Notes",
-      value: "This is a note about the service.\nAnother important note.",
-    },
-  ];
-
   return (
     <div className={styles[`listing-container`]}>
       <Helmet>
@@ -160,7 +150,7 @@ export const ServiceListingPage = () => {
                       </td>
                     </tr>
                   )}
-                  rows={tempDetails}
+                  rows={details}
                 />
               </ServiceListingSection>
             )}
