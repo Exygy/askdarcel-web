@@ -9,6 +9,8 @@ interface TwoColumnContentSection {
   mediaAlignment: string;
   image: SanityImageSource;
   imageAlt: string | undefined;
+  videoUrl: string | undefined;
+  mediaType: "image" | "video";
   contentBlock: any;
   contentLinkButtonText: string;
   contentLinkButtonUrl: string;
@@ -46,6 +48,7 @@ export const AboutPage = () => {
     fetchPageData();
   }, []);
 
+  console.log(pageData);
   if (!pageData.pageInitialized) {
     return <>loading...</>;
   }

@@ -1,11 +1,12 @@
-import React from "react";
-import { SanityImageSource } from "@sanity/image-url/lib/types/types.d";
 import BlockContent, {
   BlockContentProps,
 } from "@sanity/block-content-to-react";
 import imageUrlBuilder from "@sanity/image-url";
-import styles from "./TwoColumnContentSection.module.scss";
+import { SanityImageSource } from "@sanity/image-url/lib/types/types.d";
+import React from "react";
+import ReactPlayer from "react-player/youtube";
 import { client } from "../../../sanity";
+import styles from "./TwoColumnContentSection.module.scss";
 
 const builder = imageUrlBuilder(client);
 
@@ -39,6 +40,8 @@ const BlockRenderer = (props: {
 export const TwoColumnContentSection = ({
   image,
   imageAlt,
+  videoUrl,
+  mediaType,
   contentBlock,
   mediaAlignment,
   contentLinkButtonText,
@@ -47,6 +50,8 @@ export const TwoColumnContentSection = ({
   mediaAlignment: string;
   image: SanityImageSource;
   imageAlt: string | undefined;
+  videoUrl: string | undefined;
+  mediaType: "image" | "video";
   contentBlock: BlockContentProps;
   contentLinkButtonText: string;
   contentLinkButtonUrl: string;
@@ -60,11 +65,17 @@ export const TwoColumnContentSection = ({
             : styles.imageContainer_right
         }
       >
-        <img
-          className={styles.image}
-          src={builder.image(image).url()}
-          alt={imageAlt}
-        />
+        {mediaType === "video" ? (
+          <div className={styles.videoWrapper}>
+            <ReactPlayer url={videoUrl} controls muted width="100%" />
+          </div>
+        ) : (
+          <img
+            className={styles.image}
+            src={builder.image(image).url()}
+            alt={imageAlt}
+          />
+        )}
       </div>
       <div
         className={
