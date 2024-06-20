@@ -41,7 +41,6 @@ export const ActionSidebar = ({ actions, onClickAction }: ActionBarProps) => (
 
 export const ActionBarMobile = ({ actions, onClickAction }: ActionBarProps) => (
   <div className={styles["action-bar-mobile"]}>
-    {console.log(actions)}
     {actions.map((action) => (
       <ActionButton
         action={action}
