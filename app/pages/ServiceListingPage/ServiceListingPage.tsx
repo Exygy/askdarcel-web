@@ -164,7 +164,7 @@ export const ServiceListingPage = () => {
 
             {locations.length > 0 && (
               <ServiceListingSection
-                title="Location and Hours"
+                title="Location and hours"
                 data-cy="service-loc-hours-section"
               >
                 <MapOfLocations
@@ -179,9 +179,9 @@ export const ServiceListingPage = () => {
               </ServiceListingSection>
             )}
 
-            {resource.services.length > 0 && (
+            {resource.services.length > 1 && (
               <ServiceListingSection
-                title="Other Services at this organization"
+                title="Other services at this organization"
                 data-cy="service-other-section"
               >
                 {resource.services
