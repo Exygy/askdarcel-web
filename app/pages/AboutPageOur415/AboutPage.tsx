@@ -48,7 +48,6 @@ export const AboutPage = () => {
     fetchPageData();
   }, []);
 
-  console.log(pageData);
   if (!pageData.pageInitialized) {
     return <>loading...</>;
   }

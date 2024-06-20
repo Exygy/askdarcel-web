@@ -11,7 +11,6 @@ import {
   useSubcategoriesForCategory,
 } from "../../hooks/APIHooks";
 import { CATEGORIES, Step, ServiceCategory } from "./constants";
-import { Footer as FooterNew } from "components/ui";
 
 import styles from "./ServiceDiscoveryForm.module.scss";
 
@@ -151,8 +150,6 @@ const InnerServiceDiscoveryForm = ({
         numSteps={steps.length}
         disableNextBtn={disableNextBtn}
       />
-
-      <FooterNew />
     </>
   );
 };

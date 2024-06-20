@@ -67,7 +67,13 @@ export const TwoColumnContentSection = ({
       >
         {mediaType === "video" ? (
           <div className={styles.videoWrapper}>
-            <ReactPlayer url={videoUrl} controls muted width="100%" />
+            <ReactPlayer
+              url={videoUrl}
+              controls
+              muted
+              width="100%"
+              height="450px"
+            />
           </div>
         ) : (
           <img

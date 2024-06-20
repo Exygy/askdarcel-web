@@ -5,6 +5,9 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr;
+  max-width: $break-desktop;
+  // max-width: $max-container-width;
+  margin: auto;
 }
 
 .contentContainer_left {
@@ -49,10 +52,6 @@
   width: 100%;
 }
 
-.videoWrapper {
-  width: 100%;
-}
-
 .contentLinkButton {
   margin-left: 7%;
   margin-right: 18%;
@@ -71,7 +70,7 @@
   }
 }
 
-@media screen and (max-width: $min-desktop) {
+@media screen and (max-width: $break-tablet-l) {
   .contentContainer_right .contentBlock,
   .contentContainer_left .contentBlock {
     width: 100%;
