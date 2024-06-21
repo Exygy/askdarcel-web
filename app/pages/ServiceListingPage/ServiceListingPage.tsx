@@ -112,10 +112,12 @@ export const ServiceListingPage = () => {
               />
             </header>
 
-            <ActionBarMobile
-              actions={mobileActions}
-              onClickAction={onClickAction}
-            />
+            <span className="no-print">
+              <ActionBarMobile
+                actions={mobileActions}
+                onClickAction={onClickAction}
+              />
+            </span>
 
             <ServiceListingSection
               title="About"
@@ -197,7 +199,7 @@ export const ServiceListingPage = () => {
               </section>
             */}
           </div>
-          <aside className={styles["listing--aside"]}>
+          <aside className={`${styles["listing--aside"]} no-print`}>
             <ActionSidebar
               actions={sidebarActions}
               onClickAction={onClickAction}

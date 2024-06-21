@@ -6,6 +6,10 @@
   background: $color-grey1;
   padding: $section-padding-desktop-vertical $general-spacing-md;
   background: $color-white;
+
+  @include r_max($break-tablet-s) {
+    padding: $section-padding-mobile-vertical $general-spacing-md;
+  }
 }
 
 .listing {
@@ -22,11 +26,17 @@
     font-size: 3rem;
     text-transform: capitalize;
     margin-bottom: $padding-default;
+    @include r_max($break-tablet-s) {
+      font-size: 2rem;
+    }
   }
 
   h2 {
     font-size: 2rem;
     padding-bottom: $general-spacing-lg;
+    @include r_max($break-tablet-s) {
+      font-size: 26px;
+    }
   }
 
   p {
@@ -45,6 +55,9 @@
   section {
     border-bottom: 1px solid #eee;
     padding: $general-spacing-xl 0;
+    @include r_max($break-tablet-s) {
+      padding: $general-spacing-lg 0;
+    }
 
     p {
       white-space: pre-line;
@@ -64,6 +77,9 @@
       font-size: 18px;
       width: 150px;
       padding-right: $general-spacing-lg;
+      @include r_max($break-tablet-s) {
+        width: 100px;
+      }
     }
 
     .service-loc-hours-section {
@@ -80,19 +96,6 @@
       background-color: inherit;
     }
   }
-
-  @include r_max($break-tablet-s) {
-    h2 {
-      padding-bottom: $general-spacing-xxl;
-      font-size: calc-em(16px);
-    }
-    header {
-      padding: 0 0 calc-em(20px) 0;
-    }
-    section {
-      padding: calc-em(20px) 0;
-    }
-  }
 }
 
 .service--program--details {
@@ -105,7 +108,6 @@
 
 .listing--main {
   width: 100%;
-  //   max-width: calc-em(1000px);
   margin: auto;
   display: flex;
   justify-content: center;

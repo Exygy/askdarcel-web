@@ -21,6 +21,7 @@ const ActionButton = ({
       variant="secondary"
       iconVariant="before"
       iconName={icon}
+      mobileFullWidth={false}
     >
       {name}
     </Button>
