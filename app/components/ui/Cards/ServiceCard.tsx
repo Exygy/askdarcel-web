@@ -5,6 +5,7 @@ import styles from "./ServiceCard.module.scss";
 
 export const ServiceCard = ({ service }: { service: Service }) => {
   const { id, name, long_description } = service;
+
   return (
     <Link to={{ pathname: `/services/${id}` }} className={styles.serviceCard}>
       <h3 className={styles.header}>{name}</h3>

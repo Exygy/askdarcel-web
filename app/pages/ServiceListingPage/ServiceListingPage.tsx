@@ -37,7 +37,7 @@ TODO:
 - [x] Other services section
 - [] Pass aria labels to buttons?
 - [] Add call button to desktop
-- [] Is this max width fine? It is narrower than homepage content
+- [x] Is this max width fine? It is narrower than homepage content
 - [] Remove things that aren't being used in here and in scss
 */
 
@@ -106,14 +106,12 @@ export const ServiceListingPage = () => {
                 <h1 data-cy="service-page-title">{service.name}</h1>
                 <MOHCDBadge resource={resource} />
               </div>
-              {/* {service.alsoNamed ? <p>Also Known As</p> : null} */}
               <ServiceProgramDetails
                 service={service}
                 organization={resource}
               />
             </header>
 
-            {/* Should action bar desktop and mobile have different actions? */}
             <ActionBarMobile
               actions={mobileActions}
               onClickAction={onClickAction}
@@ -167,15 +165,16 @@ export const ServiceListingPage = () => {
                 title="Location and hours"
                 data-cy="service-loc-hours-section"
               >
-                <MapOfLocations
-                  locations={locations}
-                  locationRenderer={(location: any) => (
-                    <TableOfOpeningTimes
-                      recurringSchedule={location.recurringSchedule}
-                    />
-                  )}
-                />
-                {/* TODO Transport Options */}
+                <div className={styles["service-loc-hours-section"]}>
+                  <MapOfLocations
+                    locations={locations}
+                    locationRenderer={(location: any) => (
+                      <TableOfOpeningTimes
+                        recurringSchedule={location.recurringSchedule}
+                      />
+                    )}
+                  />
+                </div>
               </ServiceListingSection>
             )}
 
@@ -187,10 +186,7 @@ export const ServiceListingPage = () => {
                 {resource.services
                   .filter((srv) => srv.id !== service.id)
                   .map((srv) => (
-                    <>
-                      {console.log(service)}
-                      <ServiceCard service={srv} key={srv.id} />
-                    </>
+                    <ServiceCard service={srv} key={srv.id} />
                   ))}
               </ServiceListingSection>
             )}
@@ -247,146 +243,3 @@ export const ServiceProgramDetails = ({
     <a href={`/organizations/${organization.id}`}>{organization.name}</a>
   </span>
 );
-
-// TEMP
-// const services = [
-//   {
-//     updated_at: "2023-09-20T22:24:26.807Z",
-//     alternate_name: null,
-//     application_process:
-//       "For technical assistance, Attorney of the Day (AOD) consultation service offers expert legal technical assistance to attorneys, nonprofit staff, criminal defenders, and others assisting immigrant clients. We offer case-specific consultations on immigration law and practice.\n\nTo discuss rates and set up a contract, please contact our AOD Administrator at AODAdmin@ilrc.org or (415) 255-9499.",
-//     certified: false,
-//     eligibility: null,
-//     email: "ilrc@ilrc.org",
-//     fee: "Most educational content is free; some publications can be purchased for a fee",
-//     id: 973,
-//     interpretation_services: null,
-//     long_description:
-//       "As a national expert on these issues, the Immigrant Legal Resource Center (ILRC) does the following:\n\n- Provides ongoing trainings on the family-based immigration process\n- Answers case-specific questions from practitioners\n- Authors a comprehensive manual, Families \u0026 Immigration: A Practical Guide\n- Advocates locally and federally in support of immigrant families.\n\n",
-//     name: "Family-Based",
-//     required_documents: null,
-//     short_description:
-//       "As a national expert on these issues, the Immigrant Legal Resource Center (ILRC) does the following:\n- Provides ongoing trainings on the family-based immigration process",
-//     url: "https://www.ilrc.org/family-based",
-//     verified_at: null,
-//     wait_time: null,
-//     certified_at: null,
-//     featured: false,
-//     source_attribution: "ask_darcel",
-//     status: "approved",
-//     internal_note: null,
-//     schedule: {
-//       id: 1456,
-//       schedule_days: [],
-//       hours_known: true,
-//     },
-//     notes: [],
-//     categories: [
-//       {
-//         name: "Citizenship \u0026 Immigration",
-//         id: 141,
-//         top_level: false,
-//         featured: false,
-//       },
-//       {
-//         name: "Legal",
-//         id: 153,
-//         top_level: false,
-//         featured: true,
-//       },
-//       {
-//         name: "Immigration Assistance",
-//         id: 350,
-//         top_level: false,
-//         featured: false,
-//       },
-//       {
-//         name: "Legal Assistance",
-//         id: 1100024,
-//         top_level: false,
-//         featured: false,
-//       },
-//     ],
-//     addresses: [],
-//     eligibilities: [
-//       {
-//         name: "Families with children below 18 years old",
-//         id: 1050,
-//         feature_rank: null,
-//       },
-//       {
-//         name: "Immigrants",
-//         id: 1012,
-//         feature_rank: 6,
-//       },
-//     ],
-//     instructions: [],
-//     documents: [],
-//   },
-//   {
-//     updated_at: "2023-09-20T22:24:26.315Z",
-//     alternate_name: null,
-//     application_process: "Call mainline for more information.",
-//     certified: false,
-//     eligibility: null,
-//     email: "ilrc@ilrc.org",
-//     fee: "Most educational content is free; some publications can be purchased for a fee",
-//     id: 977,
-//     interpretation_services: null,
-//     long_description:
-//       "The ILRC actively engages in policy advocacy to transform prosecutorial practices (crime-related processes).\n\nThe ILRC works directly with elected prosecutors throughout the country to draft and enact policies that mitigate or eliminate the devastating lifelong impact of criminal convictions.\n\n",
-//     name: "Prosecutors",
-//     required_documents: null,
-//     short_description: null,
-//     url: "https://www.ilrc.org/prosecutors",
-//     verified_at: null,
-//     wait_time: null,
-//     certified_at: null,
-//     featured: false,
-//     source_attribution: "ask_darcel",
-//     status: "approved",
-//     internal_note: null,
-//     schedule: {
-//       id: 1461,
-//       schedule_days: [],
-//       hours_known: true,
-//     },
-//     notes: [],
-//     categories: [
-//       {
-//         name: "Citizenship \u0026 Immigration",
-//         id: 141,
-//         top_level: false,
-//         featured: false,
-//       },
-//       {
-//         name: "Legal",
-//         id: 153,
-//         top_level: false,
-//         featured: true,
-//       },
-//       {
-//         name: "Legal Representation",
-//         id: 186,
-//         top_level: false,
-//         featured: false,
-//       },
-//       {
-//         name: "Immigration Assistance",
-//         id: 350,
-//         top_level: false,
-//         featured: false,
-//       },
-//     ],
-//     addresses: [],
-//     eligibilities: [
-//       {
-//         name: "Immigrants",
-//         id: 1012,
-//         feature_rank: 6,
-//       },
-//     ],
-//     instructions: [],
-//     documents: [],
-//   },
-// ];
