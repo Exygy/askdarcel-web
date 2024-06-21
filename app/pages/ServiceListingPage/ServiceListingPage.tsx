@@ -14,8 +14,8 @@ import {
   TableOfOpeningTimes,
 } from "components/listing";
 import { Datatable, Footer, Loader } from "components/ui";
-import whiteLabel from "../../utils/whitelabel";
 import { removeAsterisksAndHashes } from "utils/strings";
+import whiteLabel from "../../utils/whitelabel";
 import {
   fetchService,
   generateServiceDetails,
@@ -82,7 +82,7 @@ export const ServiceListingPage = () => {
         <title>{`${service.name} | ${whiteLabelTitle}`}</title>
         <meta name="description" content={formattedLongDescription} />
       </Helmet>
-      <article className={styles[`listing`]} id="service">
+      <article className={styles.listing} id="service">
         <div
           className={`${styles["listing--main"]} ${styles["weglot-dynamic"]}`}
         >

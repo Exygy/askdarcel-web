@@ -1,7 +1,7 @@
 import React from "react";
+import { Button } from "components/ui/inline/Button/Button";
 import { OrganizationAction } from "../../models";
 import styles from "./ActionBar.module.scss";
-import { Button } from "components/ui/inline/Button/Button";
 
 const ActionButton = ({
   action,

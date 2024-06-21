@@ -58,13 +58,9 @@ export const Button = ({
 
     return (
       <>
-        {iconName && iconVariant === "before" && (
-          <span className={iconClass}></span>
-        )}
+        {iconName && iconVariant === "before" && <span className={iconClass} />}
         {children}
-        {iconName && iconVariant === "after" && (
-          <span className={iconClass}></span>
-        )}
+        {iconName && iconVariant === "after" && <span className={iconClass} />}
       </>
     );
   };
