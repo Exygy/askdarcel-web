@@ -22,7 +22,6 @@ export const Button = ({
   disabled,
   href,
   mobileFullWidth = true,
-  ariaLabel,
 }: {
   children: string | JSX.Element;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
@@ -38,7 +37,6 @@ export const Button = ({
   iconName?: string; // use font awesome icon name without 'fa-'
   href?: string;
   mobileFullWidth?: boolean;
-  ariaLabel?: string;
 }) => {
   const buttonClass = classNames(
     styles.button,

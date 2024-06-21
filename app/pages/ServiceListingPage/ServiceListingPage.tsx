@@ -35,8 +35,8 @@ TODO:
 - [x] turn buttons to Button component
 - [x] Figure out what to do with modal / tooltip thing on hover
 - [x] Other services section
-- [] Pass aria labels to buttons?
-- [] Add call button to desktop
+- [] mobile styles
+- [x] Add call button to desktop
 - [x] Is this max width fine? It is narrower than homepage content
 - [] Remove things that aren't being used in here and in scss
 */
@@ -75,7 +75,7 @@ export const ServiceListingPage = () => {
   const locations = getServiceLocations(service, resource, recurringSchedule);
   const allActions = getOrganizationActions(resource);
   const sidebarActions = allActions.filter((a) =>
-    ["print", "directions"].includes(a.icon)
+    ["print", "phone", "directions"].includes(a.icon)
   );
   const mobileActions = allActions.filter((a) =>
     ["phone", "directions"].includes(a.icon)
