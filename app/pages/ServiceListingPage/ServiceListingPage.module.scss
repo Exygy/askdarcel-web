@@ -39,6 +39,14 @@
     }
   }
 
+  .service--program--details {
+    font-family: "Montserrat";
+    font-size: 18px;
+    @include r_max($break-tablet-s) {
+      font-size: 16px;
+    }
+  }
+
   p {
     padding-left: $spacing-0;
     line-height: 150%;
@@ -52,6 +60,16 @@
     }
   }
 
+  p,
+  a,
+  table {
+    @include r_max($break-tablet-s) {
+      font-size: 14px;
+      line-height: 125%;
+    }
+  }
+
+  // TODO: Make reusable InfoTable and Section components rather than general edits
   section {
     border-bottom: 1px solid #eee;
     padding: $general-spacing-xl 0;
@@ -79,6 +97,7 @@
       padding-right: $general-spacing-lg;
       @include r_max($break-tablet-s) {
         width: 100px;
+        font-size: 16px;
       }
     }
 
@@ -96,11 +115,6 @@
       background-color: inherit;
     }
   }
-}
-
-.service--program--details {
-  font-family: "Montserrat";
-  font-size: 18px;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

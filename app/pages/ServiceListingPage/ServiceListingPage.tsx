@@ -27,20 +27,6 @@ import {
 } from "../../models";
 import styles from "./ServiceListingPage.module.scss";
 
-/*
-TODO:
-- [x] Links blue
-- [x] Headers colors and sizes
-- [x] Padding
-- [x] turn buttons to Button component
-- [x] Figure out what to do with modal / tooltip thing on hover
-- [x] Other services section
-- [] mobile styles
-- [x] Add call button to desktop
-- [x] Is this max width fine? It is narrower than homepage content
-- [] Remove things that aren't being used in here and in scss
-*/
-
 const { title: whiteLabelTitle, footerOptions: whiteLabelFooterOpts } =
   whiteLabel;
 
@@ -192,12 +178,6 @@ export const ServiceListingPage = () => {
                   ))}
               </ServiceListingSection>
             )}
-
-            {/* TODO Need an API to get similar services, maybe same category for now? */}
-            {/* <section>
-                <h2>Similar Services Near You</h2>
-              </section>
-            */}
           </div>
           <aside className={`${styles["listing--aside"]} no-print`}>
             <ActionSidebar
