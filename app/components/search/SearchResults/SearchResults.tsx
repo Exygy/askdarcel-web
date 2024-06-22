@@ -13,6 +13,7 @@ import ResultsPagination from "components/search/Pagination/ResultsPagination";
 // import { TextListing } from "components/Texting/Texting";
 import { SearchHit, transformHits } from "../../../models/SearchHits";
 import styles from "./SearchResults.module.scss";
+import ClearSearchButton from "../Refinements/ClearSearch";
 
 // NOTE: We will re-implement the texting feature so leaving these comments in the project until then
 
@@ -59,23 +60,32 @@ const SearchResults = ({
           overlayMapWithSearchResults ? styles.overlayMapWithSearchResults : ""
         }`}
       >
-        <div
-          className={`${styles.noResultsMessage} ${
-            hits && hits.length ? styles.hidden : ""
-          }`}
-        >
-          No results found in your area. Try a different location, category, or
-          search term.
-        </div>
-        {hits.map((hit, index) => (
-          <SearchResult
-            hit={hit}
-            index={index}
-            // categoryId={categoryId} // Keep for category ticket
-            key={hit.id}
-          />
-        ))}
-        <ResultsPagination noResults={!hits || !hits.length} />
+        {!hits.length ? (
+          <div
+            className={`${styles.noResultsMessage} ${
+              hits && hits.length ? styles.hidden : ""
+            }`}
+          >
+            No results found in your area. Try a different location, category,
+            or search term.
+          </div>
+        ) : (
+          <>
+            <div className={styles.searchResultsHeader}>
+              <h2>{`${hits.length} Results`}</h2>
+              <ClearSearchButton />
+            </div>
+            {hits.map((hit, index) => (
+              <SearchResult
+                hit={hit}
+                index={index}
+                // categoryId={categoryId} // Keep for category ticket
+                key={hit.id}
+              />
+            ))}
+            <ResultsPagination noResults={!hits || !hits.length} />
+          </>
+        )}
       </div>
       <SearchMap
         hits={hits}

@@ -59,6 +59,12 @@
   }
 }
 
+.searchResultsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .searchResult {
   padding: $general-spacing-md;
   border: 1px solid $border-gray;
