@@ -5,6 +5,7 @@
   font-weight: 700;
   font-size: 14px;
   height: fit-content;
+  width: fit-content;
 
   &:disabled {
     color: $white;
@@ -89,6 +90,8 @@
 
   &--linkBlue {
     padding: $spacing-0;
+    border-bottom: 1px solid transparent;
+
     border-radius: $rounded-none;
     color: $link-blue-default;
 
@@ -105,6 +108,7 @@
 
   &--linkWhite {
     padding: $spacing-0;
+    border-bottom: 1px solid transparent;
     border-radius: $rounded-none;
     color: $white;
 
