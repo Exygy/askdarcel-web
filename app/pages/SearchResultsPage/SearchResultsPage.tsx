@@ -221,6 +221,7 @@ const InnerSearchResults = ({
             <SearchResults
               overlayMapWithSearchResults={expandList}
               setAroundLatLng={setLocation}
+              searchQuery={untranslatedQuery}
             />
           </div>
         </div>

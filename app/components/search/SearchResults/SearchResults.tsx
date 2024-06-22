@@ -22,11 +22,13 @@ const SearchResults = ({
   overlayMapWithSearchResults,
   setAroundLatLng,
   categoryId,
+  searchQuery,
 }: {
   searchResults: SearchResultsProps;
   overlayMapWithSearchResults: boolean;
   setAroundLatLng: (latLng: { lat: number; lng: number }) => void;
   categoryId?: string;
+  searchQuery?: string | null;
 }) => {
   const category = CATEGORIES.find((c) => c.id === categoryId);
   const sortBy24HourAvailability = Boolean(category?.sortBy24HourAvailability);
@@ -66,8 +68,8 @@ const SearchResults = ({
               hits && hits.length ? styles.hidden : ""
             }`}
           >
-            No results found in your area. Try a different location, category,
-            or search term.
+            No results for {` "${searchQuery}" `} found in your area.
+            <br /> Try a different location, category, or search term.
           </div>
         ) : (
           <>
