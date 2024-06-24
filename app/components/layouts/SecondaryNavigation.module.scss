@@ -2,6 +2,15 @@
 
 .container {
   background: $surface-4;
-  padding: $spacing-6 $spacing-16;
+  padding: $spacing-6 $spacing-8;
   color: $text-tertiary;
+
+  @media screen and (max-width: $break-tablet-s) {
+    padding: $spacing-6 calc-em(20px);
+    button {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+    }
+  }
 }

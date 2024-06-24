@@ -20,7 +20,7 @@ export const BackNavigation = ({
       : () => history.goBack();
 
   return (
-    <Button onClick={backDestination} variant="linkWhite">
+    <Button onClick={backDestination} variant="linkWhite" arrowVariant="before">
       Back to Service Listings
     </Button>
   );
