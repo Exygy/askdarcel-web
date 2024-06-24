@@ -50,20 +50,18 @@ export const Button = ({
     }
   );
 
-  const content = () => {
-    const iconClass = classNames(
-      `fas fa-${iconName}`,
-      styles[`icon-${iconVariant}`]
-    );
+  const iconClass = classNames(
+    `fas fa-${iconName}`,
+    styles[`icon-${iconVariant}`]
+  );
 
-    return (
-      <>
-        {iconName && iconVariant === "before" && <span className={iconClass} />}
-        {children}
-        {iconName && iconVariant === "after" && <span className={iconClass} />}
-      </>
-    );
-  };
+  const content = (
+    <>
+      {iconName && iconVariant === "before" && <span className={iconClass} />}
+      {children}
+      {iconName && iconVariant === "after" && <span className={iconClass} />}
+    </>
+  );
 
   // Links that follow same visual guidelines as buttons
   if (href) {
@@ -72,7 +70,7 @@ export const Button = ({
     const linkProps = isExternalLink && { target: "_blank", rel: "noreferrer" };
     return (
       <a href={href} className={buttonClass} {...linkProps}>
-        {content()}
+        {content}
       </a>
     );
   }
@@ -88,7 +86,7 @@ export const Button = ({
       className={`${buttonClass} ${addClass || ""}`}
       disabled={disabled}
     >
-      {content()}
+      {content}
     </button>
   );
 };
