@@ -47,6 +47,10 @@
   &.hidden {
     display: none;
   }
+
+  .noResultsText {
+    margin-bottom: $general-spacing-md;
+  }
 }
 
 :global(.results-map) {
@@ -63,6 +67,10 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  h2 {
+    font-size: 20px;
+  }
 }
 
 .searchResult {

@@ -3,7 +3,7 @@ import { Button } from "components/ui/inline/Button/Button";
 
 const ClearSearchButton = () => {
   return (
-    <Button variant="linkBlue" href="/search" mobileFullWidth={false}>
+    <Button variant="linkBlue" size="lg" href="/search" mobileFullWidth={false}>
       Clear Search
     </Button>
   );

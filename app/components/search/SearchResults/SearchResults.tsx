@@ -13,9 +13,18 @@ import ResultsPagination from "components/search/Pagination/ResultsPagination";
 // import { TextListing } from "components/Texting/Texting";
 import { SearchHit, transformHits } from "../../../models/SearchHits";
 import styles from "./SearchResults.module.scss";
-import ClearSearchButton from "../Refinements/ClearSearch";
+import ClearSearchButton from "../Refinements/ClearSearchButton";
 
 // NOTE: We will re-implement the texting feature so leaving these comments in the project until then
+
+/* 
+  TODOS:
+  - [] mobile
+  - [] fix no results section layout
+  - [] fix non search pages having search header
+  - [] follow up with kyle
+  - [] fix pagination? or create new ticket
+*/
 
 const SearchResults = ({
   searchResults,
@@ -68,13 +77,19 @@ const SearchResults = ({
               hits && hits.length ? styles.hidden : ""
             }`}
           >
-            No results for {` "${searchQuery}" `} found in your area.
-            <br /> Try a different location, category, or search term.
+            <div className={styles.noResultsText}>
+              No results for {` "${searchQuery}" `} found in your area.
+              <br /> Try a different location, filter, or search term.
+            </div>
+
+            <ClearSearchButton />
           </div>
         ) : (
           <>
             <div className={styles.searchResultsHeader}>
-              <h2>{`${hits.length} Results`}</h2>
+              <h2>{`${hits.length} search results ${
+                searchQuery && ` for ${searchQuery}`
+              }`}</h2>
               <ClearSearchButton />
             </div>
             {hits.map((hit, index) => (
