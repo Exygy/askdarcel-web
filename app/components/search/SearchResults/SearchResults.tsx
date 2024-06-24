@@ -18,15 +18,6 @@ import ClearSearchButton from "../Refinements/ClearSearchButton";
 
 // NOTE: We will re-implement the texting feature so leaving these comments in the project until then
 
-/* 
-  TODOS:
-  - [] mobile
-  - [x] fix no results section layout
-  - [x] fix non search pages having search header
-  - [x] follow up with kyle
-  - [x] fix pagination? or create new ticket
-*/
-
 const SearchResults = ({
   searchResults,
   overlayMapWithSearchResults,
