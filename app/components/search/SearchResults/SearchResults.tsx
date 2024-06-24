@@ -73,15 +73,16 @@ const SearchResults = ({
             }`}
           >
             <div className={styles.noResultsText}>
-              No results for {` "${searchQuery}" `} found in your area.
+              No results {searchQuery && `for ${` "${searchQuery}" `}`} found in
+              your area.
               <br /> Try a different location, filter, or search term.
             </div>
 
-            <ClearSearchButton />
+            {searchQuery && <ClearSearchButton />}
           </div>
         ) : (
           <>
-            {!categoryId && searchQuery && (
+            {searchQuery && (
               <div className={styles.searchResultsHeader}>
                 <h2>{`${searchResults.nbHits} search results ${
                   searchQuery && ` for ${searchQuery}`
