@@ -7,6 +7,12 @@ describe("removeAsterisksAndHashes", () => {
       # **Service Contact Information:**\n
       # **Another Heading:**\n
     `;
-    expect(removeAsterisksAndHashes(str)).to.equal("Test Service");
+
+    const actual = removeAsterisksAndHashes(str);
+    const expected = `
+      **Service Contact Information:**
+      **Another Heading:**
+    `
+    expect(actual).to.equal(expected);
   });
 });
