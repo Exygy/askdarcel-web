@@ -9,15 +9,12 @@ export const SecondaryNavigationLayout = ({
   navigationChildren,
 }: {
   children: ReactNode;
-  navigationChildren: ReactNode[];
+  navigationChildren: ReactNode | ReactNode[];
 }) => {
-
   return (
     <>
-      <div className={`${styles.container}`}>
-        {navigationChildren}
-      </div>
+      <div className={`${styles.container}`}>{navigationChildren}</div>
       {children}
     </>
-  )
-}
+  );
+};

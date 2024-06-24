@@ -49,7 +49,6 @@ export const Router = ({
 }) => {
   const { authState } = useAppContext();
 
-
   return (
     <Switch>
       <Route exact path="/" component={homePage} />
@@ -68,14 +67,13 @@ export const Router = ({
       <Route
         exact
         path="/organizations/:id"
-        component={() =>
+        component={() => (
           <SecondaryNavigationLayout
-            navigationChildren={
-              <BackNavigation defaultReturnTo="/search" />
-            }>
+            navigationChildren={<BackNavigation defaultReturnTo="/search" />}
+          >
             <OrganizationListingPage />
           </SecondaryNavigationLayout>
-        }
+        )}
       />
       <Route
         exact
