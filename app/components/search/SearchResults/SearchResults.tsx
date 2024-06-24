@@ -21,10 +21,10 @@ import ClearSearchButton from "../Refinements/ClearSearchButton";
 /* 
   TODOS:
   - [] mobile
-  - [] fix no results section layout
-  - [] fix non search pages having search header
-  - [] follow up with kyle
-  - [] fix pagination? or create new ticket
+  - [x] fix no results section layout
+  - [x] fix non search pages having search header
+  - [x] follow up with kyle
+  - [x] fix pagination? or create new ticket
 */
 
 const SearchResults = ({
@@ -65,6 +65,9 @@ const SearchResults = ({
 
   if (!searchResults) return null;
 
+  const currentPage = searchResults.page ?? 0;
+  const hitsPerPage = searchResults.hitsPerPage ?? 20;
+
   return (
     <div className={styles.searchResultsAndMapContainer}>
       <div
@@ -87,16 +90,18 @@ const SearchResults = ({
           </div>
         ) : (
           <>
-            <div className={styles.searchResultsHeader}>
-              <h2>{`${hits.length} search results ${
-                searchQuery && ` for ${searchQuery}`
-              }`}</h2>
-              <ClearSearchButton />
-            </div>
+            {!categoryId && searchQuery && (
+              <div className={styles.searchResultsHeader}>
+                <h2>{`${searchResults.nbHits} search results ${
+                  searchQuery && ` for ${searchQuery}`
+                }`}</h2>
+                <ClearSearchButton />
+              </div>
+            )}
             {hits.map((hit, index) => (
               <SearchResult
                 hit={hit}
-                index={index}
+                index={currentPage * hitsPerPage + index + 1}
                 // categoryId={categoryId} // Keep for category ticket
                 key={hit.id}
               />
@@ -181,7 +186,7 @@ const SearchResult = ({
       <div className={styles.searchResultContentContainer}>
         <div>
           <h2 className={styles.title}>
-            {index + 1}.{" "}
+            {index}.{" "}
             <Link
               to={{ pathname: `/${basePath}/${hit.id}` }}
               className={`notranslate ${styles.titleLink}`}
