@@ -6,52 +6,15 @@ import Our415Logo from "assets/img/our415-white.png";
 import SFSeal from "assets/img/sf-seal-white.png";
 import DCYFLogo from "assets/img/dcyf-white.png";
 import { FooterColumn } from "./FooterColumn";
-import { client } from "../../../sanity";
+import { useFooterData } from "../../../hooks/StrapiAPIHooks";
 
 import "./Footer.scss";
-
-export interface FooterLinkType {
-  href: string;
-  label: string;
-}
-
-export interface FooterColumnType {
-  title: string;
-  links: FooterLinkType[];
-}
-
-export interface FooterData {
-  address: string;
-  email: string;
-  phoneNumber: string;
-  column1: FooterColumnType;
-  column2: FooterColumnType;
-  column3: FooterColumnType;
-}
+import { DynamicLink } from "models/Strapi";
 
 export const Footer = () => {
-  const { footerOptions } = whiteLabel;
-  const [footerData, setFooterData] = useState<FooterData | null>(null);
+  const { data, error, isLoading } = useFooterData();
 
-  useEffect(() => {
-    const fetchFooterData = async () => {
-      const query = `*[_type == "footer" && name == "Main Footer"][0]{
-        name,
-        address,
-        email,
-        phoneNumber,
-        column1,
-        column2,
-        column3
-      }`;
-      const result: FooterData = await client.fetch(query);
-      setFooterData(result);
-    };
-
-    fetchFooterData();
-  }, []);
-
-  if (!footerData) {
+  if (error || isLoading) {
     return <div>Loading...</div>;
   }
 
@@ -70,28 +33,24 @@ export const Footer = () => {
               <div
                 className="site-footer__address"
                 dangerouslySetInnerHTML={{
-                  __html: htmlWithBreaks(footerData.address),
+                  __html: htmlWithBreaks(data.address),
                 }}
               />
               <div className="site-footer__contact">
                 <a
-                  href={`tel:${callableUSPhoneNumber(footerData.phoneNumber)}`}
+                  href={`tel:${callableUSPhoneNumber(data.phone_number)}`}
                 >
-                  {footerData.phoneNumber}
+                  {data.phone_number}
                 </a>
                 <br />
-                <a href={`mailto:${footerData.email}`}>{footerData.email}</a>
+                <a href={`mailto:${data.email_address}`}>{data.email_address}</a>
               </div>
             </address>
           </div>
-
-          {footerOptions.showLinks && (
-            <div className="site-footer__links">
-              <FooterColumn column={footerData.column1} />
-              <FooterColumn column={footerData.column2} />
-              <FooterColumn column={footerData.column3} />
-            </div>
-          )}
+          
+          <div className="site-footer__links">
+            {data.links && data.links.map((item: DynamicLink) => <FooterColumn column={item} />)}
+          </div>
           <div className="site-footer__logos">
             <div className="site-footer__sfseal">
               <img src={SFSeal} alt="City of San Francisco Seal" />
