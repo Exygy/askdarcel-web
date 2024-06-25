@@ -95,7 +95,7 @@ const SearchResults = ({
                 hit={hit}
                 index={currentPage * hitsPerPage + index + 1}
                 // categoryId={categoryId} // Keep for category ticket
-                key={hit.id}
+                key={`${hit.id} - ${hit.name}`}
               />
             ))}
             <ResultsPagination noResults={!hits || !hits.length} />
