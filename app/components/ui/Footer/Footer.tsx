@@ -14,8 +14,8 @@ import { DynamicLink } from "models/Strapi";
 export const Footer = () => {
   const { data, error, isLoading } = useFooterData();
 
-  if (error || isLoading) {
-    return <div>Loading...</div>;
+  if (isLoading) {
+    return null;
   }
 
   return (
@@ -49,7 +49,7 @@ export const Footer = () => {
           </div>
           
           <div className="site-footer__links">
-            {data.links && data.links.map((item: DynamicLink) => <FooterColumn column={item} />)}
+            {!error && data?.links && data.links.map((item: DynamicLink) => <FooterColumn column={item} />)}
           </div>
           <div className="site-footer__logos">
             <div className="site-footer__sfseal">
