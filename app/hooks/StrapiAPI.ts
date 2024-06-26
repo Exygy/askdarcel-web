@@ -1,7 +1,17 @@
 import useSWR from "swr";
 import fetcher from "utils/fetcher";
-import { type Footer, type StrapiResponse } from "models/Strapi";
+import { StrapiModels } from "models/Strapi";
 import config from "../config";
+
+export interface StrapiResponse<T> {
+  data: {
+    id: number;
+    attributes: T;
+    meta: {
+      [key: string]: string;
+    };
+  } | null;
+}
 
 interface SWRHookResult<T> {
   data: T | null;
@@ -28,5 +38,9 @@ function useStrapiHook<T>(path: string): SWRHookResult<T> {
 }
 
 export function useFooterData() {
-  return useStrapiHook<Footer>("footer?populate[links][populate]=*");
+  return useStrapiHook<StrapiModels.FooterAttributes>("footer?populate[links][populate]=*");
+}
+
+export function useNavigationData() {
+  return useStrapiHook<StrapiModels.HeaderAttributes>("header?populate[logo]=*&populate[navigation][populate]=*");
 }

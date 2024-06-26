@@ -4,7 +4,7 @@ import { htmlWithBreaks } from "utils/sanity";
 import Our415Logo from "assets/img/our415-white.png";
 import SFSeal from "assets/img/sf-seal-white.png";
 import DCYFLogo from "assets/img/dcyf-white.png";
-import { DynamicLink } from "models/Strapi";
+// import { DynamicLink } from "models/Strapi";
 import { FooterColumn } from "./FooterColumn";
 import { useFooterData } from "../../../hooks/StrapiAPI";
 
