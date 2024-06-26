@@ -99,7 +99,6 @@ export const App = () => {
         </span>
         <div id={pageWrapId}>
           <Navigation
-            showSearch={showSearch}
             toggleHamburgerMenu={() => setHamburgerOpen(!hamburgerOpen)}
           />
           {showBanner && <Banner />}
