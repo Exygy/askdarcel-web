@@ -16,7 +16,7 @@ function createStrapiHook<T>(path: string): SWRHookResult<T> {
     });
 
   const { data, error, isLoading } = useSWR<StrapiResponse<T>>(
-    "/api/footer",
+    `/api/${path}`,
     dataFetcher
   );
 
