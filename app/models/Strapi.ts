@@ -4,7 +4,7 @@ export interface StrapiResponse<T> {
     attributes: T;
     meta: {
       [key: string]: string;
-    }
+    };
   } | null;
 }
 

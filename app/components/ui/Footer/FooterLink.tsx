@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { type Link as FooterLinkType } from "../../../models/Strapi"
+import { type Link as FooterLinkType } from "../../../models/Strapi";
 
 export const FooterLink = ({ link }: { link: FooterLinkType }) => {
   const isInternalLink = (url: string): boolean => {

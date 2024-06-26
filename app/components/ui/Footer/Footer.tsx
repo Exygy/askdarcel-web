@@ -29,27 +29,33 @@ export const Footer = () => {
                 alt="SF Department of Children Youth and their Families"
               />
             </div>
-            {!error && data && <address>
-              <div
-                className="site-footer__address"
-                dangerouslySetInnerHTML={{
-                  __html: htmlWithBreaks(data.address),
-                }}
-              />
-              <div className="site-footer__contact">
-                <a
-                  href={`tel:${callableUSPhoneNumber(data.phone_number)}`}
-                >
-                  {data.phone_number}
-                </a>
-                <br />
-                <a href={`mailto:${data.email_address}`}>{data.email_address}</a>
-              </div>
-            </address>}
+            {!error && data && (
+              <address>
+                <div
+                  className="site-footer__address"
+                  dangerouslySetInnerHTML={{
+                    __html: htmlWithBreaks(data.address),
+                  }}
+                />
+                <div className="site-footer__contact">
+                  <a href={`tel:${callableUSPhoneNumber(data.phone_number)}`}>
+                    {data.phone_number}
+                  </a>
+                  <br />
+                  <a href={`mailto:${data.email_address}`}>
+                    {data.email_address}
+                  </a>
+                </div>
+              </address>
+            )}
           </div>
-          
+
           <div className="site-footer__links">
-            {!error && data?.links && data.links.map((item: DynamicLink) => <FooterColumn key={item.id} column={item} />)}
+            {!error &&
+              data?.links &&
+              data.links.map((item: DynamicLink) => (
+                <FooterColumn key={item.id} column={item} />
+              ))}
           </div>
           <div className="site-footer__logos">
             <div className="site-footer__sfseal">
