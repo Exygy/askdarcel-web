@@ -41,7 +41,6 @@ export const eligibilitiesMapping = {
   "Summer Programs"
 ]
 */
-
 export const categoriesMapping = {
   "Basic Needs & Shelter": ["Basic Needs & Shelter"],
   Employment: ["Employment"],
