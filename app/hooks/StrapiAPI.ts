@@ -4,7 +4,7 @@ import { type Footer, type StrapiResponse } from "models/Strapi";
 import config from "../config";
 
 interface SWRHookResult<T> {
-  data: T;
+  data: T | null;
   error?: Error;
   isLoading: boolean;
 }
@@ -21,7 +21,7 @@ function useStrapiHook<T>(path: string): SWRHookResult<T> {
   );
 
   return {
-    data: data?.data ? (data.data as any).attributes : null,
+    data: data?.data ? data.data.attributes : null,
     error,
     isLoading,
   };

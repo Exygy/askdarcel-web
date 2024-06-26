@@ -51,8 +51,7 @@ export const Footer = () => {
 
           <div className="site-footer__links">
             {!error &&
-              data?.links &&
-              data.links.map((item: DynamicLink) => (
+              data?.links.map((item: DynamicLink) => (
                 <FooterColumn key={item.id} column={item} />
               ))}
           </div>
