@@ -1,13 +1,11 @@
-export interface Single {
+export interface StrapiResponse<T> {
   data: {
     id: number;
-    attributes: {
-      [key: string]: string;
-    };
+    attributes: T;
     meta: {
       [key: string]: string;
     }
-  };
+  } | null;
 }
 
 export interface Link {
@@ -18,6 +16,8 @@ export interface Link {
 
 export interface DynamicLink {
   id: number;
+  // __component is a key used by Strapi
+  // that may not have practical purposes for the frontend
   __component: string;
   title: string;
   link: Link[];

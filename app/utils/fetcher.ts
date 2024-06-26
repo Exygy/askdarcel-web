@@ -2,16 +2,17 @@ interface Headers {
   [key: string]: string;
 }
 
-export default function fetcher(url: string, headers: Headers = {}) {
+export default async function fetcher<T>(url: string, headers: Headers = {}): Promise<T> {
   const fetchHeaders = {
     'Content-Type': 'application/json',
     ...headers
   };
 
-  return fetch(
+  const res = await fetch(
     url,
     {
       headers: fetchHeaders,
     }
-  ).then(res => res.json());
+  );
+  return await res.json();
 }

@@ -6,7 +6,7 @@ import Our415Logo from "assets/img/our415-white.png";
 import SFSeal from "assets/img/sf-seal-white.png";
 import DCYFLogo from "assets/img/dcyf-white.png";
 import { FooterColumn } from "./FooterColumn";
-import { useFooterData } from "../../../hooks/StrapiAPIHooks";
+import { useFooterData } from "../../../hooks/StrapiAPI";
 
 import "./Footer.scss";
 import { DynamicLink } from "models/Strapi";
@@ -29,7 +29,7 @@ export const Footer = () => {
                 alt="SF Department of Children Youth and their Families"
               />
             </div>
-            <address>
+            {!error && data && <address>
               <div
                 className="site-footer__address"
                 dangerouslySetInnerHTML={{
@@ -45,11 +45,11 @@ export const Footer = () => {
                 <br />
                 <a href={`mailto:${data.email_address}`}>{data.email_address}</a>
               </div>
-            </address>
+            </address>}
           </div>
           
           <div className="site-footer__links">
-            {!error && data?.links && data.links.map((item: DynamicLink) => <FooterColumn column={item} />)}
+            {!error && data?.links && data.links.map((item: DynamicLink) => <FooterColumn key={item.id} column={item} />)}
           </div>
           <div className="site-footer__logos">
             <div className="site-footer__sfseal">
