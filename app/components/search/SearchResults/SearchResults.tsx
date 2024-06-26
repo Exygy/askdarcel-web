@@ -15,6 +15,7 @@ import ResultsPagination from "components/search/Pagination/ResultsPagination";
 import { SearchHit, transformHits } from "../../../models/SearchHits";
 import styles from "./SearchResults.module.scss";
 import ClearSearchButton from "../Refinements/ClearSearchButton";
+import { Tooltip } from "react-tippy";
 
 // NOTE: We will re-implement the texting feature so leaving these comments in the project until then
 
@@ -177,15 +178,38 @@ const SearchResult = ({
       /> */}
       <div className={styles.searchResultContentContainer}>
         <div>
-          <h2 className={styles.title}>
-            {index}.{" "}
-            <Link
-              to={{ pathname: `/${basePath}/${hit.id}` }}
-              className={`notranslate ${styles.titleLink}`}
-            >
-              {hit.name}
-            </Link>
-          </h2>
+          <div className={styles.titleContainer}>
+            <h2 className={styles.title}>
+              {index}.{" "}
+              <Link
+                to={{ pathname: `/${basePath}/${hit.id}` }}
+                className={`notranslate ${styles.titleLink}`}
+              >
+                {hit.name}
+              </Link>
+            </h2>
+            <div className={styles.searchResultSubcatContainer}>
+              {hit.categories.length > 0 && (
+                <span className={styles.searchResultSubcat}>
+                  {hit.categories[0]}
+                </span>
+              )}
+              {hit.categories.length > 1 && (
+                <Tooltip
+                  title={hit.categories.slice(1).join(", ")}
+                  position="top"
+                  trigger="mouseenter"
+                  arrow={true}
+                  delay={100}
+                  animation="shift"
+                >
+                  <span className={styles.searchResultSubcatTooltip}>
+                    +{hit.categories.length - 1}
+                  </span>
+                </Tooltip>
+              )}
+            </div>
+          </div>
           {hit.type === "service" && (
             <div className={styles.serviceOf}>
               <Link

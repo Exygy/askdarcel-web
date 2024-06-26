@@ -1,3 +1,5 @@
+// On search results page, not category listings page
+
 export const eligibilitiesMapping = {
   Disability: [
     "All Disabilities",
@@ -26,6 +28,7 @@ export const eligibilitiesMapping = {
   Veterans: ["Veterans"],
 };
 
+// Hardcoded catgories in search page sidebar
 export const categoriesMapping = {
   "Basic Needs & Shelter": ["Basic Needs & Shelter"],
   Employment: ["Employment"],
