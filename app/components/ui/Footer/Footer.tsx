@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import whiteLabel from "utils/whitelabel";
+import React from "react";
 import { callableUSPhoneNumber } from "utils/numbers";
 import { htmlWithBreaks } from "utils/sanity";
 import Our415Logo from "assets/img/our415-white.png";

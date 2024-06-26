@@ -1,6 +1,6 @@
 import React from "react";
-import { FooterLink } from "./FooterLink";
 import { DynamicLink } from "models/Strapi";
+import { FooterLink } from "./FooterLink";
 
 export const FooterColumn = ({ column }: { column: DynamicLink }) => {
   return (

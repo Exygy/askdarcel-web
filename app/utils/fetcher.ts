@@ -14,5 +14,5 @@ export default async function fetcher<T>(
   const res = await fetch(url, {
     headers: fetchHeaders,
   });
-  return await res.json();
+  return res.json();
 }
