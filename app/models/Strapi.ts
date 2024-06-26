@@ -1,5 +1,3 @@
-import type { Schema, Attribute } from '@strapi/strapi';
-
 export namespace StrapiModels {
   export interface StrapiResponse<T> {
     data: {
@@ -35,22 +33,22 @@ export namespace StrapiModels {
 
   export interface HeaderAttributes {
     logo: LogoAttributes;
-    navigation: Attribute.DynamicZone<['navigation.menu']>;
-    createdAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<
-      'api::header.header',
-      'oneToOne',
-      'admin::user'
-    > &
-    Attribute.Private;
-    updatedBy: Attribute.Relation<
-      'api::header.header',
-      'oneToOne',
-      'admin::user'
-    > &
-    Attribute.Private;
+    // navigation: Attribute.DynamicZone<['navigation.menu']>;
+    // createdAt: Attribute.DateTime;
+    // updatedAt: Attribute.DateTime;
+    // publishedAt: Attribute.DateTime;
+    // createdBy: Attribute.Relation<
+    //   'api::header.header',
+    //   'oneToOne',
+    //   'admin::user'
+    // > &
+    // Attribute.Private;
+    // updatedBy: Attribute.Relation<
+    //   'api::header.header',
+    //   'oneToOne',
+    //   'admin::user'
+    // > &
+    // Attribute.Private;
   };
 }
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useNavigationData } from "hooks/StrapiAPI";
+import { useNavigationData } from "../../hooks/StrapiAPI";
 import Translate from "./Translate";
 import styles from "./Navigation.module.scss";
 
@@ -16,13 +16,16 @@ export const Navigation = ({
   }
 
   if (isLoading) {
+    // TODO
   }
 
   return (
     <nav className={styles.siteNav}>
       <div className={styles.primaryRow}>
         <div className={styles.navLeft}>
-          <SiteLogo src={data?.logo.url} />
+          <Link className={`${styles.navLogo}`} to="/">
+            {data?.logo.url}
+          </Link>
         </div>
 
         <SiteLinks />
@@ -38,13 +41,6 @@ export const Navigation = ({
     </nav>
   );
 };
-
-const SiteLogo = () => (
-  <Link className={`${styles.navLogo}`} to="/">
-    {/* TODO */}
-    [SITE LOGO HERE]
-  </Link>
-);
 
 const SiteLinks = () => {
   return (

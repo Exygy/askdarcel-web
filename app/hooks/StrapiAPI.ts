@@ -1,3 +1,10 @@
+// NOTE @rosschapman: Developers may be tempted to auto-generate types as described in the strapi docs but the
+// output is not easily consumed by a client application in its raw form. For example, string fields from
+// the recommended module `@strapi/strapi` are typed as `Attribute.String` but this type isn't compatible with
+// `string` 🤦. Strapi offers this cumbersome approach for consideration, but also caveats this is not an official
+// solution: https://strapi.io/blog/improve-your-frontend-experience-with-strapi-types-and-type-script. Although I
+// don't trust this in view of the above example.
+
 import useSWR from "swr";
 import fetcher from "utils/fetcher";
 import { StrapiModels } from "models/Strapi";

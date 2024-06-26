@@ -5,6 +5,7 @@ import Our415Logo from "assets/img/our415-white.png";
 import SFSeal from "assets/img/sf-seal-white.png";
 import DCYFLogo from "assets/img/dcyf-white.png";
 // import { DynamicLink } from "models/Strapi";
+import { StrapiModels } from "models/Strapi";
 import { FooterColumn } from "./FooterColumn";
 import { useFooterData } from "../../../hooks/StrapiAPI";
 
@@ -51,7 +52,7 @@ export const Footer = () => {
 
           <div className="site-footer__links">
             {!error &&
-              data?.links.map((item: DynamicLink) => (
+              data?.links.map((item: StrapiModels.DynamicLink) => (
                 <FooterColumn key={item.id} column={item} />
               ))}
           </div>
