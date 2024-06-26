@@ -28,7 +28,20 @@ export const eligibilitiesMapping = {
   Veterans: ["Veterans"],
 };
 
-// Hardcoded catgories in search page sidebar
+// Hardcoded catgories in search page sidebar (Can add multiple categories as array)
+/* i.e. "Arts, Culture & Identity": [
+  "Arts and Creative Expression",
+  "Culinary Arts",
+  "Culture & Identity",
+  "Dance",
+  "Digital Media Production",
+  "Disability Support",
+  "Justice Involvement",
+  "LGBTQ+ Support",
+  "Summer Programs"
+]
+*/
+
 export const categoriesMapping = {
   "Basic Needs & Shelter": ["Basic Needs & Shelter"],
   Employment: ["Employment"],
