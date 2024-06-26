@@ -9,8 +9,7 @@ interface SWRHookResult<T> {
   isLoading: boolean;
 }
 
-// eslint-disable-next-line react-hooks/rules-of-hooks
-function createStrapiHook<T>(path: string): SWRHookResult<T> {
+function useStrapiHook<T>(path: string): SWRHookResult<T> {
   const dataFetcher = () =>
     fetcher<StrapiResponse<T>>(`${config.STRAPI_API_URL}/api/${path}`, {
       Authorization: `Bearer ${config.STRAPI_API_TOKEN}`,
@@ -29,5 +28,5 @@ function createStrapiHook<T>(path: string): SWRHookResult<T> {
 }
 
 export function useFooterData() {
-  return createStrapiHook<Footer>("footer?populate[links][populate]=*");
+  return useStrapiHook<Footer>("footer?populate[links][populate]=*");
 }
