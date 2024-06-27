@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { StrapiModels } from "../../../models/Strapi";
+import { StrapiModel } from "../../../models/Strapi";
 
-export const FooterLink = ({ link }: { link: StrapiModels.Link }) => {
+export const FooterLink = ({ link }: { link: StrapiModel.Link }) => {
   const isInternalLink = (url: string): boolean => {
     return url.startsWith("/") || url.startsWith(window.location.origin);
   };

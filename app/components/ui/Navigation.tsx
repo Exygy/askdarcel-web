@@ -1,10 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import {
+  StrapiModel,
   extractLogoFromNavigationResponse,
   extractNavigationMenusFromNavigationResponse,
-} from "components/utils/Strapi";
-import { StrapiModels } from "models/Strapi";
+} from "models/Strapi";
 import Translate from "components/ui/Translate";
 import { useNavigationData } from "../../hooks/StrapiAPI";
 import styles from "./Navigation.module.scss";
@@ -42,7 +42,7 @@ export const Navigation = ({
           {menuData?.map((item) => (
             <>
               <span>{item.title}</span>
-              {item.link.map((linkItem: StrapiModels.Link) => (
+              {item.link.map((linkItem: StrapiModel.Link) => (
                 <Link to={linkItem.url}>{linkItem.text}</Link>
               ))}
             </>

@@ -1,11 +1,11 @@
 import React from "react";
-import { StrapiModels } from "models/Strapi";
+import { StrapiModel } from "models/Strapi";
 import { FooterLink } from "./FooterLink";
 
 export const FooterColumn = ({
   column,
 }: {
-  column: StrapiModels.DynamicLink;
+  column: StrapiModel.DynamicLink;
 }) => {
   return (
     <figure>
