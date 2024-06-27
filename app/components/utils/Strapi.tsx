@@ -1,15 +1,16 @@
 import { StrapiModels } from "models/Strapi";
 
-export function extractNavigationMenus(
-  rootData: StrapiModels.HeaderAttributes | null
+export function extractNavigationMenusFromNavigationResponse(
+  navigationResponse: StrapiModels.HeaderAttributes | null
 ): Array<Omit<StrapiModels.NavigationMenu, "__component">> | null {
   return (
-    rootData && rootData.navigation.map(({ __component, ...rest }) => rest)
+    navigationResponse &&
+    navigationResponse.navigation.map(({ __component, ...rest }) => rest)
   );
 }
 
-export function extractLogo(
-  rootData: StrapiModels.HeaderAttributes | null
+export function extractLogoFromNavigationResponse(
+  navigationResponse: StrapiModels.HeaderAttributes | null
 ): StrapiModels.LogoAttributes | null {
-  return rootData && rootData.logo.data.attributes;
+  return navigationResponse && navigationResponse.logo.data.attributes;
 }

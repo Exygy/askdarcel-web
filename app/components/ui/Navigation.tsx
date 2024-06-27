@@ -1,6 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { extractLogo, extractNavigationMenus } from "components/utils/Strapi";
+import {
+  extractLogoFromNavigationResponse,
+  extractNavigationMenusFromNavigationResponse,
+} from "components/utils/Strapi";
 import { StrapiModels } from "models/Strapi";
 import Translate from "components/ui/Translate";
 import { useNavigationData } from "../../hooks/StrapiAPI";
@@ -11,14 +14,17 @@ export const Navigation = ({
 }: {
   toggleHamburgerMenu: () => void;
 }) => {
-  const { data, error, isLoading } = useNavigationData();
-  const logoData = extractLogo(data);
-  const menuData = extractNavigationMenus(data);
+  const { data: navigationResponse, error, isLoading } = useNavigationData();
+  const logoData = extractLogoFromNavigationResponse(navigationResponse);
+  const menuData =
+    extractNavigationMenusFromNavigationResponse(navigationResponse);
 
+  // TODO
   if (error) {
     return <span>ERROR</span>;
   }
 
+  // TODO
   if (isLoading) {
     return <span>is loading...</span>;
   }
