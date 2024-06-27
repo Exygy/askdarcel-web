@@ -213,6 +213,7 @@ const SearchResult = ({
                   trigger="mouseenter"
                   delay={100}
                   animation="none"
+                  arrow
                 >
                   <span className={styles.searchResultSubcatTooltip}>
                     +{hit.categories.length - 1}
