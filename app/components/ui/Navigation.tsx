@@ -1,7 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { extractLogo, extractNavigationMenus } from "components/utils/Strapi";
+import { StrapiModels } from "models/Strapi";
+import Translate from "components/ui/Translate";
 import { useNavigationData } from "../../hooks/StrapiAPI";
-import Translate from "./Translate";
 import styles from "./Navigation.module.scss";
 
 export const Navigation = ({
@@ -10,13 +12,15 @@ export const Navigation = ({
   toggleHamburgerMenu: () => void;
 }) => {
   const { data, error, isLoading } = useNavigationData();
+  const logoData = extractLogo(data);
+  const menuData = extractNavigationMenus(data);
 
   if (error) {
-    // TODO
+    return "ERROR";
   }
 
   if (isLoading) {
-    // TODO
+    return "is loading...";
   }
 
   return (
@@ -24,11 +28,21 @@ export const Navigation = ({
       <div className={styles.primaryRow}>
         <div className={styles.navLeft}>
           <Link className={`${styles.navLogo}`} to="/">
-            {data?.logo.url}
+            <img src={logoData?.url} alt={logoData?.alternativeText} />
           </Link>
         </div>
 
-        <SiteLinks />
+        <ul className={styles.navRight}>
+          {menuData?.map((item) => (
+            <>
+              <span>{item.title}</span>
+              {item.link.map((linkItem: StrapiModels.Link) => (
+                <Link to={linkItem.url}>{linkItem.text}</Link>
+              ))}
+            </>
+          ))}
+          <Translate />
+        </ul>
         <div className={styles.mobileNavigation}>
           <button
             type="button"
@@ -39,14 +53,6 @@ export const Navigation = ({
         </div>
       </div>
     </nav>
-  );
-};
-
-const SiteLinks = () => {
-  return (
-    <ul className={styles.navRight}>
-      <Translate />
-    </ul>
   );
 };
 

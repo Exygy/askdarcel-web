@@ -32,8 +32,12 @@ export namespace StrapiModels {
   }
 
   export interface HeaderAttributes {
-    logo: LogoAttributes;
-    // navigation: Attribute.DynamicZone<['navigation.menu']>;
+    logo: {
+      data: {
+        attributes: LogoAttributes;
+      };
+    };
+    navigation: NavigationMenu[];
     // createdAt: Attribute.DateTime;
     // updatedAt: Attribute.DateTime;
     // publishedAt: Attribute.DateTime;
@@ -50,26 +54,35 @@ export namespace StrapiModels {
     // > &
     // Attribute.Private;
   };
+
+  export interface LogoAttributes {
+    name: string;
+    alternativeText: string;
+    caption: string;
+    width: number;
+    height: number;
+    hash: string;
+    ext: string;
+    mime: string;
+    size: number;
+    url: string;
+    previewUrl: string;
+    provider: string;
+    createdAt: string;
+    updatedAt: string;
+
+    // TODO uknown types
+    // provider_metadata: null;
+    // formats: null;
+  }
+
+  export interface NavigationMenu {
+    id: number;
+    // The plurality mismatch here is a quirk of strapi's serialization of repeatable nested components
+    link: Link[];
+    __component: "navigation.menu";
+    title: string;
+  }
 }
 
 
-interface LogoAttributes {
-  name: string;
-  alternativeText: string;
-  caption: string;
-  width: number;
-  height: number;
-  hash: string;
-  ext: string;
-  mime: string;
-  size: number;
-  url: string;
-  previewUrl: string;
-  provider: string;
-  createdAt: string;
-  updatedAt: string;
-
-  // TODO uknown types
-  // provider_metadata: null;
-  // formats: null;
-}
