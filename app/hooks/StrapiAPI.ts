@@ -104,9 +104,9 @@ export namespace StrapiApi {
 
   export interface NavigationMenuResponse {
     id: number;
-    // The plurality mismatch here is a quirk of strapi's serialization of repeatable nested components
     __component: "navigation.menu";
-    link: Link[];
+    // The plurality mismatch here is a quirk of strapi's serialization of repeatable nested components
+    link: LinkResponse[];
     title: string;
   }
 }
