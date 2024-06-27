@@ -7,6 +7,7 @@ import { BackgroundColorVariant } from "models";
 import { client } from "../../../sanity";
 import { OppEventCard } from "../Cards/OppEventCard";
 import styles from "./OppEventCardSection.module.scss";
+import { Loader } from "../Loader";
 
 export interface EventData {
   slug: Slug;
@@ -49,7 +50,7 @@ export const OppEventCardSection = (props: OppEventCardSectionProps) => {
   const builder = imageUrlBuilder(client);
 
   if (!sectionData) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
 
   const cardData = sectionData.opportunityCards || sectionData.eventCards;

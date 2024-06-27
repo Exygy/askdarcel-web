@@ -3,6 +3,7 @@ import React from "react";
 import { BackgroundColorVariant } from "models";
 import { CategoryCard } from "../Cards/CategoryCard";
 import styles from "./CategorySection.module.scss";
+import { Loader } from "../Loader";
 
 interface Category {
   icon: {
