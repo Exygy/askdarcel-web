@@ -3,10 +3,7 @@ import { SanityImageSource } from "@sanity/image-url/lib/types/types.d";
 import * as Sentry from "@sentry/browser";
 import { Footer } from "components/ui";
 import Hero from "components/ui/Hero/Hero";
-import {
-  CategorySection,
-  FeaturedCategoriesData,
-} from "components/ui/Section/CategorySection";
+import { CategorySection } from "components/ui/Section/CategorySection";
 import {
   OppEventCardData,
   OppEventCardSection,
@@ -37,7 +34,6 @@ export interface HeroData {
 
 interface HomePageData {
   heroSection: HeroData;
-  categoriesSection: FeaturedCategoriesData;
   opportunitySection: OppEventCardData;
   eventSection: OppEventCardData;
   /* TODO: update field in Sanity schema
@@ -55,7 +51,6 @@ export const HomePage = () => {
     const fetchHomePageData = async () => {
       const query = `*[_type == "homePage" && name == "Home Page"][0]{
         'heroSection': *[_type == "hero" && name == "Home Hero"][0],
-        categoriesSection {...,'featuredCategoriesSection': featuredCategoriesSection[]->},
         opportunitySection {...,'opportunityCards': opportunityCards[]->},
         eventSection {...,'eventCards': eventCards[]->},
         'twoColumnContentSections': *[_type == 'contentPageType' && name == 'Home']{
@@ -79,7 +74,6 @@ export const HomePage = () => {
   }
 
   const {
-    categoriesSection,
     opportunitySection,
     eventSection,
     heroSection,
@@ -97,15 +91,7 @@ export const HomePage = () => {
         description={heroSection.description}
         buttons={heroSection.buttons}
       />
-      <CategorySection sectionData={categoriesSection} />
-
-      <HomePageSection title="X" description="X" backgroundColor="secondary">
-        <CategoryCard
-          label={coreCategories[0].name}
-          slug={coreCategories[0].categorySlug}
-          icon={{ name: `fa-utensils`, provider: "fa" }}
-        />
-      </HomePageSection>
+      <CategorySection />
       <OppEventCardSection
         sectionType="opportunity"
         sectionData={opportunitySection}
