@@ -6,6 +6,7 @@ import {
   TwoColumnContent,
   TwoColumnContentSection,
 } from "../../components/ui/TwoColumnContentSection/TwoColumnContentSection";
+import { Loader } from "components/ui";
 
 interface PageState {
   pageInitialized: boolean;
@@ -39,7 +40,7 @@ export const AboutPage = () => {
   }, []);
 
   if (!pageData.pageInitialized) {
-    return <>loading...</>;
+    return <Loader />;
   }
 
   return (

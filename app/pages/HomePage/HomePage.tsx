@@ -17,6 +17,7 @@ import {
 } from "components/ui/TwoColumnContentSection/TwoColumnContentSection";
 import React, { useEffect, useState } from "react";
 import { client } from "../../sanity";
+import { Loader } from "components/ui";
 
 const builder = imageUrlBuilder(client);
 
@@ -73,7 +74,7 @@ export const HomePage = () => {
   }, []);
 
   if (homePageData === null) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
 
   const {
