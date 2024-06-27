@@ -179,15 +179,27 @@ const SearchResult = ({
       <div className={styles.searchResultContentContainer}>
         <div>
           <div className={styles.titleContainer}>
-            <h2 className={styles.title}>
-              {index}.{" "}
-              <Link
-                to={{ pathname: `/${basePath}/${hit.id}` }}
-                className={`notranslate ${styles.titleLink}`}
-              >
-                {hit.name}
-              </Link>
-            </h2>
+            <div>
+              <h2 className={styles.title}>
+                {index}.{" "}
+                <Link
+                  to={{ pathname: `/${basePath}/${hit.id}` }}
+                  className={`notranslate ${styles.titleLink}`}
+                >
+                  {hit.name}
+                </Link>
+              </h2>
+              {hit.type === "service" && (
+                <div className={styles.serviceOf}>
+                  <Link
+                    to={`/organizations/${hit.resource_id}`}
+                    className={`notranslate ${styles.serviceOfLink}`}
+                  >
+                    {hit.service_of}
+                  </Link>
+                </div>
+              )}
+            </div>
             <div className={styles.searchResultSubcatContainer}>
               {hit.categories.length > 0 && (
                 <span className={styles.searchResultSubcat}>
@@ -210,16 +222,6 @@ const SearchResult = ({
               )}
             </div>
           </div>
-          {hit.type === "service" && (
-            <div className={styles.serviceOf}>
-              <Link
-                to={`/organizations/${hit.resource_id}`}
-                className={`notranslate ${styles.serviceOfLink}`}
-              >
-                {hit.service_of}
-              </Link>
-            </div>
-          )}
         </div>
         <div className={styles.searchResultContent}>
           <div className={styles.searchText}>

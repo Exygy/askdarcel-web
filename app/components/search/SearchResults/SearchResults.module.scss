@@ -102,11 +102,59 @@
     border: none;
     border-top: 1px solid $border-gray;
     flex-direction: column;
+    width: 100vw;
   }
 }
 
 .searchResultContentContainer {
   width: 100%;
+  max-width: 584px;
+  @media screen and (max-width: $break-tablet-s) {
+    max-width: 100vw;
+  }
+}
+
+.title {
+  font-weight: 600;
+  font-size: 20px;
+  font-family: "Montserrat";
+
+  @media screen and (max-width: $break-tablet-s) {
+    font-size: 18px;
+  }
+}
+
+.titleContainer {
+  display: flex;
+  justify-content: space-between;
+
+  @media screen and (max-width: $break-tablet-s) {
+    display: block;
+  }
+}
+
+.serviceOf {
+  font-size: 14px;
+  line-height: 125%;
+}
+
+.titleLink,
+.serviceOfLink {
+  color: $text-link;
+
+  &:hover {
+    color: $text-link-hover;
+  }
+}
+
+.searchResultSubcatContainer {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--general-spacing-xxs, 4px);
+
+  @media screen and (max-width: $break-tablet-s) {
+    margin-top: $general-spacing-s;
+  }
 }
 
 .searchResultSubcat,
@@ -125,55 +173,6 @@
 
 .searchResultSubcatTooltip {
   cursor: pointer;
-}
-
-.searchResultSubcatContainer {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--general-spacing-xxs, 4px);
-}
-
-.title {
-  font-weight: 600;
-  font-size: 20px;
-  font-family: "Montserrat";
-
-  @media screen and (max-width: $break-tablet-s) {
-    font-size: 18px;
-  }
-}
-
-.titleContainer {
-  // width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.serviceOf {
-  font-size: 14px;
-  line-height: 125%;
-}
-
-.titleLink,
-.serviceOfLink {
-  color: $text-link;
-
-  &:hover {
-    color: $text-link-hover;
-  }
-}
-
-.searchResultContent {
-  display: flex;
-  gap: 25px;
-  justify-items: stretch;
-
-  @media screen and (max-width: $break-desktop) {
-    gap: 32px;
-    grid-template-columns: none;
-    justify-items: start;
-  }
 }
 
 .address {
