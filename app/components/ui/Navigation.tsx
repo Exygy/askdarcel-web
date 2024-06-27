@@ -37,9 +37,9 @@ const SiteLogo = () => (
 
 const SiteLinks = () => {
   return (
-    <ul className={styles.navRight}>
+    <div className={styles.navRight}>
       <Translate />
-    </ul>
+    </div>
   );
 };
 
