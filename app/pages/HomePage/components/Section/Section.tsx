@@ -1,7 +1,7 @@
 import { Button } from "components/ui/inline/Button/Button";
 import React from "react";
-import styles from "./Section.module.scss";
 import { BackgroundColorVariant } from "models";
+import styles from "./Section.module.scss";
 
 export interface Slug {
   current: string;

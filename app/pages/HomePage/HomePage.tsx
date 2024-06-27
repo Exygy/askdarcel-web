@@ -14,8 +14,6 @@ import {
 } from "components/ui/TwoColumnContentSection/TwoColumnContentSection";
 import React, { useEffect, useState } from "react";
 import { client } from "../../sanity";
-import { CategoryCard } from "components/ui/Cards/CategoryCard";
-import { HomePageSection } from "./components/Section";
 
 const builder = imageUrlBuilder(client);
 

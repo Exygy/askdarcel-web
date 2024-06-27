@@ -1,8 +1,8 @@
 import { HomePageSection } from "pages/HomePage/components/Section";
 import React from "react";
+import { BackgroundColorVariant } from "models";
 import { CategoryCard } from "../Cards/CategoryCard";
 import styles from "./CategorySection.module.scss";
-import { BackgroundColorVariant } from "models";
 
 interface Category {
   icon: {
@@ -30,7 +30,7 @@ interface CategorySectionProps {
   // sectionData: FeaturedCategoriesData;
 }
 
-export const CategorySection = (props: CategorySectionProps) => {
+export const CategorySection = () => {
   // const { sectionData } = props;
 
   // if (!sectionData) {
