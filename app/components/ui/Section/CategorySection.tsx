@@ -26,10 +26,6 @@ export interface FeaturedCategoriesData {
   featuredCategoriesSection: FeaturedCategoriesSection[];
 }
 
-interface CategorySectionProps {
-  // sectionData: FeaturedCategoriesData;
-}
-
 export const CategorySection = () => {
   // const { sectionData } = props;
 
