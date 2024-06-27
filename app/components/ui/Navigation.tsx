@@ -16,11 +16,11 @@ export const Navigation = ({
   const menuData = extractNavigationMenus(data);
 
   if (error) {
-    return "ERROR";
+    return <span>ERROR</span>;
   }
 
   if (isLoading) {
-    return "is loading...";
+    return <span>is loading...</span>;
   }
 
   return (
