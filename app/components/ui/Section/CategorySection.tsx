@@ -46,7 +46,7 @@ export const CategorySection = () => {
     >
       <div className={styles.categorySection}>
         <div className={styles.categoryCards}>
-          {hardcodeCategories.map((category) => {
+          {topLevelCategories.map((category) => {
             return (
               <CategoryCard
                 key={category.name}
@@ -68,7 +68,8 @@ export const CategorySection = () => {
   );
 };
 
-export const hardcodeCategories = [
+// Hardcoded until CMS is running again
+export const topLevelCategories = [
   {
     name: "Food",
     icon: {
