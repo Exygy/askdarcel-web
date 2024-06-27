@@ -1,25 +1,15 @@
 /**
-  NOTE @rosschapman: Developers may be tempted to auto-generate types as described in the strapi docs using cli commands
-  from the `@strapi/strapi` module, but I've noticed the output is funky for use in a client application in its raw form.
-  For example, string fields from the recommended module are typed as `Attribute.String` but this type isn't compatible
+  NOTE @rosschapman: Developers may be tempted to auto-generate response types as described in the strapi docs using cli
+  commands from the `@strapi/strapi` module, but I've noticed the output is funky for use in a client application in its
+  raw form. For example, string fields from the recommended module are typed as `Attribute.String` but this type isn't compatible
   with `string` 🤦. Strapi offers this cumbersome approach to sync types, but also caveats this is not an official
-  solution: https://strapi.io/blog/improve-your-frontend-experience-with-strapi-types-and-type-script. Even so, I don't
-  trust this in view of the above example.
+  solution: https://strapi.io/blog/improve-your-frontend-experience-with-strapi-types-and-type-script. Even so, I still
+  don't trust the generated types in view of the above example.
 */
 
 import useSWR from "swr";
 import fetcher from "utils/fetcher";
 import config from "../config";
-
-export interface StrapiResponse<T> {
-  data: {
-    id: number;
-    attributes: T;
-    meta: {
-      [key: string]: string;
-    };
-  } | null;
-}
 
 interface SWRHookResult<T> {
   data: T | null;
@@ -28,10 +18,10 @@ interface SWRHookResult<T> {
 }
 function useStrapiHook<T>(path: string): SWRHookResult<T> {
   const dataFetcher = () =>
-    fetcher<StrapiResponse<T>>(`${config.STRAPI_API_URL}/api/${path}`, {
+    fetcher<StrapiApi.BaseResponse<T>>(`${config.STRAPI_API_URL}/api/${path}`, {
       Authorization: `Bearer ${config.STRAPI_API_TOKEN}`,
     });
-  const { data, error, isLoading } = useSWR<StrapiResponse<T>>(
+  const { data, error, isLoading } = useSWR<StrapiApi.BaseResponse<T>>(
     `/api/${path}`,
     dataFetcher
   );
@@ -43,46 +33,55 @@ function useStrapiHook<T>(path: string): SWRHookResult<T> {
 }
 
 export function useFooterData() {
-  return useStrapiHook<StrapiResponses.Footer>("footer?populate[links][populate]=*");
+  return useStrapiHook<StrapiApi.FooterResponse>("footer?populate[links][populate]=*");
 }
 
 export function useNavigationData() {
-  return useStrapiHook<StrapiResponses.Header>("header?populate[logo]=*&populate[navigation][populate]=*");
+  return useStrapiHook<StrapiApi.HeaderResponse>("header?populate[logo]=*&populate[navigation][populate]=*");
 }
 
-export namespace StrapiResponses {
-  export interface Link {
+export namespace StrapiApi {
+  export interface BaseResponse<T> {
+    data: {
+      id: number;
+      attributes: T;
+      meta: {
+        [key: string]: string;
+      };
+    } | null;
+  }
+  export interface LinkResponse {
     id: number;
     url: string;
     text: string;
   }
 
-  export interface DynamicLink {
+  export interface DynamicLinkResponse {
     id: number;
     // __component is a key used by Strapi
     // that may not have practical purposes for the frontend
     __component: string;
     title: string;
-    link: Link[];
+    link: LinkResponse[];
   }
 
-  export interface Footer {
+  export interface FooterResponse {
     address: string;
     email_address: string;
     phone_number: string;
-    links: DynamicLink[];
+    links: DynamicLinkResponse[];
   }
 
-  export interface Header {
+  export interface HeaderResponse {
     logo: {
       data: {
-        attributes: Logo;
+        attributes: LogoResponse;
       };
     };
-    navigation: NavigationMenu[];
+    navigation: NavigationMenuResponse[];
   };
 
-  export interface Logo {
+  export interface LogoResponse {
     name: string;
     alternativeText: string;
     caption: string;
@@ -103,9 +102,10 @@ export namespace StrapiResponses {
     // formats: null;
   }
 
-  export interface NavigationMenu {
+  export interface NavigationMenuResponse {
     id: number;
     // The plurality mismatch here is a quirk of strapi's serialization of repeatable nested components
+    __component: "navigation.menu";
     link: Link[];
     title: string;
   }
