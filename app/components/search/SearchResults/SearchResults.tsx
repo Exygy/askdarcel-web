@@ -12,10 +12,10 @@ import { removeAsterisksAndHashes } from "utils/strings";
 import ResultsPagination from "components/search/Pagination/ResultsPagination";
 // import { Texting } from "components/Texting";
 // import { TextListing } from "components/Texting/Texting";
+import { Tooltip } from "react-tippy";
 import { SearchHit, transformHits } from "../../../models/SearchHits";
 import styles from "./SearchResults.module.scss";
 import ClearSearchButton from "../Refinements/ClearSearchButton";
-import { Tooltip } from "react-tippy";
 
 // NOTE: We will re-implement the texting feature so leaving these comments in the project until then
 
@@ -211,9 +211,8 @@ const SearchResult = ({
                   title={hit.categories.slice(1).join(", ")}
                   position="top"
                   trigger="mouseenter"
-                  arrow={true}
                   delay={100}
-                  animation="shift"
+                  animation="none"
                 >
                   <span className={styles.searchResultSubcatTooltip}>
                     +{hit.categories.length - 1}
