@@ -6,6 +6,7 @@ import React from "react";
 import { client } from "../../../sanity";
 import { OppEventCard } from "../Cards/OppEventCard";
 import styles from "./OppEventCardSection.module.scss";
+import { BackgroundColorVariant } from "models";
 
 export interface EventData {
   slug: Slug;
@@ -28,7 +29,7 @@ export interface EventData {
 export interface OppEventCardData {
   header: string;
   subheader?: string;
-  backgroundColor: string;
+  backgroundColor: BackgroundColorVariant;
   link: {
     label: string;
     slug: Slug;

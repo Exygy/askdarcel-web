@@ -17,6 +17,8 @@ import {
 } from "components/ui/TwoColumnContentSection/TwoColumnContentSection";
 import React, { useEffect, useState } from "react";
 import { client } from "../../sanity";
+import { CategoryCard } from "components/ui/Cards/CategoryCard";
+import { HomePageSection } from "./components/Section";
 
 const builder = imageUrlBuilder(client);
 
@@ -96,12 +98,21 @@ export const HomePage = () => {
         buttons={heroSection.buttons}
       />
       <CategorySection sectionData={categoriesSection} />
+
+      <HomePageSection title="X" description="X" backgroundColor="secondary">
+        <CategoryCard
+          label={coreCategories[0].name}
+          slug={coreCategories[0].categorySlug}
+          icon={{ name: `fa-utensils`, provider: "fa" }}
+        />
+      </HomePageSection>
       <OppEventCardSection
         sectionType="opportunity"
         sectionData={opportunitySection}
       />
       <OppEventCardSection sectionType="event" sectionData={eventSection} />
       <TwoColumnContentSection {...twoColumnContentData} />
+
       {/* Newsletter Component */}
       <Footer />
     </>

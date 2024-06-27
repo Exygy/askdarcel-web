@@ -2,6 +2,7 @@ import { HomePageSection } from "pages/HomePage/components/Section";
 import React from "react";
 import { CategoryCard } from "../Cards/CategoryCard";
 import styles from "./CategorySection.module.scss";
+import { BackgroundColorVariant } from "models";
 
 interface Category {
   icon: {
@@ -21,7 +22,7 @@ interface FeaturedCategoriesSection {
 export interface FeaturedCategoriesData {
   header: string;
   subheader: string;
-  backgroundColor: string;
+  backgroundColor: BackgroundColorVariant;
   featuredCategoriesSection: FeaturedCategoriesSection[];
 }
 
