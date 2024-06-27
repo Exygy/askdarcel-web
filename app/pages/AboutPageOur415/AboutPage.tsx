@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Loader } from "components/ui";
 import { client } from "../../sanity";
 import { Masthead } from "../../components/ui/Masthead/Masthead";
 import { EmailSignup } from "../../components/EmailSignup/Emailsignup";
@@ -6,7 +7,6 @@ import {
   TwoColumnContent,
   TwoColumnContentSection,
 } from "../../components/ui/TwoColumnContentSection/TwoColumnContentSection";
-import { Loader } from "components/ui";
 
 interface PageState {
   pageInitialized: boolean;

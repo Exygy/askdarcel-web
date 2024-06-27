@@ -1,7 +1,7 @@
 import imageUrlBuilder from "@sanity/image-url";
 import { SanityImageSource } from "@sanity/image-url/lib/types/types.d";
 import * as Sentry from "@sentry/browser";
-import { Footer } from "components/ui";
+import { Footer, Loader } from "components/ui";
 import Hero from "components/ui/Hero/Hero";
 import {
   CategorySection,
@@ -17,7 +17,6 @@ import {
 } from "components/ui/TwoColumnContentSection/TwoColumnContentSection";
 import React, { useEffect, useState } from "react";
 import { client } from "../../sanity";
-import { Loader } from "components/ui";
 
 const builder = imageUrlBuilder(client);
 
