@@ -153,7 +153,11 @@ export const CustomDropdown: React.FC<DropdownProps> = ({
               id={category.categorySlug}
               tabIndex={0}
               onKeyDown={(event) =>
-                handleItemKeyDown(event, category.categorySlug, index + 1)
+                handleItemKeyDown(
+                  event,
+                  `/${category.categorySlug}/results`,
+                  index + 1
+                )
               }
             >
               {category.name}
