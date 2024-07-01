@@ -4,25 +4,15 @@
   width: 100vw;
   border-bottom: 1px solid $color-grey3;
   margin-bottom: $general-spacing-lg;
-  // @media screen and (max-width: $break-tablet-l) {
-  //   padding: 15px 30px;
-  // }
-  // @media screen and (max-width: $break-tablet-s) {
-  //   padding: 14px 14px 5px;
-  // }
 }
 
 .headerInner {
   display: flex;
   max-width: 1440px;
   margin: 0 auto;
-  padding: $general-spacing-md $spacing-0;
+  padding: $general-spacing-md;
   justify-content: space-between;
   align-items: center;
-
-  @media screen and (max-width: $break-tablet-s) {
-    padding: $general-spacing-md;
-  }
 }
 
 .title {

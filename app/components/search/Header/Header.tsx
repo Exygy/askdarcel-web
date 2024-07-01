@@ -31,16 +31,18 @@ export const Header = ({
     window.location.href = slug;
   };
 
+  const title = resultsTitle === "" ? "All categories" : resultsTitle;
+
   return (
     <div className={styles.header}>
       <div className={styles.headerInner}>
         <div>
-          <h1 className="sr-only">{resultsTitle}</h1>
+          <h1 className="sr-only">{title}</h1>
           <Dropdown
             categories={topLevelCategories}
             currentCategory={currentCategory}
             onCategoryChange={handleCategoryChange}
-            resultsTitle={resultsTitle}
+            resultsTitle={title}
           />
         </div>
         <Button
