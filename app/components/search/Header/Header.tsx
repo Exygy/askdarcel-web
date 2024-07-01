@@ -37,7 +37,9 @@ export const Header = ({
     <div className={styles.header}>
       <div className={styles.headerInner}>
         <div>
-          <h1 className="sr-only">{title}</h1>
+          <h1 className="sr-only">
+            {title === resultsTitle ?? "Search results"}
+          </h1>
           <Dropdown
             categories={topLevelCategories}
             currentCategory={currentCategory}
