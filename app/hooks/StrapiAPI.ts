@@ -116,7 +116,7 @@ export interface FormatsResponse {
     provider: string;
     createdAt: string;
     updatedAt: string;
-
+  formats: FormatsResponse
     // TODO uknown types
     // provider_metadata: null;
     // formats: null;
