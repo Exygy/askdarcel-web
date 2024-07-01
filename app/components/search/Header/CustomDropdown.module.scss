@@ -31,7 +31,8 @@
   cursor: pointer;
 }
 
-.dropdownMenu li:hover {
+.dropdownMenu li:hover,
+.dropdownMenu li:focus {
   background-color: #f1f1f1;
 }
 

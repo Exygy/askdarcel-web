@@ -34,7 +34,7 @@ export const Header = ({
   return (
     <div className={styles.header}>
       <div>
-        {/* h1 is in Dropdown */}
+        <h1 className="sr-only">{resultsTitle}</h1>
         <Dropdown
           categories={topLevelCategories}
           currentCategory={currentCategory}
