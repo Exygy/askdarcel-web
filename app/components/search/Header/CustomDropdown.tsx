@@ -13,6 +13,8 @@ interface DropdownProps {
   resultsTitle: string;
 }
 
+// NOTE: built quickly for demo
+
 export const CustomDropdown: React.FC<DropdownProps> = ({
   categories,
   currentCategory,
@@ -73,6 +75,38 @@ export const CustomDropdown: React.FC<DropdownProps> = ({
     };
   }, [dropdownRef]);
 
+  const handleItemKeyDown = (
+    event: React.KeyboardEvent,
+    slug: string,
+    index: number
+  ) => {
+    const menuItems = Array.from(menuRef.current?.querySelectorAll("li") || []);
+
+    switch (event.key) {
+      case "ArrowDown":
+        event.preventDefault();
+        const nextItem = menuItems[index + 1] || menuItems[0];
+        (nextItem as HTMLElement)?.focus();
+        break;
+      case "ArrowUp":
+        event.preventDefault();
+        const prevItem =
+          menuItems[index - 1] || menuItems[menuItems.length - 1];
+        (prevItem as HTMLElement)?.focus();
+        break;
+      case "Enter":
+      case " ":
+        event.preventDefault();
+        handleCategoryChange(slug);
+        break;
+      case "Tab":
+        setIsOpen(false);
+        break;
+      default:
+        break;
+    }
+  };
+
   return (
     <div className={styles.dropdown} ref={dropdownRef}>
       <button
@@ -96,31 +130,31 @@ export const CustomDropdown: React.FC<DropdownProps> = ({
           role="listbox"
           aria-activedescendant={currentCategory}
         >
-          {categories.map((category) => (
+          <li
+            onClick={() => handleCategoryChange("/search")}
+            className={currentCategory === "/search" ? styles.active : ""}
+            role="menuitem"
+            id="all-categories"
+            tabIndex={0}
+            onKeyDown={(event) => handleItemKeyDown(event, "/search", 0)}
+          >
+            All categories
+          </li>
+          {categories.map((category, index) => (
             <li
               key={category.categorySlug}
-              onClick={() => handleCategoryChange(category.categorySlug)}
+              onClick={() =>
+                handleCategoryChange(`/${category.categorySlug}/results`)
+              }
               className={
                 currentCategory === category.categorySlug ? styles.active : ""
               }
               role="option"
               id={category.categorySlug}
               tabIndex={0}
-              onKeyDown={(event) => {
-                if (event.key === "Enter" || event.key === " ") {
-                  handleCategoryChange(category.categorySlug);
-                }
-                if (event.key === "ArrowDown") {
-                  const nextItem = (event.target as HTMLElement)
-                    .nextElementSibling;
-                  (nextItem as HTMLElement)?.focus();
-                }
-                if (event.key === "ArrowUp") {
-                  const prevItem = (event.target as HTMLElement)
-                    .previousElementSibling;
-                  (prevItem as HTMLElement)?.focus();
-                }
-              }}
+              onKeyDown={(event) =>
+                handleItemKeyDown(event, category.categorySlug, index + 1)
+              }
             >
               {category.name}
             </li>

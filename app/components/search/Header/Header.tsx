@@ -26,9 +26,9 @@ export const Header = ({
   const [currentCategory, setCurrentCategory] =
     useState<string>("food-resources");
 
-  const handleCategoryChange = (newCategorySlug: string) => {
-    setCurrentCategory(newCategorySlug);
-    window.location.href = `/${newCategorySlug}/results`;
+  const handleCategoryChange = (slug: string) => {
+    setCurrentCategory(slug);
+    window.location.href = slug;
   };
 
   return (
