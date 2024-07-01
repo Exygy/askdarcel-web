@@ -81,6 +81,26 @@ export namespace StrapiApi {
     navigation: NavigationMenuResponse[];
   };
 
+  export interface ImageFormatResponse {
+    ext: string;
+    url: string;
+    hash: string;
+    mime: string;
+    name: string;
+    path?: string;
+    size: number;
+    width: number;
+    height: number;
+    sizeInBytes: number;
+  }
+
+  export interface FormatsResponse {
+    large: ImageFormatResponse;
+    medium: ImageFormatResponse;
+    small: ImageFormatResponse;
+    thumbnail: ImageFormatResponse;
+  }
+
   export interface LogoResponse {
     name: string;
     alternativeText: string;
@@ -96,10 +116,9 @@ export namespace StrapiApi {
     provider: string;
     createdAt: string;
     updatedAt: string;
-
+    formats: FormatsResponse;
     // TODO uknown types
     // provider_metadata: null;
-    // formats: null;
   }
 
   export interface NavigationMenuResponse {
