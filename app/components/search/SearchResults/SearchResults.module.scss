@@ -150,7 +150,7 @@
 .searchResultSubcatContainer {
   display: flex;
   align-items: flex-start;
-  gap: var(--general-spacing-xxs, 4px);
+  gap: $general-spacing-xxs;
 
   @media screen and (max-width: $break-tablet-s) {
     margin-top: $general-spacing-s;
@@ -159,12 +159,12 @@
 
 .searchResultSubcat,
 .searchResultSubcatTooltip {
-  border-radius: var(--rounded-full, 9999px);
-  background: var(--tailwind-gray-100, #f3f4f6);
+  border-radius: $rounded-full;
+  background: $gray-100;
   display: flex;
-  padding: var(--general-spacing-xxs, 4px) var(--general-spacing-xs, 8px);
+  padding: $general-spacing-xxs $general-spacing-xs;
   align-items: center;
-  gap: var(--1, 4px);
+  gap: $general-spacing-xxs;
   line-break: none;
   white-space: nowrap;
   font-size: 14px;
