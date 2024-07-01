@@ -40,8 +40,8 @@ export const Navigation = ({
         </div>
 
         <ul className={styles.navRight}>
-          {menus?.map((menu, idx) => (
-            <div className={styles.menuContainer}>
+          {menus?.map((menu) => (
+            <div className={styles.menuContainer} key={menu.id.toString()}>
               <button
                 type="button"
                 aria-haspopup="menu"
@@ -50,17 +50,18 @@ export const Navigation = ({
               >
                 {menu.title}{" "}
               </button>
-              {menu.link.map((linkItem: StrapiModel.Link, idx) => (
-                <ul
-                  className={`${styles.dropdown} ${
-                    dropdown ? styles.showDropdown : ""
-                  }`}
-                >
+
+              <ul
+                className={`${styles.dropdown} ${
+                  dropdown ? styles.showDropdown : ""
+                }`}
+              >
+                {menu.link.map((linkItem: StrapiModel.Link) => (
                   <li key={linkItem.id} className="menu-item">
                     <Link to={linkItem.url}>{linkItem.text}</Link>
                   </li>
-                </ul>
-              ))}
+                ))}
+              </ul>
             </div>
           ))}
           <Translate />
