@@ -1,10 +1,10 @@
 import useSWR from "swr";
 import fetcher from "utils/fetcher";
-import { type Footer, type StrapiResponse } from "models/Strapi";
+import { Homepage, StrapiDataResponse, type Footer, type StrapiResponse } from "models/Strapi";
 import config from "../config";
 
 interface SWRHookResult<T> {
-  data: T | null;
+  data: StrapiDataResponse<T>;
   error?: Error;
   isLoading: boolean;
 }
@@ -21,7 +21,7 @@ function useStrapiHook<T>(path: string): SWRHookResult<T> {
   );
 
   return {
-    data: data?.data ? data.data.attributes : null,
+    data: data?.data ? data.data : null,
     error,
     isLoading,
   };
@@ -29,4 +29,10 @@ function useStrapiHook<T>(path: string): SWRHookResult<T> {
 
 export function useFooterData() {
   return useStrapiHook<Footer>("footer?populate[links][populate]=*");
+}
+
+
+// TODO: Hero => hero, Date => date, Address => address
+export function useHomepageData() {
+  return useStrapiHook<Homepage>("home-page?populate[Hero][populate]=*&populate[category_section][populate]=*&populate[opportunity_section][populate]=*&populate[opportunities][populate][image][populate]=*&populate[opportunities][populate][address]=*&populate[opportunities][populate][links][populate]=*&populate[opportunities][populate][opportunity_categories]=*&populate[event_section][populate]=*&populate[events][populate][Date]=*&populate[events][populate][Address]=*&populate[events][populate][links]=*&populate[events][populate][image][populate]=*&populate[events][populate][event_categories]=*");
 }
