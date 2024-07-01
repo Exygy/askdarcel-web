@@ -48,7 +48,7 @@ export const Navigation = ({
                 aria-expanded={dropdown ? "true" : "false"}
                 onClick={() => setDropdown((prev) => !prev)}
               >
-                {menu.title}{" "}
+                {menu.title}
               </button>
 
               <ul
