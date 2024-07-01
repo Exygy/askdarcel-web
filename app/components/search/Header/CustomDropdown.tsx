@@ -85,14 +85,18 @@ export const CustomDropdown: React.FC<DropdownProps> = ({
     switch (event.key) {
       case "ArrowDown":
         event.preventDefault();
-        const nextItem = menuItems[index + 1] || menuItems[0];
-        (nextItem as HTMLElement)?.focus();
+        {
+          const nextItem = menuItems[index + 1] || menuItems[0];
+          (nextItem as HTMLElement)?.focus();
+        }
         break;
       case "ArrowUp":
         event.preventDefault();
-        const prevItem =
-          menuItems[index - 1] || menuItems[menuItems.length - 1];
-        (prevItem as HTMLElement)?.focus();
+        {
+          const prevItem =
+            menuItems[index - 1] || menuItems[menuItems.length - 1];
+          (prevItem as HTMLElement)?.focus();
+        }
         break;
       case "Enter":
       case " ":
@@ -111,6 +115,7 @@ export const CustomDropdown: React.FC<DropdownProps> = ({
     <div className={styles.dropdown} ref={dropdownRef}>
       <button
         ref={buttonRef}
+        type="button"
         className={styles.title}
         onClick={handleToggle}
         onKeyDown={handleKeyDown}
@@ -120,7 +125,7 @@ export const CustomDropdown: React.FC<DropdownProps> = ({
       >
         {resultsTitle}{" "}
         <span className={isOpen ? styles.arrowUp : styles.arrowDown}>
-          <i className={`fas fa-chevron-${isOpen ? "up" : "down"}`}></i>
+          <i className={`fas fa-chevron-${isOpen ? "up" : "down"}`} />
         </span>
       </button>
       {isOpen && (
@@ -129,11 +134,13 @@ export const CustomDropdown: React.FC<DropdownProps> = ({
           className={styles.dropdownMenu}
           role="listbox"
           aria-activedescendant={currentCategory}
+          tabIndex={-1}
         >
           <li
             onClick={() => handleCategoryChange("/search")}
             className={currentCategory === "/search" ? styles.active : ""}
-            role="menuitem"
+            role="option"
+            aria-selected={currentCategory === "/search"}
             id="all-categories"
             tabIndex={0}
             onKeyDown={(event) => handleItemKeyDown(event, "/search", 0)}
@@ -152,6 +159,7 @@ export const CustomDropdown: React.FC<DropdownProps> = ({
               role="option"
               id={category.categorySlug}
               tabIndex={0}
+              aria-selected={currentCategory === category.categorySlug}
               onKeyDown={(event) =>
                 handleItemKeyDown(
                   event,

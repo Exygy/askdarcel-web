@@ -18,7 +18,7 @@ export const Header = ({
   setExpandList,
 }: {
   resultsTitle: string;
-  translateResultsTitle?: boolean;
+  // translateResultsTitle?: boolean;
   expandList: boolean;
   setExpandList: (_expandList: boolean) => void;
 }) => {
