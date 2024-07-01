@@ -4,6 +4,8 @@ import { icon as assetIcon } from "assets";
 import { Button } from "components/ui/inline/Button/Button";
 import { QrCodeModal } from "components/ui/QrCodeModal/QrCodeModal";
 import whiteLabel from "utils/whitelabel";
+import { topLevelCategories } from "components/ui/Section/CategorySection";
+import { CustomDropdown as Dropdown } from "./CustomDropdown";
 
 import styles from "./Header.module.scss";
 
@@ -11,7 +13,7 @@ const { showHeaderQrCode, showPrintResultsBtn } = whiteLabel;
 
 export const Header = ({
   resultsTitle,
-  translateResultsTitle = true,
+  // translateResultsTitle = true,
   expandList,
   setExpandList,
 }: {
@@ -21,16 +23,25 @@ export const Header = ({
   setExpandList: (_expandList: boolean) => void;
 }) => {
   const [qrCodeModalOpen, setQrCodeModalOpen] = useState(false);
+  const [currentCategory, setCurrentCategory] =
+    useState<string>("food-resources");
+
+  const handleCategoryChange = (newCategorySlug: string) => {
+    setCurrentCategory(newCategorySlug);
+    window.location.href = `/${newCategorySlug}/results`;
+  };
 
   return (
     <div className={styles.header}>
-      <h1
-        className={`${styles.title} ${
-          translateResultsTitle ? "" : "notranslate"
-        }`}
-      >
-        {resultsTitle}
-      </h1>
+      <div>
+        {/* h1 is in Dropdown */}
+        <Dropdown
+          categories={topLevelCategories}
+          currentCategory={currentCategory}
+          onCategoryChange={handleCategoryChange}
+          resultsTitle={resultsTitle}
+        />
+      </div>
       <Button
         onClick={() => {
           setQrCodeModalOpen(true);
