@@ -1,7 +1,7 @@
-import { StrapiApi } from '../hooks/StrapiAPI';
+import { StrapiApi } from 'hooks/StrapiAPI';
 
 /**
-  Model interfaces are a subtype of Strapi api responses that only include properties needed by consuming components.
+  Model interfaces are a subtype of Strapi api responses that only include properties needed by consuming components
 */
 export namespace StrapiModel {
   export interface Link extends StrapiApi.LinkResponse { }
