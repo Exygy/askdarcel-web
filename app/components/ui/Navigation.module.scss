@@ -210,8 +210,13 @@
 
   // Is there a better way to ensure all children inherit this font-size?
   * {
-  font-size: 18px;
-  font-family: Montserrat;
+    font-size: 18px;
+    font-family: Montserrat;
+    font-weight: 600;
+
+    &:hover {
+      color: $color-brand-dark;
+    }
   }
 }
 
@@ -231,7 +236,6 @@
   display: flex;
   gap: 5px;
   align-items: center;
-  font-weight: 600;
 
   &[aria-expanded='true'] {
     color: $color-brand-dark;
