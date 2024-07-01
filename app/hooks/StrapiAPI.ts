@@ -11,16 +11,6 @@ import useSWR from "swr";
 import fetcher from "utils/fetcher";
 import config from "../config";
 
-export interface StrapiResponse<T> {
-  data: {
-    id: number;
-    attributes: T;
-    meta: {
-      [key: string]: string;
-    };
-  } | null;
-}
-
 interface SWRHookResult<T> {
   data: T | null;
   error?: Error;

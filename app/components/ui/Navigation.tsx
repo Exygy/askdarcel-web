@@ -1,12 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import Translate from "components/ui/Translate";
+import { useNavigationData } from "../../hooks/StrapiAPI";
 import {
   StrapiModel,
   extractLogoFromNavigationResponse,
   extractNavigationMenusFromNavigationResponse,
-} from "models/Strapi";
-import Translate from "components/ui/Translate";
-import { useNavigationData } from "../../hooks/StrapiAPI";
+} from "../../models/Strapi";
 import styles from "./Navigation.module.scss";
 
 export const Navigation = ({
@@ -15,8 +15,9 @@ export const Navigation = ({
   toggleHamburgerMenu: () => void;
 }) => {
   const { data: navigationResponse, error, isLoading } = useNavigationData();
+  const [dropdown, setDropdown] = useState(false);
   const logoData = extractLogoFromNavigationResponse(navigationResponse);
-  const menuData =
+  const menus =
     extractNavigationMenusFromNavigationResponse(navigationResponse);
 
   // TODO
@@ -39,13 +40,28 @@ export const Navigation = ({
         </div>
 
         <ul className={styles.navRight}>
-          {menuData?.map((item) => (
-            <>
-              <span>{item.title}</span>
-              {item.link.map((linkItem: StrapiModel.Link) => (
-                <Link to={linkItem.url}>{linkItem.text}</Link>
+          {menus?.map((menu, idx) => (
+            <div className={styles.menuContainer}>
+              <button
+                type="button"
+                aria-haspopup="menu"
+                aria-expanded={dropdown ? "true" : "false"}
+                onClick={() => setDropdown((prev) => !prev)}
+              >
+                {menu.title}{" "}
+              </button>
+              {menu.link.map((linkItem: StrapiModel.Link, idx) => (
+                <ul
+                  className={`${styles.dropdown} ${
+                    dropdown ? styles.showDropdown : ""
+                  }`}
+                >
+                  <li key={linkItem.id} className="menu-item">
+                    <Link to={linkItem.url}>{linkItem.text}</Link>
+                  </li>
+                </ul>
               ))}
-            </>
+            </div>
           ))}
           <Translate />
         </ul>
