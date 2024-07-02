@@ -15,6 +15,7 @@ import {
 } from "components/listing";
 import { Datatable, Footer, Loader } from "components/ui";
 import { removeAsterisksAndHashes } from "utils/strings";
+import { ListingInfoSection } from "components/ui/Cards/ListingInfoSection";
 import whiteLabel from "../../utils/whitelabel";
 import {
   fetchService,
@@ -26,7 +27,6 @@ import {
   Service,
 } from "../../models";
 import styles from "./ServiceListingPage.module.scss";
-import { ListingInfoSection } from "components/ui/Cards/ListingInfoSection";
 
 const { title: whiteLabelTitle, footerOptions: whiteLabelFooterOpts } =
   whiteLabel;

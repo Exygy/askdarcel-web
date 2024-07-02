@@ -1,6 +1,6 @@
 import React from "react";
-import styles from "./ListingInfoSection.module.scss";
 import classNames from "classnames";
+import styles from "./ListingInfoSection.module.scss";
 
 type ListingInfoSectionProps = {
   title: string;

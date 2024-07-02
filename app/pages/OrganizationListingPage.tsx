@@ -3,6 +3,8 @@ import ReactMarkdown from "react-markdown";
 import { useParams, Redirect, useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import qs from "qs";
+import { ListingInfoSection } from "components/ui/Cards/ListingInfoSection";
+import { removeAsterisksAndHashes } from "utils/strings";
 import {
   ActionBarMobile,
   ActionSidebar,
@@ -18,7 +20,6 @@ import {
   TableOfOpeningTimes,
   WebsiteRenderer,
 } from "../components/listing";
-import { ListingInfoSection } from "components/ui/Cards/ListingInfoSection";
 import { Footer, Loader } from "../components/ui";
 import whitelabel from "../utils/whitelabel";
 import {
@@ -28,7 +29,6 @@ import {
   Organization,
   OrganizationAction,
 } from "../models";
-import { removeAsterisksAndHashes } from "utils/strings";
 
 // Page at /organization/123
 export const OrganizationListingPage = () => {
