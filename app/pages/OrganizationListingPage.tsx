@@ -14,7 +14,7 @@ import {
   PhoneNumberRenderer,
   // RelativeOpeningTime,
   ResourceCategories,
-  ServiceList,
+  ServiceCard,
   TableOfOpeningTimes,
   WebsiteRenderer,
 } from "../components/listing";
@@ -27,6 +27,7 @@ import {
   Organization,
   OrganizationAction,
 } from "../models";
+import { removeAsterisksAndHashes } from "utils/strings";
 
 // Page at /organization/123
 export const OrganizationListingPage = () => {
@@ -122,7 +123,18 @@ export const OrganizationListingPage = () => {
               className="service--section"
               data-cy="org-services-section"
             >
-              <ServiceList services={org.services} />
+              {org.services.length > 0 &&
+                org.services.map((srv) => (
+                  <ServiceCard
+                    service={{
+                      ...srv,
+                      long_description: removeAsterisksAndHashes(
+                        srv.long_description
+                      ),
+                    }}
+                    key={srv.id}
+                  />
+                ))}
             </OrganizationSubheaderSection>
 
             {/* <Notes notes={org.notes} id="notes" /> */}
