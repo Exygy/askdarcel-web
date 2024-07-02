@@ -11,6 +11,8 @@ export const GoogleTranslate = ({
 }) => {
   const [, setCookie] = useCookies(["googtrans"]);
 
+  const rand = Math.random().toString(20).substring(2, 6);
+
   if (languages.length > 0) {
     // Google Translate determines translation source and target
     // with a "googtrans" cookie.
@@ -26,20 +28,20 @@ export const GoogleTranslate = ({
         <Helmet>
           <script type="text/javascript">
             {`
-              function googleTranslateElementInit() {
+              function googleTranslateElementInit_${rand}() {
                 new google.translate.TranslateElement({
                   includedLanguages: '${languages.join(",")}',
                   pageLanguage: 'en',
-                }, 'google_translate_element');
+                }, 'google_translate_element_${rand}');
               }
             `}
           </script>
           <script
             type="text/javascript"
-            src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+            src={`//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit_${rand}`}
           />
         </Helmet>
-        <div id="google_translate_element" />
+        <div id={`google_translate_element_${rand}`} />
       </li>
     );
   }

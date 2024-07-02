@@ -33,8 +33,8 @@ const burgerStyles = {
 // Until new nav is introduced, screen reader is reading hamburger links on desktop. This fixes that.
 
 const Navigation = () => {
-  const [hamburgerisOpen, setHamburgerisOpen] = useState(false);
-  const toggleHamburgerMenu = () => setHamburgerisOpen((prev) => !prev);
+  const [mobileNavIsOpen, setmobileNavIsOpen] = useState(false);
+  const toggleMobileNav = () => setmobileNavIsOpen((prev) => !prev);
   const [popUpMessage, setPopUpMessage] = useState<PopupMessageProp>({
     message: "",
     visible: false,
@@ -89,17 +89,19 @@ const Navigation = () => {
 
   return (
     <>
-      <Menu
-        isOpen={hamburgerisOpen}
-        onStateChange={() => toggleHamburgerMenu}
-        outerContainerId={outerContainerId}
-        pageWrapId={pageWrapId}
-        right
-        styles={burgerStyles}
-        width="275px"
-      >
-        {menus?.length && <NavigationMenu menus={menus} />}
-      </Menu>
+      {mobileNavIsOpen && (
+        <Menu
+          isOpen={mobileNavIsOpen}
+          onStateChange={() => toggleMobileNav}
+          outerContainerId={outerContainerId}
+          pageWrapId={pageWrapId}
+          right
+          styles={burgerStyles}
+          width="275px"
+        >
+          {mobileNavIsOpen && menus?.length && <NavigationMenu menus={menus} />}
+        </Menu>
+      )}
       <div id={pageWrapId}>
         <nav className={navigationStyles.siteNav}>
           <div className={navigationStyles.primaryRow}>
@@ -117,7 +119,7 @@ const Navigation = () => {
                 type="button"
                 aria-label="navigation menu"
                 className={navigationStyles.hamburgerButton}
-                onClick={toggleHamburgerMenu}
+                onClick={toggleMobileNav}
               />
             </div>
           </div>
