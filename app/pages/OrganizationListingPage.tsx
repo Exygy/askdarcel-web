@@ -1,27 +1,23 @@
 import React, { useState, useEffect, useMemo } from "react";
 import ReactMarkdown from "react-markdown";
 import { useParams, Redirect, useLocation } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
 import qs from "qs";
 import { ListingInfoSection } from "components/ui/Cards/ListingInfoSection";
 import { removeAsterisksAndHashes } from "utils/strings";
 import {
   ActionBarMobile,
-  ActionSidebar,
   AddressInfoRenderer,
   EmailRenderer,
   MapOfLocations,
-  MOHCDBadge,
-  // Notes,
+  NotesList,
   PhoneNumberRenderer,
-  // RelativeOpeningTime,
   ResourceCategories,
   ServiceCard,
   TableOfOpeningTimes,
   WebsiteRenderer,
 } from "../components/listing";
-import { Footer, Loader } from "../components/ui";
-import whitelabel from "../utils/whitelabel";
+import { Loader } from "../components/ui";
+
 import {
   fetchOrganization,
   getOrganizationActions,
@@ -108,26 +104,18 @@ export const OrganizationListingPage = () => {
           ))}
       </ListingInfoSection>
 
-      {/* <Notes notes={org.notes} id="notes" /> */}
-
       <ListingInfoSection title="Contact" data-cy="org-info-section">
-        <ul className="info">
-          <div className="info--column">
-            <ResourceCategories categories={org.categories} />
-            {(org.addresses || []).map((address) => (
-              <AddressInfoRenderer address={address} key={address.id} />
-            ))}
-            {org.phones.length > 0 && (
-              <PhoneNumberRenderer phones={org.phones} />
-            )}
-            {org.website && <WebsiteRenderer website={org.website} />}
-            {org.email && <EmailRenderer email={org.email} />}
-          </div>
-        </ul>
+        <ResourceCategories categories={org.categories} />
+        {(org.addresses || []).map((address) => (
+          <AddressInfoRenderer address={address} key={address.id} />
+        ))}
+        {org.phones.length > 0 && <PhoneNumberRenderer phones={org.phones} />}
+        {org.website && <WebsiteRenderer website={org.website} />}
+        {org.email && <EmailRenderer email={org.email} />}
       </ListingInfoSection>
 
       {orgLocations?.length > 0 && (
-        <ListingInfoSection title="Location" borderBottom={false}>
+        <ListingInfoSection title="Location">
           <MapOfLocations
             locations={orgLocations}
             locationRenderer={(loc: any) => (
@@ -136,6 +124,10 @@ export const OrganizationListingPage = () => {
           />
         </ListingInfoSection>
       )}
+
+      <ListingInfoSection title="Notes" borderBottom={false}>
+        <NotesList notes={org.notes} />
+      </ListingInfoSection>
     </ListingPageWrapper>
   );
 };
