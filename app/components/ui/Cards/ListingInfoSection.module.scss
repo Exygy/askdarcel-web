@@ -16,8 +16,12 @@
   h2 {
     font-size: 32px;
     font-weight: 700;
-    color: #333; // is this the right color?
+    color: $text-primary; // is this the right color?
     margin-bottom: $general-spacing-lg;
+
+    @include r_max($break-tablet-s) {
+      font-size: 26px;
+    }
   }
 
   &.borderBottom {
