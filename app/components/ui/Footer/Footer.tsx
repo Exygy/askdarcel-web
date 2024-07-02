@@ -4,17 +4,16 @@ import { htmlWithBreaks } from "utils/sanity";
 import Our415Logo from "assets/img/our415-white.png";
 import SFSeal from "assets/img/sf-seal-white.png";
 import DCYFLogo from "assets/img/dcyf-white.png";
-import { DynamicLink, StrapiDatumResponse } from "models/Strapi";
+import { StrapiModel } from "models/Strapi";
 import { FooterColumn } from "./FooterColumn";
 import { useFooterData } from "../../../hooks/StrapiAPI";
-import { type Footer as FooterType } from "models/Strapi";
 
 import "./Footer.scss";
 
 export const Footer = () => {
   const { data, error, isLoading } = useFooterData();
 
-  const footerData = data as StrapiDatumResponse<FooterType>
+  const { attributes: footerData } = data as StrapiModel.StrapiDatum<StrapiModel.Footer>;
 
   if (isLoading) {
     return null;
@@ -36,16 +35,16 @@ export const Footer = () => {
                 <div
                   className="site-footer__address"
                   dangerouslySetInnerHTML={{
-                    __html: htmlWithBreaks(footerData.attributes.address),
+                    __html: htmlWithBreaks(footerData.address),
                   }}
                 />
                 <div className="site-footer__contact">
-                  <a href={`tel:${callableUSPhoneNumber(footerData.attributes.phone_number)}`}>
-                    {footerData.attributes.phone_number}
+                  <a href={`tel:${callableUSPhoneNumber(footerData.phone_number)}`}>
+                    {footerData.phone_number}
                   </a>
                   <br />
-                  <a href={`mailto:${footerData.attributes.email_address}`}>
-                    {footerData.attributes.email_address}
+                  <a href={`mailto:${footerData.email_address}`}>
+                    {footerData.email_address}
                   </a>
                 </div>
               </address>
@@ -54,7 +53,7 @@ export const Footer = () => {
 
           <div className="site-footer__links">
             {!error &&
-              footerData.attributes?.links.map((item: DynamicLink) => (
+              footerData?.links.map((item: StrapiModel.DynamicLink) => (
                 <FooterColumn key={item.id} column={item} />
               ))}
           </div>
