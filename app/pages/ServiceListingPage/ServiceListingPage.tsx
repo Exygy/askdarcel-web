@@ -26,6 +26,7 @@ import {
   Service,
 } from "../../models";
 import styles from "./ServiceListingPage.module.scss";
+import { ListingInfoSection } from "components/ui/Cards/ListingInfoSection";
 
 const { title: whiteLabelTitle, footerOptions: whiteLabelFooterOpts } =
   whiteLabel;
@@ -105,10 +106,7 @@ export const ServiceListingPage = () => {
               />
             </span>
 
-            <ServiceListingSection
-              title="About"
-              data-cy="service-about-section"
-            >
+            <ListingInfoSection title="About" data-cy="service-about-section">
               <ReactMarkdown
                 className="rendered-markdown"
                 source={formattedLongDescription}
@@ -118,10 +116,10 @@ export const ServiceListingPage = () => {
                 attribution={resource.source_attribution}
                 status={resource.status}
               />
-            </ServiceListingSection>
+            </ListingInfoSection>
 
             {details.length > 0 && (
-              <ServiceListingSection
+              <ListingInfoSection
                 title="Details"
                 data-cy="service-details-section"
               >
@@ -138,18 +136,18 @@ export const ServiceListingPage = () => {
                   )}
                   rows={details}
                 />
-              </ServiceListingSection>
+              </ListingInfoSection>
             )}
 
-            <ServiceListingSection
+            <ListingInfoSection
               title="Contact"
               data-cy="service-contact-section"
             >
               <TableOfContactInfo service={service} />
-            </ServiceListingSection>
+            </ListingInfoSection>
 
             {locations.length > 0 && (
-              <ServiceListingSection
+              <ListingInfoSection
                 title="Location and hours"
                 data-cy="service-loc-hours-section"
               >
@@ -163,12 +161,13 @@ export const ServiceListingPage = () => {
                     )}
                   />
                 </div>
-              </ServiceListingSection>
+              </ListingInfoSection>
             )}
 
             {resource.services.length > 1 && (
-              <ServiceListingSection
+              <ListingInfoSection
                 title="Other services at this organization"
+                borderBottom={false}
                 data-cy="service-other-section"
               >
                 {resource.services
@@ -184,7 +183,7 @@ export const ServiceListingPage = () => {
                       key={srv.id}
                     />
                   ))}
-              </ServiceListingSection>
+              </ListingInfoSection>
             )}
           </div>
           <aside className={`${styles["listing--aside"]} no-print`}>
@@ -199,22 +198,6 @@ export const ServiceListingPage = () => {
     </div>
   );
 };
-
-type ServiceListingSectionProps = {
-  title: string;
-} & React.HTMLProps<HTMLDivElement>;
-
-// A title with the content of a section
-export const ServiceListingSection = ({
-  children,
-  title,
-  ...props
-}: ServiceListingSectionProps) => (
-  <section {...props}>
-    <h2>{title}</h2>
-    {children}
-  </section>
-);
 
 type ServiceProgramDetailsProps = {
   service: Service;
