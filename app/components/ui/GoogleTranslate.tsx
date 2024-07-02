@@ -11,7 +11,10 @@ export const GoogleTranslate = ({
 }) => {
   const [, setCookie] = useCookies(["googtrans"]);
 
-  const rand = Math.random().toString(20).substring(2, 6);
+  // Creating multiple instances of the widget to render into both mobile and desktop menu views seems to be the only
+  // way to gaurantee that the widget is rendered into multiple divs in the DOM wihin our current component hierarchy
+  // and conditional render logic for the navigation menus.
+  const WIDGET_ID = Math.random().toString(20).substring(2, 6);
 
   if (languages.length > 0) {
     // Google Translate determines translation source and target
@@ -28,20 +31,20 @@ export const GoogleTranslate = ({
         <Helmet>
           <script type="text/javascript">
             {`
-              function googleTranslateElementInit_${rand}() {
+              function googleTranslateElementInit_${WIDGET_ID}() {
                 new google.translate.TranslateElement({
                   includedLanguages: '${languages.join(",")}',
                   pageLanguage: 'en',
-                }, 'google_translate_element_${rand}');
+                }, 'google_translate_element_${WIDGET_ID}');
               }
             `}
           </script>
           <script
             type="text/javascript"
-            src={`//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit_${rand}`}
+            src={`//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit_${WIDGET_ID}`}
           />
         </Helmet>
-        <div id={`google_translate_element_${rand}`} />
+        <div id={`google_translate_element_${WIDGET_ID}`} />
       </li>
     );
   }
