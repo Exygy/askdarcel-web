@@ -46,11 +46,11 @@ export const AboutPage = () => {
   return (
     <>
       <Masthead title={pageData.mastHead} />
-      {pageData?.twoColumnContentSections?.map(
+      {/* {pageData?.twoColumnContentSections?.map(
         (section: JSX.IntrinsicAttributes & TwoColumnContent) => {
           return <TwoColumnContentSection key={section._id} {...section} />;
         }
-      )}
+      )} */}
       <EmailSignup />
     </>
   );

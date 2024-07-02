@@ -1,6 +1,5 @@
 import imageUrlBuilder from "@sanity/image-url";
 import { SanityImageSource } from "@sanity/image-url/lib/types/types.d";
-import * as Sentry from "@sentry/browser";
 import { Footer, Loader } from "components/ui";
 import Hero from "components/ui/Hero/Hero";
 import { CategorySection } from "components/ui/Section/CategorySection";
@@ -12,90 +11,51 @@ import {
   TwoColumnContent,
   TwoColumnContentSection,
 } from "components/ui/TwoColumnContentSection/TwoColumnContentSection";
-import React, { useEffect, useState } from "react";
-import { client } from "../../sanity";
-
-const builder = imageUrlBuilder(client);
-
-export interface ButtonType {
-  slug: string;
-  label: string;
-}
-
-export interface HeroData {
-  name: string;
-  title: string;
-  description: string;
-  backgroundImage: SanityImageSource;
-  buttons: ButtonType[];
-}
-
-interface HomePageData {
-  heroSection: HeroData;
-  opportunitySection: OppEventCardData;
-  eventSection: OppEventCardData;
-  /* TODO: update field in Sanity schema
-  to avoid nested values of the same name
-  */
-  twoColumnContentSections: {
-    twoColumnContentSections: TwoColumnContent;
-  }[];
-}
+import React from "react";
+import { StrapiModel } from "models/Strapi";
+import { useHomepageData } from "../../hooks/StrapiAPI";
 
 export const HomePage = () => {
-  const [homePageData, setHomePageData] = useState<HomePageData | null>(null);
+  const { data, error, isLoading } = useHomepageData();
 
-  useEffect(() => {
-    const fetchHomePageData = async () => {
-      const query = `*[_type == "homePage" && name == "Home Page"][0]{
-        'heroSection': *[_type == "hero" && name == "Home Hero"][0],
-        opportunitySection {...,'opportunityCards': opportunityCards[]->},
-        eventSection {...,'eventCards': eventCards[]->},
-        'twoColumnContentSections': *[_type == 'contentPageType' && name == 'Home']{
-      twoColumnContentSections[0]->
-      }
-    }`;
+  const { attributes: homePageData } = data as StrapiModel.StrapiDatum<StrapiModel.Homepage>;
 
-      try {
-        const result: HomePageData = await client.fetch(query);
-        setHomePageData(result);
-      } catch (error) {
-        Sentry.captureException(error);
-      }
-    };
-
-    fetchHomePageData();
-  }, []);
-
-  if (homePageData === null) {
-    return <Loader />;
+  if (isLoading) {
+    return null;
   }
 
   const {
-    opportunitySection,
-    eventSection,
-    heroSection,
-    twoColumnContentSections,
+    opportunity_section,
+    opportunities,
+    event_section,
+    events,
+    hero,
+    two_column_content_blocks,
   } = homePageData;
 
   const twoColumnContentData =
-    twoColumnContentSections[0].twoColumnContentSections;
+  two_column_content_blocks.data;
 
   return (
     <>
       <Hero
-        backgroundImage={builder.image(heroSection.backgroundImage).url()}
-        title={heroSection.title}
-        description={heroSection.description}
-        buttons={heroSection.buttons}
+        backgroundImage={hero.background_image.data?.attributes.url ?? ""}
+        title={hero.title}
+        description={hero.description}
+        buttons={hero.buttons}
       />
       <CategorySection />
       <OppEventCardSection
         sectionType="opportunity"
-        sectionData={opportunitySection}
+        sectionData={opportunity_section}
+        opportunities={opportunities.data ?? []}
       />
-      <OppEventCardSection sectionType="event" sectionData={eventSection} />
-      <TwoColumnContentSection {...twoColumnContentData} />
+      <OppEventCardSection
+        sectionType="event"
+        sectionData={event_section}
+        events={events.data ?? []}
+      />
+      {twoColumnContentData?.map((content) => <TwoColumnContentSection {...content.attributes} />)}
 
       {/* Newsletter Component */}
       <Footer />

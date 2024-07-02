@@ -7,6 +7,7 @@ import imageUrlBuilder from "@sanity/image-url";
 import styles from "./TwoColumnContentSection.module.scss";
 import { client } from "../../../sanity";
 import { Button } from "../inline/Button/Button";
+import { StrapiModel } from "models/Strapi";
 
 const builder = imageUrlBuilder(client);
 
@@ -47,52 +48,40 @@ export interface TwoColumnContent {
   _id: string;
 }
 
-export const TwoColumnContentSection = ({
-  image,
-  imageAlt,
-  contentBlock,
-  mediaAlignment,
-  contentLinkButtonText,
-  contentLinkButtonUrl,
-}: {
-  mediaAlignment: string;
-  image: SanityImageSource;
-  imageAlt: string | undefined;
-  contentBlock: any;
-  contentLinkButtonText: string;
-  contentLinkButtonUrl: string;
-}) => {
+export const TwoColumnContentSection = (props: StrapiModel.TwoColumnContentBlock) => {
+  const { link, content, media_alignment, media } = props;
   return (
     <section className={styles.twoColumnContentSectionContainer}>
       <div
         className={
-          mediaAlignment === "left"
+          media_alignment === "left"
             ? styles.imageContainer_left
             : styles.imageContainer_right
         }
       >
         <img
           className={styles.image}
-          src={builder.image(image).url()}
-          alt={imageAlt}
+          src={media[0].image?.data?.attributes?.url ?? ""}
+          alt={media[0].image?.data?.attributes?.alternativeText}
         />
       </div>
       <div
         className={
-          mediaAlignment === "left"
+          media_alignment === "left"
             ? styles.contentContainer_left
             : styles.contentContainer_right
         }
       >
-        <BlockContent
+        <div
           className={styles.contentBlock}
-          blocks={contentBlock}
-          serializers={{ types: { block: BlockRenderer } }}
+          dangerouslySetInnerHTML={{
+            __html: content
+          }}
         />
-        {contentLinkButtonText && (
+        {link && (
           <div className={styles.contentLinkButton}>
-            <Button href={contentLinkButtonUrl} arrowVariant="after">
-              {contentLinkButtonText}
+            <Button href={link.url} arrowVariant="after">
+              {link.text}
             </Button>
           </div>
         )}
