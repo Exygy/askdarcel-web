@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Translate from "components/ui/Translate";
-import navigationStyles from "components/ui/Navigation.module.scss";
+import styles from "components/ui/Navigation.module.scss";
 import { push as Menu } from "react-burger-menu";
 import {
   StrapiModel,
@@ -11,10 +11,10 @@ import {
 import { PopUpMessage, PopupMessageProp } from "../../components/ui";
 import { Router } from "../../Router";
 import { useNavigationData } from "../../hooks/StrapiAPI";
+import { OUTER_CONTAINER_ID } from "../../App";
 
-const outerContainerId = "outer-container";
-const pageWrapId = "page-wrap";
-const burgerStyles = {
+const PAGE_WRAP_ID = "page-wrap";
+const BURGER_STYLES = {
   bmBurgerButton: {
     display: "none",
   },
@@ -29,8 +29,6 @@ const burgerStyles = {
     display: "none",
   },
 };
-
-// Until new nav is introduced, screen reader is reading hamburger links on desktop. This fixes that.
 
 const Navigation = () => {
   const [mobileNavIsOpen, setmobileNavIsOpen] = useState(false);
@@ -90,35 +88,39 @@ const Navigation = () => {
   return (
     <>
       {mobileNavIsOpen && (
-        <Menu
-          isOpen={mobileNavIsOpen}
-          onStateChange={() => toggleMobileNav}
-          outerContainerId={outerContainerId}
-          pageWrapId={pageWrapId}
-          right
-          styles={burgerStyles}
-          width="275px"
-        >
-          {mobileNavIsOpen && menus?.length && <NavigationMenu menus={menus} />}
-        </Menu>
+        <span className={styles.hamburgerContainer}>
+          <Menu
+            isOpen={mobileNavIsOpen}
+            onStateChange={() => toggleMobileNav}
+            outerContainerId={OUTER_CONTAINER_ID}
+            pageWrapId={PAGE_WRAP_ID}
+            right
+            styles={BURGER_STYLES}
+            width="275px"
+          >
+            {mobileNavIsOpen && menus?.length && (
+              <NavigationMenu menus={menus} />
+            )}
+          </Menu>
+        </span>
       )}
-      <div id={pageWrapId}>
-        <nav className={navigationStyles.siteNav}>
-          <div className={navigationStyles.primaryRow}>
-            <div className={navigationStyles.navLeft}>
-              <Link className={`${navigationStyles.navLogo}`} to="/">
+      <div id={PAGE_WRAP_ID}>
+        <nav className={styles.siteNav}>
+          <div className={styles.primaryRow}>
+            <div className={styles.navLeft}>
+              <Link className={`${styles.navLogo}`} to="/">
                 <img src={logoData?.url} alt={logoData?.alternativeText} />
               </Link>
             </div>
 
-            <ul className={navigationStyles.navRight}>
+            <ul className={styles.navRight}>
               {menus?.length && <NavigationMenu menus={menus} />}
             </ul>
-            <div className={navigationStyles.mobileNavigation}>
+            <div className={styles.mobileNavigation}>
               <button
                 type="button"
                 aria-label="navigation menu"
-                className={navigationStyles.hamburgerButton}
+                className={styles.hamburgerButton}
                 onClick={toggleMobileNav}
               />
             </div>

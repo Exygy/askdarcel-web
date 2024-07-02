@@ -14,7 +14,7 @@ import MetaImage from "./assets/img/sfsg-preview.png";
 import styles from "./App.module.scss";
 
 const { intercom, siteUrl, title, userWay } = whiteLabel;
-const outerContainerId = "outer-container";
+export const OUTER_CONTAINER_ID = "outer-container";
 
 export const App = () => {
   const history = useHistory();
@@ -44,7 +44,7 @@ export const App = () => {
   }, [history]);
 
   return (
-    <div id={outerContainerId} className={styles.outerContainer}>
+    <div id={OUTER_CONTAINER_ID} className={styles.outerContainer}>
       <AppProvider userLocation={userLocation}>
         <Helmet>
           <title>{title}</title>
