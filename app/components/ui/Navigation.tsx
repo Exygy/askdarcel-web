@@ -72,7 +72,11 @@ const Navigation = () => {
             {menu.title}
           </button>
 
-          <ul>
+          <ul
+            className={`${styles.dropdown} ${
+              dropdown ? styles.showDropdown : ""
+            }`}
+          >
             {menu.link.map((linkItem: StrapiModel.Link) => (
               <li key={linkItem.id} className="menu-item">
                 <Link to={linkItem.url}>{linkItem.text}</Link>
@@ -114,7 +118,9 @@ const Navigation = () => {
             </div>
 
             <ul className={styles.navRight}>
-              {menus?.length && <NavigationMenu menus={menus} />}
+              {!mobileNavIsOpen && menus?.length && (
+                <NavigationMenu menus={menus} />
+              )}
             </ul>
             <div className={styles.mobileNavigation}>
               <button
