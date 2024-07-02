@@ -96,6 +96,32 @@ pre {
   }
 }
 
+.rendered-markdown {
+  strong {
+    font-weight: bold;
+  }
+
+  em {
+    font-style: italic;
+  }
+
+  ul {
+    padding: 16px 26px;
+
+    li {
+      list-style-type: disc;
+    }
+  }
+
+  ol {
+    padding: 16px 26px;
+
+    li {
+      list-style-type: decimal;
+    }
+  }
+}
+
 // Hide from print view
 @media print {
   .no-print {
