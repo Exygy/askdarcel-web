@@ -3,14 +3,13 @@ import { Helmet } from "react-helmet-async";
 import { Footer } from "components/ui";
 import { ActionSidebar } from "components/listing";
 import whitelabel from "utils/whitelabel";
-import styles from "./PageWrapper.module.scss"; // Keep using service listing styles
+import styles from "./PageWrapper.module.scss";
 
 type ListingPageWrapperProps = {
   title: string;
   description: string;
   children: React.ReactNode;
   sidebarActions: any[];
-  mobileActions: any[];
   onClickAction: (action: any) => void;
 };
 

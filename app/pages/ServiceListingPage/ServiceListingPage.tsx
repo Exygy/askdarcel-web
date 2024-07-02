@@ -10,9 +10,11 @@ import {
   TableOfContactInfo,
   TableOfOpeningTimes,
 } from "components/listing";
-import { Datatable, Footer, Loader } from "components/ui";
+import { Datatable, Loader } from "components/ui";
 import { removeAsterisksAndHashes } from "utils/strings";
 import { ListingInfoSection } from "components/ui/Cards/ListingInfoSection";
+import PageHeader from "components/listing/PageHeader";
+import ListingPageWrapper from "components/listing/PageWrapper";
 import {
   fetchService,
   generateServiceDetails,
@@ -23,8 +25,6 @@ import {
   Service,
 } from "../../models";
 import styles from "./ServiceListingPage.module.scss";
-import PageHeader from "components/listing/PageHeader";
-import ListingPageWrapper from "components/listing/PageWrapper";
 
 // Page at /services/123
 export const ServiceListingPage = () => {
@@ -77,7 +77,6 @@ export const ServiceListingPage = () => {
       title={service.name}
       description={service.long_description || ""}
       sidebarActions={sidebarActions}
-      mobileActions={mobileActions}
       onClickAction={onClickAction}
     >
       <PageHeader title={service.name} dataCy="service-page-title">

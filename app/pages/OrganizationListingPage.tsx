@@ -4,6 +4,8 @@ import { useParams, Redirect, useLocation } from "react-router-dom";
 import qs from "qs";
 import { ListingInfoSection } from "components/ui/Cards/ListingInfoSection";
 import { removeAsterisksAndHashes } from "utils/strings";
+import PageHeader from "components/listing/PageHeader";
+import ListingPageWrapper from "components/listing/PageWrapper";
 import {
   ActionBarMobile,
   AddressInfoRenderer,
@@ -25,8 +27,6 @@ import {
   Organization,
   OrganizationAction,
 } from "../models";
-import ListingPageWrapper from "components/listing/PageWrapper";
-import PageHeader from "components/listing/PageHeader";
 
 // Page at /organization/123
 export const OrganizationListingPage = () => {
@@ -71,7 +71,6 @@ export const OrganizationListingPage = () => {
       title={org.name}
       description={org.long_description || ""}
       sidebarActions={sidebarActions}
-      mobileActions={mobileActions}
       onClickAction={onClickAction}
     >
       <PageHeader title={org.name} dataCy="org-page-title" />
