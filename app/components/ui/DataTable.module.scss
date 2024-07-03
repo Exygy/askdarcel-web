@@ -10,15 +10,6 @@
     td {
       padding: 10px;
       text-align: left;
-
-      &.headerCell h3 {
-        font-size: 18px;
-      }
-
-      &.iconCell {
-        max-width: $padding-xxlarge;
-        $padding: 10px $padding-default;
-      }
     }
 
     th {
@@ -32,17 +23,6 @@
       @include r_max($break-tablet-s) {
         width: 100px;
         font-size: 16px;
-      }
-    }
-  }
-
-  &.compact {
-    width: auto;
-
-    tr {
-      td,
-      th {
-        padding: $padding-default $padding-large;
       }
     }
   }

@@ -134,16 +134,14 @@ export const ServiceListingPage = () => {
           title="Location and hours"
           data-cy="service-loc-hours-section"
         >
-          <div className={styles["service-loc-hours-section"]}>
-            <MapOfLocations
-              locations={locations}
-              locationRenderer={(location: any) => (
-                <TableOfOpeningTimes
-                  recurringSchedule={location.recurringSchedule}
-                />
-              )}
-            />
-          </div>
+          <MapOfLocations
+            locations={locations}
+            locationRenderer={(location: any) => (
+              <TableOfOpeningTimes
+                recurringSchedule={location.recurringSchedule}
+              />
+            )}
+          />
         </ListingInfoSection>
       )}
 
