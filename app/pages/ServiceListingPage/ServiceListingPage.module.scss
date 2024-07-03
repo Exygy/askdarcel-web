@@ -22,8 +22,7 @@ a {
 }
 
 p,
-a,
-table {
+a {
   @include r_max($break-tablet-s) {
     font-size: 14px;
     line-height: 125%;

@@ -1,15 +1,18 @@
 import React from "react";
+import styles from "./DataTable.module.scss";
 
-interface DatatableProps<T = any> {
+interface DataTableProps<T = any> {
   rows: T[];
   rowRenderer: (row: T) => JSX.Element;
 }
 
-export const Datatable = <T extends unknown>({
+export const DataTable = <T extends unknown>({
   rows,
   rowRenderer,
-}: DatatableProps<T>) => (
-  <table>
-    <tbody>{rows.map((row) => rowRenderer(row))}</tbody>
-  </table>
-);
+}: DataTableProps<T>) => {
+  return (
+    <table className={styles.dataTable}>
+      <tbody>{rows.map((row) => rowRenderer(row))}</tbody>
+    </table>
+  );
+};
