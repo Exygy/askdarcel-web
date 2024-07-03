@@ -1,14 +1,10 @@
-import imageUrlBuilder from "@sanity/image-url";
-import { SanityImageSource } from "@sanity/image-url/lib/types/types.d";
-import { Footer, Loader } from "components/ui";
+import { Footer } from "components/ui";
 import Hero from "components/ui/Hero/Hero";
 import { CategorySection } from "components/ui/Section/CategorySection";
 import {
-  OppEventCardData,
   OppEventCardSection,
 } from "components/ui/Section/OppEventCardSection";
 import {
-  TwoColumnContent,
   TwoColumnContentSection,
 } from "components/ui/TwoColumnContentSection/TwoColumnContentSection";
 import React from "react";
@@ -18,7 +14,9 @@ import { useHomepageData } from "../../hooks/StrapiAPI";
 export const HomePage = () => {
   const { data, error, isLoading } = useHomepageData();
 
-  const { attributes: homePageData } = data as StrapiModel.StrapiDatum<StrapiModel.Homepage>;
+  const res = data as StrapiModel.StrapiDatum<StrapiModel.Homepage>;
+
+  const homePageData = res?.attributes;
 
   if (isLoading) {
     return null;
@@ -38,12 +36,12 @@ export const HomePage = () => {
 
   return (
     <>
-      <Hero
+      {hero && <Hero
         backgroundImage={hero.background_image.data?.attributes.url ?? ""}
         title={hero.title}
         description={hero.description}
         buttons={hero.buttons}
-      />
+      />}
       <CategorySection />
       <OppEventCardSection
         sectionType="opportunity"
@@ -55,7 +53,7 @@ export const HomePage = () => {
         sectionData={event_section}
         events={events.data ?? []}
       />
-      {twoColumnContentData?.map((content) => <TwoColumnContentSection {...content.attributes} />)}
+      {twoColumnContentData?.map((content) => <TwoColumnContentSection key={content.id} {...content.attributes} />)}
 
       {/* Newsletter Component */}
       <Footer />

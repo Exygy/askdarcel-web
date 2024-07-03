@@ -13,7 +13,9 @@ import "./Footer.scss";
 export const Footer = () => {
   const { data, error, isLoading } = useFooterData();
 
-  const { attributes: footerData } = data as StrapiModel.StrapiDatum<StrapiModel.Footer>;
+  const res = data as StrapiModel.StrapiDatum<StrapiModel.Footer>;
+
+  const footerData = res?.attributes;
 
   if (isLoading) {
     return null;

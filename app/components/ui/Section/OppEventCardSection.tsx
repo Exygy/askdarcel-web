@@ -1,44 +1,11 @@
 import imageUrlBuilder from "@sanity/image-url";
-import { SanityImageSource } from "@sanity/image-url/lib/types/types.d";
 import { HomePageSection } from "pages/HomePage/components/Section";
-import { Slug } from "pages/HomePage/components/Section/Section";
 import React from "react";
-import { BackgroundColorVariant } from "models";
 import { client } from "../../../sanity";
 import { OppEventCard } from "../Cards/OppEventCard";
 import styles from "./OppEventCardSection.module.scss";
 import { Loader } from "../Loader";
 import { StrapiModel } from "models/Strapi";
-
-export interface EventData {
-  slug: Slug;
-  image: SanityImageSource;
-
-  /* Event Types*/
-  title?: string;
-  date?: {
-    endDate: Date;
-    startDate: Date;
-    _type: string;
-  };
-
-  /* Opportunity Types*/
-  name?: string;
-  start_date?: Date;
-  end_date?: Date;
-}
-
-export interface OppEventCardData {
-  header: string;
-  subheader?: string;
-  backgroundColor: BackgroundColorVariant;
-  link: {
-    label: string;
-    slug: Slug;
-  };
-  opportunityCards?: EventData[];
-  eventCards?: EventData[];
-}
 
 interface OppEventCardSectionProps {
   sectionType: "event" | "opportunity";
@@ -63,7 +30,7 @@ export const OppEventCardSection = (props: OppEventCardSectionProps) => {
       backgroundColor={background_color.color}
       link={link}
     >
-      <div className={`${styles.cardsContainer} ${styles[sectionType]}`}>
+      {events && <div className={`${styles.cardsContainer} ${styles[sectionType]}`}>
         {events?.map((event): JSX.Element => {
           const { attributes: { title, id, date, image } } =
             event;
@@ -74,13 +41,15 @@ export const OppEventCardSection = (props: OppEventCardSectionProps) => {
               key={title}
               title={title}
               slug={id}
-              startDate={new Date(date.startdate)}
-              endDate={new Date(date.enddate)}
+              startDate={new Date(date?.startdate)}
+              endDate={new Date(date?.enddate)}
               image={cardImage}
               sectionType={sectionType}
             />
           );
         })}
+        </div>}
+        {opportunities && <div className={`${styles.cardsContainer} ${styles[sectionType]}`}>
         {opportunities?.map((opp): JSX.Element => {
           const { attributes: { title, id, startdate, enddate, image } } =
             opp;
@@ -98,7 +67,7 @@ export const OppEventCardSection = (props: OppEventCardSectionProps) => {
             />
           );
         })}
-      </div>
+      </div>}
     </HomePageSection>
   );
 };
