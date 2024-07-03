@@ -49,7 +49,6 @@
     display: none;
   }
 
-  gap: 20px;
 }
 
 @mixin navLogoShared {
@@ -207,16 +206,18 @@
 .navigationMenuContainer {
   display: flex;
   flex-direction: column;
+  align-items: center;
 
-  // Is there a better way to ensure all children inherit this font-size?
+  // Adds separator
+  border-right: 1px solid black;
+  padding-right: $spacing-5;
+  margin-right: $spacing-5;
+
+  // Override for all children since we haven't had time to reformat the markup with consistent child elements/selectors
   * {
     font-size: 18px;
     font-family: Montserrat;
-    font-weight: 600;
-
-    &:hover {
-      color: $color-brand-dark;
-    }
+    font-weight: 500;
   }
 }
 
@@ -226,9 +227,9 @@
   z-index: 999;
   top: 70px;
   background: $white;
+  box-shadow: 0px 4px 6px -1px #0000001A;
   border-radius: $rounded-md;
-  box-shadow: 0px 1px 3px 0px rgba(112, 79, 29, 0.1),
-    0px 1px 2px -1px rgba(112, 79, 29, 0.1);
+  overflow: hidden;
 }
 
 .navigationMenuHeader {
@@ -236,9 +237,22 @@
   display: flex;
   gap: 5px;
   align-items: center;
+  font-weight: 600;
 
   &[aria-expanded='true'] {
     color: $color-brand-dark;
+  }
+
+  &:hover {
+    color: $color-brand-dark;
+  }
+}
+
+
+.navigationMenuListItem {
+  &:hover {
+    background: $gray-50;
+    color: inherit;
   }
 }
 
@@ -247,22 +261,16 @@
   display: flex;
   text-decoration: none;
   color: $text-primary;
-  padding: $spacing-3;
+  padding: $spacing-3 $spacing-4;
 
   &:hover {
     text-decoration: none;
+    color: $text-primary;
   }
 }
 
 .navigationMenuHeader .chevron {
   font-size: 12px;
-}
-.dropdown {
-  display: none;
-}
-
-.showDropdown {
-  display: block;
 }
 
 // Until new nav is introduced, screen reader is reading hamburger links on desktop. This fixes that.

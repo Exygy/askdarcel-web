@@ -39,7 +39,7 @@ const Navigation = () => {
     type: "success",
   });
   const { data: navigationResponse, error, isLoading } = useNavigationData();
-  const [dropdown, setDropdown] = useState(false);
+  const [dropdownIsOpen, setDropdownIsOpen] = useState(false);
   const logoData = extractLogoFromNavigationResponse(navigationResponse);
   const menus =
     extractNavigationMenusFromNavigationResponse(navigationResponse);
@@ -53,7 +53,6 @@ const Navigation = () => {
   if (isLoading) {
     return <span>is loading...</span>;
   }
-
   interface NavigationMenuProps {
     menus: StrapiModel.NavigationMenu[];
   }
@@ -62,24 +61,29 @@ const Navigation = () => {
   }): JSX.Element => (
     <>
       {menus.map((menu) => (
-        <div key={menu.id.toString()}>
+        <div
+          className={styles.navigationMenuContainer}
+          key={menu.id.toString()}
+        >
           <button
             type="button"
             aria-haspopup="menu"
-            aria-expanded={dropdown ? "true" : "false"}
-            onClick={() => setDropdown((prev) => !prev)}
+            aria-expanded={dropdownIsOpen ? "true" : "false"}
+            onClick={() => setDropdownIsOpen((prev) => !prev)}
+            className={styles.navigationMenuHeader}
           >
             {menu.title}
+            <span className={`fas fa-chevron-down ${styles.chevron}`} />
           </button>
-
           <ul
-            className={`${styles.dropdown} ${
-              dropdown ? styles.showDropdown : ""
-            }`}
+            style={{ display: dropdownIsOpen ? "block" : "none" }}
+            className={styles.navigationMenuList}
           >
             {menu.link.map((linkItem: StrapiModel.Link) => (
-              <li key={linkItem.id} className="menu-item">
-                <Link to={linkItem.url}>{linkItem.text}</Link>
+              <li key={linkItem.id} className={styles.navigationMenuListItem}>
+                <Link to={linkItem.url} className={styles.navigationMenuLink}>
+                  {linkItem.text}
+                </Link>
               </li>
             ))}
           </ul>
