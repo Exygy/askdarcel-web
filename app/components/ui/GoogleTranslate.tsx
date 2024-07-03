@@ -1,53 +1,53 @@
-import React from "react";
+/* eslint-disable react-hooks/exhaustive-deps -- allows empty array argument in useEffect */
+/* eslint-disable no-new -- allows calling `new` for initializer */
+
+import React, { useEffect } from "react";
 import { useCookies } from "react-cookie";
-import { Helmet } from "react-helmet-async";
+import { useLocation } from "react-router-dom";
 
-export const GoogleTranslate = ({
-  languages,
-  queryLangCode,
-}: {
-  languages: readonly string[];
-  queryLangCode: string | null;
-}) => {
+/**
+ * A Google translate widget component for use across multiple components
+ *
+ * Normally it is difficult to mount a widget like this into multiple components or HTML targets. By dynamically
+ * adding the third-party scripts and initializing on demand, we can render the widget into both desktop and mobile
+ * navigation view.
+ */
+export const GoogleTranslate = () => {
+  const { search } = useLocation();
+
+  const params = new URLSearchParams(search);
+  const targetLangCode = params.get("lang");
   const [, setCookie] = useCookies(["googtrans"]);
+  const languages = ["en", "es", "tl", "zh-TW"];
 
-  // Creating multiple instances of the widget to render into both mobile and desktop menu views seems to be the only
-  // way to gaurantee that the widget is rendered into multiple divs in the DOM wihin our current component hierarchy
-  // and conditional render logic for the navigation menus.
-  const WIDGET_ID = Math.random().toString(20).substring(2, 6);
-
-  if (languages.length > 0) {
-    // Google Translate determines translation source and target
-    // with a "googtrans" cookie.
-    // When the user navigates with a `lang` query param,
-    // interpret that as an explicit ask to translate the site
-    // into that target language.
-    if (queryLangCode && languages.includes(queryLangCode)) {
-      setCookie("googtrans", `/en/${queryLangCode}`, { path: "/" });
+  useEffect(() => {
+    function googleTranslateElementInit() {
+      new (window as any).google.translate.TranslateElement(
+        {
+          includedLanguages: `${languages.join(",")}`,
+          pageLanguage: targetLangCode || "en",
+        },
+        "google_translate_element"
+      );
     }
-
-    return (
-      <li>
-        <Helmet>
-          <script type="text/javascript">
-            {`
-              function googleTranslateElementInit_${WIDGET_ID}() {
-                new google.translate.TranslateElement({
-                  includedLanguages: '${languages.join(",")}',
-                  pageLanguage: 'en',
-                }, 'google_translate_element_${WIDGET_ID}');
-              }
-            `}
-          </script>
-          <script
-            type="text/javascript"
-            src={`//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit_${WIDGET_ID}`}
-          />
-        </Helmet>
-        <div id={`google_translate_element_${WIDGET_ID}`} />
-      </li>
+    const addScript = document.createElement("script");
+    addScript.setAttribute(
+      "src",
+      "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
     );
+    document.body.appendChild(addScript);
+    (window as any).googleTranslateElementInit = googleTranslateElementInit;
+  }, []);
+
+  // TODO @rosschapman: Let's explore this use case, this may not be something we care about supporting?
+  // Google Translate determines translation source and target
+  // with a "googtrans" cookie.
+  // When the user navigates with a `lang` query param,
+  // interpret that as an explicit ask to translate the site
+  // into that target language.
+  if (targetLangCode && languages.includes(targetLangCode)) {
+    setCookie("googtrans", `/en/${targetLangCode}`, { path: "/" });
   }
 
-  return null;
+  return <div id="google_translate_element" />;
 };
