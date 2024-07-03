@@ -12,6 +12,11 @@ import { useLocation } from "react-router-dom";
  * adding the third-party scripts and initializing on demand, we can render the widget into both desktop and mobile
  * navigation view.
  */
+
+declare const window: {
+  googleTranslateElementInit: () => void;
+} & Window;
+
 export const GoogleTranslate = () => {
   const { search } = useLocation();
 
@@ -30,13 +35,14 @@ export const GoogleTranslate = () => {
         "google_translate_element"
       );
     }
+
     const addScript = document.createElement("script");
     addScript.setAttribute(
       "src",
       "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
     );
     document.body.appendChild(addScript);
-    (window as any).googleTranslateElementInit = googleTranslateElementInit;
+    window.googleTranslateElementInit = googleTranslateElementInit;
   }, []);
 
   // TODO @rosschapman: Let's explore this use case, this may not be something we care about supporting?
