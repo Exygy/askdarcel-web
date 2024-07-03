@@ -22,12 +22,17 @@
     }
 
     th {
+      font-family: "Montserrat";
+      font-size: 18px;
       font-weight: bold;
-      color: $color-textfade;
-    }
-
-    &:hover {
-      background: $color-grey1;
+      color: $text-primary;
+      width: 150px;
+      padding-right: $general-spacing-lg;
+      padding-left: $spacing-0;
+      @include r_max($break-tablet-s) {
+        width: 100px;
+        font-size: 16px;
+      }
     }
   }
 
