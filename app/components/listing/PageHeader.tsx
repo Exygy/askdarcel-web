@@ -1,13 +1,17 @@
 import React from "react";
 import styles from "./PageHeader.module.scss";
 
-type PageHeaderProps = {
+type ListingPageHeaderProps = {
   title: string;
   children?: React.ReactNode;
   dataCy: string;
 };
 
-const PageHeader = ({ title, children, dataCy }: PageHeaderProps) => (
+const ListingPageHeader = ({
+  title,
+  children,
+  dataCy,
+}: ListingPageHeaderProps) => (
   <header className={styles.pageHeader}>
     <h1 data-cy={dataCy} className="notranslate">
       {title}
@@ -16,4 +20,4 @@ const PageHeader = ({ title, children, dataCy }: PageHeaderProps) => (
   </header>
 );
 
-export default PageHeader;
+export default ListingPageHeader;

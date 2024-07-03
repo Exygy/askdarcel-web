@@ -4,7 +4,7 @@ import { useParams, Redirect, useLocation } from "react-router-dom";
 import qs from "qs";
 import { ListingInfoSection } from "components/ui/Cards/ListingInfoSection";
 import { removeAsterisksAndHashes } from "utils/strings";
-import PageHeader from "components/listing/PageHeader";
+import ListingPageHeader from "components/listing/PageHeader";
 import ListingPageWrapper from "components/listing/PageWrapper";
 import {
   ActionBarMobile,
@@ -73,7 +73,7 @@ export const OrganizationListingPage = () => {
       sidebarActions={sidebarActions}
       onClickAction={onClickAction}
     >
-      <PageHeader title={org.name} dataCy="org-page-title" />
+      <ListingPageHeader title={org.name} dataCy="org-page-title" />
 
       <ActionBarMobile actions={mobileActions} onClickAction={onClickAction} />
 

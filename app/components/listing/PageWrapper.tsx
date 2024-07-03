@@ -21,7 +21,7 @@ const ListingPageWrapper = ({
   onClickAction,
 }: ListingPageWrapperProps) => (
   <>
-    <div className={styles[`listing-container`]}>
+    <div className={styles[`listing-wrapper`]}>
       <Helmet>
         <title>{`${title} | ${whitelabel.title}`}</title>
         <meta name="description" content={description} />

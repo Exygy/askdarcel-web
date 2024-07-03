@@ -13,7 +13,7 @@ import {
 import { Datatable, Loader } from "components/ui";
 import { removeAsterisksAndHashes } from "utils/strings";
 import { ListingInfoSection } from "components/ui/Cards/ListingInfoSection";
-import PageHeader from "components/listing/PageHeader";
+import ListingPageHeader from "components/listing/PageHeader";
 import ListingPageWrapper from "components/listing/PageWrapper";
 import {
   fetchService,
@@ -79,9 +79,9 @@ export const ServiceListingPage = () => {
       sidebarActions={sidebarActions}
       onClickAction={onClickAction}
     >
-      <PageHeader title={service.name} dataCy="service-page-title">
+      <ListingPageHeader title={service.name} dataCy="service-page-title">
         <ServiceProgramDetails service={service} organization={resource} />
-      </PageHeader>
+      </ListingPageHeader>
 
       <span className="no-print">
         <ActionBarMobile
