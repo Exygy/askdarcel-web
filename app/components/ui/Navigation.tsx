@@ -15,7 +15,7 @@ export const Navigation = ({
   toggleHamburgerMenu: () => void;
 }) => {
   const { data: navigationResponse, error, isLoading } = useNavigationData();
-  const [dropdownIsOpen, setDropdown] = useState(false);
+  const [dropdownIsOpen, setDropdownIsOpen] = useState(false);
   const logoData = extractLogoFromNavigationResponse(navigationResponse);
   const menus =
     extractNavigationMenusFromNavigationResponse(navigationResponse);
@@ -49,20 +49,21 @@ export const Navigation = ({
                 type="button"
                 aria-haspopup="menu"
                 aria-expanded={dropdownIsOpen ? "true" : "false"}
-                onClick={() => setDropdown((prev) => !prev)}
+                onClick={() => setDropdownIsOpen((prev) => !prev)}
                 className={styles.navigationMenuHeader}
               >
                 {menu.title}
                 <span className={`fas fa-chevron-down ${styles.chevron}`} />
               </button>
-
               <ul
-                className={`${styles.dropdown} ${styles.navigationMenuList} ${
-                  dropdownIsOpen ? styles.showDropdown : ""
-                }`}
+                style={{ display: dropdownIsOpen ? "block" : "none" }}
+                className={styles.navigationMenuList}
               >
                 {menu.link.map((linkItem: StrapiModel.Link) => (
-                  <li key={linkItem.id} className="menu-item">
+                  <li
+                    key={linkItem.id}
+                    className={styles.navigationMenuListItem}
+                  >
                     <Link
                       to={linkItem.url}
                       className={styles.navigationMenuLink}
@@ -74,7 +75,6 @@ export const Navigation = ({
               </ul>
             </div>
           ))}
-          <div>|</div>
           <Translate />
         </ul>
         <div className={styles.mobileNavigation}>
