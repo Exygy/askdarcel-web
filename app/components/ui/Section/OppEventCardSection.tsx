@@ -30,44 +30,50 @@ export const OppEventCardSection = (props: OppEventCardSectionProps) => {
       backgroundColor={background_color.color}
       link={link}
     >
-      {events && <div className={`${styles.cardsContainer} ${styles[sectionType]}`}>
-        {events?.map((event): JSX.Element => {
-          const { attributes: { title, id, date, image } } =
-            event;
-          const cardImage = image.image.data?.attributes.url ?? "";
-
-          return (
-            <OppEventCard
-              key={title}
-              title={title}
-              slug={id}
-              startDate={new Date(date?.startdate)}
-              endDate={new Date(date?.enddate)}
-              image={cardImage}
-              sectionType={sectionType}
-            />
-          );
-        })}
-        </div>}
-        {opportunities && <div className={`${styles.cardsContainer} ${styles[sectionType]}`}>
-        {opportunities?.map((opp): JSX.Element => {
-          const { attributes: { title, id, startdate, enddate, image } } =
-            opp;
+      {events && (
+        <div className={`${styles.cardsContainer} ${styles[sectionType]}`}>
+          {events?.map((event): JSX.Element => {
+            const {
+              attributes: { title, id, date, image },
+            } = event;
             const cardImage = image.image.data?.attributes.url ?? "";
 
-          return (
-            <OppEventCard
-              key={title}
-              title={title}
-              slug={id}
-              startDate={new Date(startdate)}
-              endDate={new Date(enddate)}
-              image={cardImage}
-              sectionType={sectionType}
-            />
-          );
-        })}
-      </div>}
+            return (
+              <OppEventCard
+                key={title}
+                title={title}
+                slug={id}
+                startDate={new Date(date?.startdate)}
+                endDate={new Date(date?.enddate)}
+                image={cardImage}
+                sectionType={sectionType}
+              />
+            );
+          })}
+        </div>
+      )}
+      {opportunities && (
+        <div className={`${styles.cardsContainer} ${styles[sectionType]}`}>
+          {opportunities?.map((opp): JSX.Element => {
+            const {
+              attributes: { title, id, startdate, enddate, image },
+            } = opp;
+            const cardImage = image.image.data?.attributes.url ?? "";
+
+            return (
+              <OppEventCard
+                key={title}
+                title={title}
+                slug={id}
+                startDate={new Date(startdate)}
+                endDate={new Date(enddate)}
+                image={cardImage}
+                sectionType={sectionType}
+              />
+            );
+          })}
+        </div>
+      )}
     </HomePageSection>
   );
 };

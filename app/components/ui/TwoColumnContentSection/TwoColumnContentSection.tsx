@@ -48,7 +48,9 @@ export interface TwoColumnContent {
   _id: string;
 }
 
-export const TwoColumnContentSection = (props: StrapiModel.TwoColumnContentBlock) => {
+export const TwoColumnContentSection = (
+  props: StrapiModel.TwoColumnContentBlock
+) => {
   const { link, content, media_alignment, media } = props;
   return (
     <section className={styles.twoColumnContentSectionContainer}>
@@ -75,7 +77,7 @@ export const TwoColumnContentSection = (props: StrapiModel.TwoColumnContentBlock
         <div
           className={styles.contentBlock}
           dangerouslySetInnerHTML={{
-            __html: content
+            __html: content,
           }}
         />
         {link && (

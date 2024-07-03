@@ -2,7 +2,11 @@ import React from "react";
 import { StrapiModel } from "models/Strapi";
 import { FooterLink } from "./FooterLink";
 
-export const FooterColumn = ({ column }: { column: StrapiModel.DynamicLink }) => {
+export const FooterColumn = ({
+  column,
+}: {
+  column: StrapiModel.DynamicLink;
+}) => {
   return (
     <figure>
       <figcaption>{column.title}</figcaption>

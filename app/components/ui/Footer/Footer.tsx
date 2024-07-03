@@ -41,7 +41,11 @@ export const Footer = () => {
                   }}
                 />
                 <div className="site-footer__contact">
-                  <a href={`tel:${callableUSPhoneNumber(footerData.phone_number)}`}>
+                  <a
+                    href={`tel:${callableUSPhoneNumber(
+                      footerData.phone_number
+                    )}`}
+                  >
                     {footerData.phone_number}
                   </a>
                   <br />

@@ -19,16 +19,19 @@ interface SWRHookResult<T> {
 
 function useStrapiHook<T>(path: string): SWRHookResult<T> {
   const dataFetcher = () =>
-    fetcher<StrapiApi.StrapiResponse<T>>(`${config.STRAPI_API_URL}/api/${path}`, {
-      Authorization: `Bearer ${config.STRAPI_API_TOKEN}`,
-    });
+    fetcher<StrapiApi.StrapiResponse<T>>(
+      `${config.STRAPI_API_URL}/api/${path}`,
+      {
+        Authorization: `Bearer ${config.STRAPI_API_TOKEN}`,
+      }
+    );
 
   const { data, error, isLoading } = useSWR<StrapiApi.StrapiResponse<T>>(
     `/api/${path}`,
     dataFetcher
   );
-  console.log('error = ', error);
-  console.log('hook data = ', data);
+  console.log("error = ", error);
+  console.log("hook data = ", data);
 
   return {
     data: data?.data ? data.data : null,
@@ -38,18 +41,22 @@ function useStrapiHook<T>(path: string): SWRHookResult<T> {
 }
 
 export function useFooterData() {
-  return useStrapiHook<StrapiApi.FooterResponse>("footer?populate[links][populate]=*");
+  return useStrapiHook<StrapiApi.FooterResponse>(
+    "footer?populate[links][populate]=*"
+  );
 }
 
 export function useHomepageData() {
-  return useStrapiHook<StrapiApi.HomepageResponse>("home-page?populate[hero][populate]=*&populate[category_section][populate]=*&populate[opportunity_section][populate]=*&populate[opportunities][populate][image][populate]=*&populate[opportunities][populate][address]=*&populate[opportunities][populate][links][populate]=*&populate[opportunities][populate][opportunity_categories]=*&populate[event_section][populate]=*&populate[events][populate][date]=*&populate[events][populate][address]=*&populate[events][populate][links]=*&populate[events][populate][image][populate]=*&populate[events][populate][event_categories]=*&populate[two_column_content_blocks][populate][link]=*&populate[two_column_content_blocks][populate][media][populate]=*");
+  return useStrapiHook<StrapiApi.HomepageResponse>(
+    "home-page?populate[hero][populate]=*&populate[category_section][populate]=*&populate[opportunity_section][populate]=*&populate[opportunities][populate][image][populate]=*&populate[opportunities][populate][address]=*&populate[opportunities][populate][links][populate]=*&populate[opportunities][populate][opportunity_categories]=*&populate[event_section][populate]=*&populate[events][populate][date]=*&populate[events][populate][address]=*&populate[events][populate][links]=*&populate[events][populate][image][populate]=*&populate[events][populate][event_categories]=*&populate[two_column_content_blocks][populate][link]=*&populate[two_column_content_blocks][populate][media][populate]=*"
+  );
 }
 
 export namespace StrapiApi {
   interface Meta {
     [key: string]: string;
   }
-  
+
   // Single data item response
   export interface StrapiDatumResponse<T> {
     id: number;
@@ -57,7 +64,10 @@ export namespace StrapiApi {
   }
 
   // Data response can be a single item, an array of items, or null
-  export type StrapiDataResponse<T> = StrapiDatumResponse<T> | Array<StrapiDatumResponse<T>> | null;
+  export type StrapiDataResponse<T> =
+    | StrapiDatumResponse<T>
+    | Array<StrapiDatumResponse<T>>
+    | null;
 
   // Unified response interface for object or array responses
   export interface StrapiResponse<T> {
@@ -177,11 +187,12 @@ export namespace StrapiApi {
       coordinates: {
         lat: number;
         lng: number;
-      }
+      };
     } | null;
   }
 
-  export interface TwoColumnContentBlockResponse extends BaseAttributesResponse {
+  export interface TwoColumnContentBlockResponse
+    extends BaseAttributesResponse {
     title: string;
     media_alignment: "left" | "right";
     content: string;
@@ -217,7 +228,7 @@ export namespace StrapiApi {
     enddate: string;
     starttime: string;
     endtime: string;
-    recurrence: "none" | "daily" | "weekly" | "monthly" | "yearly"
+    recurrence: "none" | "daily" | "weekly" | "monthly" | "yearly";
   }
 
   export interface EventResponse extends BaseAttributesResponse {
