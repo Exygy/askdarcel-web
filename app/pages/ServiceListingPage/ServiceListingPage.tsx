@@ -123,9 +123,7 @@ export const ServiceListingPage = () => {
       <ListingInfoSection title="Contact" data-cy="service-contact-section">
         <DataTable
           rows={[service]}
-          rowRenderer={(service: Service) => (
-            <ContactInfoTableRows service={service} />
-          )}
+          rowRenderer={(srv) => <ContactInfoTableRows service={srv} />}
         />
       </ListingInfoSection>
 
