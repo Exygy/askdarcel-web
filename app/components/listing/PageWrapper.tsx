@@ -23,7 +23,7 @@ const ListingPageWrapper = ({
   <>
     <div className={styles[`listing-wrapper`]}>
       <Helmet>
-        <title>{`${title} | ${whitelabel.title}`}</title>
+        <title>{title}</title>
         <meta name="description" content={description} />
       </Helmet>
       <article className={styles.listing} id="resource">
