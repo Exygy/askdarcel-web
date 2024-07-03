@@ -2,7 +2,6 @@ import React from "react";
 import { Helmet } from "react-helmet-async";
 import { Footer } from "components/ui";
 import { ActionSidebar } from "components/listing";
-import whitelabel from "utils/whitelabel";
 import styles from "./PageWrapper.module.scss";
 
 type ListingPageWrapperProps = {
@@ -23,7 +22,7 @@ const ListingPageWrapper = ({
   <>
     <div className={styles[`listing-wrapper`]}>
       <Helmet>
-        <title>{`${title} | ${whitelabel.title}`}</title>
+        <title>{title}</title>
         <meta name="description" content={description} />
       </Helmet>
       <article className={styles.listing} id="resource">
