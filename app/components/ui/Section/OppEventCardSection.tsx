@@ -1,7 +1,5 @@
-import imageUrlBuilder from "@sanity/image-url";
 import { HomePageSection } from "pages/HomePage/components/Section";
 import React from "react";
-import { client } from "../../../sanity";
 import { OppEventCard } from "../Cards/OppEventCard";
 import styles from "./OppEventCardSection.module.scss";
 import { Loader } from "../Loader";
@@ -17,7 +15,6 @@ interface OppEventCardSectionProps {
 export const OppEventCardSection = (props: OppEventCardSectionProps) => {
   const { sectionType, sectionData, events, opportunities } = props;
   const { header, subheader, background_color, link } = sectionData;
-  const builder = imageUrlBuilder(client);
 
   if (!sectionData) {
     return <Loader />;

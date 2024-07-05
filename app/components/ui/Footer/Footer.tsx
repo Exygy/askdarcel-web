@@ -1,6 +1,6 @@
 import React from "react";
 import { callableUSPhoneNumber } from "utils/numbers";
-import { htmlWithBreaks } from "utils/sanity";
+import { htmlWithBreaks } from "utils/cms";
 import Our415Logo from "assets/img/our415-white.png";
 import SFSeal from "assets/img/sf-seal-white.png";
 import DCYFLogo from "assets/img/dcyf-white.png";
