@@ -16,4 +16,5 @@ export namespace StrapiModel {
   export interface Opportunity extends StrapiApi.OpportunityResponse {}
   export interface TwoColumnContentBlock
     extends StrapiApi.TwoColumnContentBlockResponse {}
+  export interface PageContent extends StrapiApi.ContentPageResponse {}
 }

@@ -30,8 +30,6 @@ function useStrapiHook<T>(path: string): SWRHookResult<T> {
     `/api/${path}`,
     dataFetcher
   );
-  console.log("error = ", error);
-  console.log("hook data = ", data);
 
   return {
     data: data?.data ? data.data : null,
@@ -52,9 +50,18 @@ export function useHomepageData() {
   );
 }
 
+export function usePageContent(title: string) {
+  return useStrapiHook<StrapiApi.ContentPageResponse>(`content-pages?filters[title][$eq]=${title}&populate[two_column_content_blocks][populate][link]=*&populate[two_column_content_blocks][populate][media][populate]=*`);
+}
+
 export namespace StrapiApi {
   interface Meta {
-    [key: string]: string;
+    pagination?: {
+      page: number;
+      pageSize: number;
+      pageCount: number;
+      total: number;
+    }
   }
 
   // Single data item response
@@ -260,6 +267,12 @@ export namespace StrapiApi {
     opportunities: StrapiArrayResponse<OpportunityResponse>;
     event_section: ContentBlockResponse;
     events: StrapiArrayResponse<EventResponse>;
+    two_column_content_blocks: StrapiArrayResponse<TwoColumnContentBlockResponse>;
+  }
+
+  export interface ContentPageResponse extends BaseAttributesResponse {
+    title: string;
+    masthead: string;
     two_column_content_blocks: StrapiArrayResponse<TwoColumnContentBlockResponse>;
   }
 }
