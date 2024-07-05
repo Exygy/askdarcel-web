@@ -3,13 +3,11 @@ import { Loader } from "components/ui";
 import { StrapiModel } from "models/Strapi";
 import { Masthead } from "../../components/ui/Masthead/Masthead";
 import { EmailSignup } from "../../components/EmailSignup/Emailsignup";
-import {
-  TwoColumnContentSection,
-} from "../../components/ui/TwoColumnContentSection/TwoColumnContentSection";
+import { TwoColumnContentSection } from "../../components/ui/TwoColumnContentSection/TwoColumnContentSection";
 import { usePageContent } from "../../hooks/StrapiAPI";
 
 export const AboutPage = () => {
-  const { data, isLoading } = usePageContent('About');
+  const { data, isLoading } = usePageContent("About");
 
   const res = data as Array<StrapiModel.StrapiDatum<StrapiModel.PageContent>>;
 
@@ -19,11 +17,15 @@ export const AboutPage = () => {
     return <Loader />;
   }
 
-  return pageData && (
-    <>
-      <Masthead title={pageData.masthead} />
-      {pageData.two_column_content_blocks?.data?.map((content) => <TwoColumnContentSection key={content.id} {...content.attributes} />)}
-      <EmailSignup />
-    </>
+  return (
+    pageData && (
+      <>
+        <Masthead title={pageData.masthead} />
+        {pageData.two_column_content_blocks?.data?.map((content) => (
+          <TwoColumnContentSection key={content.id} {...content.attributes} />
+        ))}
+        <EmailSignup />
+      </>
+    )
   );
 };

@@ -51,7 +51,9 @@ export function useHomepageData() {
 }
 
 export function usePageContent(title: string) {
-  return useStrapiHook<StrapiApi.ContentPageResponse>(`content-pages?filters[title][$eq]=${title}&populate[two_column_content_blocks][populate][link]=*&populate[two_column_content_blocks][populate][media][populate]=*`);
+  return useStrapiHook<StrapiApi.ContentPageResponse>(
+    `content-pages?filters[title][$eq]=${title}&populate[two_column_content_blocks][populate][link]=*&populate[two_column_content_blocks][populate][media][populate]=*`
+  );
 }
 
 export namespace StrapiApi {
@@ -61,7 +63,7 @@ export namespace StrapiApi {
       pageSize: number;
       pageCount: number;
       total: number;
-    }
+    };
   }
 
   // Single data item response
