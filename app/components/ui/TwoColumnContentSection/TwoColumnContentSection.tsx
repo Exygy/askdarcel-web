@@ -23,6 +23,8 @@ export const TwoColumnContentSection = (
         <img
           className={styles.image}
           src={media[0].image?.data?.attributes?.url ?? ""}
+          // eslint-disable-next-line jsx-a11y/img-redundant-alt
+          alt={media[0].image?.data?.attributes?.alternativeText}
         />
       </div>
       <div
