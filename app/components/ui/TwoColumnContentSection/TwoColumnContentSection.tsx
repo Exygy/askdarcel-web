@@ -4,6 +4,7 @@ import styles from "./TwoColumnContentSection.module.scss";
 import { Button } from "../inline/Button/Button";
 
 // TODO: media can be a video URL, update component to handle
+// TODO: update use srcset and the different media sizes for images
 
 export const TwoColumnContentSection = (
   props: StrapiModel.TwoColumnContentBlock
