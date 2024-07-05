@@ -1,7 +1,7 @@
 import React from "react";
+import { StrapiModel } from "models/Strapi";
 import styles from "./TwoColumnContentSection.module.scss";
 import { Button } from "../inline/Button/Button";
-import { StrapiModel } from "models/Strapi";
 
 // TODO: media can be a video URL, update component to handle
 
@@ -22,7 +22,6 @@ export const TwoColumnContentSection = (
         <img
           className={styles.image}
           src={media[0].image?.data?.attributes?.url ?? ""}
-          alt={media[0].image?.data?.attributes?.alternativeText}
         />
       </div>
       <div

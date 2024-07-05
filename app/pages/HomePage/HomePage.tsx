@@ -8,7 +8,7 @@ import { StrapiModel } from "models/Strapi";
 import { useHomepageData } from "../../hooks/StrapiAPI";
 
 export const HomePage = () => {
-  const { data, error, isLoading } = useHomepageData();
+  const { data, isLoading } = useHomepageData();
 
   const res = data as StrapiModel.StrapiDatum<StrapiModel.Homepage>;
 

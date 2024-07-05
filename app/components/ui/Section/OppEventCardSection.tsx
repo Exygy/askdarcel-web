@@ -1,9 +1,9 @@
 import { HomePageSection } from "pages/HomePage/components/Section";
 import React from "react";
+import { StrapiModel } from "models/Strapi";
 import { OppEventCard } from "../Cards/OppEventCard";
 import styles from "./OppEventCardSection.module.scss";
 import { Loader } from "../Loader";
-import { StrapiModel } from "models/Strapi";
 
 interface OppEventCardSectionProps {
   sectionType: "event" | "opportunity";

@@ -1,8 +1,8 @@
 import React from "react";
 import classNames from "classnames";
+import { StrapiModel } from "models/Strapi";
 import styles from "./Hero.module.scss";
 import { Button } from "../inline/Button/Button";
-import { StrapiModel } from "models/Strapi";
 
 const Hero = ({
   backgroundImage,

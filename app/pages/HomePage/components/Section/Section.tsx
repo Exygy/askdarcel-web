@@ -1,8 +1,8 @@
 import { Button } from "components/ui/inline/Button/Button";
 import React from "react";
 import { BackgroundColorVariant } from "models";
-import styles from "./Section.module.scss";
 import { StrapiModel } from "models/Strapi";
+import styles from "./Section.module.scss";
 
 export interface Slug {
   current: string;
