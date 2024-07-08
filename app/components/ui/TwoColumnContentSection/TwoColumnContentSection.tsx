@@ -10,6 +10,7 @@ export const TwoColumnContentSection = (
   props: StrapiModel.TwoColumnContentBlock
 ) => {
   const { link, content, media_alignment, media } = props;
+  const altText = media[0].image?.data?.attributes?.alternativeText;
 
   return (
     <section className={styles.twoColumnContentSectionContainer}>
@@ -23,8 +24,7 @@ export const TwoColumnContentSection = (
         <img
           className={styles.image}
           src={media[0].image?.data?.attributes?.url ?? ""}
-          // eslint-disable-next-line jsx-a11y/img-redundant-alt
-          alt={media[0].image?.data?.attributes?.alternativeText}
+          alt={altText}
         />
       </div>
       <div
