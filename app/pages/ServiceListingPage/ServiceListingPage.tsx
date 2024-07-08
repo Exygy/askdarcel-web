@@ -10,7 +10,7 @@ import {
   TableOfOpeningTimes,
   ContactInfoTableRows,
 } from "components/listing";
-import { DataTable, Loader } from "components/ui";
+import { ListingInfoTable, Loader } from "components/ui";
 import { removeAsterisksAndHashes } from "utils/strings";
 import { ListingInfoSection } from "components/ui/Cards/ListingInfoSection";
 import ListingPageHeader from "components/listing/PageHeader";
@@ -104,7 +104,7 @@ export const ServiceListingPage = () => {
 
       {details.length > 0 && (
         <ListingInfoSection title="Details" data-cy="service-details-section">
-          <DataTable
+          <ListingInfoTable
             rowRenderer={(detail) => (
               <tr key={detail.title}>
                 <th>{detail.title}</th>
@@ -121,7 +121,7 @@ export const ServiceListingPage = () => {
       )}
 
       <ListingInfoSection title="Contact" data-cy="service-contact-section">
-        <DataTable
+        <ListingInfoTable
           rows={[service]}
           rowRenderer={(srv) => <ContactInfoTableRows service={srv} />}
         />
