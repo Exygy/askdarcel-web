@@ -129,7 +129,7 @@ const Navigation = () => {
 
             <ul className={`${styles.navRight}`}>
               <div
-                className={desktopNavigationStyles.desktopMenuItemsContainer}
+                className={desktopNavigationStyles.navigationMenuItemsContainer}
               >
                 {menuData.map((menuDataItem) => (
                   <DesktoptopLevelNavigationMenuItemRenderer
