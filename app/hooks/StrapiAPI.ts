@@ -96,14 +96,14 @@ export namespace StrapiApi {
     meta?: Meta;
   }
 
-  interface BaseAttributesResponse {
+  interface BaseDatumAttributesResponse {
     id: string;
     createdAt: string;
     updatedAt: string;
     publishedAt?: string;
   }
 
-  interface CategoryResponse extends BaseAttributesResponse {
+  interface CategoryResponse extends BaseDatumAttributesResponse {
     label: string;
   }
 
@@ -156,7 +156,7 @@ export namespace StrapiApi {
     thumbnail: ImageFormatResponse;
   }
 
-  export interface ImageResponse extends BaseAttributesResponse {
+  export interface ImageResponse extends BaseDatumAttributesResponse {
     name: string;
     alternativeText?: string;
     caption?: string;
@@ -201,7 +201,7 @@ export namespace StrapiApi {
   }
 
   export interface TwoColumnContentBlockResponse
-    extends BaseAttributesResponse {
+    extends BaseDatumAttributesResponse {
     title: string;
     media_alignment: "left" | "right";
     content: string;
@@ -210,7 +210,7 @@ export namespace StrapiApi {
     media: DynamicMediaResponse[];
   }
 
-  export interface OpportunityResponse extends BaseAttributesResponse {
+  export interface OpportunityResponse extends BaseDatumAttributesResponse {
     title: string;
     description: string;
     startdate: string;
@@ -240,7 +240,7 @@ export namespace StrapiApi {
     recurrence: "none" | "daily" | "weekly" | "monthly" | "yearly";
   }
 
-  export interface EventResponse extends BaseAttributesResponse {
+  export interface EventResponse extends BaseDatumAttributesResponse {
     title: string;
     venue: string;
     admissions: string;
@@ -255,7 +255,7 @@ export namespace StrapiApi {
     event_categories: Array<StrapiDatumResponse<CategoryResponse>>;
   }
 
-  export interface HomepageResponse extends BaseAttributesResponse {
+  export interface HomepageResponse extends BaseDatumAttributesResponse {
     title: string;
     hero: {
       id: number;
@@ -272,7 +272,7 @@ export namespace StrapiApi {
     two_column_content_blocks: StrapiArrayResponse<TwoColumnContentBlockResponse>;
   }
 
-  export interface ContentPageResponse extends BaseAttributesResponse {
+  export interface ContentPageResponse extends BaseDatumAttributesResponse {
     title: string;
     masthead: string;
     two_column_content_blocks: StrapiArrayResponse<TwoColumnContentBlockResponse>;
