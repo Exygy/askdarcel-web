@@ -23,7 +23,7 @@ export const Button = ({
   href,
   mobileFullWidth = true,
 }: {
-  children: string | JSX.Element;
+  children?: string | JSX.Element;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   readonly buttonType?: ButtonType;
   addClass?: string; // phase out as we replace old buttons with new

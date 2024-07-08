@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "components/ui/Navigation.module.scss";
-import { push as Menu } from "react-burger-menu";
+import { push as SidebarPushPanel } from "react-burger-menu";
 import {
   StrapiModel,
   extractLogoFromNavigationResponse,
   extractNavigationMenusFromNavigationResponse,
+  ExtractedNavigationMenusFromNavigationResponse,
 } from "../../models/Strapi";
 import { PopUpMessage, PopupMessageProp } from "../../components/ui";
 import { Router } from "../../Router";
@@ -24,104 +25,99 @@ const BURGER_STYLES = {
   bmMenu: {
     padding: "0",
     borderLeft: "1px solid #f4f4f4",
+    background: "white",
   },
   bmOverlay: {
     display: "none",
   },
 };
 
-interface NavigationMenuProps {
-  menus: StrapiModel.NavigationMenu[];
-  dropdownIsOpen: boolean;
-  setDropdownIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-const NavigationMenu: React.FC<NavigationMenuProps> = ({
-  menus,
-  dropdownIsOpen,
-  setDropdownIsOpen,
-}): JSX.Element => (
-  <>
-    {menus.map((menu) => (
-      <div className={styles.navigationMenuContainer} key={menu.id.toString()}>
-        <button
-          type="button"
-          aria-haspopup="menu"
-          aria-expanded={dropdownIsOpen ? "true" : "false"}
-          onClick={() => setDropdownIsOpen((prev) => !prev)}
-          className={styles.navigationMenuHeader}
-        >
-          {menu.title}
-          <span className={`fas fa-chevron-down ${styles.chevron}`} />
-        </button>
-
-        <ul
-          style={{ display: dropdownIsOpen ? "block" : "none" }}
-          className={styles.navigationMenuList}
-        >
-          {menu.link.map((linkItem: StrapiModel.Link) => (
-            <li key={linkItem.id} className={styles.navigationMenuListItem}>
-              <Link to={linkItem.url} className={styles.navigationMenuLink}>
-                {linkItem.text}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
-    ))}
-    <div className="navigationMenuTranslate">
-      <GoogleTranslate />
-    </div>
-  </>
-);
-
 const Navigation = () => {
-  const [mobileNavIsOpen, setmobileNavIsOpen] = useState(false);
-  const toggleMobileNav = () => setmobileNavIsOpen((prev) => !prev);
+  const [mobileNavigationSidebarIsOpen, setMobileNavigationSidebarIsOpen] =
+    useState(false);
+  const [
+    mobileSubNavigationSidebarIsOpen,
+    setMobileSubNavigationSidebarIsOpen,
+  ] = useState(false);
+  const toggleMobileNav = () =>
+    setMobileNavigationSidebarIsOpen((prev) => !prev);
+  const toggleMobileSubNav = () =>
+    setMobileSubNavigationSidebarIsOpen((prev) => !prev);
+  const [desktopNavigationdropdownIsOpen, setdesktopNavigationDropdownIsOpen] =
+    useState(false);
+  const toggledesktopNavigationDropdownIsOpen = () =>
+    setdesktopNavigationDropdownIsOpen((prev) => !prev);
   const [popUpMessage, setPopUpMessage] = useState<PopupMessageProp>({
     message: "",
     visible: false,
     type: "success",
   });
   const { data: navigationResponse, error, isLoading } = useNavigationData();
-  const [dropdownIsOpen, setDropdownIsOpen] = useState(false);
   const logoData = extractLogoFromNavigationResponse(navigationResponse);
-  const menus =
+  const menuData =
     extractNavigationMenusFromNavigationResponse(navigationResponse);
 
-  // TODO
-  if (error) {
+  const mobileNavigationButtonIcon = () => {
+    if (mobileNavigationSidebarIsOpen && mobileSubNavigationSidebarIsOpen) {
+      return "fa-arrow-left";
+    }
+    if (mobileNavigationSidebarIsOpen) {
+      return "fa-xmark";
+    }
+
+    return ` fa-bars`;
+  };
+
+  const handleMobileNavigationOnClick = () => {
+    if (mobileNavigationSidebarIsOpen && mobileSubNavigationSidebarIsOpen) {
+      toggleMobileSubNav();
+    } else {
+      toggleMobileNav();
+    }
+  };
+
+  // TODO: What do we want here?
+  if (error || menuData === null) {
     return <span>ERROR</span>;
   }
 
-  // TODO
+  // TODO: What do we want here?
   if (isLoading) {
     return <span>is loading...</span>;
   }
 
   return (
     <>
-      {mobileNavIsOpen && (
-        <span className={styles.hamburgerContainer}>
-          <Menu
-            isOpen={mobileNavIsOpen}
-            onStateChange={() => toggleMobileNav}
-            outerContainerId={OUTER_CONTAINER_ID}
-            pageWrapId={PAGE_WRAP_ID}
-            right
-            styles={BURGER_STYLES}
-            width="275px"
-          >
-            {mobileNavIsOpen && menus?.length && (
-              <NavigationMenu
-                menus={menus}
-                dropdownIsOpen={dropdownIsOpen}
-                setDropdownIsOpen={setDropdownIsOpen}
+      <span className={styles.mobileNavigationContainer}>
+        <SidebarPushPanel
+          isOpen={
+            mobileNavigationSidebarIsOpen || mobileSubNavigationSidebarIsOpen
+          }
+          outerContainerId={OUTER_CONTAINER_ID}
+          pageWrapId={PAGE_WRAP_ID}
+          right
+          styles={BURGER_STYLES}
+          width={"275px"}
+        >
+          <div className={styles.mobileMenuItemsContainer}>
+            {menuData.map((menuDataItem) => (
+              <MobileNavigationMenuDataItemRenderer
+                menuItem={menuDataItem}
+                mobileSubNavigationSidebarIsOpen={
+                  mobileSubNavigationSidebarIsOpen
+                }
+                toggleMobileSubNav={toggleMobileSubNav}
+                key={menuDataItem.id}
               />
+            ))}
+            {mobileNavigationSidebarIsOpen && (
+              <div className={styles.navigationMenuTranslate}>
+                <GoogleTranslate />
+              </div>
             )}
-          </Menu>
-        </span>
-      )}
+          </div>
+        </SidebarPushPanel>
+      </span>
       <div id={PAGE_WRAP_ID}>
         <nav className={styles.siteNav}>
           <div className={styles.primaryRow}>
@@ -131,23 +127,33 @@ const Navigation = () => {
               </Link>
             </div>
 
-            <ul className={styles.navRight}>
-              {!mobileNavIsOpen && menus?.length && (
-                <NavigationMenu
-                  menus={menus}
-                  dropdownIsOpen={dropdownIsOpen}
-                  setDropdownIsOpen={setDropdownIsOpen}
-                />
-              )}
+            <ul className={`${styles.navRight}`}>
+              <div className={styles.desktopMenuItemsContainer}>
+                {menuData.map((menuDataItem) => (
+                  <DesktoptopLevelNavigationMenuItemRenderer
+                    menuItem={menuDataItem}
+                    desktopNavigationdropdownIsOpen={
+                      desktopNavigationdropdownIsOpen
+                    }
+                    toggledesktopNavigationDropdownIsOpen={
+                      toggledesktopNavigationDropdownIsOpen
+                    }
+                    key={menuDataItem.id}
+                  />
+                ))}
+              </div>
+              <div className={styles.navigationMenuTranslate}>
+                <GoogleTranslate />
+              </div>
             </ul>
-            <div className={styles.mobileNavigation}>
-              <button
-                type="button"
-                aria-label="navigation menu"
-                className={styles.hamburgerButton}
-                onClick={toggleMobileNav}
-              />
-            </div>
+            <button
+              type="button"
+              aria-label="navigation menu"
+              className={`fas ${mobileNavigationButtonIcon()} ${
+                styles.mobileNavigationButton
+              }`}
+              onClick={handleMobileNavigationOnClick}
+            />
           </div>
         </nav>
         <div className="container">
@@ -157,6 +163,123 @@ const Navigation = () => {
       </div>
     </>
   );
+};
+
+function menuItemHasLinks(
+  menuItem: ExtractedNavigationMenusFromNavigationResponse[number]
+): menuItem is StrapiModel.NavigationMenu {
+  return "link" in menuItem;
+}
+
+const DesktoptopLevelNavigationMenuItemRenderer = ({
+  menuItem,
+  desktopNavigationdropdownIsOpen,
+  toggledesktopNavigationDropdownIsOpen,
+}: {
+  menuItem: ExtractedNavigationMenusFromNavigationResponse[number];
+  desktopNavigationdropdownIsOpen: boolean;
+  toggledesktopNavigationDropdownIsOpen: () => void;
+}) => {
+  if (menuItemHasLinks(menuItem)) {
+    return (
+      <>
+        <div
+          className={styles.navigationMenuContainer}
+          key={menuItem.id.toString()}
+        >
+          <button
+            type="button"
+            aria-haspopup="menu"
+            aria-expanded={desktopNavigationdropdownIsOpen ? "true" : "false"}
+            onClick={toggledesktopNavigationDropdownIsOpen}
+            className={styles.navigationMenuHeader}
+          >
+            {menuItem.title}
+            <span className={`fas fa-chevron-down ${styles.chevron}`} />
+          </button>
+
+          <ul
+            style={{
+              display: desktopNavigationdropdownIsOpen ? "block" : "none",
+            }}
+            className={`${styles.navigationMenuList}`}
+          >
+            {menuItem.link.map((linkItem: StrapiModel.Link) => (
+              <li key={linkItem.id} className={styles.navigationMenuListItem}>
+                <Link to={linkItem.url} className={styles.navigationMenuLink}>
+                  {linkItem.text}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </>
+    );
+  } else {
+    return (
+      <li key={menuItem.id}>
+        <Link to={menuItem.url} className={styles.navigationMenuLink}>
+          {menuItem.text}
+        </Link>
+      </li>
+    );
+  }
+};
+
+const MobileNavigationMenuDataItemRenderer = ({
+  menuItem,
+  mobileSubNavigationSidebarIsOpen,
+  toggleMobileSubNav,
+}: {
+  menuItem: ExtractedNavigationMenusFromNavigationResponse[number];
+  mobileSubNavigationSidebarIsOpen: boolean;
+  toggleMobileSubNav: () => void;
+}) => {
+  if (menuItemHasLinks(menuItem)) {
+    return (
+      <div
+        className={styles.mobileNavigationMenuContainer}
+        key={menuItem.id.toString()}
+      >
+        <button
+          type="button"
+          aria-haspopup="menu"
+          aria-expanded={mobileSubNavigationSidebarIsOpen ? "true" : "false"}
+          onClick={toggleMobileSubNav}
+          className={`${styles.mobileNavigationMenuHeader}`}
+        >
+          {menuItem.title}
+          <span className={`fas fa-chevron-right ${styles.chevron}`} />
+        </button>
+        <ul
+          className={`${styles.mobileNavigationMenuList} ${
+            mobileSubNavigationSidebarIsOpen
+              ? styles.mobileNavigationMenuListOpen
+              : ""
+          }`}
+        >
+          {menuItem.link.map((linkItem: StrapiModel.Link) => (
+            <li
+              key={linkItem.id}
+              className={styles.mobileNavigationMenuListItem}
+            >
+              <Link to={linkItem.url} className={styles.navigationMenuLink}>
+                {linkItem.text}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  } else {
+    return (
+      <li key={menuItem.id} className={styles.mobileNavigationMenuListItem}>
+        <Link to={menuItem.url} className={styles.mobileNavigationMenuLink}>
+          {menuItem.text}
+        </Link>
+      </li>
+    );
+  }
 };
 
 export default Navigation;
