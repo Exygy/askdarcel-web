@@ -146,7 +146,7 @@ export const ServiceListingPage = () => {
       {resource.services.length > 1 && (
         <ListingInfoSection
           title="Other services at this organization"
-          borderBottom={false}
+          borderBottom={service.categories ? true : false}
           data-cy="service-other-section"
         >
           {resource.services
@@ -162,6 +162,24 @@ export const ServiceListingPage = () => {
                 key={srv.id}
               />
             ))}
+        </ListingInfoSection>
+      )}
+      {service.categories && (
+        <ListingInfoSection
+          title="Tags"
+          borderBottom={false}
+          data-cy="service-tags-section"
+        >
+          <ListingInfoTable>
+            <tr>
+              <th>Categories</th>
+              <td>No categories</td>
+            </tr>
+            <tr>
+              <th>Subcategories</th>
+              <td>No categories</td>
+            </tr>
+          </ListingInfoTable>
         </ListingInfoSection>
       )}
     </ListingPageWrapper>
