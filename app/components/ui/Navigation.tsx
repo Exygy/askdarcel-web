@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "components/ui/Navigation.module.scss";
+import mobileNavigationStyles from "components/ui/MobileNavigation.module.scss";
+import desktopNavigationStyles from "components/ui/DesktopNavigation.module.scss";
 import { push as SidebarPushPanel } from "react-burger-menu";
 import {
   StrapiModel,
@@ -57,7 +59,7 @@ const Navigation = () => {
   const menuData =
     extractNavigationMenusFromNavigationResponse(navigationResponse);
 
-  const mobileNavigationButtonIcon = () => {
+  const activatePushPanelButtonIcon = () => {
     if (mobileNavigationSidebarIsOpen && mobileSubNavigationSidebarIsOpen) {
       return "fa-arrow-left";
     }
@@ -88,36 +90,34 @@ const Navigation = () => {
 
   return (
     <>
-      <span className={styles.mobileNavigationContainer}>
-        <SidebarPushPanel
-          isOpen={
-            mobileNavigationSidebarIsOpen || mobileSubNavigationSidebarIsOpen
-          }
-          outerContainerId={OUTER_CONTAINER_ID}
-          pageWrapId={PAGE_WRAP_ID}
-          right
-          styles={BURGER_STYLES}
-          width={"275px"}
-        >
-          <div className={styles.mobileMenuItemsContainer}>
-            {menuData.map((menuDataItem) => (
-              <MobileNavigationMenuDataItemRenderer
-                menuItem={menuDataItem}
-                mobileSubNavigationSidebarIsOpen={
-                  mobileSubNavigationSidebarIsOpen
-                }
-                toggleMobileSubNav={toggleMobileSubNav}
-                key={menuDataItem.id}
-              />
-            ))}
-            {mobileNavigationSidebarIsOpen && (
-              <div className={styles.navigationMenuTranslate}>
-                <GoogleTranslate />
-              </div>
-            )}
-          </div>
-        </SidebarPushPanel>
-      </span>
+      <SidebarPushPanel
+        isOpen={
+          mobileNavigationSidebarIsOpen || mobileSubNavigationSidebarIsOpen
+        }
+        outerContainerId={OUTER_CONTAINER_ID}
+        pageWrapId={PAGE_WRAP_ID}
+        right
+        styles={BURGER_STYLES}
+        width={"275px"}
+      >
+        <div>
+          {menuData.map((menuDataItem) => (
+            <MobileNavigationMenuDataItemRenderer
+              menuItem={menuDataItem}
+              mobileSubNavigationSidebarIsOpen={
+                mobileSubNavigationSidebarIsOpen
+              }
+              toggleMobileSubNav={toggleMobileSubNav}
+              key={menuDataItem.id}
+            />
+          ))}
+          {mobileNavigationSidebarIsOpen && (
+            <div className={styles.navigationMenuTranslate}>
+              <GoogleTranslate />
+            </div>
+          )}
+        </div>
+      </SidebarPushPanel>
       <div id={PAGE_WRAP_ID}>
         <nav className={styles.siteNav}>
           <div className={styles.primaryRow}>
@@ -128,7 +128,9 @@ const Navigation = () => {
             </div>
 
             <ul className={`${styles.navRight}`}>
-              <div className={styles.desktopMenuItemsContainer}>
+              <div
+                className={desktopNavigationStyles.desktopMenuItemsContainer}
+              >
                 {menuData.map((menuDataItem) => (
                   <DesktoptopLevelNavigationMenuItemRenderer
                     menuItem={menuDataItem}
@@ -149,8 +151,8 @@ const Navigation = () => {
             <button
               type="button"
               aria-label="navigation menu"
-              className={`fas ${mobileNavigationButtonIcon()} ${
-                styles.mobileNavigationButton
+              className={`fas ${activatePushPanelButtonIcon()} ${
+                styles.activatePushPanelButton
               }`}
               onClick={handleMobileNavigationOnClick}
             />
@@ -184,7 +186,7 @@ const DesktoptopLevelNavigationMenuItemRenderer = ({
     return (
       <>
         <div
-          className={styles.navigationMenuContainer}
+          className={desktopNavigationStyles.navigationMenuContainer}
           key={menuItem.id.toString()}
         >
           <button
@@ -192,21 +194,29 @@ const DesktoptopLevelNavigationMenuItemRenderer = ({
             aria-haspopup="menu"
             aria-expanded={desktopNavigationdropdownIsOpen ? "true" : "false"}
             onClick={toggledesktopNavigationDropdownIsOpen}
-            className={styles.navigationMenuHeader}
+            className={desktopNavigationStyles.navigationMenuHeader}
           >
             {menuItem.title}
-            <span className={`fas fa-chevron-down ${styles.chevron}`} />
+            <span
+              className={`fas fa-chevron-down ${desktopNavigationStyles.chevron}`}
+            />
           </button>
 
           <ul
             style={{
               display: desktopNavigationdropdownIsOpen ? "block" : "none",
             }}
-            className={`${styles.navigationMenuList}`}
+            className={`${desktopNavigationStyles.navigationMenuList}`}
           >
             {menuItem.link.map((linkItem: StrapiModel.Link) => (
-              <li key={linkItem.id} className={styles.navigationMenuListItem}>
-                <Link to={linkItem.url} className={styles.navigationMenuLink}>
+              <li
+                key={linkItem.id}
+                className={desktopNavigationStyles.navigationMenuListItem}
+              >
+                <Link
+                  to={linkItem.url}
+                  className={desktopNavigationStyles.navigationMenuLink}
+                >
                   {linkItem.text}
                 </Link>
               </li>
@@ -218,7 +228,10 @@ const DesktoptopLevelNavigationMenuItemRenderer = ({
   } else {
     return (
       <li key={menuItem.id}>
-        <Link to={menuItem.url} className={styles.navigationMenuLink}>
+        <Link
+          to={menuItem.url}
+          className={desktopNavigationStyles.navigationMenuLink}
+        >
           {menuItem.text}
         </Link>
       </li>
@@ -238,7 +251,7 @@ const MobileNavigationMenuDataItemRenderer = ({
   if (menuItemHasLinks(menuItem)) {
     return (
       <div
-        className={styles.mobileNavigationMenuContainer}
+        className={mobileNavigationStyles.mobileNavigationMenuContainer}
         key={menuItem.id.toString()}
       >
         <button
@@ -246,24 +259,29 @@ const MobileNavigationMenuDataItemRenderer = ({
           aria-haspopup="menu"
           aria-expanded={mobileSubNavigationSidebarIsOpen ? "true" : "false"}
           onClick={toggleMobileSubNav}
-          className={`${styles.mobileNavigationMenuHeader}`}
+          className={`${mobileNavigationStyles.mobileNavigationMenuHeader}`}
         >
           {menuItem.title}
-          <span className={`fas fa-chevron-right ${styles.chevron}`} />
+          <span
+            className={`fas fa-chevron-right ${mobileNavigationStyles.chevron}`}
+          />
         </button>
         <ul
-          className={`${styles.mobileNavigationMenuList} ${
+          className={`${mobileNavigationStyles.mobileNavigationMenuList} ${
             mobileSubNavigationSidebarIsOpen
-              ? styles.mobileNavigationMenuListOpen
+              ? mobileNavigationStyles.mobileNavigationMenuListOpen
               : ""
           }`}
         >
           {menuItem.link.map((linkItem: StrapiModel.Link) => (
             <li
               key={linkItem.id}
-              className={styles.mobileNavigationMenuListItem}
+              className={mobileNavigationStyles.mobileNavigationMenuListItem}
             >
-              <Link to={linkItem.url} className={styles.navigationMenuLink}>
+              <Link
+                to={linkItem.url}
+                className={mobileNavigationStyles.mobileNavigationMenuLink}
+              >
                 {linkItem.text}
               </Link>
             </li>
@@ -273,8 +291,14 @@ const MobileNavigationMenuDataItemRenderer = ({
     );
   } else {
     return (
-      <li key={menuItem.id} className={styles.mobileNavigationMenuListItem}>
-        <Link to={menuItem.url} className={styles.mobileNavigationMenuLink}>
+      <li
+        key={menuItem.id}
+        className={mobileNavigationStyles.mobileNavigationMenuListItem}
+      >
+        <Link
+          to={menuItem.url}
+          className={mobileNavigationStyles.mobileNavigationMenuLink}
+        >
           {menuItem.text}
         </Link>
       </li>
