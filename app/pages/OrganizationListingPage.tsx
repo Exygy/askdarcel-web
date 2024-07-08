@@ -114,7 +114,10 @@ export const OrganizationListingPage = () => {
       </ListingInfoSection>
 
       {orgLocations?.length > 0 && (
-        <ListingInfoSection title="Location">
+        <ListingInfoSection
+          title="Location"
+          borderBottom={org.notes ? true : false}
+        >
           <MapOfLocations
             locations={orgLocations}
             locationRenderer={(loc: any) => (
@@ -124,9 +127,11 @@ export const OrganizationListingPage = () => {
         </ListingInfoSection>
       )}
 
-      <ListingInfoSection title="Notes" borderBottom={false}>
-        <NotesList notes={org.notes} />
-      </ListingInfoSection>
+      {org.notes && (
+        <ListingInfoSection title="Notes" borderBottom={false}>
+          <NotesList notes={org.notes} />
+        </ListingInfoSection>
+      )}
     </ListingPageWrapper>
   );
 };
