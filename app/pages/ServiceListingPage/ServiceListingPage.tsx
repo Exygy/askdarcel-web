@@ -25,6 +25,7 @@ import {
   Service,
 } from "../../models";
 import styles from "./ServiceListingPage.module.scss";
+import { LabelTagRows } from "components/listing/LabelTagRows";
 
 // Page at /services/123
 export const ServiceListingPage = () => {
@@ -146,7 +147,6 @@ export const ServiceListingPage = () => {
       {resource.services.length > 1 && (
         <ListingInfoSection
           title="Other services at this organization"
-          borderBottom={service.categories ? true : false}
           data-cy="service-other-section"
         >
           {resource.services
@@ -164,21 +164,14 @@ export const ServiceListingPage = () => {
             ))}
         </ListingInfoSection>
       )}
-      {service.categories && (
+      {(service.categories.length > 0 || service.eligibilities.length > 0) && (
         <ListingInfoSection
           title="Tags"
           borderBottom={false}
           data-cy="service-tags-section"
         >
           <ListingInfoTable>
-            <tr>
-              <th>Categories</th>
-              <td>No categories</td>
-            </tr>
-            <tr>
-              <th>Subcategories</th>
-              <td>No categories</td>
-            </tr>
+            <LabelTagRows service={service} />
           </ListingInfoTable>
         </ListingInfoSection>
       )}
