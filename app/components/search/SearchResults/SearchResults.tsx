@@ -169,7 +169,7 @@ const SearchResult = ({
   const url = hit.type === "service" ? hit.url : hit.website;
   const basePath = hit.type === "service" ? `services` : `organizations`;
 
-  // TODO: categories should be top level false
+  // TODO: since hit -> categories just come in as one array of category names, we need to compare them against a hardcoded list of top-level categories and display the ones that are NOT top-level in the subcategory LabelTags. Awaiting that PR.
 
   return (
     <div className={styles.searchResult}>
