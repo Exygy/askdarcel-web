@@ -116,7 +116,7 @@ export const OrganizationListingPage = () => {
       {orgLocations?.length > 0 && (
         <ListingInfoSection
           title="Location"
-          borderBottom={org.notes ? true : false}
+          borderBottom={org.notes.length > 0 ? true : false}
         >
           <MapOfLocations
             locations={orgLocations}
@@ -127,7 +127,7 @@ export const OrganizationListingPage = () => {
         </ListingInfoSection>
       )}
 
-      {org.notes && (
+      {org.notes.length > 0 && (
         <ListingInfoSection title="Notes" borderBottom={false}>
           <NotesList notes={org.notes} />
         </ListingInfoSection>
