@@ -37,11 +37,6 @@
 .navRight {
   display: flex;
   align-items: center;
-  li {
-    &:not(:last-child) {
-      padding-right: calc-em(20px);
-    }
-  }
   @include r_max($break-tablet-s) {
     display: none;
   }

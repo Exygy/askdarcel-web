@@ -15,7 +15,6 @@
   > * {
     font-size: 18px;
     font-family: Montserrat;
-    font-weight: 500;
   }
 }
 
@@ -27,6 +26,7 @@
   box-shadow: 0px 4px 6px -1px #0000001A;
   border-radius: $rounded-md;
   overflow: hidden;
+  font-weight: 400;
 }
 
 .navigationMenuHeader {
@@ -56,14 +56,6 @@
   }
 }
 
-.navigationMenuHeader {
-  font-size: 18px;
-}
-.navigationMenuListItem {
-  font-size: 18px;
-  font-weight: 400;
-}
-
 .navigationMenuLink {
   // flex ensures each menu link fills width of widest item
   display: flex;
@@ -80,13 +72,18 @@
   font-size: 12px;
 }
 
-.navigationMenuItemsContainer {
+.desktopNavigationContainer {
   display: flex;
   flex-direction: row;
   align-items: center;
 
   // Adds separator
   border-right: 1px solid black;
-  padding-right: $spacing-1;
+  padding-right: $spacing-2;
   margin-right: $spacing-6;
+
+
+  > * {
+    font-weight: 600;
+  }
 }
