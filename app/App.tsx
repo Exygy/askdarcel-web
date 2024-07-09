@@ -14,8 +14,7 @@ import {
   Banner,
   HamburgerMenu,
   Navigation,
-  PopUpMessage,
-  PopupMessageProp,
+  PopupMessageProp, // TODO: Get rid of Popup message and props
   UserWay,
 } from "./components/ui";
 
@@ -106,7 +105,6 @@ export const App = () => {
           <div className="container">
             <Router setPopUpMessage={setPopUpMessage} />
           </div>
-          {popUpMessage && <PopUpMessage popUpMessage={popUpMessage} />}
         </div>
       </AppProvider>
     </div>
