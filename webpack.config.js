@@ -21,6 +21,10 @@ if (existsSync("config.yml") || process.env.CONFIG_YAML) {
 
 // Take the user config from the file, and override keys with environment variables if they exist
 const environmentConfig = [
+  "API_URL",
+  "API_PROXY_SECURE",
+  "API_PROXY_CHANGE_ORIGIN",
+  "API_PROXY_REWRITE",
   "GOOGLE_API_KEY",
   "ALGOLIA_INDEX_PREFIX",
   "ALGOLIA_APPLICATION_ID",
@@ -179,8 +183,10 @@ module.exports = {
         pathRewrite: { "^/api/v2/": "/api/" },
       },
       "/api/": {
-        target: process.env.API_URL || "http://localhost:3000",
-        pathRewrite: { "^/api/": "" },
+        target: config.API_URL || "http://localhost:3000",
+        pathRewrite: config.API_PROXY_REWRITE ? { "^/api/": "" } : undefined,
+        secure: config.API_PROXY_SECURE || false,
+        changeOrigin: config.API_PROXY_CHANGE_ORIGIN || false,
       },
     },
   },
