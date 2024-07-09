@@ -117,7 +117,8 @@
     "test:coverage": "nyc --extension .jsx --reporter=text npm test -- --exit",
     "test:watch": "npm run test -- --watch --watch-extensions jsx --inspect",
     "testcafe": "testcafe",
-    "testcafe:ci": "testcafe chrome:headless testcafe/*.js -c 3 --skip-js-errors"
+    "testcafe:ci": "testcafe chrome:headless testcafe/*.js -c 3 --skip-js-errors",
+    "open:pr": "./open-pr.sh"
   },
   "repository": {
     "type": "git",
