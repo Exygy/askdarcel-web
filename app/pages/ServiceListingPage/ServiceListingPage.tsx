@@ -15,6 +15,7 @@ import { removeAsterisksAndHashes } from "utils/strings";
 import { ListingInfoSection } from "components/ui/Cards/ListingInfoSection";
 import ListingPageHeader from "components/listing/PageHeader";
 import ListingPageWrapper from "components/listing/PageWrapper";
+import LabelTagRows from "components/listing/LabelTagRows";
 import {
   fetchService,
   generateServiceDetails,
@@ -25,7 +26,6 @@ import {
   Service,
 } from "../../models";
 import styles from "./ServiceListingPage.module.scss";
-import { LabelTagRows } from "components/listing/LabelTagRows";
 
 // Page at /services/123
 export const ServiceListingPage = () => {

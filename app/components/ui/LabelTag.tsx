@@ -6,7 +6,7 @@ interface LabelTagProps {
 }
 
 export const LabelTag = (props: LabelTagProps) => {
-  const label = props.label;
+  const { label } = props;
 
   return <span className={styles.labelTag}>{label}</span>;
 };

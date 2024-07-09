@@ -3,7 +3,7 @@ import { LabelTag } from "components/ui/LabelTag";
 import { Service } from "../../models";
 import styles from "./LabelTagRows.module.scss";
 
-export const LabelTagRows = ({ service }: { service: Service }) => {
+const LabelTagRows = ({ service }: { service: Service }) => {
   const topLevelCategories = service.categories?.filter(
     (srv) => srv.top_level === true
   );
@@ -48,3 +48,5 @@ export const LabelTagRows = ({ service }: { service: Service }) => {
     </>
   );
 };
+
+export default LabelTagRows;
