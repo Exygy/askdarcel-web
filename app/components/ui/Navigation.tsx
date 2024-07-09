@@ -109,7 +109,7 @@ const Navigation = () => {
               key={menuDataItem.id + idx}
             />
           ))}
-          {!!mobileNavigationSidebarIsOpen && (
+          {mobileNavigationSidebarIsOpen && (
             <div className={styles.navigationMenuTranslate}>
               <GoogleTranslate />
             </div>
