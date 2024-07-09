@@ -35,32 +35,26 @@ const BURGER_STYLES = {
 };
 
 const Navigation = () => {
+  const { data: navigationResponse, error, isLoading } = useNavigationData();
   const [mobileNavigationSidebarIsOpen, setMobileNavigationSidebarIsOpen] =
     useState(false);
-  const [
-    mobileSubNavigationSidebarIsOpen,
-    setMobileSubNavigationSidebarIsOpen,
-  ] = useState(false);
+  const [whichActiveMobileSubMenu, setActiveMobileSubMenu] = useState("");
   const toggleMobileNav = () =>
     setMobileNavigationSidebarIsOpen((prev) => !prev);
-  const toggleMobileSubNav = () =>
-    setMobileSubNavigationSidebarIsOpen((prev) => !prev);
-  const [desktopNavigationdropdownIsOpen, setdesktopNavigationDropdownIsOpen] =
-    useState(false);
-  const toggledesktopNavigationDropdownIsOpen = () =>
-    setdesktopNavigationDropdownIsOpen((prev) => !prev);
+  const [whichActiveDesktopSubMenu, setsetActiveDesktopSubMenu] = useState("");
   const [popUpMessage, setPopUpMessage] = useState<PopupMessageProp>({
     message: "",
     visible: false,
     type: "success",
   });
-  const { data: navigationResponse, error, isLoading } = useNavigationData();
   const logoData = extractLogoFromNavigationResponse(navigationResponse);
   const menuData =
     extractNavigationMenusFromNavigationResponse(navigationResponse);
+  const mobileSubMenuIsActive = !!whichActiveMobileSubMenu;
+  const desktopSubMenuIsActive = !!whichActiveDesktopSubMenu;
 
-  const activatePushPanelButtonIcon = () => {
-    if (mobileNavigationSidebarIsOpen && mobileSubNavigationSidebarIsOpen) {
+  const pushPanelIconDisplay = () => {
+    if (mobileNavigationSidebarIsOpen && mobileSubMenuIsActive) {
       return "fa-arrow-left";
     }
     if (mobileNavigationSidebarIsOpen) {
@@ -70,11 +64,19 @@ const Navigation = () => {
     return ` fa-bars`;
   };
 
-  const handleMobileNavigationOnClick = () => {
-    if (mobileNavigationSidebarIsOpen && mobileSubNavigationSidebarIsOpen) {
-      toggleMobileSubNav();
+  const handleActivatePushPanelClick = () => {
+    if (mobileSubMenuIsActive) {
+      setActiveMobileSubMenu("");
     } else {
       toggleMobileNav();
+    }
+  };
+
+  const togglesetActiveDesktopSubMenu = (next: string) => {
+    if (desktopSubMenuIsActive && whichActiveDesktopSubMenu === next) {
+      setsetActiveDesktopSubMenu("");
+    } else {
+      setsetActiveDesktopSubMenu(next);
     }
   };
 
@@ -91,9 +93,7 @@ const Navigation = () => {
   return (
     <>
       <SidebarPushPanel
-        isOpen={
-          mobileNavigationSidebarIsOpen || mobileSubNavigationSidebarIsOpen
-        }
+        isOpen={mobileNavigationSidebarIsOpen}
         outerContainerId={OUTER_CONTAINER_ID}
         pageWrapId={PAGE_WRAP_ID}
         right
@@ -101,17 +101,15 @@ const Navigation = () => {
         width={"275px"}
       >
         <div>
-          {menuData.map((menuDataItem) => (
+          {menuData.map((menuDataItem, idx) => (
             <MobileNavigationMenuDataItemRenderer
               menuItem={menuDataItem}
-              mobileSubNavigationSidebarIsOpen={
-                mobileSubNavigationSidebarIsOpen
-              }
-              toggleMobileSubNav={toggleMobileSubNav}
-              key={menuDataItem.id}
+              whichActiveMobileSubMenu={whichActiveMobileSubMenu}
+              setActiveMobileSubMenu={setActiveMobileSubMenu}
+              key={menuDataItem.id + idx}
             />
           ))}
-          {mobileNavigationSidebarIsOpen && (
+          {!!mobileNavigationSidebarIsOpen && (
             <div className={styles.navigationMenuTranslate}>
               <GoogleTranslate />
             </div>
@@ -131,16 +129,14 @@ const Navigation = () => {
               <div
                 className={desktopNavigationStyles.navigationMenuItemsContainer}
               >
-                {menuData.map((menuDataItem) => (
+                {menuData.map((menuDataItem, idx) => (
                   <DesktoptopLevelNavigationMenuItemRenderer
                     menuItem={menuDataItem}
-                    desktopNavigationdropdownIsOpen={
-                      desktopNavigationdropdownIsOpen
+                    whichActiveDesktopSubMenu={whichActiveDesktopSubMenu}
+                    togglesetActiveDesktopSubMenu={
+                      togglesetActiveDesktopSubMenu
                     }
-                    toggledesktopNavigationDropdownIsOpen={
-                      toggledesktopNavigationDropdownIsOpen
-                    }
-                    key={menuDataItem.id}
+                    key={menuDataItem.id + idx}
                   />
                 ))}
               </div>
@@ -151,10 +147,10 @@ const Navigation = () => {
             <button
               type="button"
               aria-label="navigation menu"
-              className={`fas ${activatePushPanelButtonIcon()} ${
+              className={`fas ${pushPanelIconDisplay()} ${
                 styles.activatePushPanelButton
               }`}
-              onClick={handleMobileNavigationOnClick}
+              onClick={handleActivatePushPanelClick}
             />
           </div>
         </nav>
@@ -175,25 +171,28 @@ function menuItemHasLinks(
 
 const DesktoptopLevelNavigationMenuItemRenderer = ({
   menuItem,
-  desktopNavigationdropdownIsOpen,
-  toggledesktopNavigationDropdownIsOpen,
+  whichActiveDesktopSubMenu,
+  togglesetActiveDesktopSubMenu,
 }: {
   menuItem: ExtractedNavigationMenusFromNavigationResponse[number];
-  desktopNavigationdropdownIsOpen: boolean;
-  toggledesktopNavigationDropdownIsOpen: () => void;
+  whichActiveDesktopSubMenu: string;
+  togglesetActiveDesktopSubMenu: (uniqueKey: string) => void;
 }) => {
   if (menuItemHasLinks(menuItem)) {
+    const uniqueKey = menuItem.title;
     return (
       <>
         <div
           className={desktopNavigationStyles.navigationMenuContainer}
-          key={menuItem.id.toString()}
+          key={uniqueKey}
         >
           <button
             type="button"
             aria-haspopup="menu"
-            aria-expanded={desktopNavigationdropdownIsOpen ? "true" : "false"}
-            onClick={toggledesktopNavigationDropdownIsOpen}
+            aria-expanded={
+              whichActiveDesktopSubMenu === uniqueKey ? "true" : "false"
+            }
+            onClick={() => togglesetActiveDesktopSubMenu(uniqueKey)}
             className={desktopNavigationStyles.navigationMenuHeader}
           >
             {menuItem.title}
@@ -204,7 +203,8 @@ const DesktoptopLevelNavigationMenuItemRenderer = ({
 
           <ul
             style={{
-              display: desktopNavigationdropdownIsOpen ? "block" : "none",
+              display:
+                whichActiveDesktopSubMenu === uniqueKey ? "block" : "none",
             }}
             className={`${desktopNavigationStyles.navigationMenuList}`}
           >
@@ -226,8 +226,9 @@ const DesktoptopLevelNavigationMenuItemRenderer = ({
       </>
     );
   } else {
+    const uniqueKey = menuItem.url;
     return (
-      <li key={menuItem.id}>
+      <li key={uniqueKey}>
         <Link
           to={menuItem.url}
           className={desktopNavigationStyles.navigationMenuLink}
@@ -241,24 +242,27 @@ const DesktoptopLevelNavigationMenuItemRenderer = ({
 
 const MobileNavigationMenuDataItemRenderer = ({
   menuItem,
-  mobileSubNavigationSidebarIsOpen,
-  toggleMobileSubNav,
+  whichActiveMobileSubMenu,
+  setActiveMobileSubMenu,
 }: {
   menuItem: ExtractedNavigationMenusFromNavigationResponse[number];
-  mobileSubNavigationSidebarIsOpen: boolean;
-  toggleMobileSubNav: () => void;
+  whichActiveMobileSubMenu: string;
+  setActiveMobileSubMenu: (uniqueKey: string) => void;
 }) => {
   if (menuItemHasLinks(menuItem)) {
+    const uniqueKey = menuItem.title;
     return (
       <div
         className={mobileNavigationStyles.mobileNavigationMenuContainer}
-        key={menuItem.id.toString()}
+        key={uniqueKey}
       >
         <button
           type="button"
           aria-haspopup="menu"
-          aria-expanded={mobileSubNavigationSidebarIsOpen ? "true" : "false"}
-          onClick={toggleMobileSubNav}
+          aria-expanded={
+            whichActiveMobileSubMenu === uniqueKey ? "true" : "false"
+          }
+          onClick={() => setActiveMobileSubMenu(uniqueKey)}
           className={`${mobileNavigationStyles.mobileNavigationMenuHeader}`}
         >
           {menuItem.title}
@@ -268,7 +272,7 @@ const MobileNavigationMenuDataItemRenderer = ({
         </button>
         <ul
           className={`${mobileNavigationStyles.mobileNavigationMenuList} ${
-            mobileSubNavigationSidebarIsOpen
+            whichActiveMobileSubMenu === uniqueKey
               ? mobileNavigationStyles.mobileNavigationMenuListOpen
               : ""
           }`}
@@ -290,9 +294,10 @@ const MobileNavigationMenuDataItemRenderer = ({
       </div>
     );
   } else {
+    const uniqueKey = menuItem.url;
     return (
       <li
-        key={menuItem.id}
+        key={uniqueKey}
         className={mobileNavigationStyles.mobileNavigationMenuListItem}
       >
         <Link

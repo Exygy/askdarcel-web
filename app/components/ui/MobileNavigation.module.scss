@@ -60,8 +60,8 @@
   top: 0;
   border-radius: 0;
   transition: transform 0.5s ease;
-  // TODO: Not sure yet why we need extra width here
-  transform: translateX(125%);
+  width: 100%;
+  transform: translateX(100%);
   background: $white;
 }
 
