@@ -169,6 +169,8 @@ const SearchResult = ({
   const url = hit.type === "service" ? hit.url : hit.website;
   const basePath = hit.type === "service" ? `services` : `organizations`;
 
+  // TODO: categories should be top level false
+
   return (
     <div className={styles.searchResult}>
       {/* Keep for Phase 2: */}
