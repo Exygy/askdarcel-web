@@ -1,12 +1,19 @@
 import React from "react";
+import classNames from "classnames";
 import styles from "./LabelTag.module.scss";
 
 interface LabelTagProps {
   label: string;
+  withTooltip?: boolean;
 }
 
 export const LabelTag = (props: LabelTagProps) => {
-  const { label } = props;
+  const { label, withTooltip = false } = props;
 
-  return <span className={styles.labelTag}>{label}</span>;
+  const tagClasses = classNames(
+    styles.labelTag,
+    withTooltip && styles.withTooltip
+  );
+
+  return <span className={tagClasses}>{label}</span>;
 };

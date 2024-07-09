@@ -13,6 +13,7 @@ import ResultsPagination from "components/search/Pagination/ResultsPagination";
 // import { Texting } from "components/Texting";
 // import { TextListing } from "components/Texting/Texting";
 import { Tooltip } from "react-tippy";
+import { LabelTag } from "components/ui/LabelTag";
 import { SearchHit, transformHits } from "../../../models/SearchHits";
 import styles from "./SearchResults.module.scss";
 import ClearSearchButton from "../Refinements/ClearSearchButton";
@@ -202,9 +203,7 @@ const SearchResult = ({
             </div>
             <div className={styles.searchResultSubcatContainer}>
               {hit.categories.length > 0 && (
-                <span className={styles.searchResultSubcat}>
-                  {hit.categories[0]}
-                </span>
+                <LabelTag label={hit.categories[0].toString()} />
               )}
               {hit.categories.length > 1 && (
                 <Tooltip
@@ -215,9 +214,10 @@ const SearchResult = ({
                   animation="none"
                   arrow
                 >
-                  <span className={styles.searchResultSubcatTooltip}>
-                    +{hit.categories.length - 1}
-                  </span>
+                  <LabelTag
+                    label={`+${hit.categories.length - 1}`}
+                    withTooltip
+                  />
                 </Tooltip>
               )}
             </div>
