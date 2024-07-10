@@ -12,6 +12,13 @@ export const TableOfOpeningTimes = ({
   recurringSchedule: RecurringSchedule;
 }) => (
   <table className={styles.openingTimesTable}>
+    <caption className="sr-only">Location Hours</caption>
+    <thead className="sr-only">
+      <tr>
+        <th scope="col">Day</th>
+        <th scope="col">Hours</th>
+      </tr>
+    </thead>
     <tbody>
       {(recurringSchedule.hoursKnown &&
         recurringSchedule.intervals.map((interval) => {
@@ -19,13 +26,13 @@ export const TableOfOpeningTimes = ({
           const closesAt = interval.closesAt.timeString();
           return (
             <tr key={interval.key()} data-cy="opening-times-row">
-              <th>{interval.opensAt.dayString()}</th>
+              <th scope="row">{interval.opensAt.dayString()}</th>
               <td>{`${opensAt} - ${closesAt}`}</td>
             </tr>
           );
         })) || (
         <tr>
-          <th>Call for Hours</th>
+          <td>Call for Hours</td>
         </tr>
       )}
     </tbody>
