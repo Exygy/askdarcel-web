@@ -57,6 +57,16 @@
 }
 
 .navigationMenuLink {
+  text-decoration: none;
+  color: $text-primary;
+
+  &:hover {
+    text-decoration: none;
+    color: $color-brand-dark;
+  }
+}
+
+.navigationMenuList .navigationMenuLink {
   // flex ensures each menu link fills width of widest item
   display: flex;
   text-decoration: none;
