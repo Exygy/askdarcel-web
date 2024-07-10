@@ -182,7 +182,9 @@ module.exports = {
       },
       "/api/v2/": {
         target: config.API_URL || "http://localhost:3001",
-        pathRewrite: config.API_PROXY_REWRITE ? { "^/api/v2/": "/api/" } : undefined,
+        pathRewrite: config.API_PROXY_REWRITE
+          ? { "^/api/v2/": "/api/" }
+          : undefined,
         secure: config.API_PROXY_SECURE || false,
         changeOrigin: config.API_PROXY_CHANGE_ORIGIN || false,
       },
