@@ -12,14 +12,13 @@ export const ListingInfoTable = <T extends unknown>({
   rowRenderer,
   children,
 }: ListingInfoTableProps<T>) => {
+  const useRowRenderer = !children && rows && rowRenderer;
+
   return (
     <table className={styles.listingInfoTable}>
       <tbody>
         {children}
-        {!children &&
-          rows &&
-          rowRenderer &&
-          rows.map((row) => rowRenderer(row))}
+        {useRowRenderer && rows.map((row) => rowRenderer(row))}
       </tbody>
     </table>
   );
