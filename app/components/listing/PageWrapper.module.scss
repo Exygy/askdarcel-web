@@ -8,10 +8,6 @@
   @include r_max($break-tablet-s) {
     padding: $section-padding-mobile-vertical $general-spacing-md;
   }
-
-  header {
-    margin-bottom: $general-spacing-lg;
-  }
 }
 
 .listing {
