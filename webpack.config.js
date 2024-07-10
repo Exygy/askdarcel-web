@@ -176,11 +176,15 @@ module.exports = {
     historyApiFallback: true,
     proxy: {
       "/api-docs": {
-        target: process.env.API_URL || "http://localhost:3000",
+        target: config.API_UR || "http://localhost:3000",
+        secure: config.API_PROXY_SECURE || false,
+        changeOrigin: config.API_PROXY_CHANGE_ORIGIN || false,
       },
       "/api/v2/": {
-        target: process.env.API_GO_URL || "http://localhost:3001",
-        pathRewrite: { "^/api/v2/": "/api/" },
+        target: config.API_URL || "http://localhost:3001",
+        pathRewrite: config.API_PROXY_REWRITE ? { "^/api/v2/": "/api/" } : undefined,
+        secure: config.API_PROXY_SECURE || false,
+        changeOrigin: config.API_PROXY_CHANGE_ORIGIN || false,
       },
       "/api/": {
         target: config.API_URL || "http://localhost:3000",
