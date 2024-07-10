@@ -1,10 +1,9 @@
-import React, { FormEvent, useState } from "react";
-import { Link, useHistory } from "react-router-dom";
-import cn from "classnames";
-import qs from "qs";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { useAppContext, whiteLabel } from "utils";
 import Translate from "./Translate";
 import styles from "./Navigation.module.scss";
+import { SiteSearchInput } from "components/ui/SiteSearchInput";
 
 const {
   appImages: { logoSmall },
@@ -17,15 +16,11 @@ const {
 } = whiteLabel;
 
 export const Navigation = ({
-  showSearch,
   toggleHamburgerMenu,
 }: {
-  showSearch: boolean;
   toggleHamburgerMenu: () => void;
 }) => {
-  const [query, setQuery] = useState("");
   const [showSecondarySearch, setShowSecondarySearch] = useState(false);
-  const searchProps = { query, setQuery };
 
   // On the SF Families whitelabel site, we want to link to an external site
   // (the SF Families website), so it must be an external link. For other
@@ -37,9 +32,6 @@ export const Navigation = ({
       <div className={styles.primaryRow}>
         <div className={styles.navLeft}>
           <SiteLogo />
-          {showSearch && (
-            <SiteSearch extraClasses={styles.navSearchFull} {...searchProps} />
-          )}
         </div>
         <SiteLinks />
 
@@ -64,10 +56,7 @@ export const Navigation = ({
       {showSecondarySearch && (
         <div className={styles.secondaryRowWrapper}>
           <div className={styles.secondaryRow}>
-            <SiteSearch
-              extraClasses={styles.mobileNavigation}
-              {...searchProps}
-            />
+            <SiteSearchInput />
           </div>
         </div>
       )}
@@ -142,54 +131,3 @@ const SiteLinks = () => {
     </ul>
   );
 };
-
-const SiteSearch = ({
-  query,
-  setQuery,
-  extraClasses,
-}: {
-  extraClasses?: string;
-  query: string;
-  setQuery: (q: string) => void;
-}) => {
-  const history = useHistory();
-
-  const submitSearch = (e: FormEvent) => {
-    e.preventDefault();
-    const searchState = qs.parse(window.location.search.slice(1));
-
-    if (query) {
-      searchState.query = query;
-    } else {
-      delete searchState.query;
-    }
-
-    history.push(`/search?${qs.stringify(searchState)}`);
-    return false;
-  };
-
-  return (
-    <form
-      onSubmit={submitSearch}
-      className={cn([
-        styles.navSearch,
-        extraClasses,
-        "search-container",
-        "form-row",
-      ])}
-      role="search"
-    >
-      <input
-        onChange={(e) => setQuery(e.target.value)}
-        value={query}
-        type="text"
-        className={styles.searchField}
-        placeholder="Search for a service or organization"
-        name="srch-term"
-        id="srch-term"
-      />
-    </form>
-  );
-};
-
-export default SiteSearch;

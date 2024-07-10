@@ -1,0 +1,58 @@
+@import "../../styles/utils/_helpers.scss";
+
+.mobileSearchButton {
+  color: white;
+  background: black;
+  padding: $spacing-2;
+  font-weight: 900;
+  border-radius: $rounded-full;
+}
+
+.searchInputDisclose {
+  summary {
+    // Hides default marker
+    list-style: none;
+
+    button {
+      // Prevents default button click handling
+      pointer-events: none;
+    }
+  }
+}
+
+.desktopInnerContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.desktopInnerContainerLeft {
+  display: flex;
+  gap: $spacing-6;
+
+}
+
+.mobileInnerContainer {
+  gap: $spacing-3;
+}
+
+.mobileInnerContainerLeft {
+  position: relative;
+  width: 100%;
+
+  summary {
+    list-style: none;
+    float: right;
+    top: 0;
+    right: 0;
+    position: absolute;
+  }
+
+  details[open] {
+    margin-bottom: $spacing-3;
+  }
+
+  h2 {
+    margin-bottom: $spacing-2;
+  }
+}
