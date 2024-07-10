@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import styles from "./LocationTimesAccordion.module.scss";
 import { LocationDetails } from "models";
 import classNames from "classnames";
+import styles from "./LocationTimesAccordion.module.scss";
 
 /*
     Accordion built per a11y guidelines:
@@ -52,9 +52,7 @@ const LocationTimesAccordion = ({
               >
                 <span className={styles.accordionTitle}>
                   {`${i + 1}. ${loc.address.address_1}`}
-                  <i
-                    className={`fas fa-chevron-${isActive ? "up" : "down"}`}
-                  ></i>
+                  <i className={`fas fa-chevron-${isActive ? "up" : "down"}`} />
                 </span>
               </button>
             </h3>
