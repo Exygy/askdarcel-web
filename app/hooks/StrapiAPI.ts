@@ -16,7 +16,6 @@ interface SWRHookResult<T> {
   error?: Error;
   isLoading: boolean;
 }
-
 function useStrapiHook<T>(path: string): SWRHookResult<T> {
   const dataFetcher = () =>
     fetcher<StrapiApi.StrapiResponse<T>>(
@@ -54,6 +53,32 @@ export function usePageContent(title: string) {
   return useStrapiHook<StrapiApi.ContentPageResponse>(
     `content-pages?filters[title][$eq]=${title}&populate[two_column_content_blocks][populate][link]=*&populate[two_column_content_blocks][populate][media][populate]=*`
   );
+}
+
+export function useNavigationData() {
+  const path = "header?populate[logo]=*&populate[navigation][populate]=*";
+
+  const dataFetcher = () =>
+    fetcher<{ data: StrapiApi.StrapiDatumResponse<StrapiApi.HeaderResponse> }>(
+      `${config.STRAPI_API_URL}/api/${path}`,
+      {
+        Authorization: `Bearer ${config.STRAPI_API_TOKEN}`,
+      }
+    );
+
+  const { data, error, isLoading } = <
+    {
+      data: { data: StrapiApi.StrapiDatumResponse<StrapiApi.HeaderResponse> };
+      error: any;
+      isLoading: boolean;
+    }
+  >useSWR(`/api/${path}`, dataFetcher);
+
+  return {
+    data: data?.data ? data?.data.attributes : null,
+    error,
+    isLoading,
+  };
 }
 
 export namespace StrapiApi {
@@ -276,5 +301,42 @@ export namespace StrapiApi {
     title: string;
     masthead: string;
     two_column_content_blocks: StrapiArrayResponse<TwoColumnContentBlockResponse>;
+  }
+
+  export interface HeaderResponse extends BaseDatumAttributesResponse {
+    logo: {
+      data: {
+        attributes: LogoResponse;
+      };
+    };
+    navigation: NavigationMenuResponse[];
+  }
+
+  export interface LogoResponse {
+    name: string;
+    alternativeText: string;
+    caption: string;
+    width: number;
+    height: number;
+    hash: string;
+    ext: string;
+    mime: string;
+    size: number;
+    url: string;
+    previewUrl: string;
+    provider: string;
+    createdAt: string;
+    updatedAt: string;
+    formats: FormatsResponse;
+    // TODO uknown types
+    // provider_metadata: null;
+  }
+
+  export interface NavigationMenuResponse {
+    id: number;
+    __component: "navigation.menu";
+    // The plurality mismatch here is a quirk of strapi's serialization of repeatable nested components
+    link: LinkResponse[];
+    title: string;
   }
 }
