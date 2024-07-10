@@ -1,0 +1,34 @@
+@import "../../styles/utils/_helpers.scss";
+
+.locationTimesAccordion {
+  .accordionItem {
+    .accordionHeader {
+      padding: $general-spacing-md;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+
+      &:hover {
+        background: $gray-100;
+      }
+
+      h3 {
+        margin: 0;
+        font-size: 18px;
+      }
+
+      i {
+        transition: transform 0.3s;
+      }
+    }
+  }
+
+  .accordionContent {
+    padding-bottom: $general-spacing-md;
+  }
+
+  .activeItem {
+    background: $gray-50;
+  }
+}
