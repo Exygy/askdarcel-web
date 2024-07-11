@@ -1,133 +1,312 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { useAppContext, whiteLabel } from "utils";
-import Translate from "./Translate";
-import styles from "./Navigation.module.scss";
-import { SiteSearchInput } from "components/ui/SiteSearchInput";
+import styles from "components/ui/Navigation.module.scss";
+import mobileNavigationStyles from "components/ui/MobileNavigation.module.scss";
+import desktopNavigationStyles from "components/ui/DesktopNavigation.module.scss";
+import { push as SidebarPushPanel } from "react-burger-menu";
+import { GoogleTranslate } from "components/ui/GoogleTranslate";
+import {
+  StrapiModel,
+  extractLogoFromNavigationResponse,
+  extractNavigationMenusFromNavigationResponse,
+  ExtractedNavigationMenusFromNavigationResponse,
+} from "../../models/Strapi";
+import { PopUpMessage, PopupMessageProp } from "./PopUpMessage";
+import { Router } from "../../Router";
+import { useNavigationData } from "../../hooks/StrapiAPI";
+import { OUTER_CONTAINER_ID } from "../../App";
 
-const {
-  appImages: { logoSmall },
-  logoLinkDestination,
-  navLogoStyle,
-  showMobileNav,
-  showReportCrisis,
-  siteNavStyle,
-  title,
-} = whiteLabel;
+const PAGE_WRAP_ID = "page-wrap";
+const BURGER_STYLES = {
+  bmBurgerButton: {
+    display: "none",
+  },
+  bmCrossButton: {
+    display: "none",
+  },
+  bmMenu: {
+    padding: "0",
+    borderLeft: "1px solid #f4f4f4",
+    background: "white",
+  },
+  bmOverlay: {
+    display: "none",
+  },
+};
 
-export const Navigation = ({
-  toggleHamburgerMenu,
-}: {
-  toggleHamburgerMenu: () => void;
-}) => {
-  const [showSecondarySearch, setShowSecondarySearch] = useState(false);
+export const Navigation = () => {
+  const { data: navigationResponse, error, isLoading } = useNavigationData();
+  const [mobileNavigationSidebarIsOpen, setMobileNavigationSidebarIsOpen] =
+    useState(false);
+  const [whichActiveMobileSubMenu, setActiveMobileSubMenu] = useState("");
+  const toggleMobileNav = () =>
+    setMobileNavigationSidebarIsOpen((prev) => !prev);
+  const [whichActiveDesktopSubMenu, setsetActiveDesktopSubMenu] = useState("");
+  const [popUpMessage, setPopUpMessage] = useState<PopupMessageProp>({
+    message: "",
+    visible: false,
+    type: "success",
+  });
 
-  // On the SF Families whitelabel site, we want to link to an external site
-  // (the SF Families website), so it must be an external link. For other
-  // sites, we want to just use an internal react-router Link to the root URL,
-  // since 1) this allows us to use react-router routing and 2) this avoids
-  // having staging and development environments link to the production site.
+  const logoData = extractLogoFromNavigationResponse(navigationResponse);
+  const menuData =
+    extractNavigationMenusFromNavigationResponse(navigationResponse);
+  const mobileSubMenuIsActive = !!whichActiveMobileSubMenu;
+  const desktopSubMenuIsActive = !!whichActiveDesktopSubMenu;
+
+  const pushPanelIconDisplay = () => {
+    if (mobileNavigationSidebarIsOpen && mobileSubMenuIsActive) {
+      return "fa-arrow-left";
+    }
+    if (mobileNavigationSidebarIsOpen) {
+      return "fa-xmark";
+    }
+
+    return ` fa-bars`;
+  };
+
+  const handleActivatePushPanelClick = () => {
+    if (mobileSubMenuIsActive) {
+      setActiveMobileSubMenu("");
+    } else {
+      toggleMobileNav();
+    }
+  };
+
+  const togglesetActiveDesktopSubMenu = (next: string) => {
+    if (desktopSubMenuIsActive && whichActiveDesktopSubMenu === next) {
+      setsetActiveDesktopSubMenu("");
+    } else {
+      setsetActiveDesktopSubMenu(next);
+    }
+  };
+
+  // TODO: What do we want here?
+  if (error || menuData === null) {
+    return <span>ERROR</span>;
+  }
+
+  // TODO: What do we want here?
+  if (isLoading) {
+    return <span>is loading...</span>;
+  }
+
   return (
-    <nav className={siteNavStyle}>
-      <div className={styles.primaryRow}>
-        <div className={styles.navLeft}>
-          <SiteLogo />
-        </div>
-        <SiteLinks />
-
-        {showMobileNav && (
-          <div className={styles.mobileNavigation}>
-            <button
-              type="button"
-              aria-label="search for a service"
-              className={styles.searchButton}
-              onClick={() => setShowSecondarySearch(!showSecondarySearch)}
+    <>
+      <SidebarPushPanel
+        isOpen={mobileNavigationSidebarIsOpen}
+        outerContainerId={OUTER_CONTAINER_ID}
+        pageWrapId={PAGE_WRAP_ID}
+        right
+        styles={BURGER_STYLES}
+        width="275px"
+      >
+        <div>
+          {menuData.map((menuDataItem) => (
+            <MobileNavigationMenuDataItemRenderer
+              menuItem={menuDataItem}
+              whichActiveMobileSubMenu={whichActiveMobileSubMenu}
+              setActiveMobileSubMenu={setActiveMobileSubMenu}
+              key={menuDataItem.id}
             />
+          ))}
+          {mobileNavigationSidebarIsOpen && (
+            <div className={styles.navigationMenuTranslate}>
+              <GoogleTranslate />
+            </div>
+          )}
+        </div>
+      </SidebarPushPanel>
+      <div id={PAGE_WRAP_ID}>
+        <nav className={styles.siteNav}>
+          <div className={styles.primaryRow}>
+            <div className={styles.navLeft}>
+              <Link className={`${styles.navLogo}`} to="/">
+                <img src={logoData?.url} alt={logoData?.alternativeText} />
+              </Link>
+            </div>
+
+            <ul className={`${styles.navRight}`}>
+              <div
+                className={desktopNavigationStyles.desktopNavigationContainer}
+              >
+                {menuData.map((menuDataItem) => (
+                  <DesktoptopLevelNavigationMenuItemRenderer
+                    menuItem={menuDataItem}
+                    whichActiveDesktopSubMenu={whichActiveDesktopSubMenu}
+                    togglesetActiveDesktopSubMenu={
+                      togglesetActiveDesktopSubMenu
+                    }
+                    key={menuDataItem.id}
+                  />
+                ))}
+              </div>
+              <div className={styles.navigationMenuTranslate}>
+                <GoogleTranslate />
+              </div>
+            </ul>
             <button
               type="button"
               aria-label="navigation menu"
-              className={styles.hamburgerButton}
-              onClick={toggleHamburgerMenu}
+              className={`fas ${pushPanelIconDisplay()} ${
+                styles.activatePushPanelButton
+              }`}
+              onClick={handleActivatePushPanelClick}
             />
           </div>
-        )}
-      </div>
-
-      {showSecondarySearch && (
-        <div className={styles.secondaryRowWrapper}>
-          <div className={styles.secondaryRow}>
-            <SiteSearchInput />
-          </div>
+        </nav>
+        <div className="container">
+          <Router setPopUpMessage={setPopUpMessage} />
         </div>
-      )}
-    </nav>
+        {popUpMessage && <PopUpMessage popUpMessage={popUpMessage} />}
+      </div>
+    </>
   );
 };
 
-const SiteLogo = () =>
-  /^https?:\/\//.test(logoLinkDestination) ? (
-    <a
-      className={`${navLogoStyle} ${styles.navLogo}`}
-      href={logoLinkDestination}
-    >
-      <img src={logoSmall} alt={title} />
-    </a>
-  ) : (
-    <Link className={`${navLogoStyle} ${styles.navLogo}`} to="/">
-      <img src={logoSmall} alt={title} />
-    </Link>
-  );
+function menuItemHasLinks(
+  menuItem: ExtractedNavigationMenusFromNavigationResponse[number]
+): menuItem is StrapiModel.NavigationMenu {
+  return "link" in menuItem;
+}
 
-const SiteLinks = () => {
-  const { authState } = useAppContext();
+const DesktoptopLevelNavigationMenuItemRenderer = ({
+  menuItem,
+  whichActiveDesktopSubMenu,
+  togglesetActiveDesktopSubMenu,
+}: {
+  menuItem: ExtractedNavigationMenusFromNavigationResponse[number];
+  whichActiveDesktopSubMenu: string;
+  togglesetActiveDesktopSubMenu: (uniqueKey: string) => void;
+}) => {
+  if (menuItemHasLinks(menuItem)) {
+    const uniqueKey = menuItem.title;
+    return (
+      <div
+        className={desktopNavigationStyles.navigationMenuContainer}
+        key={uniqueKey}
+      >
+        <button
+          type="button"
+          aria-haspopup="menu"
+          aria-expanded={
+            whichActiveDesktopSubMenu === uniqueKey ? "true" : "false"
+          }
+          onClick={() => togglesetActiveDesktopSubMenu(uniqueKey)}
+          className={desktopNavigationStyles.navigationMenuHeader}
+        >
+          {menuItem.title}
+          <span
+            className={`fas fa-chevron-down ${desktopNavigationStyles.chevron}`}
+          />
+        </button>
 
+        <ul
+          style={{
+            display: whichActiveDesktopSubMenu === uniqueKey ? "block" : "none",
+          }}
+          className={`${desktopNavigationStyles.navigationMenuList}`}
+        >
+          {menuItem.link.map((linkItem: StrapiModel.Link) => (
+            <li
+              key={linkItem.id}
+              className={desktopNavigationStyles.navigationMenuListItem}
+            >
+              <Link
+                to={linkItem.url}
+                className={desktopNavigationStyles.navigationMenuLink}
+              >
+                {linkItem.text}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
+
+  const uniqueKey = menuItem.url;
   return (
-    <ul className={styles.navRight}>
-      {/* Todo: This will eventually be replaced by a user icon with a dropdown menu of account related options.
-          The designs are still forthcoming. For now, it serves as a basic log-out functionality for the purposes
-          of development and testing.
-      */}
-      {authState && (
-        <li>
-          <Link to="/log-out">Log Out</Link>
-        </li>
-      )}
-      <li>
-        <Link to="/about">About</Link>
-      </li>
-      <li>
-        <a
-          href="https://help.sfserviceguide.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          FAQ
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://help.sfserviceguide.org/en/collections/1719243-contact-us"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Contact Us
-        </a>
-      </li>
-      {showReportCrisis && (
-        <li>
-          <a
-            type="button"
-            aria-label="report street crisis"
-            href="https://sf.gov/information/reporting-concerns-about-street-crises-and-conditions"
-            className={styles.buttonLink}
-            target="blank"
-            rel="noopener noreferrer"
-          >
-            Report Street Crisis
-          </a>
-        </li>
-      )}
-      <Translate />
-    </ul>
+    <li key={uniqueKey}>
+      <Link
+        to={menuItem.url}
+        className={desktopNavigationStyles.navigationMenuLink}
+      >
+        {menuItem.text}
+      </Link>
+    </li>
   );
 };
+
+const MobileNavigationMenuDataItemRenderer = ({
+  menuItem,
+  whichActiveMobileSubMenu,
+  setActiveMobileSubMenu,
+}: {
+  menuItem: ExtractedNavigationMenusFromNavigationResponse[number];
+  whichActiveMobileSubMenu: string;
+  setActiveMobileSubMenu: (uniqueKey: string) => void;
+}) => {
+  if (menuItemHasLinks(menuItem)) {
+    const uniqueKey = menuItem.title;
+    return (
+      <div
+        className={mobileNavigationStyles.mobileNavigationMenuContainer}
+        key={uniqueKey}
+      >
+        <button
+          type="button"
+          aria-haspopup="menu"
+          aria-expanded={
+            whichActiveMobileSubMenu === uniqueKey ? "true" : "false"
+          }
+          onClick={() => setActiveMobileSubMenu(uniqueKey)}
+          className={`${mobileNavigationStyles.mobileNavigationMenuHeader}`}
+        >
+          {menuItem.title}
+          <span
+            className={`fas fa-chevron-right ${mobileNavigationStyles.chevron}`}
+          />
+        </button>
+        <ul
+          className={`${mobileNavigationStyles.mobileNavigationMenuList} ${
+            whichActiveMobileSubMenu === uniqueKey
+              ? mobileNavigationStyles.mobileNavigationMenuListOpen
+              : ""
+          }`}
+        >
+          {menuItem.link.map((linkItem: StrapiModel.Link) => (
+            <li
+              key={linkItem.id}
+              className={mobileNavigationStyles.mobileNavigationMenuListItem}
+            >
+              <Link
+                to={linkItem.url}
+                className={mobileNavigationStyles.mobileNavigationMenuLink}
+              >
+                {linkItem.text}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
+
+  const uniqueKey = menuItem.url;
+  return (
+    <li
+      key={uniqueKey}
+      className={mobileNavigationStyles.mobileNavigationMenuListItem}
+    >
+      <Link
+        to={menuItem.url}
+        className={mobileNavigationStyles.mobileNavigationMenuLink}
+      >
+        {menuItem.text}
+      </Link>
+    </li>
+  );
+};
+
+export default Navigation;

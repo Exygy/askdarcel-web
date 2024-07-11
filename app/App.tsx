@@ -1,44 +1,24 @@
 import React, { useEffect, useState } from "react";
-
 // Todo: Once GA sunsets the UA analytics tracking come July 2023, we can remove the "react-ga"
 // package and all references to it:
 // https://support.google.com/analytics/answer/12938611#zippy=%2Cin-this-article
 import ReactGA_4 from "react-ga4";
-
 import Intercom from "react-intercom";
 import { Helmet } from "react-helmet-async";
 import { useHistory } from "react-router-dom";
-
 import { SiteSearchProvider } from "./hooks/SiteSearch";
 import { GeoCoordinates, getLocation, whiteLabel, AppProvider } from "./utils";
-import {
-  Banner,
-  HamburgerMenu,
-  Navigation,
-  PopUpMessage, // TODO: Get rid of Popup message and props
-  PopupMessageProp,
-  UserWay,
-} from "./components/ui";
-
-import { Router } from "./Router";
+import { Navigation, UserWay } from "./components/ui";
 
 import config from "./config";
 import MetaImage from "./assets/img/sfsg-preview.png";
-
 import styles from "./App.module.scss";
 
-const { intercom, showBanner, siteUrl, title, userWay } = whiteLabel;
-const outerContainerId = "outer-container";
-const pageWrapId = "page-wrap";
+const { intercom, siteUrl, title, userWay } = whiteLabel;
+export const OUTER_CONTAINER_ID = "outer-container";
 
 export const App = () => {
   const history = useHistory();
-  const [hamburgerOpen, setHamburgerOpen] = useState(false);
-  const [popUpMessage, setPopUpMessage] = useState<PopupMessageProp>({
-    message: "",
-    visible: false,
-    type: "success",
-  });
   const [userLocation, setUserLocation] = useState<GeoCoordinates | null>(null);
 
   useEffect(() => {
@@ -65,7 +45,7 @@ export const App = () => {
   }, [history]);
 
   return (
-    <div id={outerContainerId} className={styles.outerContainer}>
+    <div id={OUTER_CONTAINER_ID} className={styles.outerContainer}>
       <AppProvider userLocation={userLocation}>
         <SiteSearchProvider>
           <Helmet>
@@ -89,25 +69,7 @@ export const App = () => {
           {intercom && config.INTERCOM_APP_ID && (
             <Intercom appID={config.INTERCOM_APP_ID} />
           )}
-          <span className={styles.hamburgerContainer}>
-            <HamburgerMenu
-              isOpen={hamburgerOpen}
-              outerContainerId={outerContainerId}
-              onStateChange={(s) => setHamburgerOpen(s.isOpen)}
-              pageWrapId={pageWrapId}
-              toggleHamburgerMenu={() => setHamburgerOpen(!hamburgerOpen)}
-            />
-          </span>
-          <div id={pageWrapId}>
-            <Navigation
-              toggleHamburgerMenu={() => setHamburgerOpen(!hamburgerOpen)}
-            />
-            {showBanner && <Banner />}
-            <div className="container">
-              <Router setPopUpMessage={setPopUpMessage} />
-            </div>
-            {popUpMessage && <PopUpMessage popUpMessage={popUpMessage} />}
-          </div>
+          <Navigation />
         </SiteSearchProvider>
       </AppProvider>
     </div>

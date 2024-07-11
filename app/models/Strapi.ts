@@ -17,4 +17,31 @@ export namespace StrapiModel {
   export interface TwoColumnContentBlock
     extends StrapiApi.TwoColumnContentBlockResponse {}
   export interface PageContent extends StrapiApi.ContentPageResponse {}
+  export interface Header extends StrapiApi.HeaderResponse {}
+  export interface Logo
+    extends Pick<
+      StrapiApi.LogoResponse,
+      "width" | "height" | "alternativeText" | "url"
+    > {}
+  export interface NavigationMenu
+    extends Omit<StrapiApi.NavigationMenuResponse, "__component"> {}
 }
+
+export function extractNavigationMenusFromNavigationResponse(
+  navigationResponse: StrapiApi.HeaderResponse | null
+): ExtractedNavigationMenusFromNavigationResponse | null {
+  return (
+    navigationResponse?.navigation.map(({ __component, ...rest }) => rest) ||
+    null
+  );
+}
+
+export function extractLogoFromNavigationResponse(
+  navigationResponse: StrapiApi.HeaderResponse | null
+): StrapiModel.Logo | null {
+  return navigationResponse?.logo.data.attributes || null;
+}
+
+export type ExtractedNavigationMenusFromNavigationResponse = Array<
+  StrapiModel.NavigationMenu | StrapiModel.Link
+>;
