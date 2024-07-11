@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React from "react";
 import GoogleMap from "google-map-react";
 import config from "../../config";
 import { LocationDetails } from "../../models";
@@ -15,11 +15,9 @@ import styles from "./MapOfLocations.module.scss";
 // TODO: Accordion needs big refactor/rebuild which is out of scope of this ticket. Will create new ticket.
 
 export const MapOfLocations = ({
-  locationRenderer,
   locations,
 }: {
   locations: LocationDetails[];
-  locationRenderer: (loc: LocationDetails) => ReactElement;
 }) => {
   const { userLocation } = useAppContext();
   if (userLocation === null) {
@@ -49,12 +47,7 @@ export const MapOfLocations = ({
           ))}
         </GoogleMap>
       </div>
-      {locationRenderer && (
-        <LocationTimesAccordion
-          locations={locations}
-          locationRenderer={locationRenderer}
-        />
-      )}
+      <LocationTimesAccordion locations={locations} />
     </div>
   );
 };

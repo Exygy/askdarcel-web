@@ -15,7 +15,6 @@ import {
   PhoneNumberRenderer,
   ResourceCategories,
   ServiceCard,
-  TableOfOpeningTimes,
   WebsiteRenderer,
 } from "../components/listing";
 import { Loader } from "../components/ui";
@@ -118,12 +117,7 @@ export const OrganizationListingPage = () => {
           title="Location"
           borderBottom={org.notes.length > 0}
         >
-          <MapOfLocations
-            locations={orgLocations}
-            locationRenderer={(loc: any) => (
-              <TableOfOpeningTimes recurringSchedule={loc.recurringSchedule} />
-            )}
-          />
+          <MapOfLocations locations={orgLocations} />
         </ListingInfoSection>
       )}
 

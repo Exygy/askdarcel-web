@@ -7,7 +7,6 @@ import {
   MapOfLocations,
   ServiceAttribution,
   ServiceCard,
-  TableOfOpeningTimes,
   ContactInfoTableRows,
 } from "components/listing";
 import { ListingInfoTable, Loader } from "components/ui";
@@ -133,14 +132,7 @@ export const ServiceListingPage = () => {
           title="Location and hours"
           data-cy="service-loc-hours-section"
         >
-          <MapOfLocations
-            locations={locations}
-            locationRenderer={(location: any) => (
-              <TableOfOpeningTimes
-                recurringSchedule={location.recurringSchedule}
-              />
-            )}
-          />
+          <MapOfLocations locations={locations} />
         </ListingInfoSection>
       )}
 

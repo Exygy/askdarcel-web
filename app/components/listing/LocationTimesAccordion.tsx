@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { LocationDetails } from "models";
 import classNames from "classnames";
 import styles from "./LocationTimesAccordion.module.scss";
+import { TableOfOpeningTimes } from "./TableOfOpeningTimes";
 
 /*
     Accordion built per a11y guidelines:
@@ -9,11 +10,9 @@ import styles from "./LocationTimesAccordion.module.scss";
 */
 
 const LocationTimesAccordion = ({
-  locationRenderer,
   locations,
 }: {
   locations: LocationDetails[];
-  locationRenderer: (loc: LocationDetails) => React.ReactElement;
 }) => {
   const [activeIndices, setActiveIndices] = useState<number[]>([0]);
 
@@ -27,14 +26,14 @@ const LocationTimesAccordion = ({
 
   return (
     <div className={styles.locationTimesAccordion}>
-      {locations.map((loc, i) => {
+      {locations.map((location, i) => {
         const isActive = activeIndices.includes(i);
         const headerId = `accordion${i}id`;
         const panelId = `sect${i}`;
 
         return (
           <div
-            key={loc.id}
+            key={location.id}
             className={classNames(
               styles.accordionItem,
               isActive && styles.activeItem
@@ -46,12 +45,12 @@ const LocationTimesAccordion = ({
                 aria-expanded={isActive}
                 className={styles.accordionButton}
                 aria-controls={panelId}
-                aria-label={loc.address.address_1}
+                aria-label={location.address.address_1}
                 id={headerId}
                 onClick={() => toggleAccordion(i)}
               >
                 <span className={styles.accordionTitle}>
-                  {`${i + 1}. ${loc.address.address_1}`}
+                  {`${i + 1}. ${location.address.address_1}`}
                   <i className={`fas fa-chevron-${isActive ? "up" : "down"}`} />
                 </span>
               </button>
@@ -64,7 +63,9 @@ const LocationTimesAccordion = ({
               hidden={!isActive}
             >
               <div className={styles.accordionContent}>
-                {locationRenderer(loc)}
+                <TableOfOpeningTimes
+                  recurringSchedule={location.recurringSchedule}
+                />
               </div>
             </div>
           </div>
