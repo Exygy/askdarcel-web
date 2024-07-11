@@ -15,6 +15,7 @@ export const SiteSearchInput = () => {
   const { query, setQuery } = useSiteSearch();
   const history = useHistory();
 
+  // eg: `?page=1` -> `page=1`
   const removeQueryStringStart = (querystring: string) => querystring.slice(1);
 
   const submitSearch = (e: FormEvent) => {
