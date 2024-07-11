@@ -14,20 +14,21 @@ const LocationTimesAccordion = ({
 }: {
   locations: LocationDetails[];
 }) => {
-  const [activeIndices, setActiveIndices] = useState<number[]>([0]);
+  const [expandedAccordionItems, setExpandedAccordionItems] = useState<{
+    [key: number]: boolean;
+  }>({ 0: true });
 
-  const handleAccordionToggleOnClick = (index: number) => {
-    setActiveIndices((prevActiveIndices) =>
-      prevActiveIndices.includes(index)
-        ? prevActiveIndices.filter((i) => i !== index)
-        : [...prevActiveIndices, index]
-    );
+  const handleExpandAccordionItemOnClick = (currentIndex: number) => {
+    setExpandedAccordionItems((prevExpandedItems) => ({
+      ...prevExpandedItems,
+      [currentIndex]: !prevExpandedItems[currentIndex],
+    }));
   };
 
   return (
     <div className={styles.locationTimesAccordion}>
       {locations.map((location, i) => {
-        const isActive = activeIndices.includes(i);
+        const isExpanded = expandedAccordionItems[i] || false;
         const headerId = `accordion${i}id`;
         const panelId = `sect${i}`;
 
@@ -36,22 +37,24 @@ const LocationTimesAccordion = ({
             key={location.id}
             className={classNames(
               styles.accordionItem,
-              isActive && styles.activeItem
+              isExpanded && styles.activeItem
             )}
           >
             <h3>
               <button
                 type="button"
-                aria-expanded={isActive}
+                aria-expanded={isExpanded}
                 className={styles.accordionButton}
                 aria-controls={panelId}
                 aria-label={location.address.address_1}
                 id={headerId}
-                onClick={() => handleAccordionToggleOnClick(i)}
+                onClick={() => handleExpandAccordionItemOnClick(i)}
               >
                 <span className={styles.accordionTitle}>
                   {`${i + 1}. ${location.address.address_1}`}
-                  <i className={`fas fa-chevron-${isActive ? "up" : "down"}`} />
+                  <i
+                    className={`fas fa-chevron-${isExpanded ? "up" : "down"}`}
+                  />
                 </span>
               </button>
             </h3>
@@ -60,7 +63,7 @@ const LocationTimesAccordion = ({
               role="region"
               aria-labelledby={headerId}
               className={styles.accordionPanel}
-              hidden={!isActive}
+              hidden={!isExpanded}
             >
               <div className={styles.accordionContent}>
                 <TableOfLocationTimes
