@@ -16,7 +16,7 @@ const LocationTimesAccordion = ({
 }) => {
   const [activeIndices, setActiveIndices] = useState<number[]>([0]);
 
-  const toggleAccordion = (index: number) => {
+  const handleAccordionToggleOnClick = (index: number) => {
     setActiveIndices((prevActiveIndices) =>
       prevActiveIndices.includes(index)
         ? prevActiveIndices.filter((i) => i !== index)
@@ -47,7 +47,7 @@ const LocationTimesAccordion = ({
                 aria-controls={panelId}
                 aria-label={location.address.address_1}
                 id={headerId}
-                onClick={() => toggleAccordion(i)}
+                onClick={() => handleAccordionToggleOnClick(i)}
               >
                 <span className={styles.accordionTitle}>
                   {`${i + 1}. ${location.address.address_1}`}
