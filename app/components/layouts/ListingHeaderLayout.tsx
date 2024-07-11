@@ -14,16 +14,7 @@ export const ListingHeaderLayout = ({
     <div className={styles.mobileInnerContainer}>
       <div className={styles.mobileInnerContainerLeft}>
         <h2>Services</h2>
-        <details className={styles.searchInputDisclose}>
-          <summary>
-            <button
-              type="button"
-              aria-label="search control"
-              className={`${styles.mobileSearchButton} fa-solid fa-magnifying-glass`}
-            />
-          </summary>
-          <SiteSearchInput />
-        </details>
+        <SiteSearchInput />
       </div>
       <span>{descriptionText}</span>
     </div>

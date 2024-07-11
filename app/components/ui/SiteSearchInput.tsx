@@ -40,7 +40,7 @@ export const SiteSearchInput = () => {
     >
       <button
         type="submit"
-        aria-label="Search input icon"
+        aria-label="Search"
         className={`${styles.searchIcon} fa-solid fa-magnifying-glass`}
       />
       <input

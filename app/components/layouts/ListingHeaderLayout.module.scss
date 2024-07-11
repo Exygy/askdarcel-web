@@ -1,7 +1,5 @@
 @import "../../styles/utils/_helpers.scss";
 
-@value mobileBreakpoint: $break-tablet-s;
-
 .mobileSearchButton {
   color: white;
   background: black;
@@ -10,22 +8,11 @@
   border-radius: $rounded-full;
 }
 
-.searchInputDisclose {
-  summary {
-    // Hides default marker
-    list-style: none;
-
-    button {
-      // Prevents default button click handling
-      pointer-events: none;
-    }
-  }
-}
-
 .desktopInnerContainer {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: $spacing-6;
 
   @include r_max($break-tablet-s) {
     display: none;
@@ -47,20 +34,8 @@
 }
 
 .mobileInnerContainerLeft {
-  position: relative;
   width: 100%;
-
-  summary {
-    list-style: none;
-    float: right;
-    top: 0;
-    right: 0;
-    position: absolute;
-  }
-
-  details[open] {
-    margin-bottom: $spacing-3;
-  }
+  margin-bottom: $spacing-2;
 
   h2 {
     margin-bottom: $spacing-2;
