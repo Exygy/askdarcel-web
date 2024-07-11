@@ -564,7 +564,7 @@ export const IntimatePartnerViolencePdfPage = () => {
                           />
                           <div className="serviceHours">
                             <p className="hoursTitle">Hours</p>
-                            <TableOfOpeningTimes
+                            <TableOfLocationTimes
                               recurringSchedule={locations[0].recurringSchedule}
                             />
                           </div>
@@ -708,7 +708,7 @@ const ServiceAddress = ({
   );
 };
 
-const TableOfOpeningTimes = ({
+const TableOfLocationTimes = ({
   recurringSchedule,
 }: {
   recurringSchedule: RecurringSchedule;

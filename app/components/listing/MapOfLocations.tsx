@@ -1,9 +1,9 @@
-import React, { ReactElement } from "react";
+import React from "react";
 import GoogleMap from "google-map-react";
 import config from "../../config";
 import { LocationDetails } from "../../models";
 import { Loader } from "../ui";
-import { Accordion, AccordionItem } from "../ui/Accordion";
+import LocationTimesAccordion from "./LocationTimesAccordion";
 import {
   createMapOptions,
   CustomMarker,
@@ -15,11 +15,9 @@ import styles from "./MapOfLocations.module.scss";
 // TODO: Accordion needs big refactor/rebuild which is out of scope of this ticket. Will create new ticket.
 
 export const MapOfLocations = ({
-  locationRenderer,
   locations,
 }: {
   locations: LocationDetails[];
-  locationRenderer: (loc: LocationDetails) => ReactElement;
 }) => {
   const { userLocation } = useAppContext();
   if (userLocation === null) {
@@ -49,35 +47,7 @@ export const MapOfLocations = ({
           ))}
         </GoogleMap>
       </div>
-      {locationRenderer && (
-        <Accordion>
-          {locations.map((loc, i) => (
-            <AccordionItem
-              key={loc.address.id}
-              headerRenderer={
-                <table>
-                  <tbody>
-                    <tr>
-                      <td className="headerCell">
-                        <strong className="notranslate">
-                          <h3>{`${i + 1}. ${loc.address.address_1}`}</h3>
-                        </strong>
-                      </td>
-                      <td className="iconCell">
-                        <div className="selector">
-                          <i className="material-icons">keyboard_arrow_down</i>
-                        </div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              }
-            >
-              {locationRenderer(loc)}
-            </AccordionItem>
-          ))}
-        </Accordion>
-      )}
+      <LocationTimesAccordion locations={locations} />
     </div>
   );
 };
