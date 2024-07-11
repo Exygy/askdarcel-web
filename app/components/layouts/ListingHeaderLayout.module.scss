@@ -1,0 +1,43 @@
+@import "../../styles/utils/_helpers.scss";
+
+.mobileSearchButton {
+  color: white;
+  background: black;
+  padding: $spacing-2;
+  font-weight: 900;
+  border-radius: $rounded-full;
+}
+
+.desktopInnerContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: $spacing-6;
+
+  @include r_max($break-tablet-s) {
+    display: none;
+  }
+}
+
+.desktopInnerContainerLeft {
+  display: flex;
+  gap: $spacing-6;
+}
+
+.mobileInnerContainer {
+  display: none;
+  gap: $spacing-3;
+
+  @include r_max($break-tablet-s) {
+    display: block;
+  }
+}
+
+.mobileInnerContainerLeft {
+  width: 100%;
+  margin-bottom: $spacing-2;
+
+  h2 {
+    margin-bottom: $spacing-2;
+  }
+}
