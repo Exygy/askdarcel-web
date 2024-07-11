@@ -1,12 +1,12 @@
 import React from "react";
 import { SiteSearchInput } from "components/ui/SiteSearchInput";
 import { useMediaQuery } from "react-responsive";
-import styles from "./ListingNavigationLayout.module.scss";
+import styles from "./ListingHeaderLayout.module.scss";
 
 /**
  * Renders mobile and desktop views for Listings navigation
  */
-export const ListingsNavigationLayout = ({
+export const ListingHeaderLayout = ({
   descriptionText,
 }: {
   descriptionText: string;

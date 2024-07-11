@@ -28,8 +28,8 @@ import { LoginPage } from "pages/Auth/LoginPage";
 import { SignUpPage } from "pages/Auth/SignUpPage";
 import { LogoutPage } from "pages/Auth/LogoutPage";
 import { SecondaryNavigationLayout } from "components/layouts/SecondaryNavigationLayout";
-import { BackNavigation } from "components/layouts/BackNavigation";
-import { ListingsNavigationLayout } from "components/ui/ListingsNavigationLayout";
+import { BackButton } from "components/ui/BackButton";
+import { ListingHeaderLayout } from "components/layouts/ListingHeaderLayout";
 import { SearchResultsPage } from "pages/SearchResultsPage/SearchResultsPage";
 
 export const Router = ({
@@ -60,7 +60,7 @@ export const Router = ({
         component={() => (
           <>
             <SecondaryNavigationLayout>
-              <BackNavigation defaultReturnTo="/search">Back</BackNavigation>
+              <BackButton defaultReturnTo="/search">Back</BackButton>
             </SecondaryNavigationLayout>
             <OrganizationListingPage />
           </>
@@ -82,7 +82,7 @@ export const Router = ({
         component={() => (
           <>
             <SecondaryNavigationLayout>
-              <ListingsNavigationLayout descriptionText="Description text explaining this section goes here." />
+              <ListingHeaderLayout descriptionText="Description text explaining this section goes here." />
             </SecondaryNavigationLayout>
             <SearchResultsPage />
           </>
@@ -94,9 +94,9 @@ export const Router = ({
         component={() => (
           <>
             <SecondaryNavigationLayout>
-              <BackNavigation defaultReturnTo="/search">
+              <BackButton defaultReturnTo="/search">
                 Back to Services
-              </BackNavigation>
+              </BackButton>
             </SecondaryNavigationLayout>
             <ServiceListingPage />
           </>

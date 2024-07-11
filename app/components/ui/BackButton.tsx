@@ -4,7 +4,7 @@ import { Button } from "components/ui/inline/Button/Button";
 import { useHistory } from "react-router-dom";
 
 // Renders a smart back link that handles pages visited directly or from referring page
-export const BackNavigation = ({
+export const BackButton = ({
   defaultReturnTo,
   children,
 }: {
