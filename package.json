@@ -118,7 +118,7 @@
     "test:watch": "npm run test -- --watch --watch-extensions jsx --inspect",
     "testcafe": "testcafe",
     "testcafe:ci": "testcafe chrome:headless testcafe/*.js -c 3 --skip-js-errors",
-    "open:pr": "./open-pr.sh"
+    "open:pr": "sh ./open-pr.sh"
   },
   "repository": {
     "type": "git",
