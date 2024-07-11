@@ -1,5 +1,7 @@
 @import "../../styles/utils/_helpers.scss";
 
+@value mobileBreakpoint: $break-tablet-s;
+
 .mobileSearchButton {
   color: white;
   background: black;
@@ -24,6 +26,10 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  @include r_max($break-tablet-s) {
+    display: none;
+  }
 }
 
 .desktopInnerContainerLeft {
@@ -32,7 +38,12 @@
 }
 
 .mobileInnerContainer {
+  display: none;
   gap: $spacing-3;
+
+  @include r_max($break-tablet-s) {
+    display: block;
+  }
 }
 
 .mobileInnerContainerLeft {
