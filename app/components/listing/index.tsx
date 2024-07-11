@@ -9,4 +9,4 @@ export * from "../ui/Cards/ServiceCard";
 export * from "./ServiceDetails";
 export * from "./StreetViewImage";
 export * from "./ContactInfoTableRows";
-export * from "./TableOfOpeningTimes";
+export * from "./TableOfLocationTimes";

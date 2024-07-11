@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { LocationDetails } from "models";
 import classNames from "classnames";
 import styles from "./LocationTimesAccordion.module.scss";
-import { TableOfOpeningTimes } from "./TableOfOpeningTimes";
+import { TableOfLocationTimes } from "./TableOfLocationTimes";
 
 /*
     Accordion built per a11y guidelines:
@@ -63,7 +63,7 @@ const LocationTimesAccordion = ({
               hidden={!isActive}
             >
               <div className={styles.accordionContent}>
-                <TableOfOpeningTimes
+                <TableOfLocationTimes
                   recurringSchedule={location.recurringSchedule}
                 />
               </div>

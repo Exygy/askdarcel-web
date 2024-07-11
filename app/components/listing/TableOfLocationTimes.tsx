@@ -1,12 +1,12 @@
 import React from "react";
 import { RecurringSchedule } from "../../models/RecurringSchedule";
-import styles from "./TableOfOpeningTimes.module.scss";
+import styles from "./TableOfLocationTimes.module.scss";
 
 // TODO order with current day first
 // TODO Show relativeOpeningTime for current day
 // TODO Show days without entries in the schedule as closed
 // TODO Order with current day at top
-export const TableOfOpeningTimes = ({
+export const TableOfLocationTimes = ({
   recurringSchedule,
 }: {
   recurringSchedule: RecurringSchedule;

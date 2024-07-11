@@ -364,7 +364,7 @@ export const ServicePdfPage = () => {
 
                   <div className="serviceHours">
                     <p className="hoursTitle">Hours</p>
-                    <TableOfOpeningTimes
+                    <TableOfLocationTimes
                       recurringSchedule={locations[0].recurringSchedule}
                     />
                   </div>
@@ -513,7 +513,7 @@ const TableOfContactInfo = ({ service }: { service: Service }) => {
   );
 };
 
-const TableOfOpeningTimes = ({
+const TableOfLocationTimes = ({
   recurringSchedule,
 }: {
   recurringSchedule: RecurringSchedule;

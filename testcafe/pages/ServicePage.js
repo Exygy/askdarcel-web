@@ -31,7 +31,7 @@ export default class ServicePage {
       .find(".listing--main--left--details tr")
       .nth(1)
       .find("td");
-    this.schedule = baseSelector.findReact("TableOfOpeningTimes tbody tr");
+    this.schedule = baseSelector.findReact("TableOfLocationTimes tbody tr");
     this.url = (serviceId) => `${config.baseUrl}/services/${serviceId}`;
   }
 
