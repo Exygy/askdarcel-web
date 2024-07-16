@@ -1,7 +1,7 @@
 import type { PopupMessageProp } from "components/ui";
 import React from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
-import { whiteLabel, useAppContext } from "utils";
+import { useAppContext } from "utils";
 import { ProtectedRoute, PublicRoute } from "components/utils";
 
 import { AuthInterstitial } from "pages/AuthInterstitial";
@@ -16,13 +16,10 @@ import {
   RedirectToOrganizationsEdit,
 } from "pages/LegacyRedirects";
 import { ResourceGuides, ResourceGuide } from "pages/ResourceGuides";
-import { SearchResultsPage } from "pages/SearchResultsPage/SearchResultsPage";
 import { ServiceListingPage } from "pages/ServiceListingPage/ServiceListingPage";
 import { ServicePdfPage } from "pages/Pdf/ServicePdfPage";
 import { IntimatePartnerViolencePdfPage } from "pages/Pdf/IntimatePartnerViolencePdfPage";
 import { TermsOfServicePage } from "pages/legal/TermsOfService";
-import { UcsfHomePage } from "pages/UcsfHomePage/UcsfHomePage";
-import { UcsfDiscoveryForm } from "pages/UcsfDiscoveryForm/UcsfDiscoveryForm";
 import OrganizationEditPage from "pages/OrganizationEditPage";
 import { EditBreakingNewsPage } from "pages/EditBreakingNewsPage";
 import { ServiceDiscoveryForm } from "pages/ServiceDiscoveryForm";
@@ -31,16 +28,9 @@ import { LoginPage } from "pages/Auth/LoginPage";
 import { SignUpPage } from "pages/Auth/SignUpPage";
 import { LogoutPage } from "pages/Auth/LogoutPage";
 import { SecondaryNavigationLayout } from "components/layouts/SecondaryNavigationLayout";
-import { BackNavigation } from "components/layouts/BackNavigation";
-
-const { homePageComponent } = whiteLabel;
-
-const homePageDictionary = {
-  HomePage,
-  UcsfHomePage,
-};
-
-const homePage = homePageDictionary[homePageComponent];
+import { BackButton } from "components/ui/BackButton";
+import { ListingHeaderLayout } from "components/layouts/ListingHeaderLayout";
+import { SearchResultsPage } from "pages/SearchResultsPage/SearchResultsPage";
 
 export const Router = ({
   setPopUpMessage,
@@ -51,7 +41,7 @@ export const Router = ({
 
   return (
     <Switch>
-      <Route exact path="/" component={homePage} />
+      <Route exact path="/" component={HomePage} />
       <Route exact path="/about" component={AboutPage} />
       <Route exact path="/auth" component={AuthInterstitial} />
       <Route exact path="/demo/listing" component={ListingDebugPage} />
@@ -68,11 +58,12 @@ export const Router = ({
         exact
         path="/organizations/:id"
         component={() => (
-          <SecondaryNavigationLayout
-            navigationChildren={<BackNavigation>Back</BackNavigation>}
-          >
+          <>
+            <SecondaryNavigationLayout>
+              <BackButton defaultReturnTo="/search">Back</BackButton>
+            </SecondaryNavigationLayout>
             <OrganizationListingPage />
-          </SecondaryNavigationLayout>
+          </>
         )}
       />
       <Route
@@ -85,20 +76,30 @@ export const Router = ({
       <Route exact path="/privacy-policy" component={PrivacyPolicyPage} />
       <Route exact path="/resource-guides" component={ResourceGuides} />
       <Route exact path="/resource-guides/:id" component={ResourceGuide} />
-      <Route exact path="/search" component={SearchResultsPage} />
+      <Route
+        exact
+        path="/search"
+        component={() => (
+          <>
+            <SecondaryNavigationLayout>
+              <ListingHeaderLayout descriptionText="Description text explaining this section goes here." />
+            </SecondaryNavigationLayout>
+            <SearchResultsPage />
+          </>
+        )}
+      />
       <Route
         exact
         path="/services/:id"
         component={() => (
-          <SecondaryNavigationLayout
-            navigationChildren={
-              <BackNavigation defaultReturnTo="/search">
+          <>
+            <SecondaryNavigationLayout>
+              <BackButton defaultReturnTo="/search">
                 Back to Services
-              </BackNavigation>
-            }
-          >
+              </BackButton>
+            </SecondaryNavigationLayout>
             <ServiceListingPage />
-          </SecondaryNavigationLayout>
+          </>
         )}
       />
       <Route exact path="/service-handout/:id" component={ServicePdfPage} />
@@ -146,13 +147,6 @@ export const Router = ({
         isAuthenticated={!!authState}
         path="/log-out"
         component={LogoutPage}
-      />
-
-      {/* UCSF white label paths */}
-      <Route
-        exact
-        path="/find-services/:selectedResourceSlug"
-        component={UcsfDiscoveryForm}
       />
 
       {/* Legacy redirects */}
