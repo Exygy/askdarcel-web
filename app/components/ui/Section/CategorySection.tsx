@@ -68,105 +68,64 @@ export const CategorySection = () => {
   );
 };
 
-// Hardcoded until CMS is running again
+// TODO: combine topLevelCategories, coreCategories (from Homepage) and CATEGORIES (from ServiceDiscoveryForm constants)
 export const topLevelCategories = [
   {
-    name: "Food",
+    name: "Arts, Culture & Identity",
     icon: {
       name: "fa-utensils",
       provider: "fa",
     },
-    categorySlug: "food-resources",
+    categorySlug: "arts-culture-identity",
   },
   {
-    name: "Health and COVID-19",
+    name: "Children's Care",
     icon: {
       name: "fa-hospital",
       provider: "fa",
     },
-    categorySlug: "medical-services-resources",
+    categorySlug: "childrens-care",
   },
   {
-    name: "Showers, Hygiene and other Services",
-    icon: {
-      name: "fa-shower",
-      provider: "fa",
-    },
-    categorySlug: "hygiene-resources",
-  },
-  {
-    name: "Shelters",
+    name: "Education",
     icon: {
       name: "fa-bed",
       provider: "fa",
     },
-    categorySlug: "shelter-resources",
+    categorySlug: "education",
   },
   {
-    name: "Long-term Housing",
+    name: "Family Support",
     icon: {
       name: "fa-house",
       provider: "fa",
     },
-    categorySlug: "longterm-housing-resources",
+    categorySlug: "family-support",
   },
   {
-    name: "Rental Assistance and Eviction Prevention",
+    name: "Health & Wellness",
     icon: {
       name: "fa-house-chimney-user",
       provider: "fa",
     },
-    categorySlug: "rental-assistance-resources",
+    categorySlug: "health-wellness",
   },
   {
-    name: "Financial Assistance",
+    name: "Sports & Recreation",
     icon: {
       name: "fa-wallet",
       provider: "fa",
     },
-    categorySlug: "financial-resources",
+    categorySlug: "sports-recreation",
   },
   {
-    name: "Jobs",
+    name: "Youth Workforce & Life Skills",
     icon: {
       name: "fa-briefcase",
       provider: "fa",
     },
-    categorySlug: "job-assistance-resources",
+    categorySlug: "youth-workforce-life-skills",
   },
-  {
-    name: "Internet, Devices & Technology Training",
-    icon: {
-      name: "fa-wifi",
-      provider: "fa",
-    },
-    categorySlug: "internet-access-resources",
-  },
-  {
-    name: "LGBTQ+ Resources",
-    icon: {
-      name: "fa-people-group",
-      provider: "fa",
-    },
-    categorySlug: "lgbtq-resources",
-  },
-  {
-    name: "Resources for Domestic Violence Survivors",
-    icon: {
-      name: "fa-warning",
-      provider: "fa",
-    },
-    categorySlug: "domestic-violence-resources",
-  },
-  // Removing last one to keep with style guidelines for now
-  // {
-  //   name: "Substance Use Resources",
-  //   icon: {
-  //     name: "fa-suitcase-medical",
-  //     provider: "fa",
-  //   },
-  //   categorySlug: "substance-use-resources",
-  // },
 ];
 
 const tempCategoriesSection = {

@@ -5,6 +5,11 @@ export type Step =
   | "subcategories"
   | "results";
 
+export interface Subcats {
+  name: string;
+  id: number;
+}
+
 export interface ServiceCategory {
   algoliaCategoryName: string;
   sortBy24HourAvailability?: boolean;
@@ -16,6 +21,7 @@ export interface ServiceCategory {
   slug: string;
   steps: Step[];
   subcategorySubheading: string;
+  subcats: Subcats[];
 }
 
 const defaultSubheading =
@@ -23,158 +29,377 @@ const defaultSubheading =
 
 export const CATEGORIES: Readonly<ServiceCategory[]> = [
   {
-    algoliaCategoryName: "Covid-food",
-    id: "1000001",
-    name: "Food Resources",
-    slug: "food-resources",
+    algoliaCategoryName: "Arts, Culture & Identity",
+    id: "356",
+    name: "Arts, Culture & Identity",
+    slug: "arts-culture-identity",
     steps: ["subcategories", "results"],
     subcategorySubheading: defaultSubheading,
+    subcats: [
+      {
+        "name": "LGBTQ+ Support",
+        "id": 201,
+      },
+      {
+        "name": "Arts and Creative Expression",
+        "id": 255,
+      },
+      {
+        "name": "Disability Support",
+        "id": 244,
+      },
+      {
+        "name": "Culinary Arts",
+        "id": 276,
+      },
+      {
+        "name": "Summer Programs",
+        "id": 284,
+      },
+      {
+        "name": "Culture & Identity",
+        "id": 294,
+      },
+      {
+        "name": "Digital Media Production",
+        "id": 258,
+      },
+      {
+        "name": "Justice Involvement",
+        "id": 342,
+      },
+      {
+        "name": "Team Sports",
+        "id": 354,
+      }
+    ]
   },
   {
-    algoliaCategoryName: "Covid-hygiene",
-    id: "1000002",
-    name: "Hygiene Resources",
-    slug: "hygiene-resources",
+    algoliaCategoryName: "Children's Care",
+    id: "357",
+    name: "Children's Care",
+    slug: "childrens-care",
     steps: ["subcategories", "results"],
     subcategorySubheading: defaultSubheading,
+    subcats: [
+      {
+        "name": "Childcare",
+        "id": 102,
+      },
+      {
+        "name": "Summer Programs",
+        "id": 284,
+      },
+      {
+        "name": "After & Before School Care",
+        "id": 343,
+      },
+      {
+        "name": "Playgroups",
+        "id": 344,
+      }
+    ]
   },
   {
-    algoliaCategoryName: "Covid-health",
-    id: "1000005",
-    name: "Medical Services",
-    slug: "medical-services-resources",
+    algoliaCategoryName: "Education",
+    id: "358",
+    name: "Education",
+    slug: "education",
     steps: ["subcategories", "results"],
     subcategorySubheading: defaultSubheading,
+    subcats: [
+      {
+        "name": "Financial Education",
+        "id": 94,
+      },
+      {
+        "name": "Foreign Languages",
+        "id": 135,
+      },
+      {
+        "name": "Special Education",
+        "id": 138,
+      },
+      {
+        "name": "Computer Class",
+        "id": 144,
+      },
+      {
+        "name": "LGBTQ+ Support",
+        "id": 201,
+      },
+      {
+        "name": "SEL (Social Emotional Learning)",
+        "id": 248,
+      },
+      {
+        "name": "Disability Support",
+        "id": 244,
+      },
+      {
+        "name": "Learning English",
+        "id": 231,
+      },
+      {
+        "name": "Summer Programs",
+        "id": 284,
+      },
+      {
+        "name": "College Prep",
+        "id": 291,
+      },
+      {
+        "name": "STEM",
+        "id": 293,
+      },
+      {
+        "name": "Reading & Literacy",
+        "id": 286,
+      },
+      {
+        "name": "Justice Involvement",
+        "id": 342,
+      },
+      {
+        "name": "Academic Support",
+        "id": 345,
+      },
+      {
+        "name": "Alternative Education & GED",
+        "id": 346,
+      },
+      {
+        "name": "Free City College",
+        "id": 347,
+      },
+      {
+        "name": "Public Schools",
+        "id": 348,
+      }
+    ]
   },
   {
-    algoliaCategoryName: "Covid-domesticviolence",
-    id: "1000006",
-    name: "Domestic Violence",
-    slug: "domestic-violence-resources",
+    algoliaCategoryName: "Family Support",
+    id: "359",
+    name: "Family Support",
+    slug: "family-support",
     steps: ["subcategories", "results"],
     subcategorySubheading: defaultSubheading,
+    subcats: [
+      {
+        "name": "Support Groups",
+        "id": 123,
+      },
+      {
+        "name": "Family Shelters",
+        "id": 174,
+      },
+      {
+        "name": "Legal Services",
+        "id": 188,
+      },
+      {
+        "name": "Food",
+        "id": 2,
+      },
+      {
+        "name": "LGBTQ+ Support",
+        "id": 201,
+      },
+      {
+        "name": "Emergency Financial Assistance",
+        "id": 1100007,
+      },
+      {
+        "name": "Computer or Internet Access",
+        "id": 225,
+      },
+      {
+        "name": "Disability Support",
+        "id": 244,
+      },
+      {
+        "name": "Parent Education",
+        "id": 295,
+      },
+      {
+        "name": "Family Resource Centers",
+        "id": 297,
+      },
+      {
+        "name": "Justice Involvement",
+        "id": 342,
+      },
+      {
+        "name": "Child Welfare Services",
+        "id": 349,
+      },
+      {
+        "name": "Foster Care Services",
+        "id": 198,
+      },
+      {
+        "name": "Housing & Rental Assistance",
+        "id": 1,
+      },
+      {
+        "name": "Immigration Assistance",
+        "id": 350,
+      },
+      {
+        "name": "Teen Parents",
+        "id": 351,
+      }
+    ]
   },
   {
-    algoliaCategoryName: "Covid-internet",
-    id: "1000007",
-    name: "Internet Access",
-    slug: "internet-access-resources",
+    algoliaCategoryName: "Health & Wellness",
+    id: "360",
+    name: "Health & Wellness",
+    slug: "health-wellness",
     steps: ["subcategories", "results"],
     subcategorySubheading: defaultSubheading,
+    subcats: [
+      {
+        "name": "Medical Care",
+        "id": 58,
+      },
+      {
+        "name": "Mental Health Care",
+        "id": 78,
+      },
+      {
+        "name": "Vision Care",
+        "id": 88,
+      },
+      {
+        "name": "Addiction & Recovery",
+        "id": 41,
+      },
+      {
+        "name": "Dental Care",
+        "id": 42,
+      },
+      {
+        "name": "Health Education",
+        "id": 43,
+      },
+      {
+        "name": "LGBTQ+ Support",
+        "id": 201,
+      },
+      {
+        "name": "Disability Support",
+        "id": 244,
+      },
+      {
+        "name": "Justice Involvement",
+        "id": 342,
+      },
+      {
+        "name": "Crisis Intervention",
+        "id": 352,
+      }
+    ]
   },
   {
-    algoliaCategoryName: "Covid-finance",
-    id: "1000003",
-    name: "Financial Resources",
-    slug: "financial-resources",
+    algoliaCategoryName: "Sports & Recreation",
+    id: "361",
+    name: "Sports & Recreation",
+    slug: "sports-recreation",
     steps: ["subcategories", "results"],
     subcategorySubheading: defaultSubheading,
+    subcats: [
+      {
+        "name": "LGBTQ+ Support",
+        "id": 201,
+      },
+      {
+        "name": "Disability Support",
+        "id": 244,
+      },
+      {
+        "name": "Summer Programs",
+        "id": 284,
+      },
+      {
+        "name": "Outdoors",
+        "id": 319,
+      },
+      {
+        "name": "Gardening",
+        "id": 274,
+      },
+      {
+        "name": "Justice Involvement",
+        "id": 342,
+      },
+      {
+        "name": "Physical Fitness",
+        "id": 353,
+      },
+      {
+        "name": "Team Sports",
+        "id": 354,
+      }
+    ]
   },
   {
-    algoliaCategoryName: "Covid-jobs",
-    id: "1000009",
-    name: "Job Assistance",
-    slug: "job-assistance-resources",
+    algoliaCategoryName: "Youth Workforce & Life Skills",
+    id: "362",
+    name: "Youth Workforce & Life Skills",
+    slug: "youth-workforce-life-skills",
     steps: ["subcategories", "results"],
     subcategorySubheading: defaultSubheading,
-  },
-  {
-    algoliaCategoryName: "Covid-housing",
-    id: "1000004",
-    name: "Rental Assistance",
-    slug: "rental-assistance-resources",
-    steps: ["subcategories", "results"],
-    subcategorySubheading: defaultSubheading,
-  },
-  {
-    algoliaCategoryName: "Covid-lgbtqa",
-    id: "1000008",
-    name: "LGBTQ Resources",
-    slug: "lgbtq-resources",
-    steps: ["subcategories", "results"],
-    subcategorySubheading: defaultSubheading,
-  },
-  {
-    algoliaCategoryName: "Covid-shelter",
-    id: "1000010",
-    name: "Shelter Resources",
-    slug: "shelter-resources",
-    steps: ["subcategories", "results"],
-    subcategorySubheading:
-      "If you need shelter, then tell us more about who you are. Select one answer.",
-  },
-  {
-    algoliaCategoryName: "Covid-longtermhousing",
-    id: "1000011",
-    name: "Long-term Housing",
-    slug: "longterm-housing-resources",
-    steps: ["housingStatus", "subcategoriesRadio", "results"],
-    subcategorySubheading:
-      "If you need shelter, then tell us more about who you are. Select one answer.",
-  },
-  {
-    algoliaCategoryName: "Covid-substanceuse",
-    id: "1000012",
-    name: "Substance Use Resources",
-    slug: "substance-use-resources",
-    steps: ["subcategories", "results"],
-    subcategorySubheading: defaultSubheading,
-  },
-  {
-    algoliaCategoryName: "Ucsf-mentalhealth",
-    id: "2000001",
-    name: "Mental Health Resources",
-    abbreviatedName: "Mental Health",
-    slug: "ucsf-mental-health-resources",
-    steps: ["subcategories", "eligibilities", "results"],
-    subcategorySubheading: defaultSubheading,
-  },
-  {
-    algoliaCategoryName: "Ucsf-shelter",
-    id: "2000002",
-    name: "Shelter Resources",
-    abbreviatedName: "Shelter",
-    slug: "ucsf-shelter-resources",
-    steps: ["subcategories", "eligibilities", "results"],
-    subcategorySubheading: defaultSubheading,
-  },
-  {
-    algoliaCategoryName: "Ucsf-substanceuse",
-    id: "2000003",
-    name: "Substance Use Resources",
-    abbreviatedName: "Substance Use",
-    slug: "ucsf-substance-use-resources",
-    steps: ["subcategories", "eligibilities", "results"],
-    subcategorySubheading: defaultSubheading,
-  },
-  {
-    algoliaCategoryName: "Ucsf-foodinsecurity",
-    id: "2000004",
-    name: "Food Insecurity Resources",
-    abbreviatedName: "Food Insecurity",
-    slug: "ucsf-food-insecurity-resources",
-    steps: ["subcategories", "eligibilities", "results"],
-    subcategorySubheading: defaultSubheading,
-  },
-  {
-    algoliaCategoryName: "Ucsf-immmigration",
-    id: "2000005",
-    name: "Immigration Resources",
-    abbreviatedName: "Immigration",
-    slug: "ucsf-immigration-resources",
-    steps: ["eligibilities", "results"],
-    subcategorySubheading: defaultSubheading,
-  },
-  {
-    algoliaCategoryName: "Ucsf-intimatepartnerviolence",
-    sortBy24HourAvailability: true,
-    disableGeoLocation: true,
-    id: "2000006",
-    name: "Intimate Partner Violence Resources",
-    abbreviatedName: "Intimate Partner Violence",
-    slug: "ucsf-partner-violence-resources",
-    steps: ["subcategories", "eligibilities", "results"],
-    subcategorySubheading: defaultSubheading,
-    sortAlgoliaSubcategoryRefinements: true,
+    subcats: [
+      {
+        "name": "Mentorship",
+        "id": 119,
+      },
+      {
+        "name": "Skills & Training",
+        "id": 142,
+      },
+      {
+        "name": "Vocational Training",
+        "id": 214,
+      },
+      {
+        "name": "LGBTQ+ Support",
+        "id": 201,
+      },
+      {
+        "name": "Job Assistance",
+        "id": 1100010,
+      },
+      {
+        "name": "Disability Support",
+        "id": 244,
+      },
+      {
+        "name": "Summer Programs",
+        "id": 284,
+      },
+      {
+        "name": "Youth Leadership",
+        "id": 288,
+      },
+      {
+        "name": "Career Exploration",
+        "id": 330,
+      },
+      {
+        "name": "Justice Involvement",
+        "id": 342,
+      },
+      {
+        "name": "Apprenticeship",
+        "id": 355,
+      },
+      {
+        "name": "Youth Jobs & Internships",
+        "id": 275,
+      }
+    ]
   },
 ];
