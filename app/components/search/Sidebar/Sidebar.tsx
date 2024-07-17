@@ -11,10 +11,9 @@ import OpenNowFilter from "components/search/Refinements/OpenNowFilter";
 import RefinementListFilter from "components/search/Refinements/RefinementListFilter";
 import FacetRefinementList from "components/search/Refinements/FacetRefinementList";
 import { eligibilityMap as ucsfEligibilityMap } from "components/ucsf/RefinementLists/ucsfEligibilitiesMap";
-import styles from "./Sidebar.module.scss";
 import { Button } from "components/ui/inline/Button/Button";
-import classNames from "classnames";
 import MapToggleButtons from "./MapToggleButtons";
+import styles from "./Sidebar.module.scss";
 
 const Sidebar = ({
   setSearchRadius,
@@ -170,7 +169,7 @@ const Sidebar = ({
 
   return (
     <div className={styles.sidebar}>
-      <div className={styles.filtersButtonContainer} aria-hidden={true}>
+      <div className={styles.filtersButtonContainer} aria-hidden>
         <Button
           variant="linkBlue"
           onClick={() => setfilterMenuVisible(!filterMenuVisible)}

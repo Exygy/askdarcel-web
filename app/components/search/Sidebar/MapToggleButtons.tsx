@@ -1,7 +1,6 @@
 import React from "react";
-
-import styles from "./MapToggleButtons.module.scss";
 import classNames from "classnames";
+import styles from "./MapToggleButtons.module.scss";
 
 const MapToggleButtons = ({
   collapseMap,
