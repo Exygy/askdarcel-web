@@ -14,6 +14,7 @@ import { eligibilityMap as ucsfEligibilityMap } from "components/ucsf/Refinement
 import styles from "./Sidebar.module.scss";
 import { Button } from "components/ui/inline/Button/Button";
 import classNames from "classnames";
+import MapToggleButtons from "./MapToggleButtons";
 
 const Sidebar = ({
   setSearchRadius,
@@ -180,35 +181,10 @@ const Sidebar = ({
         >
           Filters
         </Button>
-        {/* Move into own component */}
-        <div className={styles.mapListToggleContainer}>
-          <button
-            type="button"
-            className={classNames(
-              styles.mapListToggleBtn,
-              styles.mapButton,
-              "no-transition"
-            )}
-            onClick={() => setCollapseMap(false)}
-          >
-            <span className={!collapseMap ? styles.activeView : ""}>
-              <i className="fa-solid fa-map" />
-            </span>
-          </button>
-          <button
-            type="button"
-            className={classNames(
-              styles.mapListToggleBtn,
-              styles.listButton,
-              "no-transition"
-            )}
-            onClick={() => setCollapseMap(true)}
-          >
-            <span className={collapseMap ? styles.activeView : ""}>
-              <i className="fa-solid fa-list" />
-            </span>
-          </button>
-        </div>
+        <MapToggleButtons
+          collapseMap={collapseMap}
+          setCollapseMap={setCollapseMap}
+        />
       </div>
       <div
         className={`${styles.filtersContainer} ${

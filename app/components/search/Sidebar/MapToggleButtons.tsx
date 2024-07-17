@@ -1,0 +1,45 @@
+import React from "react";
+
+import styles from "./MapToggleButtons.module.scss";
+import classNames from "classnames";
+
+const MapToggleButtons = ({
+  collapseMap,
+  setCollapseMap,
+}: {
+  collapseMap: boolean;
+  setCollapseMap: (_collapseMap: boolean) => void;
+}) => {
+  return (
+    <div className={styles.mapListToggleContainer}>
+      <button
+        type="button"
+        className={classNames(
+          styles.mapListToggleBtn,
+          styles.mapButton,
+          "no-transition"
+        )}
+        onClick={() => setCollapseMap(false)}
+      >
+        <span className={!collapseMap ? styles.activeView : ""}>
+          <i className="fa-solid fa-map" />
+        </span>
+      </button>
+      <button
+        type="button"
+        className={classNames(
+          styles.mapListToggleBtn,
+          styles.listButton,
+          "no-transition"
+        )}
+        onClick={() => setCollapseMap(true)}
+      >
+        <span className={collapseMap ? styles.activeView : ""}>
+          <i className="fa-solid fa-list" />
+        </span>
+      </button>
+    </div>
+  );
+};
+
+export default MapToggleButtons;
