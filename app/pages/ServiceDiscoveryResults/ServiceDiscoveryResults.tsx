@@ -157,11 +157,7 @@ const InnerServiceDiscoveryResults = ({
           content={`A list of ${categoryName} in San Francisco`}
         />
       </Helmet>
-      <Header
-        resultsTitle={categoryName}
-        expandList={expandList}
-        setExpandList={setExpandList}
-      />
+      <Header resultsTitle={categoryName} />
 
       <InstantSearch
         searchClient={searchClient}
@@ -191,6 +187,8 @@ const InnerServiceDiscoveryResults = ({
             sortAlgoliaSubcategoryRefinements={
               sortAlgoliaSubcategoryRefinements
             }
+            expandList={expandList}
+            setExpandList={setExpandList}
           />
 
           <div className={styles.results}>

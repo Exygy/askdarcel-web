@@ -13,6 +13,7 @@ import FacetRefinementList from "components/search/Refinements/FacetRefinementLi
 import { eligibilityMap as ucsfEligibilityMap } from "components/ucsf/RefinementLists/ucsfEligibilitiesMap";
 import styles from "./Sidebar.module.scss";
 import { Button } from "components/ui/inline/Button/Button";
+import classNames from "classnames";
 
 const Sidebar = ({
   setSearchRadius,
@@ -23,6 +24,8 @@ const Sidebar = ({
   subcategories = [],
   subcategoryNames = [],
   sortAlgoliaSubcategoryRefinements = false,
+  expandList,
+  setExpandList,
 }: {
   setSearchRadius: (radius: string) => void;
   searchRadius: string;
@@ -32,6 +35,8 @@ const Sidebar = ({
   subcategories?: Category[];
   subcategoryNames?: string[];
   sortAlgoliaSubcategoryRefinements?: boolean;
+  expandList: boolean;
+  setExpandList: (_expandList: boolean) => void;
 }) => {
   const [filterMenuVisible, setfilterMenuVisible] = useState(false);
   let categoryRefinementJsx: React.ReactElement | null = null;
@@ -164,7 +169,7 @@ const Sidebar = ({
 
   return (
     <div className={styles.sidebar}>
-      <div className={styles.filtersButtonContainer}>
+      <div className={styles.filtersButtonContainer} aria-hidden={true}>
         <Button
           variant="linkBlue"
           onClick={() => setfilterMenuVisible(!filterMenuVisible)}
@@ -174,6 +179,35 @@ const Sidebar = ({
         >
           Filters
         </Button>
+        {/* Move into own component */}
+        <div className={styles.mapListToggleContainer}>
+          <button
+            type="button"
+            className={classNames(
+              styles.mapListToggleBtn,
+              styles.mapButton,
+              "no-transition"
+            )}
+            onClick={() => setExpandList(false)}
+          >
+            <span className={!expandList ? styles.activeView : ""}>
+              <i className="fa-solid fa-map" />
+            </span>
+          </button>
+          <button
+            type="button"
+            className={classNames(
+              styles.mapListToggleBtn,
+              styles.listButton,
+              "no-transition"
+            )}
+            onClick={() => setExpandList(true)}
+          >
+            <span className={expandList ? styles.activeView : ""}>
+              <i className="fa-solid fa-list" />
+            </span>
+          </button>
+        </div>
       </div>
       <div
         className={`${styles.filtersContainer} ${

@@ -175,11 +175,9 @@ const InnerSearchResults = ({
           } in San Francisco`}
         />
       </Helmet>
-      <Header
-        resultsTitle={untranslatedQuery ?? ""}
-        expandList={expandList}
-        setExpandList={setExpandList}
-      />
+
+      {/* Move toggle buttons out of here */}
+      <Header resultsTitle={untranslatedQuery ?? ""} />
 
       <InstantSearch
         searchClient={searchClient}
@@ -221,6 +219,8 @@ const InnerSearchResults = ({
             setSearchRadius={setSearchRadius}
             searchRadius={searchRadius}
             isSearchResultsPage
+            expandList={expandList}
+            setExpandList={setExpandList}
           />
 
           <div className={styles.results}>
