@@ -66,7 +66,7 @@ export const ServiceDiscoveryResults = ({
   const eligibilities = useEligibilitiesForCategory(category.id);
   const subcategories = useSubcategoriesForCategory(category.id);
   const [searchState, setSearchState] = useState(urlToSearchState(location));
-  const [expandList, setExpandList] = useState(false);
+  const [collapseMap, setCollapseMap] = useState(false);
   const [searchRadius, setSearchRadius] = useState(
     searchState?.configure?.aroundRadius || "all"
   );
@@ -103,8 +103,8 @@ export const ServiceDiscoveryResults = ({
         onSearchStateChange={onSearchStateChange}
         searchRadius={searchRadius}
         setSearchRadius={setSearchRadius}
-        expandList={expandList}
-        setExpandList={setExpandList}
+        collapseMap={collapseMap}
+        setCollapseMap={setCollapseMap}
         userLatLng={{ lat: userLocation.lat, lng: userLocation.lng }}
       />
     );
@@ -123,8 +123,8 @@ const InnerServiceDiscoveryResults = ({
   onSearchStateChange,
   searchRadius,
   setSearchRadius,
-  expandList,
-  setExpandList,
+  collapseMap,
+  setCollapseMap,
   userLatLng,
 }: {
   eligibilities: object[];
@@ -135,8 +135,8 @@ const InnerServiceDiscoveryResults = ({
   onSearchStateChange: (nextSearchState: SearchState) => void;
   searchRadius: string;
   setSearchRadius: (radius: string) => void;
-  expandList: boolean;
-  setExpandList: (_expandList: boolean) => void;
+  collapseMap: boolean;
+  setCollapseMap: (_collapseMap: boolean) => void;
   userLatLng: { lat: number; lng: number };
 }) => {
   const [location, setLocation] = useState(userLatLng);
@@ -187,13 +187,13 @@ const InnerServiceDiscoveryResults = ({
             sortAlgoliaSubcategoryRefinements={
               sortAlgoliaSubcategoryRefinements
             }
-            expandList={expandList}
-            setExpandList={setExpandList}
+            collapseMap={collapseMap}
+            setCollapseMap={setCollapseMap}
           />
 
           <div className={styles.results}>
             <SearchResults
-              overlayMapWithSearchResults={expandList}
+              overlayMapWithSearchResults={collapseMap}
               categoryId={categoryId}
               setAroundLatLng={setLocation}
             />

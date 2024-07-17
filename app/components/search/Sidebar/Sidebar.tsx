@@ -24,8 +24,8 @@ const Sidebar = ({
   subcategories = [],
   subcategoryNames = [],
   sortAlgoliaSubcategoryRefinements = false,
-  expandList,
-  setExpandList,
+  collapseMap,
+  setCollapseMap,
 }: {
   setSearchRadius: (radius: string) => void;
   searchRadius: string;
@@ -35,8 +35,8 @@ const Sidebar = ({
   subcategories?: Category[];
   subcategoryNames?: string[];
   sortAlgoliaSubcategoryRefinements?: boolean;
-  expandList: boolean;
-  setExpandList: (_expandList: boolean) => void;
+  collapseMap: boolean;
+  setCollapseMap: (_collapseMap: boolean) => void;
 }) => {
   const [filterMenuVisible, setfilterMenuVisible] = useState(false);
   let categoryRefinementJsx: React.ReactElement | null = null;
@@ -188,9 +188,9 @@ const Sidebar = ({
               styles.mapButton,
               "no-transition"
             )}
-            onClick={() => setExpandList(false)}
+            onClick={() => setCollapseMap(false)}
           >
-            <span className={!expandList ? styles.activeView : ""}>
+            <span className={!collapseMap ? styles.activeView : ""}>
               <i className="fa-solid fa-map" />
             </span>
           </button>
@@ -201,9 +201,9 @@ const Sidebar = ({
               styles.listButton,
               "no-transition"
             )}
-            onClick={() => setExpandList(true)}
+            onClick={() => setCollapseMap(true)}
           >
-            <span className={expandList ? styles.activeView : ""}>
+            <span className={collapseMap ? styles.activeView : ""}>
               <i className="fa-solid fa-list" />
             </span>
           </button>
