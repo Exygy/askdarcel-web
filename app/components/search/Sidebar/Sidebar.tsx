@@ -11,9 +11,8 @@ import OpenNowFilter from "components/search/Refinements/OpenNowFilter";
 import RefinementListFilter from "components/search/Refinements/RefinementListFilter";
 import FacetRefinementList from "components/search/Refinements/FacetRefinementList";
 import { eligibilityMap as ucsfEligibilityMap } from "components/ucsf/RefinementLists/ucsfEligibilitiesMap";
-
-import filtersIcon from "assets/img/filters-icon.png";
 import styles from "./Sidebar.module.scss";
+import { Button } from "components/ui/inline/Button/Button";
 
 const Sidebar = ({
   setSearchRadius,
@@ -121,7 +120,7 @@ const Sidebar = ({
             `[count:desc`, name:asc`]. In other words, the 10 default eligibilities are the most
             tagged eligibilities of the returned services, with `name:asc` acting as a tiebreaker.
           */
-          limit={eligibilityNames.length > 0 ? 100 : 10}
+          limit={100}
           transformItems={(items: { label: string }[]) => {
             let itemsList = items;
             if (eligibilityNames.length > 0) {
@@ -165,19 +164,16 @@ const Sidebar = ({
 
   return (
     <div className={styles.sidebar}>
-      <div className={styles.filtersIconContainer}>
-        <button
-          className={styles.filterBtn}
+      <div className={styles.filtersButtonContainer}>
+        <Button
+          variant="linkBlue"
           onClick={() => setfilterMenuVisible(!filterMenuVisible)}
-          type="button"
+          iconName="sliders"
+          iconVariant="before"
+          mobileFullWidth={false}
         >
-          <img
-            src={filtersIcon}
-            alt="search filters"
-            className={styles.filtersIcon}
-          />
-          <span>Filters</span>
-        </button>
+          Filters
+        </Button>
       </div>
       <div
         className={`${styles.filtersContainer} ${
@@ -185,18 +181,18 @@ const Sidebar = ({
         }`}
       >
         <div className={styles.filterResourcesHeaderMobile}>
-          <span className={styles.filterResourcesTitle}>Filters</span>
-          <button
-            className={`${styles.filterBtn} ${styles.filterResourcesBtn}`}
-            onClick={() => setfilterMenuVisible(!filterMenuVisible)}
-            type="button"
-          >
-            Close
-          </button>
+          <h2 className={styles.filterResourcesTitle}>Filters</h2>
+          <span className={styles.filterResourcesCloseButton}>
+            <Button
+              variant="linkBlue"
+              mobileFullWidth={false}
+              onClick={() => setfilterMenuVisible(!filterMenuVisible)}
+            >
+              Close
+            </Button>
+          </span>
         </div>
-        <span className={styles.filterResourcesTitleDesktop}>
-          Filter Resources
-        </span>
+        <h2 className={styles.filterResourcesTitleDesktop}>Filter Resources</h2>
         <ClearAllFilters setSearchRadius={setSearchRadius} />
         <div className={styles.filterGroup}>
           <div className={styles.filterTitle}>Availability</div>
@@ -208,7 +204,7 @@ const Sidebar = ({
             eligibilityRefinementJsx ? "" : styles.hideFilterGroup
           } `}
         >
-          <div className={styles.filterTitle}>Eligibilities</div>
+          <h2 className={styles.filterTitle}>Eligibilities</h2>
           {eligibilityRefinementJsx}
         </div>
         {!isSearchResultsPage && (
@@ -217,13 +213,13 @@ const Sidebar = ({
               categoryRefinementJsx ? "" : styles.hideFilterGroup
             }`}
           >
-            <div className={styles.filterTitle}>Subcategories</div>
+            <h2 className={styles.filterTitle}>Subcategories</h2>
             {categoryRefinementJsx}
           </div>
         )}
 
         <div className={styles.filterGroup}>
-          <div className={styles.filterTitle}>Distance</div>
+          <h2 className={styles.filterTitle}>Distance</h2>
           <label className={styles.checkBox}>
             Within 4 blocks
             <input
