@@ -18,6 +18,7 @@ const ClearAllFilter = ({ items, refine, setSearchRadius }: Props) => (
       setSearchRadius("all");
     }}
     mobileFullWidth={false}
+    size="lg"
   >
     Clear all
   </Button>

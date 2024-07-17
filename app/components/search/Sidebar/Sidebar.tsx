@@ -176,6 +176,7 @@ const Sidebar = ({
           iconName="sliders"
           iconVariant="before"
           mobileFullWidth={false}
+          size="lg"
         >
           Filters
         </Button>
@@ -221,6 +222,7 @@ const Sidebar = ({
               variant="linkBlue"
               mobileFullWidth={false}
               onClick={() => setfilterMenuVisible(!filterMenuVisible)}
+              size="lg"
             >
               Close
             </Button>

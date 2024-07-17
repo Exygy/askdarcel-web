@@ -176,8 +176,7 @@ const InnerSearchResults = ({
         />
       </Helmet>
 
-      {/* Move toggle buttons out of here */}
-      <Header resultsTitle={untranslatedQuery ?? ""} />
+      <Header resultsTitle="All categories" />
 
       <InstantSearch
         searchClient={searchClient}
