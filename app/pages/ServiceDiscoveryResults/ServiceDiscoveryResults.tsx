@@ -23,7 +23,7 @@ import config from "../../config";
 import { CATEGORIES, ServiceCategory } from "../ServiceDiscoveryForm/constants";
 import styles from "./ServiceDiscoveryResults.module.scss";
 import { SecondaryNavigationLayout } from "components/layouts/SecondaryNavigationLayout";
-import { ListingHeaderLayout } from "components/layouts/ListingHeaderLayout";
+import { SearchHeaderSection } from "components/search/Header/SearchHeaderSection";
 
 type MatchParams = { categorySlug: string };
 type RouterLocation = RouteComponentProps["location"];
@@ -153,7 +153,7 @@ const InnerServiceDiscoveryResults = ({
   return (
     <>
       <SecondaryNavigationLayout>
-        <ListingHeaderLayout descriptionText="Description text explaining this section goes here." />
+        <SearchHeaderSection descriptionText="Description text explaining this section goes here." />
       </SecondaryNavigationLayout>
       <div className={styles.container}>
         <Helmet>

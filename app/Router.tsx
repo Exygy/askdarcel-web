@@ -29,7 +29,7 @@ import { SignUpPage } from "pages/Auth/SignUpPage";
 import { LogoutPage } from "pages/Auth/LogoutPage";
 import { SecondaryNavigationLayout } from "components/layouts/SecondaryNavigationLayout";
 import { BackButton } from "components/ui/BackButton";
-import { ListingHeaderLayout } from "components/layouts/ListingHeaderLayout";
+import { SearchHeaderSection } from "components/search/Header/SearchHeaderSection";
 import { SearchResultsPage } from "pages/SearchResultsPage/SearchResultsPage";
 
 export const Router = ({
@@ -82,7 +82,7 @@ export const Router = ({
         component={() => (
           <>
             <SecondaryNavigationLayout>
-              <ListingHeaderLayout descriptionText="Description text explaining this section goes here." />
+              <SearchHeaderSection descriptionText="Description text explaining this section goes here." />
             </SecondaryNavigationLayout>
             <SearchResultsPage />
           </>
