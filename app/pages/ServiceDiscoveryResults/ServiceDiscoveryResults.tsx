@@ -22,6 +22,8 @@ import {
 import config from "../../config";
 import { CATEGORIES, ServiceCategory } from "../ServiceDiscoveryForm/constants";
 import styles from "./ServiceDiscoveryResults.module.scss";
+import { SecondaryNavigationLayout } from "components/layouts/SecondaryNavigationLayout";
+import { ListingHeaderLayout } from "components/layouts/ListingHeaderLayout";
 
 type MatchParams = { categorySlug: string };
 type RouterLocation = RouteComponentProps["location"];
@@ -149,59 +151,64 @@ const InnerServiceDiscoveryResults = ({
   } = category;
 
   return (
-    <div className={styles.container}>
-      <Helmet>
-        <title>{`${categoryName} in San Francisco | ${whiteLabel.title}`}</title>
-        <meta
-          name="description"
-          content={`A list of ${categoryName} in San Francisco`}
+    <>
+      <SecondaryNavigationLayout>
+        <ListingHeaderLayout descriptionText="Description text explaining this section goes here." />
+      </SecondaryNavigationLayout>
+      <div className={styles.container}>
+        <Helmet>
+          <title>{`${categoryName} in San Francisco | ${whiteLabel.title}`}</title>
+          <meta
+            name="description"
+            content={`A list of ${categoryName} in San Francisco`}
+          />
+        </Helmet>
+        <Header
+          resultsTitle={categoryName}
+          expandList={expandList}
+          setExpandList={setExpandList}
         />
-      </Helmet>
-      <Header
-        resultsTitle={categoryName}
-        expandList={expandList}
-        setExpandList={setExpandList}
-      />
 
-      <InstantSearch
-        searchClient={searchClient}
-        indexName={`${config.ALGOLIA_INDEX_PREFIX}_services_search`}
-        searchState={searchState}
-        onSearchStateChange={onSearchStateChange}
-      >
-        {category.disableGeoLocation ? (
-          <Configure filters={`categories:'${algoliaCategoryName}'`} />
-        ) : (
-          <Configure
-            filters={`categories:'${algoliaCategoryName}'`}
-            aroundLatLng={`${location.lat}, ${location.lng}`}
-            aroundRadius={searchRadius}
-            aroundPrecision={1600}
-          />
-        )}
-        <div className={styles.flexContainer}>
-          <Sidebar
-            setSearchRadius={setSearchRadius}
-            searchRadius={searchRadius}
-            isSearchResultsPage={false}
-            eligibilities={eligibilities}
-            categorySlug={categorySlug}
-            subcategories={subcategories}
-            subcategoryNames={subcategoryNames}
-            sortAlgoliaSubcategoryRefinements={
-              sortAlgoliaSubcategoryRefinements
-            }
-          />
-
-          <div className={styles.results}>
-            <SearchResults
-              overlayMapWithSearchResults={expandList}
-              categoryId={categoryId}
-              setAroundLatLng={setLocation}
+        <InstantSearch
+          searchClient={searchClient}
+          indexName={`${config.ALGOLIA_INDEX_PREFIX}_services_search`}
+          searchState={searchState}
+          onSearchStateChange={onSearchStateChange}
+        >
+          {category.disableGeoLocation ? (
+            <Configure filters={`categories:'${algoliaCategoryName}'`} />
+          ) : (
+            <Configure
+              filters={`categories:'${algoliaCategoryName}'`}
+              aroundLatLng={`${location.lat}, ${location.lng}`}
+              aroundRadius={searchRadius}
+              aroundPrecision={1600}
             />
+          )}
+          <div className={styles.flexContainer}>
+            <Sidebar
+              setSearchRadius={setSearchRadius}
+              searchRadius={searchRadius}
+              isSearchResultsPage={false}
+              eligibilities={eligibilities}
+              categorySlug={categorySlug}
+              subcategories={subcategories}
+              subcategoryNames={subcategoryNames}
+              sortAlgoliaSubcategoryRefinements={
+                sortAlgoliaSubcategoryRefinements
+              }
+            />
+
+            <div className={styles.results}>
+              <SearchResults
+                overlayMapWithSearchResults={expandList}
+                categoryId={categoryId}
+                setAroundLatLng={setLocation}
+              />
+            </div>
           </div>
-        </div>
-      </InstantSearch>
-    </div>
+        </InstantSearch>
+      </div>
+    </>
   );
 };
