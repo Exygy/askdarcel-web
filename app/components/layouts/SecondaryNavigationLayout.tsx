@@ -7,4 +7,8 @@ export const SecondaryNavigationLayout = ({
   children,
 }: {
   children: ReactNode;
-}) => <div className={`${styles.container}`}>{children}</div>;
+}) => (
+  <div className={styles.container}>
+    <div className={styles.innerContainer}>{children}</div>
+  </div>
+);

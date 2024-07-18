@@ -8,7 +8,7 @@
 
 .headerInner {
   display: flex;
-  max-width: 1440px;
+  max-width: $width-navigation;
   margin: 0 auto;
   padding: $general-spacing-md;
   justify-content: space-between;
