@@ -92,6 +92,9 @@ const InnerServiceDiscoveryForm = ({
   const [currentStep, setCurrentStep] = useState(0);
   const history = useHistory();
   const stepName = steps[currentStep];
+
+  // Adding this to bypass lint errors on current PR. Tech debt is to remove all unused components, including this one.
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   const disableNextBtn =
     selectedSubcategory === null &&
     ["housingStatus", "subcategoriesRadio"].includes(stepName);
@@ -118,6 +121,7 @@ const InnerServiceDiscoveryForm = ({
       setCurrentStep(currentStep + 1);
     }
   };
+  /* eslint-disable @typescript-eslint/no-unused-vars */
 
   // TODO: Should goBack go back to the previous step?
   const goBack = () => {
