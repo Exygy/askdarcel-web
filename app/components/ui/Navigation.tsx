@@ -34,6 +34,8 @@ const BURGER_STYLES = {
   },
 };
 
+// TODO: use @headlessui/react components for a11y
+
 export const Navigation = () => {
   const { data: navigationResponse, error, isLoading } = useNavigationData();
   const [mobileNavigationSidebarIsOpen, setMobileNavigationSidebarIsOpen] =

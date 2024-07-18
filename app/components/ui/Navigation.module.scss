@@ -6,6 +6,7 @@
   position: sticky;
   top: 0;
   z-index: $z-index-site-nav;
+  border-bottom: 1px solid $color-grey3;
 }
 
 // TODO: Remove with other white labeled sites
@@ -13,18 +14,14 @@
   background: $color-sffamilies-nav;
 }
 
-@mixin navRow {
-  border-bottom: 1px solid $color-grey3;
-}
-
 .primaryRow {
   @extend %flex-row;
-  @include navRow;
   height: $header-height;
   justify-content: space-between;
-  padding: calc-em(10px) calc-em(30px);
+  margin: 0 auto;
+  max-width: $width-navigation;
+  padding: 0 $general-spacing-md;
   @include r_max($break-tablet-s) {
-    padding: 0 13px;
     height: $header-mobile-height;
   }
 }
