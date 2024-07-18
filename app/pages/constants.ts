@@ -19,7 +19,7 @@ export interface ServiceCategory {
   icon: {
     name: string;
     provider: string;
-  }
+  };
 }
 
 const defaultSubheading =
