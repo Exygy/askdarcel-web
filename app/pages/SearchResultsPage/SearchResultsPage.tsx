@@ -41,7 +41,7 @@ export const SearchResultsPage = () => {
   const { search } = useLocation();
   const { userLocation } = useAppContext();
   const [lastPush, setLastPush] = useState(Date.now());
-  const [expandList, setExpandList] = useState(false);
+  const [collapseMap, setCollapseMap] = useState(false);
 
   const [searchState, setSearchState] = useState<SearchState | null>(null);
   const [searchRadius, setSearchRadius] = useState(
@@ -116,8 +116,8 @@ export const SearchResultsPage = () => {
       userLocation={{ lat: userLocation.lat, lng: userLocation.lng }}
       lastPush={lastPush}
       setLastPush={setLastPush}
-      expandList={expandList}
-      setExpandList={setExpandList}
+      collapseMap={collapseMap}
+      setCollapseMap={setCollapseMap}
       searchState={searchState}
       searchRadius={searchRadius}
       setSearchRadius={setSearchRadius}
@@ -132,8 +132,8 @@ const InnerSearchResults = ({
   userLocation,
   lastPush,
   setLastPush,
-  expandList,
-  setExpandList,
+  collapseMap,
+  setCollapseMap,
   searchState,
   searchRadius,
   setSearchRadius,
@@ -143,8 +143,8 @@ const InnerSearchResults = ({
   userLocation: GeoCoordinates;
   lastPush: number;
   setLastPush: (time: number) => void;
-  expandList: boolean;
-  setExpandList: (listExpanded: boolean) => void;
+  collapseMap: boolean;
+  setCollapseMap: (listExpanded: boolean) => void;
   searchState: SearchState;
   searchRadius: string;
   setSearchRadius: (radius: string) => void;
@@ -175,11 +175,8 @@ const InnerSearchResults = ({
           } in San Francisco`}
         />
       </Helmet>
-      <Header
-        resultsTitle={untranslatedQuery ?? ""}
-        expandList={expandList}
-        setExpandList={setExpandList}
-      />
+
+      <Header resultsTitle="All categories" />
 
       <InstantSearch
         searchClient={searchClient}
@@ -221,11 +218,13 @@ const InnerSearchResults = ({
             setSearchRadius={setSearchRadius}
             searchRadius={searchRadius}
             isSearchResultsPage
+            collapseMap={collapseMap}
+            setCollapseMap={setCollapseMap}
           />
 
           <div className={styles.results}>
             <SearchResults
-              overlayMapWithSearchResults={expandList}
+              overlayMapWithSearchResults={collapseMap}
               setAroundLatLng={setLocation}
               searchQuery={untranslatedQuery}
             />
