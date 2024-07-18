@@ -2,7 +2,7 @@ import React from "react";
 import { Helmet } from "react-helmet-async";
 import { Footer } from "components/ui";
 import { ActionSidebar } from "components/listing";
-import styles from "./PageWrapper.module.scss";
+import styles from "./ListingPageWrapper.module.scss";
 
 type ListingPageWrapperProps = {
   title: string;
@@ -37,7 +37,6 @@ const ListingPageWrapper = ({
         </div>
       </article>
     </div>
-    <Footer />
   </>
 );
 
