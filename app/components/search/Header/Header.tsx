@@ -13,14 +13,10 @@ const { showHeaderQrCode, showPrintResultsBtn } = whiteLabel;
 
 export const Header = ({
   resultsTitle,
-  // translateResultsTitle = true,
-  expandList,
-  setExpandList,
-}: {
+}: // translateResultsTitle = true,
+{
   resultsTitle: string;
   // translateResultsTitle?: boolean;
-  expandList: boolean;
-  setExpandList: (_expandList: boolean) => void;
 }) => {
   const [qrCodeModalOpen, setQrCodeModalOpen] = useState(false);
   const [currentCategory, setCurrentCategory] =
@@ -76,30 +72,6 @@ export const Header = ({
           Print all results
         </Button>
         <QrCodeModal isOpen={qrCodeModalOpen} setIsOpen={setQrCodeModalOpen} />
-        <div className={styles.mapListToggleContainer}>
-          <button
-            type="button"
-            className={styles.mapListToggleBtn}
-            onClick={() => setExpandList(true)}
-          >
-            <span
-              className={`${styles.listIcon} ${
-                expandList ? styles.activeView : ""
-              }`}
-            />
-          </button>
-          <button
-            type="button"
-            className={styles.mapListToggleBtn}
-            onClick={() => setExpandList(false)}
-          >
-            <span
-              className={`${styles.mapIcon} ${
-                !expandList ? styles.activeView : ""
-              }`}
-            />
-          </button>
-        </div>
       </div>
     </div>
   );

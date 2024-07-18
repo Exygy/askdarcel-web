@@ -24,6 +24,10 @@
   width: 670px;
   margin: $spacing-0 $general-spacing-lg;
 
+  @media screen and (max-width: $break-desktop-s) {
+    margin: $spacing-0 $general-spacing-md;
+  }
+
   @media screen and (max-width: $break-tablet-p) {
     width: 100%;
     padding-top: $general-spacing-md;
