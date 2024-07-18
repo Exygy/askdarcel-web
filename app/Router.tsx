@@ -27,7 +27,7 @@ import { ServiceDiscoveryResults } from "pages/ServiceDiscoveryResults";
 import { LoginPage } from "pages/Auth/LoginPage";
 import { SignUpPage } from "pages/Auth/SignUpPage";
 import { LogoutPage } from "pages/Auth/LogoutPage";
-import { SecondaryNavigationLayout } from "components/layouts/SecondaryNavigationLayout";
+import { SecondaryNavigationWrapper } from "components/navigation/SecondaryNavigationWrapper";
 import { BackButton } from "components/ui/BackButton";
 import { SearchHeaderSection } from "components/search/Header/SearchHeaderSection";
 import { SearchResultsPage } from "pages/SearchResultsPage/SearchResultsPage";
@@ -59,9 +59,9 @@ export const Router = ({
         path="/organizations/:id"
         component={() => (
           <>
-            <SecondaryNavigationLayout>
+            <SecondaryNavigationWrapper>
               <BackButton defaultReturnTo="/search">Back</BackButton>
-            </SecondaryNavigationLayout>
+            </SecondaryNavigationWrapper>
             <OrganizationListingPage />
           </>
         )}
@@ -81,9 +81,9 @@ export const Router = ({
         path="/search"
         component={() => (
           <>
-            <SecondaryNavigationLayout>
+            <SecondaryNavigationWrapper>
               <SearchHeaderSection descriptionText="Description text explaining this section goes here." />
-            </SecondaryNavigationLayout>
+            </SecondaryNavigationWrapper>
             <SearchResultsPage />
           </>
         )}
@@ -93,11 +93,11 @@ export const Router = ({
         path="/services/:id"
         component={() => (
           <>
-            <SecondaryNavigationLayout>
+            <SecondaryNavigationWrapper>
               <BackButton defaultReturnTo="/search">
                 Back to Services
               </BackButton>
-            </SecondaryNavigationLayout>
+            </SecondaryNavigationWrapper>
             <ServiceListingPage />
           </>
         )}

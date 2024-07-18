@@ -2,7 +2,6 @@
 
 .header {
   width: 100vw;
-  border-bottom: 1px solid $color-grey3;
   margin-bottom: $general-spacing-lg;
 
   @media screen and (max-width: $break-tablet-s) {
@@ -17,6 +16,7 @@
   padding: $general-spacing-md;
   justify-content: space-between;
   align-items: center;
+  border-bottom: 1px solid $color-grey3;
 }
 
 .title {

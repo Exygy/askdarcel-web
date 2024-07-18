@@ -1,9 +1,9 @@
 import React, { ReactNode } from "react";
 
-import styles from "./SecondaryNavigation.module.scss";
+import styles from "./SecondaryNavigationWrapper.module.scss";
 
 // Provides page-level styling for the secondary navigation bar
-export const SecondaryNavigationLayout = ({
+export const SecondaryNavigationWrapper = ({
   children,
 }: {
   children: ReactNode;

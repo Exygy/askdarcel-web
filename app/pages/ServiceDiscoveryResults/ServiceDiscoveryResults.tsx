@@ -22,7 +22,7 @@ import {
 import config from "../../config";
 import { CATEGORIES, ServiceCategory } from "../ServiceDiscoveryForm/constants";
 import styles from "./ServiceDiscoveryResults.module.scss";
-import { SecondaryNavigationLayout } from "components/layouts/SecondaryNavigationLayout";
+import { SecondaryNavigationWrapper } from "components/navigation/SecondaryNavigationWrapper";
 import { SearchHeaderSection } from "components/search/Header/SearchHeaderSection";
 
 type MatchParams = { categorySlug: string };
@@ -152,9 +152,9 @@ const InnerServiceDiscoveryResults = ({
 
   return (
     <>
-      <SecondaryNavigationLayout>
+      <SecondaryNavigationWrapper>
         <SearchHeaderSection descriptionText="Description text explaining this section goes here." />
-      </SecondaryNavigationLayout>
+      </SecondaryNavigationWrapper>
       <div className={styles.container}>
         <Helmet>
           <title>{`${categoryName} in San Francisco | ${whiteLabel.title}`}</title>
