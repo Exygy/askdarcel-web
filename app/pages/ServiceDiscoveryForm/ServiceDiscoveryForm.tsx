@@ -10,7 +10,7 @@ import {
   useEligibilitiesForCategory,
   useSubcategoriesForCategory,
 } from "../../hooks/APIHooks";
-import { CATEGORIES, Step, ServiceCategory } from "./constants";
+import { CATEGORIES, Step, ServiceCategory } from "../constants";
 
 import styles from "./ServiceDiscoveryForm.module.scss";
 

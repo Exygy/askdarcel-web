@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { ServiceCategory } from "pages/constants";
 import styles from "./CustomDropdown.module.scss";
 
 interface Category {
@@ -7,7 +8,7 @@ interface Category {
 }
 
 interface DropdownProps {
-  categories: Category[];
+  categories: Readonly<ServiceCategory[]>;
   currentCategory: string;
   onCategoryChange: (slug: string) => void;
   resultsTitle: string;
@@ -149,21 +150,21 @@ export const CustomDropdown: React.FC<DropdownProps> = ({
           </li>
           {categories.map((category, index) => (
             <li
-              key={category.categorySlug}
+              key={category.slug}
               onClick={() =>
-                handleCategoryChange(`/${category.categorySlug}/results`)
+                handleCategoryChange(`/${category.slug}/results`)
               }
               className={
-                currentCategory === category.categorySlug ? styles.active : ""
+                currentCategory === category.slug ? styles.active : ""
               }
               role="option"
-              id={category.categorySlug}
+              id={category.slug}
               tabIndex={0}
-              aria-selected={currentCategory === category.categorySlug}
+              aria-selected={currentCategory === category.slug}
               onKeyDown={(event) =>
                 handleItemKeyDown(
                   event,
-                  `/${category.categorySlug}/results`,
+                  `/${category.slug}/results`,
                   index + 1
                 )
               }

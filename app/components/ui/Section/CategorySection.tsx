@@ -1,6 +1,7 @@
 import { HomePageSection } from "pages/HomePage/components/Section";
 import React from "react";
 import { BackgroundColorVariant } from "models";
+import { CATEGORIES } from "pages/constants";
 import { CategoryCard } from "../Cards/CategoryCard";
 import styles from "./CategorySection.module.scss";
 // import { Loader } from "../Loader";
@@ -46,12 +47,12 @@ export const CategorySection = () => {
     >
       <div className={styles.categorySection}>
         <div className={styles.categoryCards}>
-          {topLevelCategories.map((category) => {
+          {CATEGORIES.map((category) => {
             return (
               <CategoryCard
                 key={category.name}
                 label={category.name}
-                href={`/${category.categorySlug}/results`}
+                href={`/${category.slug}/results`}
                 icon={category.icon}
               />
             );
@@ -67,66 +68,6 @@ export const CategorySection = () => {
     </HomePageSection>
   );
 };
-
-// TODO: combine topLevelCategories, coreCategories (from Homepage) and CATEGORIES (from ServiceDiscoveryForm constants)
-export const topLevelCategories = [
-  {
-    name: "Arts, Culture & Identity",
-    icon: {
-      name: "fa-utensils",
-      provider: "fa",
-    },
-    categorySlug: "arts-culture-identity",
-  },
-  {
-    name: "Children's Care",
-    icon: {
-      name: "fa-hospital",
-      provider: "fa",
-    },
-    categorySlug: "childrens-care",
-  },
-  {
-    name: "Education",
-    icon: {
-      name: "fa-bed",
-      provider: "fa",
-    },
-    categorySlug: "education",
-  },
-  {
-    name: "Family Support",
-    icon: {
-      name: "fa-house",
-      provider: "fa",
-    },
-    categorySlug: "family-support",
-  },
-  {
-    name: "Health & Wellness",
-    icon: {
-      name: "fa-house-chimney-user",
-      provider: "fa",
-    },
-    categorySlug: "health-wellness",
-  },
-  {
-    name: "Sports & Recreation",
-    icon: {
-      name: "fa-wallet",
-      provider: "fa",
-    },
-    categorySlug: "sports-recreation",
-  },
-  {
-    name: "Youth Workforce & Life Skills",
-    icon: {
-      name: "fa-briefcase",
-      provider: "fa",
-    },
-    categorySlug: "youth-workforce-life-skills",
-  },
-];
 
 const tempCategoriesSection = {
   header: "Browse services",
