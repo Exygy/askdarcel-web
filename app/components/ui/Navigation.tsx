@@ -34,8 +34,10 @@ const BURGER_STYLES = {
   },
 };
 
+// TODO: use @headlessui/react components for a11y
+
 export const Navigation = () => {
-  const { data: navigationResponse, error, isLoading } = useNavigationData();
+  const { data: navigationResponse } = useNavigationData();
   const [mobileNavigationSidebarIsOpen, setMobileNavigationSidebarIsOpen] =
     useState(false);
   const [whichActiveMobileSubMenu, setActiveMobileSubMenu] = useState("");
@@ -81,16 +83,6 @@ export const Navigation = () => {
     }
   };
 
-  // TODO: What do we want here?
-  if (error || menuData === null) {
-    return <span>ERROR</span>;
-  }
-
-  // TODO: What do we want here?
-  if (isLoading) {
-    return <span>is loading...</span>;
-  }
-
   return (
     <>
       <SidebarPushPanel
@@ -102,8 +94,8 @@ export const Navigation = () => {
         width="275px"
       >
         <div>
-          {menuData.map((menuDataItem) => (
-            <MobileNavigationMenuDataItemRenderer
+          {menuData?.map((menuDataItem) => (
+            <MobileMenuItems
               menuItem={menuDataItem}
               whichActiveMobileSubMenu={whichActiveMobileSubMenu}
               setActiveMobileSubMenu={setActiveMobileSubMenu}
@@ -126,12 +118,12 @@ export const Navigation = () => {
               </Link>
             </div>
 
-            <ul className={`${styles.navRight}`}>
+            <div className={`${styles.navRight}`}>
               <div
                 className={desktopNavigationStyles.desktopNavigationContainer}
               >
-                {menuData.map((menuDataItem) => (
-                  <DesktoptopLevelNavigationMenuItemRenderer
+                {menuData?.map((menuDataItem) => (
+                  <DesktopMenuItems
                     menuItem={menuDataItem}
                     whichActiveDesktopSubMenu={whichActiveDesktopSubMenu}
                     togglesetActiveDesktopSubMenu={
@@ -144,7 +136,7 @@ export const Navigation = () => {
               <div className={styles.navigationMenuTranslate}>
                 <GoogleTranslate />
               </div>
-            </ul>
+            </div>
             <button
               type="button"
               aria-label="navigation menu"
@@ -170,7 +162,7 @@ function menuItemHasLinks(
   return "link" in menuItem;
 }
 
-const DesktoptopLevelNavigationMenuItemRenderer = ({
+const DesktopMenuItems = ({
   menuItem,
   whichActiveDesktopSubMenu,
   togglesetActiveDesktopSubMenu,
@@ -201,14 +193,14 @@ const DesktoptopLevelNavigationMenuItemRenderer = ({
           />
         </button>
 
-        <ul
+        <div
           style={{
             display: whichActiveDesktopSubMenu === uniqueKey ? "block" : "none",
           }}
           className={`${desktopNavigationStyles.navigationMenuList}`}
         >
           {menuItem.link.map((linkItem: StrapiModel.Link) => (
-            <li
+            <span
               key={linkItem.id}
               className={desktopNavigationStyles.navigationMenuListItem}
             >
@@ -218,27 +210,32 @@ const DesktoptopLevelNavigationMenuItemRenderer = ({
               >
                 {linkItem.text}
               </Link>
-            </li>
+            </span>
           ))}
-        </ul>
+        </div>
       </div>
     );
   }
 
   const uniqueKey = menuItem.url;
   return (
-    <li key={uniqueKey}>
-      <Link
-        to={menuItem.url}
-        className={desktopNavigationStyles.navigationMenuLink}
-      >
-        {menuItem.text}
-      </Link>
-    </li>
+    <Link
+      key={uniqueKey}
+      to={menuItem.url}
+      className={desktopNavigationStyles.navigationMenuLink}
+    >
+      {menuItem.text}
+    </Link>
   );
 };
 
-const MobileNavigationMenuDataItemRenderer = ({
+/* 
+TODO:
+1. Move to separate component and import module.scss as styles
+2. Address a11y issue where when you are in a submenu, you cannot exit with tab navigation. Need to be able to back tab to back arrow.
+
+*/
+const MobileMenuItems = ({
   menuItem,
   whichActiveMobileSubMenu,
   setActiveMobileSubMenu,
@@ -261,7 +258,7 @@ const MobileNavigationMenuDataItemRenderer = ({
             whichActiveMobileSubMenu === uniqueKey ? "true" : "false"
           }
           onClick={() => setActiveMobileSubMenu(uniqueKey)}
-          className={`${mobileNavigationStyles.mobileNavigationMenuHeader}`}
+          className={mobileNavigationStyles.mobileNavigationMenuHeader}
         >
           {menuItem.title}
           <span

@@ -1,6 +1,8 @@
 @import "../../styles/utils/_helpers.scss";
 @import "../../styles/utils/_colors.scss";
 
+// Edit naming conventions for clarity
+
 .mobileNavigationMenuContainer {
   display: flex;
   flex-direction: row;
@@ -35,21 +37,39 @@
   justify-content: space-between;
   width: 100%;
   padding: $spacing-3 $spacing-4;
+  font-size: 16px;
 
   &:last-child {
     border: none;
   }
+
+  &:focus {
+    border-radius: 0;
+    margin: 3px;
+  }
+
+  .chevron {
+    font-size: 14px;
+  }
 }
 
+// Should not be the same class for both single level and dropdown item
 .mobileNavigationMenuLink {
   // flex ensures each menu link fills width of widest item
   display: flex;
   text-decoration: none;
   color: $text-primary;
+  font-family: Montserrat;
+  font-size: 16px;
 
   &:hover {
     text-decoration: none;
     color: $text-primary;
+  }
+
+  &:focus {
+    border-radius: 0;
+    margin: 3px;
   }
 }
 

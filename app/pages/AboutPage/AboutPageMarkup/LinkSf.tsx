@@ -1,6 +1,4 @@
 import React from "react";
-import { Footer } from "../../../components/ui";
-
 import styles from "../AboutPage.module.scss";
 import STLogo from "../assets/STLogo.png";
 import MOHCDLogo from "../assets/MOHCDLogo.png";
@@ -192,6 +190,5 @@ export const LinkSf = () => (
         </ul>
       </section>
     </article>
-    <Footer />
   </div>
 );

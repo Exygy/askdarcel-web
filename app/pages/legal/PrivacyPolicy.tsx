@@ -1,6 +1,5 @@
 import React from "react";
 import ReactMarkdown from "react-markdown";
-import { Footer } from "../../components/ui";
 
 const privacyPolicyContent = `
 # Privacy Policy
@@ -74,6 +73,5 @@ export const PrivacyPolicyPage = () => (
         />
       </div>
     </article>
-    <Footer />
   </div>
 );

@@ -8,7 +8,7 @@ import { Helmet } from "react-helmet-async";
 import { useHistory } from "react-router-dom";
 import { SiteSearchProvider } from "./hooks/SiteSearch";
 import { GeoCoordinates, getLocation, whiteLabel, AppProvider } from "./utils";
-import { Navigation, UserWay } from "./components/ui";
+import { Footer, Navigation, UserWay } from "./components/ui";
 
 import config from "./config";
 import MetaImage from "./assets/img/sfsg-preview.png";
@@ -71,6 +71,7 @@ export const App = () => {
           )}
           <Navigation />
         </SiteSearchProvider>
+        <Footer />
       </AppProvider>
     </div>
   );
