@@ -55,7 +55,6 @@ export const HomePage = () => {
       ))}
 
       {/* Newsletter Component */}
-      <Footer />
     </>
   );
 };

@@ -74,6 +74,5 @@ export const PrivacyPolicyPage = () => (
         />
       </div>
     </article>
-    <Footer />
   </div>
 );

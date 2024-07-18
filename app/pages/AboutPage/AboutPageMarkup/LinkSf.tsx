@@ -192,6 +192,5 @@ export const LinkSf = () => (
         </ul>
       </section>
     </article>
-    <Footer />
   </div>
 );

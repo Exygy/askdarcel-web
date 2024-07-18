@@ -5,7 +5,7 @@ import qs from "qs";
 import { ListingInfoSection } from "components/ui/Cards/ListingInfoSection";
 import { removeAsterisksAndHashes } from "utils/strings";
 import ListingPageHeader from "components/listing/PageHeader";
-import ListingPageWrapper from "components/listing/PageWrapper";
+import ListingPageWrapper from "components/listing/ListingPageWrapper";
 import {
   ActionBarMobile,
   AddressInfoRenderer,

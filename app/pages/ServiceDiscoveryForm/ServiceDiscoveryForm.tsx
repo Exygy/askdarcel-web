@@ -143,13 +143,6 @@ const InnerServiceDiscoveryForm = ({
         subcategorySubheading={subcategorySubheading}
         setSelectedSubcategory={setSelectedSubcategory}
       />
-      <Footer
-        onGoBack={goBack}
-        onNextStep={goToNextStep}
-        currentStep={currentStep}
-        numSteps={steps.length}
-        disableNextBtn={disableNextBtn}
-      />
     </>
   );
 };

@@ -126,6 +126,5 @@ export const SfServiceGuide = () => (
         </ul>
       </section>
     </article>
-    <Footer />
   </div>
 );

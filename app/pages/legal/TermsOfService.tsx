@@ -84,6 +84,5 @@ export const TermsOfServicePage = () => (
         />
       </div>
     </article>
-    <Footer />
   </div>
 );

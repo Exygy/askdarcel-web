@@ -17,6 +17,5 @@ export const ResourceGuides = () => (
         ))}
       </ul>
     </div>
-    <Footer />
   </>
 );
