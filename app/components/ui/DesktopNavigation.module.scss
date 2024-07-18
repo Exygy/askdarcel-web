@@ -54,9 +54,18 @@
     background: $gray-50;
     color: inherit;
   }
+
+  .navigationMenuLink {
+    &:focus {
+      border-radius: 0;
+      margin: 3px;
+    }
+  }
 }
 
 .navigationMenuLink {
+  font-family: Montserrat;
+  font-size: 18px;
   text-decoration: none;
   color: $text-primary;
 
