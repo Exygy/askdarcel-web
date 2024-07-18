@@ -52,20 +52,23 @@
   font-family: Montserrat;
   font-weight: 500;
 
-  @include r_min($break-tablet-p) {
+  @include r_min($break-tablet-s) {
     display: none !important; // !important is needed to override .form-row
   }
 }
 
 // Until new nav is introduced, screen reader is reading hamburger links on desktop. This fixes that.
 .hamburgerContainer {
-  @media screen and (min-width: $min-desktop) {
+  @media screen and (min-width: $break-tablet-s) {
     display: none;
   }
 }
 
 .navigationMenuTranslate {
+  width: 154px;
+
   @include r_max($break-tablet-s) {
+    width: auto;
     padding: $spacing-3 $spacing-4;
   }
 }
