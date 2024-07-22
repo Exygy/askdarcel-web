@@ -35,6 +35,9 @@
 
   .innerContainer {
     width: 544px;
+    @media screen and (max-width: $min-desktop) {
+      width: 100%;
+    }
   }
 }
 
@@ -106,11 +109,6 @@
     grid-template-columns: none;
   }
 
-  .contentContainer_right {
-    padding: $general-spacing-md;
-    grid-row: 1;
-  }
-
   .imageContainer_right {
     grid-row: 2;
     grid-column: 1;
@@ -119,11 +117,6 @@
   .contentLinkButton {
     width: 100%;
     margin: 0px 0px;
-  }
-
-  .contentContainer_left {
-    padding: $general-spacing-md;
-    grid-row: 1;
   }
 
   .imageContainer_left {
