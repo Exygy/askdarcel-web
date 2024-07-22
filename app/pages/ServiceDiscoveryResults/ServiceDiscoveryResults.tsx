@@ -22,7 +22,7 @@ import {
   useSubcategoriesForCategory,
 } from "../../hooks/APIHooks";
 import config from "../../config";
-import { CATEGORIES, ServiceCategory } from "../ServiceDiscoveryForm/constants";
+import { CATEGORIES, ServiceCategory } from "../constants";
 import styles from "./ServiceDiscoveryResults.module.scss";
 
 type MatchParams = { categorySlug: string };

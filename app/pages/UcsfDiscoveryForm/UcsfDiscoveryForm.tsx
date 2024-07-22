@@ -22,7 +22,7 @@ import {
   SelectedEligibilities,
 } from "components/ucsf/RefinementLists/ucsfEligibilitiesMap";
 
-import { CATEGORIES } from "../ServiceDiscoveryForm/constants";
+import { CATEGORIES } from "../constants";
 import { UCSF_RESOURCES } from "../UcsfHomePage/ucsfResourceConstants";
 import { useSubcategoriesForCategory } from "../../hooks/APIHooks";
 

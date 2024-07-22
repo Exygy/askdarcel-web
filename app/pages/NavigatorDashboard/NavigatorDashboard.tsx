@@ -4,8 +4,8 @@ import * as Sentry from "@sentry/browser";
 import { useHistory } from "react-router-dom";
 
 import { icon } from "assets";
+import { CATEGORIES } from "pages/constants";
 import { Button } from "components/ui/inline/Button/Button";
-import { coreCategories } from "pages/HomePage";
 import { get } from "utils/DataService";
 
 import styles from "./NavigatorDashboard.module.scss";
@@ -15,7 +15,7 @@ import { EligibilityFilters } from "./EligibilityFilters";
 import type { SelectOptions } from "./EligibilityFilters";
 
 const initialSelectedCategories: SelectedCategories = {};
-coreCategories.forEach((category) => {
+CATEGORIES.forEach((category) => {
   initialSelectedCategories[category.algoliaCategoryName] = false;
 });
 
@@ -73,7 +73,7 @@ const AdvancedSearch = () => {
 
     const searchState: { [key: string]: unknown } = {
       refinementList: {
-        categories: coreCategories.flatMap((c) => {
+        categories: CATEGORIES.flatMap((c) => {
           if (selectedCategories[c.algoliaCategoryName]) {
             return c.algoliaCategoryName;
           }
