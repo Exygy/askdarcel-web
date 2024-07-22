@@ -69,7 +69,8 @@ export const CategorySection = () => {
   );
 };
 
+// TODO: Add to CMS
 const tempCategoriesSection = {
   header: "Browse services",
-  subheader: "Description text explaining this section goes here.",
+  subheader: "Click on the category that best fits what you’re looking for.",
 };
