@@ -38,6 +38,8 @@ export const ServiceListingPage = () => {
   const searchState = useMemo(() => qs.parse(search.slice(1)), [search]);
   const { visitDeactivated } = searchState;
 
+  useEffect(() => window.scrollTo(0, 0), []);
+
   useEffect(() => {
     fetchService(id).then((s) => setService(s));
     // TODO Handle Errors

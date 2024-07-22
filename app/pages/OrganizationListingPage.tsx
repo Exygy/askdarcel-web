@@ -35,6 +35,8 @@ export const OrganizationListingPage = () => {
   const searchState = useMemo(() => qs.parse(search.slice(1)), [search]);
   const { visitDeactivated } = searchState;
 
+  useEffect(() => window.scrollTo(0, 0), []);
+
   useEffect(() => {
     fetchOrganization(id).then((o) => setOrg(o));
     // TODO Handle Errors
