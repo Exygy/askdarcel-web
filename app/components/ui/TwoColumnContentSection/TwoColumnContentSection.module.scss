@@ -50,8 +50,6 @@
 }
 
 .contentLinkButton {
-  margin-left: 48px;
-  margin-right: 18%;
   display: inline-block;
   margin-top: $general-spacing-xl;
   margin-bottom: $general-spacing-md;
@@ -62,11 +60,11 @@
     max-width: 544px;
   }
 
-  .contentContainer_right .contentBlock {
+  .contentContainer_right .innerContainer {
     margin-right: 48px;
   }
 
-  .contentContainer_left .contentBlock {
+  .contentContainer_left .innerContainer {
     margin-left: 48px;
   }
 }
@@ -83,13 +81,13 @@
   .innerContainer {
     width: 100%;
     max-width: 100%;
+    padding: $general-spacing-md;
   }
 
   .contentBlock {
     width: 100%;
     max-width: 100%;
     margin: 0px 0px;
-    padding: $general-spacing-md;
   }
 
   .twoColumnContentSectionContainer {
@@ -109,6 +107,5 @@
 
   .contentLinkButton {
     width: 100%;
-    margin: 0px 0px;
   }
 }
