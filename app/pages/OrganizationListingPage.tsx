@@ -52,7 +52,7 @@ export const OrganizationListingPage = () => {
   const orgLocations = getOrganizationLocations(org);
   const allActions = getOrganizationActions(org);
   const sidebarActions = allActions.filter((a) =>
-    ["print", "directions"].includes(a.icon)
+    ["print", "phone", "directions"].includes(a.icon)
   );
   const mobileActions = allActions.filter((a) =>
     ["phone", "directions"].includes(a.icon)
