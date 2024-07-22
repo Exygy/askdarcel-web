@@ -29,10 +29,6 @@
   grid-column: 1;
   grid-row: 1;
   align-self: center;
-
-  .innerContainer {
-    width: 544px;
-  }
 }
 
 .imageContainer_left {
@@ -60,9 +56,9 @@
     max-width: 544px;
   }
 
-  .contentContainer_right .innerContainer {
-    margin-right: 48px;
-  }
+  // .contentContainer_right .innerContainer {
+  //   margin-right: 48px;
+  // }
 
   .contentContainer_left .innerContainer {
     margin-left: 48px;
