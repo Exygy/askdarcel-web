@@ -39,7 +39,7 @@
 
   @media screen and (max-width: $break-tablet-s) {
     max-width: 100%;
-    padding: $general-spacing-md;
+    padding: $general-spacing-xl $general-spacing-md;
     margin: $spacing-0;
   }
 
