@@ -1,6 +1,6 @@
 import React from "react";
 import { Checkbox } from "components/ui/inline/Checkbox/Checkbox";
-import { coreCategories } from "pages/HomePage";
+import { CATEGORIES } from "pages/constants";
 import styles from "./CategoryFilters.module.scss";
 
 export interface SelectedCategories {
@@ -28,7 +28,7 @@ export const CategoryFilters = ({
     <div className={styles.categoryFilters}>
       <p className={styles.categoryTypeHeader}>Service Type</p>
       <ul className={styles.categoryCheckboxList}>
-        {coreCategories.map((c) => (
+        {CATEGORIES.map((c) => (
           <li key={c.algoliaCategoryName} className={styles.checkboxItem}>
             <Checkbox
               name={c.name}

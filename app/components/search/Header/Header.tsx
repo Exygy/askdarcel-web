@@ -4,7 +4,7 @@ import { icon as assetIcon } from "assets";
 import { Button } from "components/ui/inline/Button/Button";
 import { QrCodeModal } from "components/ui/QrCodeModal/QrCodeModal";
 import whiteLabel from "utils/whitelabel";
-import { topLevelCategories } from "components/ui/Section/CategorySection";
+import { CATEGORIES } from "pages/constants";
 import { CustomDropdown as Dropdown } from "./CustomDropdown";
 
 import styles from "./Header.module.scss";
@@ -37,7 +37,7 @@ export const Header = ({
             {title === resultsTitle ?? "Search results"}
           </h1>
           <Dropdown
-            categories={topLevelCategories}
+            categories={CATEGORIES}
             currentCategory={currentCategory}
             onCategoryChange={handleCategoryChange}
             resultsTitle={title}

@@ -5,7 +5,7 @@ import {
   connectStateResults,
   SearchResults as SearchResultsProps,
 } from "react-instantsearch/connectors";
-import { CATEGORIES } from "pages/ServiceDiscoveryForm/constants";
+import { CATEGORIES } from "pages/constants";
 import { SearchMap } from "components/search/SearchMap/SearchMap";
 import { formatPhoneNumber, renderAddressMetadata } from "utils";
 import { removeAsterisksAndHashes } from "utils/strings";
