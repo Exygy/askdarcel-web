@@ -1,8 +1,6 @@
 import React from "react";
 import { whiteLabel } from "../../../utils";
 
-import { Footer } from "../../../components/ui";
-
 import styles from "../AboutPage.module.scss";
 import STLogo from "../assets/STLogo.png";
 import MOHCDLogo from "../assets/MOHCDLogo.png";
@@ -126,6 +124,5 @@ export const SfServiceGuide = () => (
         </ul>
       </section>
     </article>
-    <Footer />
   </div>
 );

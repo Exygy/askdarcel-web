@@ -10,6 +10,11 @@
   font-weight: bold;
   cursor: pointer;
   font-family: Montserrat;
+  padding: 0;
+
+  @include r_max($break-tablet-s) {
+    font-size: 20px;
+  }
 }
 
 .arrowDown i,

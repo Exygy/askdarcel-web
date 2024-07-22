@@ -13,7 +13,7 @@ import { ListingInfoTable, Loader } from "components/ui";
 import { removeAsterisksAndHashes } from "utils/strings";
 import { ListingInfoSection } from "components/ui/Cards/ListingInfoSection";
 import ListingPageHeader from "components/listing/PageHeader";
-import ListingPageWrapper from "components/listing/PageWrapper";
+import ListingPageWrapper from "components/listing/ListingPageWrapper";
 import LabelTagRows from "components/listing/LabelTagRows";
 import {
   fetchService,

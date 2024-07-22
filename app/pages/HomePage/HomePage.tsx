@@ -1,4 +1,3 @@
-import { Footer } from "components/ui";
 import Hero from "components/ui/Hero/Hero";
 import { CategorySection } from "components/ui/Section/CategorySection";
 import { OppEventCardSection } from "components/ui/Section/OppEventCardSection";
@@ -55,7 +54,6 @@ export const HomePage = () => {
       ))}
 
       {/* Newsletter Component */}
-      <Footer />
     </>
   );
 };
