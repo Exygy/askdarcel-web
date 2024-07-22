@@ -7,60 +7,37 @@
   grid-template-rows: 1fr;
 }
 
+.contentBlock p {
+  color: $text-secondary;
+}
+
+.contentContainer_left,
+.contentContainer_right {
+  padding: 2rem 0;
+}
+
 .contentContainer_left {
   grid-column: 2;
   grid-row: 1;
   align-self: center;
 }
 
-.imageContainer_left {
-  grid-column: 1;
-  grid-row: 1;
-}
-
-.contentBlock p {
-  color: $text-secondary;
-}
-
-// consolidate css
-.contentContainer_left,
-.contentContainer_right {
-  padding: 2rem 0;
-}
-
 .contentContainer_right {
   display: flex;
   justify-content: flex-end;
   margin-right: 48px;
-
-  .innerContainer {
-    width: 544px;
-    @media screen and (max-width: $min-desktop) {
-      width: 100%;
-    }
-  }
-}
-
-.contentContainer_right .contentBlock {
-  @media screen and (min-width: $min-desktop) {
-    margin-right: 48px;
-    max-width: 544px;
-  }
-}
-
-.contentContainer_left .contentBlock {
-  @media screen and (min-width: $min-desktop) {
-    margin-left: 48px;
-    max-width: 544px;
-  }
-}
-
-// TODO: mobile view
-
-.contentContainer_right {
   grid-column: 1;
   grid-row: 1;
   align-self: center;
+
+  .innerContainer {
+    width: 544px;
+  }
+}
+
+.imageContainer_left {
+  grid-column: 1;
+  grid-row: 1;
 }
 
 .imageContainer_right {
@@ -80,7 +57,21 @@
   margin-bottom: $general-spacing-md;
 }
 
-@media screen and (max-width: $break-tablet-p) {
+@media screen and (min-width: $min-desktop) {
+  .contentBlock {
+    max-width: 544px;
+  }
+
+  .contentContainer_right .contentBlock {
+    margin-right: 48px;
+  }
+
+  .contentContainer_left .contentBlock {
+    margin-left: 48px;
+  }
+}
+
+@media screen and (max-width: $min-desktop) {
   .contentBlock h2 {
     font-size: 1.375rem;
   }
@@ -88,16 +79,13 @@
   .contentBlock p {
     font-size: 1rem;
   }
-}
 
-@media screen and (max-width: $min-desktop) {
   .innerContainer {
     width: 100%;
     max-width: 100%;
   }
 
-  .contentContainer_right .contentBlock,
-  .contentContainer_left .contentBlock {
+  .contentBlock {
     width: 100%;
     max-width: 100%;
     margin: 0px 0px;
@@ -114,13 +102,13 @@
     grid-column: 1;
   }
 
-  .contentLinkButton {
-    width: 100%;
-    margin: 0px 0px;
-  }
-
   .imageContainer_left {
     grid-row: 2;
     grid-column: none;
+  }
+
+  .contentLinkButton {
+    width: 100%;
+    margin: 0px 0px;
   }
 }
