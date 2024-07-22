@@ -35,6 +35,7 @@ const BURGER_STYLES = {
 };
 
 // TODO: use @headlessui/react components for a11y
+// TODO: Fix tab navigating through hidden mobile nav on desktop width
 
 export const Navigation = () => {
   const { data: navigationResponse } = useNavigationData();
