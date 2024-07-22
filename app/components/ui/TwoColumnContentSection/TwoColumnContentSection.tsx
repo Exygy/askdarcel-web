@@ -34,19 +34,21 @@ export const TwoColumnContentSection = (
             : styles.contentContainer_right
         }
       >
-        <div
-          className={styles.contentBlock}
-          dangerouslySetInnerHTML={{
-            __html: content,
-          }}
-        />
-        {link && (
-          <div className={styles.contentLinkButton}>
-            <Button href={link.url} arrowVariant="after">
-              {link.text}
-            </Button>
-          </div>
-        )}
+        <div className={styles.innerContainer}>
+          <div
+            className={styles.contentBlock}
+            dangerouslySetInnerHTML={{
+              __html: content,
+            }}
+          />
+          {link && (
+            <div className={styles.contentLinkButton}>
+              <Button href={link.url} arrowVariant="after">
+                {link.text}
+              </Button>
+            </div>
+          )}
+        </div>
       </div>
     </section>
   );

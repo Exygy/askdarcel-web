@@ -22,17 +22,37 @@
   color: $text-secondary;
 }
 
+// consolidate css
+.contentContainer_left,
+.contentContainer_right {
+  padding: 2rem 0;
+}
+
+.contentContainer_right {
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 48px;
+
+  .innerContainer {
+    width: 544px;
+  }
+}
+
 .contentContainer_right .contentBlock {
-  width: 75%;
-  margin-left: 18%;
-  margin-right: 7%;
+  @media screen and (min-width: $min-desktop) {
+    margin-right: 48px;
+    max-width: 544px;
+  }
 }
 
 .contentContainer_left .contentBlock {
-  width: 75%;
-  margin-left: 7%;
-  margin-right: 18%;
+  @media screen and (min-width: $min-desktop) {
+    margin-left: 48px;
+    max-width: 544px;
+  }
 }
+
+// TODO: mobile view
 
 .contentContainer_right {
   grid-column: 1;
@@ -50,7 +70,7 @@
 }
 
 .contentLinkButton {
-  margin-left: 7%;
+  margin-left: 48px;
   margin-right: 18%;
   display: inline-block;
   margin-top: $general-spacing-xl;
@@ -68,9 +88,15 @@
 }
 
 @media screen and (max-width: $min-desktop) {
+  .innerContainer {
+    width: 100%;
+    max-width: 100%;
+  }
+
   .contentContainer_right .contentBlock,
   .contentContainer_left .contentBlock {
     width: 100%;
+    max-width: 100%;
     margin: 0px 0px;
     padding: $general-spacing-md;
   }
