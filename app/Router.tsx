@@ -15,7 +15,6 @@ import {
   RedirectToOrganizations,
   RedirectToOrganizationsEdit,
 } from "pages/LegacyRedirects";
-import { ResourceGuides, ResourceGuide } from "pages/ResourceGuides";
 import { ServiceListingPage } from "pages/ServiceListingPage/ServiceListingPage";
 import { ServicePdfPage } from "pages/Pdf/ServicePdfPage";
 import { IntimatePartnerViolencePdfPage } from "pages/Pdf/IntimatePartnerViolencePdfPage";
@@ -60,8 +59,6 @@ export const Router = ({
       />
 
       <Route exact path="/privacy-policy" component={PrivacyPolicyPage} />
-      <Route exact path="/resource-guides" component={ResourceGuides} />
-      <Route exact path="/resource-guides/:id" component={ResourceGuide} />
       <Route
         exact
         path="/search"
