@@ -1,37 +1,19 @@
-import type { PopupMessageProp } from "components/ui";
 import React from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
-import { useAppContext } from "utils";
-import { ProtectedRoute, PublicRoute } from "components/utils";
-
 import { HomePage } from "pages/HomePage";
 import { AboutPage } from "pages/AboutPageOur415";
 import { ListingDebugPage } from "pages/debug/ListingDemoPage";
-import { NavigatorDashboard } from "pages/NavigatorDashboard/NavigatorDashboard";
 import { OrganizationListingPage } from "pages/OrganizationListingPage";
 import { PrivacyPolicyPage } from "pages/legal/PrivacyPolicy";
-import {
-  RedirectToOrganizations,
-  RedirectToOrganizationsEdit,
-} from "pages/LegacyRedirects";
 import { ServiceListingPage } from "pages/ServiceListingPage/ServiceListingPage";
 import { TermsOfServicePage } from "pages/legal/TermsOfService";
 import { ServiceDiscoveryResults } from "pages/ServiceDiscoveryResults";
-import { LoginPage } from "pages/Auth/LoginPage";
-import { SignUpPage } from "pages/Auth/SignUpPage";
-import { LogoutPage } from "pages/Auth/LogoutPage";
 import { SecondaryNavigationWrapper } from "components/navigation/SecondaryNavigationWrapper";
 import { BackButton } from "components/ui/BackButton";
 import { SearchHeaderSection } from "components/search/Header/SearchHeaderSection";
 import { SearchResultsPage } from "pages/SearchResultsPage/SearchResultsPage";
 
-export const Router = ({
-  setPopUpMessage,
-}: {
-  setPopUpMessage: (msg: PopupMessageProp) => void;
-}) => {
-  const { authState } = useAppContext();
-
+export const Router = () => {
   return (
     <Switch>
       <Route exact path="/" component={HomePage} />
@@ -85,39 +67,7 @@ export const Router = ({
         path="/:categorySlug/results"
         component={ServiceDiscoveryResults}
       />
-      <ProtectedRoute
-        exact
-        isAuthenticated={!!authState}
-        path="/navigator-dashboard"
-        component={NavigatorDashboard}
-      />
-      <PublicRoute
-        exact
-        isAuthenticated={!!authState}
-        path="/log-in"
-        component={LoginPage}
-      />
-      <PublicRoute
-        exact
-        isAuthenticated={!!authState}
-        path="/sign-up"
-        component={SignUpPage}
-      />
-      <ProtectedRoute
-        exact
-        isAuthenticated={!!authState}
-        path="/log-out"
-        component={LogoutPage}
-      />
 
-      {/* Legacy redirects */}
-      <Redirect path="/resource/new" to="/organizations/new" />
-      <Route
-        exact
-        path="/resource/edit"
-        component={RedirectToOrganizationsEdit}
-      />
-      <Route exact path="/resource" component={RedirectToOrganizations} />
       <Redirect to="/" />
     </Switch>
   );
