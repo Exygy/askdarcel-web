@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import { icon as assetIcon } from "assets";
 import { Button } from "components/ui/inline/Button/Button";
-import { QrCodeModal } from "components/ui/QrCodeModal/QrCodeModal";
+import { QrCodeModal } from "components/ui/QrCodeModal/QrCodeModal"; // todo: remove QrCodeModal from project
 import whiteLabel from "utils/whitelabel";
 import { CATEGORIES } from "pages/constants";
 import { CustomDropdown as Dropdown } from "./CustomDropdown";
