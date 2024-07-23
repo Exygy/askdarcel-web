@@ -4,7 +4,6 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import { useAppContext } from "utils";
 import { ProtectedRoute, PublicRoute } from "components/utils";
 
-import { AuthInterstitial } from "pages/AuthInterstitial";
 import { HomePage } from "pages/HomePage";
 import { AboutPage } from "pages/AboutPageOur415";
 import { ListingDebugPage } from "pages/debug/ListingDemoPage";
@@ -41,7 +40,6 @@ export const Router = ({
     <Switch>
       <Route exact path="/" component={HomePage} />
       <Route exact path="/about" component={AboutPage} />
-      <Route exact path="/auth" component={AuthInterstitial} />
       <Route exact path="/demo/listing" component={ListingDebugPage} />
       {/* NB: /organizations/new must be listed before /organizations/:id or else the /new
                 step will be interpreted as an ID and will thus break the OrganizationEditPage */}
