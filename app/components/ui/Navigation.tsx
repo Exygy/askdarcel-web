@@ -11,7 +11,6 @@ import {
   extractNavigationMenusFromNavigationResponse,
   ExtractedNavigationMenusFromNavigationResponse,
 } from "../../models/Strapi";
-import { PopUpMessage, PopupMessageProp } from "./PopUpMessage";
 import { Router } from "../../Router";
 import { useNavigationData } from "../../hooks/StrapiAPI";
 import { OUTER_CONTAINER_ID } from "../../App";
@@ -45,11 +44,6 @@ export const Navigation = () => {
   const toggleMobileNav = () =>
     setMobileNavigationSidebarIsOpen((prev) => !prev);
   const [whichActiveDesktopSubMenu, setsetActiveDesktopSubMenu] = useState("");
-  const [popUpMessage, setPopUpMessage] = useState<PopupMessageProp>({
-    message: "",
-    visible: false,
-    type: "success",
-  });
 
   const logoData = extractLogoFromNavigationResponse(navigationResponse);
   const menuData =
@@ -149,9 +143,8 @@ export const Navigation = () => {
           </div>
         </nav>
         <div className="container">
-          <Router setPopUpMessage={setPopUpMessage} />
+          <Router />
         </div>
-        {popUpMessage && <PopUpMessage popUpMessage={popUpMessage} />}
       </div>
     </>
   );
