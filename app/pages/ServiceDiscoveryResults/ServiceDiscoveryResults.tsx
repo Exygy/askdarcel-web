@@ -153,7 +153,7 @@ const InnerServiceDiscoveryResults = ({
   return (
     <>
       <SecondaryNavigationWrapper>
-        <SearchHeaderSection descriptionText="Description text explaining this section goes here." />
+        <SearchHeaderSection descriptionText="Sign up for programs and access resources." />
       </SecondaryNavigationWrapper>
       <div className={styles.container}>
         <Helmet>
