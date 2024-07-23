@@ -7,6 +7,8 @@ import LinkSFLogo from "../assets/img/link-sf.png";
 import config from "../config";
 import styles from "../components/ui/Navigation.module.scss";
 
+// TODO: rm UcsfHomePage
+
 // Include new white label here
 type WhiteLabelSiteKey =
   | "defaultWhiteLabel"
