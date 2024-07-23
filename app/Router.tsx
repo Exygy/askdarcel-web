@@ -1,7 +1,7 @@
 import React from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 import { HomePage } from "pages/HomePage";
-import { AboutPage } from "pages/AboutPageOur415";
+import { AboutPage } from "pages/AboutPage";
 import { ListingDebugPage } from "pages/debug/ListingDemoPage";
 import { OrganizationListingPage } from "pages/OrganizationListingPage";
 import { PrivacyPolicyPage } from "pages/legal/PrivacyPolicy";
