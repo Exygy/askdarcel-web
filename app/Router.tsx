@@ -20,7 +20,6 @@ import { ServiceListingPage } from "pages/ServiceListingPage/ServiceListingPage"
 import { ServicePdfPage } from "pages/Pdf/ServicePdfPage";
 import { IntimatePartnerViolencePdfPage } from "pages/Pdf/IntimatePartnerViolencePdfPage";
 import { TermsOfServicePage } from "pages/legal/TermsOfService";
-import OrganizationEditPage from "pages/OrganizationEditPage";
 import { EditBreakingNewsPage } from "pages/EditBreakingNewsPage";
 import { ServiceDiscoveryForm } from "pages/ServiceDiscoveryForm";
 import { ServiceDiscoveryResults } from "pages/ServiceDiscoveryResults";
@@ -49,13 +48,6 @@ export const Router = ({
                 step will be interpreted as an ID and will thus break the OrganizationEditPage */}
       <Route
         exact
-        path="/organizations/new"
-        render={(props) => (
-          <OrganizationEditPage {...props} showPopUpMessage={setPopUpMessage} />
-        )}
-      />
-      <Route
-        exact
         path="/organizations/:id"
         component={() => (
           <>
@@ -66,13 +58,7 @@ export const Router = ({
           </>
         )}
       />
-      <Route
-        exact
-        path="/organizations/:id/edit"
-        render={(props) => (
-          <OrganizationEditPage {...props} showPopUpMessage={setPopUpMessage} />
-        )}
-      />
+
       <Route exact path="/privacy-policy" component={PrivacyPolicyPage} />
       <Route exact path="/resource-guides" component={ResourceGuides} />
       <Route exact path="/resource-guides/:id" component={ResourceGuide} />
@@ -82,7 +68,7 @@ export const Router = ({
         component={() => (
           <>
             <SecondaryNavigationWrapper>
-              <SearchHeaderSection descriptionText="Description text explaining this section goes here." />
+              <SearchHeaderSection descriptionText="Sign up for programs and access resources." />
             </SecondaryNavigationWrapper>
             <SearchResultsPage />
           </>
