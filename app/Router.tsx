@@ -15,11 +15,7 @@ import {
   RedirectToOrganizationsEdit,
 } from "pages/LegacyRedirects";
 import { ServiceListingPage } from "pages/ServiceListingPage/ServiceListingPage";
-import { ServicePdfPage } from "pages/Pdf/ServicePdfPage";
-import { IntimatePartnerViolencePdfPage } from "pages/Pdf/IntimatePartnerViolencePdfPage";
 import { TermsOfServicePage } from "pages/legal/TermsOfService";
-import { EditBreakingNewsPage } from "pages/EditBreakingNewsPage";
-import { ServiceDiscoveryForm } from "pages/ServiceDiscoveryForm";
 import { ServiceDiscoveryResults } from "pages/ServiceDiscoveryResults";
 import { LoginPage } from "pages/Auth/LoginPage";
 import { SignUpPage } from "pages/Auth/SignUpPage";
@@ -83,27 +79,11 @@ export const Router = ({
           </>
         )}
       />
-      <Route exact path="/service-handout/:id" component={ServicePdfPage} />
-      <Route
-        exact
-        path="/intimate-partner-violence-handout/:id"
-        component={IntimatePartnerViolencePdfPage}
-      />
       <Route exact path="/terms-of-service" component={TermsOfServicePage} />
-      <Route
-        exact
-        path="/:categorySlug/form"
-        component={ServiceDiscoveryForm}
-      />
       <Route
         exact
         path="/:categorySlug/results"
         component={ServiceDiscoveryResults}
-      />
-      <Route
-        exact
-        path="/breaking-news/edit"
-        component={EditBreakingNewsPage}
       />
       <ProtectedRoute
         exact
