@@ -14,6 +14,8 @@ interface FaqItem {
 
 type FaqItems = FaqItem[];
 
+// TODO: use this for LocationTimesAccordion
+
 const Accordion = ({ items }: { items: FaqItems }) => {
   const [expandedAccordionItems, setExpandedAccordionItems] = useState<{
     [key: number]: boolean;
