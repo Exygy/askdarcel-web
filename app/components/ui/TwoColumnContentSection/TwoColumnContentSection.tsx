@@ -2,6 +2,7 @@ import React from "react";
 import { StrapiModel } from "models/Strapi";
 import styles from "./TwoColumnContentSection.module.scss";
 import { Button } from "../inline/Button/Button";
+import Accordion from "../Accordions/Accordion";
 
 // TODO: media can be a video URL, update component to handle
 // TODO: update use srcset and the different media sizes for images
@@ -9,7 +10,7 @@ import { Button } from "../inline/Button/Button";
 export const TwoColumnContentSection = (
   props: StrapiModel.TwoColumnContentBlock
 ) => {
-  const { link, content, media_alignment, media } = props;
+  const { link, content, media_alignment, media, faq } = props;
   const altText = media[0].image?.data?.attributes?.alternativeText;
 
   return (
@@ -41,6 +42,7 @@ export const TwoColumnContentSection = (
               __html: content,
             }}
           />
+          {faq && faq.length > 0 && <Accordion items={faq} />}
           {link && (
             <div className={styles.contentLinkButton}>
               <Button href={link.url} arrowVariant="after">
