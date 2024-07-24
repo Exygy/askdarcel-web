@@ -17,8 +17,6 @@ export const FaqPage = () => {
     return <Loader />;
   }
 
-  console.log(pageData);
-
   return (
     pageData && (
       <>

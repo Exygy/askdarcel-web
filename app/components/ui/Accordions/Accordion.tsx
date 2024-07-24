@@ -35,7 +35,7 @@ const Accordion = ({ items }: { items: FaqItems }) => {
 
         return (
           <div
-            key={i}
+            key={item.question}
             className={classNames(
               styles.accordionItem,
               isExpanded && styles.activeItem
