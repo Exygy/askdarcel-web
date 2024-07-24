@@ -2,6 +2,7 @@ import React from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 import { HomePage } from "pages/HomePage";
 import { AboutPage } from "pages/AboutPage";
+import { FaqPage } from "pages/FaqPage/FaqPage";
 import { ListingDebugPage } from "pages/debug/ListingDemoPage";
 import { OrganizationListingPage } from "pages/OrganizationListingPage";
 import { PrivacyPolicyPage } from "pages/legal/PrivacyPolicy";
@@ -18,6 +19,7 @@ export const Router = () => {
     <Switch>
       <Route exact path="/" component={HomePage} />
       <Route exact path="/about" component={AboutPage} />
+      <Route exact path="/faqs" component={FaqPage} />
       <Route exact path="/demo/listing" component={ListingDebugPage} />
       {/* NB: /organizations/new must be listed before /organizations/:id or else the /new
                 step will be interpreted as an ID and will thus break the OrganizationEditPage */}
