@@ -91,6 +91,10 @@
     grid-template-columns: none;
   }
 
+  .contentContainer_right {
+    margin-right: 0;
+  }
+
   .imageContainer_right {
     grid-row: 2;
     grid-column: 1;
