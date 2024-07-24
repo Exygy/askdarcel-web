@@ -1,7 +1,6 @@
 import BackgroundImage from "../assets/img/bg.png";
 import SearchByAlgoliaImage from "../assets/img/search-by-algolia.png";
 import Our415Logo from "../assets/img/Our415_logo-hori.svg";
-import UcsfServiceLogo from "../assets/img/ic-dcnav.png";
 import SFSeal from "../assets/img/sf-seal.png";
 import LinkSFLogo from "../assets/img/link-sf.png";
 import config from "../config";
@@ -12,8 +11,7 @@ type WhiteLabelSiteKey =
   | "defaultWhiteLabel"
   | "SFServiceGuide"
   | "SFFamilies"
-  | "LinkSF"
-  | "Ucsf";
+  | "LinkSF";
 type homepageComponentEnums = "HomePage" | "UcsfHomePage";
 
 interface WhiteLabelSite {
@@ -72,14 +70,12 @@ function determineWhiteLabelSite(): WhiteLabelSiteKey {
 
   if (checkWhiteLabelSubdomain(config.SFFAMILIES_DOMAIN)) return "SFFamilies";
   if (checkWhiteLabelSubdomain(config.LINKSF_DOMAIN)) return "LinkSF";
-  if (checkWhiteLabelSubdomain(config.UCSF_DOMAIN)) return "Ucsf";
   if (
     subdomain === String(config.MOHCD_DOMAIN) ||
     domain === `staging.${String(config.MOHCD_DOMAIN)}.org`
   )
     return "SFServiceGuide";
   // N.B. The qaone environment can be used to test various whitelabels as needed
-  if (subdomain === "qaone") return "Ucsf";
 
   return "defaultWhiteLabel";
 }
@@ -197,38 +193,6 @@ const defaultWhiteLabel: WhiteLabelSite = {
   showReportCrisis: true,
 } as const;
 
-const Ucsf: WhiteLabelSite = {
-  appImages: {
-    ...appImageDefaults,
-    logoLarge: UcsfServiceLogo,
-    logoSmall: UcsfServiceLogo,
-  },
-  ...whiteLabelDefaults,
-  aboutPageText: `The Discharge Navigator is a clinician-focused tool designed to empower medical providers
-with real-time access to information about social resources around San Francisco. Clinicians
-can utilize this database to identify and share targeted resources for patients based on social
-needs, language requirements, and demographics. This project is the result of collaboration
-among experts across the SF Department of Public Health, Zuckerberg SF General Emergency
-Department, and UCSF School of Medicine in partnership with SF Service Guide.`,
-  aboutPageTitle: "Discharge Navigator",
-  enabledTranslations: [],
-  homePageComponent: "UcsfHomePage",
-  navLogoStyle: styles.navLogoUcsf,
-  /*
-    This number must be high to ensure that all associated refinements are returned. We filter out all
-    refinements that are not on the UcsfEligiblitiesMap, as well as all subcategory refinements
-    that are not returned by the API's subcategories endpoint. Thus, there is no risk of displaying
-    100 refinements to the user, since we use static lists to filter them down.
-  */
-  refinementListLimit: 100,
-  showClinicianAction: true,
-  showHandoutsIcon: true,
-  showHeaderQrCode: true,
-  showPrintResultsBtn: false,
-  siteUrl: "https://dcnav.sfserviceguide.org",
-  title: "Discharge Navigator",
-} as const;
-
 /*
   whiteLabel made Readonly to force developer to modify whiteLabel object in this file.
   Disallow changes at compile time.
@@ -237,7 +201,6 @@ const whiteLabel: Readonly<Record<WhiteLabelSiteKey, WhiteLabelSite>> = {
   SFFamilies,
   SFServiceGuide,
   LinkSF,
-  Ucsf,
   defaultWhiteLabel,
 } as const;
 

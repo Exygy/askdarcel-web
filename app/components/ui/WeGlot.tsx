@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import type { HelmetTags } from "react-helmet-async";
 
+// TODO: Delete this?
+
 const onLoad = (apiKey: string, targetLangCode: string | null) => {
   // HACK: suppress TS compile errors when accessing the global WeGlot instance created by the script.
   const weglot = (window as any).Weglot;

@@ -12,6 +12,8 @@ import * as AuthService from "utils/AuthService";
 import { GeoCoordinates } from "utils";
 import config from "../config";
 
+// TODO: Remove this?
+
 export interface UserSignUpData {
   email: string;
   name: string;
