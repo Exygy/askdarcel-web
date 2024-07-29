@@ -14,13 +14,19 @@ interface EventCardSectionProps {
 
 export const EventCardSection = (props: EventCardSectionProps) => {
   const { sectionConfig, data } = props;
+  const { header, subheader, background_color, link } = sectionConfig;
 
   if (!sectionConfig) {
     return <Loader />;
   }
 
   return (
-    <HomePageSection {...sectionConfig}>
+    <HomePageSection
+      title={header}
+      description={subheader}
+      backgroundColor={background_color.color}
+      link={link}
+    >
       {data && (
         <div className={`${eventCardSectionStyles.cardsContainer}`}>
           {data?.map((item) => {

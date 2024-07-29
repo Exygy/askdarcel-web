@@ -12,19 +12,17 @@ export interface Slug {
 export const HomePageSection = ({
   title,
   description,
-  background_color: backgroundColor,
+  backgroundColor,
   link,
   children,
 }: {
-  title: string;
-  description: string;
-  background_color: {
-    color: BackgroundColorVariant;
-  };
-  children: React.ReactNode;
-  link: StrapiModel.Link;
+  title?: string;
+  description?: string;
+  backgroundColor: BackgroundColorVariant;
+  children?: React.ReactNode;
+  link?: StrapiModel.Link;
 }) => (
-  <section className={`${styles.section} ${styles[backgroundColor?.color]}`}>
+  <section className={`${styles.section} ${styles[backgroundColor]}`}>
     <div className={styles.content}>
       <div className={styles.header}>
         <div>
