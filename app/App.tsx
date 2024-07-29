@@ -11,7 +11,7 @@ import { GeoCoordinates, getLocation, whiteLabel, AppProvider } from "./utils";
 import { Footer, Navigation, UserWay } from "./components/ui";
 
 import config from "./config";
-import MetaImage from "./assets/img/sfsg-preview.png";
+import MetaImage from "./assets/img/Our415_OG.png";
 import styles from "./App.module.scss";
 
 const { intercom, siteUrl, title, userWay } = whiteLabel;
