@@ -262,28 +262,28 @@ export namespace StrapiApi {
     };
   }
 
-  interface DateResponse {
+  export interface DateResponse {
     id: number;
     startdate: string;
-    enddate: string;
-    starttime: string;
-    endtime: string;
+    enddate: string | null;
+    starttime: string | null;
+    endtime: string | null;
     recurrence: "none" | "daily" | "weekly" | "monthly" | "yearly";
   }
 
   export interface EventResponse extends BaseDatumAttributesResponse {
     title: string;
-    venue: string;
-    admissions: string;
-    description: string;
-    date: DateResponse;
-    address: AddressResponse;
+    venue: string | null;
+    admissions: string | null;
+    description: string | null;
+    date: DateResponse | null;
+    address: AddressResponse | null;
     image: {
       id: number;
       image: StrapiObjectResponse<ImageResponse>;
-    };
-    links: LinkResponse[];
-    event_categories: Array<StrapiDatumResponse<CategoryResponse>>;
+    } | null;
+    links: LinkResponse[] | null;
+    event_categories: Array<StrapiDatumResponse<CategoryResponse>> | null;
   }
 
   export interface HomepageResponse extends BaseDatumAttributesResponse {
