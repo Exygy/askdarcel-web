@@ -75,12 +75,13 @@ module.exports = {
     },
   },
   plugins: [
+    // TODO: Replace og fields:
     new HtmlWebpackPlugin({
-      title: "SF Service Guide",
+      title: "Our415",
       template: "app/index.html",
       meta: {
         "og:url": "https://sfserviceguide.org",
-        "og:title": "SF Service Guide | San Francisco",
+        "og:title": "Our415 | San Francisco",
         "twitter:card": "summary_large_image",
         "twitter:site": "@sheltertechorg",
         "og:description":
