@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "components/ui/inline/Button/Button";
 import styles from "./OppEventCard.module.scss";
-import { OppEventDate } from "./OppEventDate";
+import { OppEventDate } from "./CardDate";
 
 interface OppEventCardProps {
   slug: string;

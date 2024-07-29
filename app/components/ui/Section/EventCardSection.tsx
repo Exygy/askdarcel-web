@@ -1,8 +1,8 @@
-import { HomePageSection } from "pages/HomePage/components/Section";
 import React from "react";
 import { StrapiModel } from "models/Strapi";
 import { CardDate } from "components/ui/Cards/CardDate";
 import { Button } from "components/ui/inline/Button/Button";
+import sectionstyles from "pages/HomePage/components/Section/Section.module.scss";
 import eventCardSectionStyles from "./EventCardSection.module.scss";
 import eventCardStyles from "../Cards/EventCard.module.scss";
 import { Loader } from "../Loader";
@@ -21,45 +21,59 @@ export const EventCardSection = (props: EventCardSectionProps) => {
   }
 
   return (
-    <HomePageSection
-      title={header}
-      description={subheader}
-      backgroundColor={background_color.color}
-      link={link}
+    <section
+      className={`${sectionstyles.section} ${
+        sectionstyles[background_color.color]
+      }`}
     >
-      {data && (
-        <div className={`${eventCardSectionStyles.cardsContainer}`}>
-          {data?.map((item) => {
-            const { title, id, date, image } = item;
-            const imageSrc = image?.image?.data?.attributes.url ?? ""; // TODO PLACEHOLDER IMAGE
+      <div className={sectionstyles.content}>
+        <div className={sectionstyles.header}>
+          <div>
+            <h2 className={sectionstyles.title}>{header}</h2>
+            <p className={sectionstyles.description}>{subheader}</p>
+          </div>
 
-            return (
-              <div key={title} className={`${eventCardStyles.eventCard}`}>
-                <img
-                  alt={title}
-                  src={imageSrc}
-                  className={`${eventCardStyles.cardImage}`}
-                />
-                <div className={eventCardStyles.content}>
-                  <div>
-                    <h4 className={eventCardStyles.contentTitle}>
-                      <a href={id}>{title}</a>
-                    </h4>
-                    {date && (
-                      <div className={eventCardStyles.contentTime}>
-                        <CardDate date={date} />
-                      </div>
-                    )}
-                  </div>
-                  <Button arrowVariant="after" variant="linkBlue" size="lg">
-                    View more
-                  </Button>
-                </div>
-              </div>
-            );
-          })}
+          {link && (
+            <Button href={link.url} arrowVariant="after" size="lg">
+              {link.text}
+            </Button>
+          )}
         </div>
-      )}
-    </HomePageSection>
+
+        {data && (
+          <div className={`${eventCardSectionStyles.cardsContainer}`}>
+            {data?.map((item) => {
+              const { title, id, date, image } = item;
+              const imageSrc = image?.image?.data?.attributes.url ?? ""; // TODO PLACEHOLDER IMAGE
+
+              return (
+                <div key={title} className={`${eventCardStyles.eventCard}`}>
+                  <img
+                    alt={title}
+                    src={imageSrc}
+                    className={`${eventCardStyles.cardImage}`}
+                  />
+                  <div className={eventCardStyles.content}>
+                    <div>
+                      <h4 className={eventCardStyles.contentTitle}>
+                        <a href={id}>{title}</a>
+                      </h4>
+                      {date && (
+                        <div className={eventCardStyles.contentTime}>
+                          <CardDate date={date} />
+                        </div>
+                      )}
+                    </div>
+                    <Button arrowVariant="after" variant="linkBlue" size="lg">
+                      View more
+                    </Button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    </section>
   );
 };

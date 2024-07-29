@@ -45,7 +45,7 @@ export const HomePage = () => {
         sectionData={opportunity_section}
         opportunities={opportunities.data ?? []}
       /> */}
-      {events.data && (
+      {eventsData && (
         <EventCardSection sectionConfig={event_section} data={eventsData} />
       )}
       {twoColumnContentData?.map((content) => (
