@@ -1,6 +1,7 @@
 import Hero from "components/ui/Hero/Hero";
 import { CategorySection } from "components/ui/Section/CategorySection";
-import { OppEventCardSection } from "components/ui/Section/OppEventCardSection";
+import { OppCardSection } from "components/ui/Section/OppCardSection";
+import { EventCardSection } from "components/ui/Section/EventCardSection";
 import { TwoColumnContentSection } from "components/ui/TwoColumnContentSection/TwoColumnContentSection";
 import React from "react";
 import { StrapiModel } from "models/Strapi";
@@ -25,6 +26,7 @@ export const HomePage = () => {
     hero,
     two_column_content_blocks,
   } = homePageData;
+  const eventsData = events.data?.map((item) => item.attributes);
 
   const twoColumnContentData = two_column_content_blocks.data;
 
@@ -39,16 +41,13 @@ export const HomePage = () => {
         />
       )}
       <CategorySection />
-      <OppEventCardSection
-        sectionType="opportunity"
+      {/* <OppCardSection
         sectionData={opportunity_section}
         opportunities={opportunities.data ?? []}
-      />
-      <OppEventCardSection
-        sectionType="event"
-        sectionData={event_section}
-        events={events.data ?? []}
-      />
+      /> */}
+      {events.data && (
+        <EventCardSection sectionConfig={event_section} data={eventsData} />
+      )}
       {twoColumnContentData?.map((content) => (
         <TwoColumnContentSection key={content.id} {...content.attributes} />
       ))}

@@ -1,18 +1,18 @@
 import { HomePageSection } from "pages/HomePage/components/Section";
 import React from "react";
 import { StrapiModel } from "models/Strapi";
-import { OppEventCard } from "../Cards/OppEventCard";
-import styles from "./OppEventCardSection.module.scss";
+import { OppCard } from "../Cards/OppCard";
+import styles from "./OppCardSection.module.scss";
 import { Loader } from "../Loader";
 
-interface OppEventCardSectionProps {
+interface OppCardSectionProps {
   sectionType: "event" | "opportunity";
   sectionData: StrapiModel.ContentBlock;
   events?: { attributes: StrapiModel.Event }[];
   opportunities?: { attributes: StrapiModel.Opportunity }[];
 }
 
-export const OppEventCardSection = (props: OppEventCardSectionProps) => {
+export const OppCardSection = (props: OppCardSectionProps) => {
   const { sectionType, sectionData, events, opportunities } = props;
   const { header, subheader, background_color, link } = sectionData;
 
@@ -36,7 +36,7 @@ export const OppEventCardSection = (props: OppEventCardSectionProps) => {
             const cardImage = image.image.data?.attributes.url ?? "";
 
             return (
-              <OppEventCard
+              <OppCard
                 key={title}
                 title={title}
                 slug={id}
@@ -58,7 +58,7 @@ export const OppEventCardSection = (props: OppEventCardSectionProps) => {
             const cardImage = image.image.data?.attributes.url ?? "";
 
             return (
-              <OppEventCard
+              <OppCard
                 key={title}
                 title={title}
                 slug={id}
