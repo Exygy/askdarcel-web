@@ -150,6 +150,10 @@ const InnerServiceDiscoveryResults = ({
     sortAlgoliaSubcategoryRefinements,
   } = category;
 
+  const escapeApostrophes = (categoryName: string) => {
+    return categoryName.replace(/'/g, "\\'");
+  };
+
   return (
     <>
       <SecondaryNavigationWrapper>
@@ -172,10 +176,12 @@ const InnerServiceDiscoveryResults = ({
           onSearchStateChange={onSearchStateChange}
         >
           {category.disableGeoLocation ? (
-            <Configure filters={`categories:'${algoliaCategoryName}'`} />
+            <Configure
+              filters={`categories:'${escapeApostrophes(algoliaCategoryName)}'`}
+            />
           ) : (
             <Configure
-              filters={`categories:'${algoliaCategoryName}'`}
+              filters={`categories:'${escapeApostrophes(algoliaCategoryName)}'`}
               aroundLatLng={`${location.lat}, ${location.lng}`}
               aroundRadius={searchRadius}
               aroundPrecision={1600}
