@@ -51,7 +51,7 @@ export function useHomepageData() {
 
 export function usePageContent(title: string) {
   return useStrapiHook<StrapiApi.ContentPageResponse>(
-    `content-pages?filters[title][$eq]=${title}&populate[two_column_content_blocks][populate][link]=*&populate[two_column_content_blocks][populate][media][populate]=*`
+    `content-pages?filters[title][$eq]=${title}&populate[two_column_content_blocks][populate][link]=*&populate[two_column_content_blocks][populate][media][populate]=*&populate[two_column_content_blocks][populate][faq]=*`
   );
 }
 
@@ -225,6 +225,11 @@ export namespace StrapiApi {
     } | null;
   }
 
+  export interface FaqItem {
+    question: string;
+    answer: string;
+  }
+
   export interface TwoColumnContentBlockResponse
     extends BaseDatumAttributesResponse {
     title: string;
@@ -233,6 +238,7 @@ export namespace StrapiApi {
     name: string;
     link: LinkResponse;
     media: DynamicMediaResponse[];
+    faq: FaqItem[];
   }
 
   export interface OpportunityResponse extends BaseDatumAttributesResponse {
