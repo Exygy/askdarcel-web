@@ -19,6 +19,7 @@ const MapToggleButtons = ({
           "no-transition"
         )}
         onClick={() => setCollapseMap(false)}
+        aria-label="Expand map"
       >
         <span className={!collapseMap ? styles.activeView : ""}>
           <i className="fa-solid fa-map" />
@@ -32,6 +33,7 @@ const MapToggleButtons = ({
           "no-transition"
         )}
         onClick={() => setCollapseMap(true)}
+        aria-label="Collapse map"
       >
         <span className={collapseMap ? styles.activeView : ""}>
           <i className="fa-solid fa-list" />
