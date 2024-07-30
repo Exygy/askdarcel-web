@@ -35,7 +35,7 @@ export const OppEventCardSection = (props: OppEventCardSectionProps) => {
               title: attributes.title,
               id: attributes.id,
               calendarEvent: attributes.calendar_event,
-              image: attributes.image?.image?.data?.attributes || null,
+              imageUrl: attributes.image?.image?.data?.attributes.url || null,
             };
 
             return (
@@ -56,7 +56,7 @@ export const OppEventCardSection = (props: OppEventCardSectionProps) => {
               title: attributes.title,
               id: attributes.id,
               calendarEvent: attributes.calendar_event,
-              image: attributes.image?.image?.data?.attributes || null,
+              imageUrl: attributes.image?.image?.data?.attributes.url || null,
             };
 
             return (

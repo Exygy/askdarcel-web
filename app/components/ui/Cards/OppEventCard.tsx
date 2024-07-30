@@ -7,7 +7,7 @@ import { FormattedDate } from "./FormattedDate";
 interface OppEventCardProps {
   details: {
     id: string;
-    image: StrapiModel.Image | null;
+    imageUrl: string | null;
     title: string;
     calendarEvent: StrapiModel.CalendarEvent;
   };
@@ -16,19 +16,19 @@ interface OppEventCardProps {
 
 export const OppEventCard = (props: OppEventCardProps) => {
   const {
-    details: { title, id, calendarEvent, image },
+    details: { title, id, calendarEvent, imageUrl },
     sectionType,
   } = props;
-  const imageUrl = image ? image.url : "";
+  // TODO: waiting on design
+  const url = imageUrl || "/placeholder.img";
 
   return (
     <div className={`${styles.oppEventCard} ${styles[sectionType]}`}>
       <img
         alt={title}
-        src={imageUrl}
+        src={url}
         className={`${styles.cardImage} ${styles[sectionType]}`}
       />
-
       <div className={styles.content}>
         <div>
           <h4 className={styles.contentTitle}>
