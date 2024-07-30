@@ -3,14 +3,21 @@ import React from "react";
 import formatEventDate from "utils/formatEventDate";
 import formatEventTime from "utils/formatEventTime";
 
-export const CardDate = ({ date }: { date: StrapiModel.Date }) => {
-  const formattedStartDate = formatEventDate(date.startdate);
-  const formattedEndDate = formatEventDate(date.enddate || "");
-  const formattedStartTime = formatEventTime(date.startdate);
-  const formattedEndTime = formatEventTime(date.enddate || "");
+export const FormattedDate = ({
+  calendarEvent,
+}: {
+  calendarEvent: StrapiModel.CalendarEvent;
+}): JSX.Element => {
+  if (calendarEvent?.startdate === undefined) {
+    return <em>{`Invalid Date: missing property {startdate}`}</em>;
+  }
+  const formattedStartDate = formatEventDate(calendarEvent.startdate);
+  const formattedEndDate = formatEventDate(calendarEvent.enddate || "");
   const isSingleDayEvent = formattedStartDate === formattedEndDate;
 
   if (isSingleDayEvent) {
+    const formattedStartTime = formatEventTime(calendarEvent.startdate);
+    const formattedEndTime = formatEventTime(calendarEvent.enddate || "");
     const hasEndTime = formattedStartTime !== formattedEndTime;
     const endTime = hasEndTime ? `- ${formattedEndTime} ` : "";
 

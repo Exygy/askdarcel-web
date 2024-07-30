@@ -1,19 +1,19 @@
 import React from "react";
 import { Button } from "components/ui/inline/Button/Button";
+import { StrapiModel } from "models/Strapi";
 import styles from "./OppEventCard.module.scss";
-import { OppEventDate } from "./OppEventDate";
+import { FormattedDate } from "./FormattedDate";
 
 interface OppEventCardProps {
   slug: string;
   image: string;
   title?: string;
-  startDate?: Date;
-  endDate?: Date;
+  calendarEvent: StrapiModel.CalendarEvent;
   sectionType: "event" | "opportunity";
 }
 
 export const OppEventCard = (props: OppEventCardProps) => {
-  const { title, slug, startDate, endDate, image, sectionType } = props;
+  const { title, slug, calendarEvent, image, sectionType } = props;
 
   return (
     <div className={`${styles.oppEventCard} ${styles[sectionType]}`}>
@@ -29,7 +29,7 @@ export const OppEventCard = (props: OppEventCardProps) => {
             <a href={slug}>{title}</a>
           </h4>
           <div className={styles.contentTime}>
-            <OppEventDate startDate={startDate} endDate={endDate} />
+            <FormattedDate calendarEvent={calendarEvent} />
           </div>
         </div>
 

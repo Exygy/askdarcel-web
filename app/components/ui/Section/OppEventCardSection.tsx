@@ -31,17 +31,16 @@ export const OppEventCardSection = (props: OppEventCardSectionProps) => {
         <div className={`${styles.cardsContainer} ${styles[sectionType]}`}>
           {events?.map((event): JSX.Element => {
             const {
-              attributes: { title, id, date, image },
+              attributes: { title, id, calendar_event, image },
             } = event;
-            const cardImage = image.image.data?.attributes.url ?? "";
+            const cardImage = image?.image?.data?.attributes.url ?? "";
 
             return (
               <OppEventCard
                 key={title}
                 title={title}
                 slug={id}
-                startDate={new Date(date?.startdate)}
-                endDate={new Date(date?.enddate)}
+                calendarEvent={calendar_event}
                 image={cardImage}
                 sectionType={sectionType}
               />
@@ -53,17 +52,16 @@ export const OppEventCardSection = (props: OppEventCardSectionProps) => {
         <div className={`${styles.cardsContainer} ${styles[sectionType]}`}>
           {opportunities?.map((opp): JSX.Element => {
             const {
-              attributes: { title, id, startdate, enddate, image },
+              attributes: { title, id, calendar_event, image },
             } = opp;
-            const cardImage = image.image.data?.attributes.url ?? "";
+            const cardImage = image?.image?.data?.attributes.url ?? "";
 
             return (
               <OppEventCard
                 key={title}
                 title={title}
                 slug={id}
-                startDate={new Date(startdate)}
-                endDate={new Date(enddate)}
+                calendarEvent={calendar_event}
                 image={cardImage}
                 sectionType={sectionType}
               />
