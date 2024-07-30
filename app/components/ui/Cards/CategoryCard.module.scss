@@ -20,6 +20,10 @@
     height: 150px;
   }
 
+  @media screen and (max-width: $break-tablet-p) {
+    justify-content: start;
+  }
+
   &:hover {
     color: $color-brand-dark;
     text-decoration: none;
