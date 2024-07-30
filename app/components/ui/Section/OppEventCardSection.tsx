@@ -33,7 +33,7 @@ export const OppEventCardSection = (props: OppEventCardSectionProps) => {
             const {
               attributes: { title, id, date, image },
             } = event;
-            const cardImage = image.image.data?.attributes.url ?? "";
+            const cardImage = image?.image?.data?.attributes.url ?? "";
 
             return (
               <OppEventCard
@@ -55,7 +55,7 @@ export const OppEventCardSection = (props: OppEventCardSectionProps) => {
             const {
               attributes: { title, id, startdate, enddate, image },
             } = opp;
-            const cardImage = image.image.data?.attributes.url ?? "";
+            const cardImage = image?.image?.data?.attributes.url ?? "";
 
             return (
               <OppEventCard
