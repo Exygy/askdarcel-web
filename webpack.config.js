@@ -75,8 +75,9 @@ module.exports = {
     },
   },
   plugins: [
+    // TODO: Replace og fields:
     new HtmlWebpackPlugin({
-      title: "SF Service Guide",
+      title: "Our415",
       template: "app/index.html",
       meta: {
         "og:url": "https://sfserviceguide.org", // TODO: Change This

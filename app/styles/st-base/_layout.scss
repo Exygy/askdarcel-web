@@ -11,7 +11,7 @@ input,
 select {
   &:active,
   &:focus {
-    outline: 3px solid #fbb040;
+    outline: 3px solid $black;
     border-radius: $rounded-md;
   }
 }
