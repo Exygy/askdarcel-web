@@ -83,13 +83,13 @@ function determineWhiteLabelSite(): WhiteLabelSiteKey {
 const configKey = determineWhiteLabelSite();
 
 const whiteLabelDefaults = {
-  aboutPageText: `The SF Service Guide is an online directory of human services in San
+  aboutPageText: `Our415 is an online directory of human services in San
 Francisco. Our goal is to help anyone with access to a smartphone,
 tablet, or computer find the services they need. The guide's
 focus is on homelessness and housing services, but also covers a
 variety of other services, from education and legal aid to senior
 services and re-entry programs.`,
-  aboutPageTitle: "SF Service Guide",
+  aboutPageTitle: "Our415",
   enabledTranslations: ["en", "es", "tl", "zh-TW"],
   footerOptions: {
     showOnListingPages: false,
@@ -163,7 +163,7 @@ const SFServiceGuide: WhiteLabelSite = {
   intercom: true,
   siteUrl: "https://sfserviceguide.org",
   showBreakingNews: true,
-  title: "SF Service Guide",
+  title: "Our415",
   showReportCrisis: true,
 } as const;
 
@@ -189,7 +189,7 @@ const defaultWhiteLabel: WhiteLabelSite = {
   intercom: true,
   siteUrl: "https://askdarcel.org",
   showBreakingNews: true,
-  title: "SF Service Guide",
+  title: "Our415",
   showReportCrisis: true,
 } as const;
 

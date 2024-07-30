@@ -75,16 +75,15 @@ module.exports = {
     },
   },
   plugins: [
+    // TODO: Replace og fields:
     new HtmlWebpackPlugin({
-      title: "SF Service Guide",
+      title: "Our415",
       template: "app/index.html",
       meta: {
-        "og:url": "https://sfserviceguide.org",
-        "og:title": "SF Service Guide | San Francisco",
-        "twitter:card": "summary_large_image",
-        "twitter:site": "@sheltertechorg",
+        "og:url": "https://sfserviceguide.org", // TODO: Change This
+        "og:title": "Our415 | San Francisco",
         "og:description":
-          "Get guided help finding food, housing, rental assistance, hygiene, health resources, essential services, and more in San Francisco. See the latest updates during the COVID-19 Coronavirus pandemic.",
+          "Our 415 is your source for everything San Francisco has for young people and families.",
         "og:type": "website",
         // Note: The image is specified in the HTML itself because it needs to
         // reference an image file.

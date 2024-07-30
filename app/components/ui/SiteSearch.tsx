@@ -6,7 +6,7 @@ import styles from "./SiteSearch.module.scss";
 
 // Doesn't seem like this is being used anywhere
 
-// TODO: Previously used as a global search in SF Service Guide. Can be repurposed for Our415 as a Top Level Category
+// TODO: Previously used as a global search in Our415. Can be repurposed for Our415 as a Top Level Category
 // search per designs or similar. See:
 // https://www.figma.com/proto/iDBeNK7SnZXF8wc3pbPTCY/Our415-Site?node-id=2629-11357&t=q9JDI7LISYb2Ok6T-1
 export const SiteSearch = ({ extraClasses }: { extraClasses?: string }) => {
