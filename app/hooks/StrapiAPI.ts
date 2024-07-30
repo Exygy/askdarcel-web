@@ -262,12 +262,12 @@ export namespace StrapiApi {
     };
   }
 
-  interface DateResponse {
+  export interface DateResponse {
     id: number;
     startdate: string;
-    enddate: string;
-    starttime: string;
-    endtime: string;
+    enddate: string | null;
+    starttime: string | null;
+    endtime: string | null;
     recurrence: "none" | "daily" | "weekly" | "monthly" | "yearly";
   }
 

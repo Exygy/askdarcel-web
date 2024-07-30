@@ -25,6 +25,7 @@ export namespace StrapiModel {
     > {}
   export interface NavigationMenu
     extends Omit<StrapiApi.NavigationMenuResponse, "__component"> {}
+  export interface Date extends StrapiApi.DateResponse {}
 }
 
 export function extractNavigationMenusFromNavigationResponse(

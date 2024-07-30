@@ -1,25 +1,21 @@
+import { StrapiModel } from "models/Strapi";
 import React from "react";
+import formatEventDate from "utils/formatEventDate";
 import formatEventTime from "utils/formatEventTime";
 
-interface OppEventDateProps {
-  startDate?: Date;
-  endDate?: Date;
-}
-
-export const OppEventDate = (props: OppEventDateProps) => {
-  const { startDate, endDate } = props;
-  const start = formatEventTime(startDate);
-  const end = formatEventTime(endDate);
-  const isSingleDayEvent = start.date === end.date;
-  const hasEndTime = start.time !== end.time;
+export const CardDate = ({ date }: { date: StrapiModel.Date }) => {
+  const formattedStartDate = formatEventDate(date.startdate);
+  const formattedEndDate = formatEventDate(date.enddate || "");
+  const formattedStartTime = formatEventTime(date.startdate);
+  const formattedEndTime = formatEventTime(date.enddate || "");
+  const isSingleDayEvent = formattedStartDate === formattedEndDate;
 
   if (isSingleDayEvent) {
-    return (
-      <p>
-        {`${start.date} · ${start.time} ${hasEndTime ? `- ${end.time} ` : ""}`}
-      </p>
-    );
+    const hasEndTime = formattedStartTime !== formattedEndTime;
+    const endTime = hasEndTime ? `- ${formattedEndTime} ` : "";
+
+    return <p>{`${formattedStartDate} · ${formattedStartTime} ${endTime}`}</p>;
   }
 
-  return <p>{`${start.date} - ${end.date}`}</p>;
+  return <p>{`${formattedStartDate} - ${formattedEndDate}`}</p>;
 };
