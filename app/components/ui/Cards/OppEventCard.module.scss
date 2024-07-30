@@ -11,7 +11,7 @@
   cursor: pointer;
 
   &:focus-within {
-    outline: 3px solid $color-secondary;
+    outline: 3px solid $black;
   }
 
   &.opportunity {
