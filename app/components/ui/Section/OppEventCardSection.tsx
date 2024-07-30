@@ -30,18 +30,18 @@ export const OppEventCardSection = (props: OppEventCardSectionProps) => {
       {events && (
         <div className={`${styles.cardsContainer} ${styles[sectionType]}`}>
           {events?.map((event): JSX.Element => {
-            const {
-              attributes: { title, id, calendar_event, image },
-            } = event;
-            const cardImage = image?.image?.data?.attributes.url ?? "";
+            const { attributes } = event;
+            const eventData = {
+              title: attributes.title,
+              id: attributes.id,
+              calendarEvent: attributes.calendar_event,
+              image: attributes.image?.image?.data?.attributes || null,
+            };
 
             return (
               <OppEventCard
-                key={title}
-                title={title}
-                slug={id}
-                calendarEvent={calendar_event}
-                image={cardImage}
+                key={eventData.title}
+                details={eventData}
                 sectionType={sectionType}
               />
             );
@@ -51,18 +51,18 @@ export const OppEventCardSection = (props: OppEventCardSectionProps) => {
       {opportunities && (
         <div className={`${styles.cardsContainer} ${styles[sectionType]}`}>
           {opportunities?.map((opp): JSX.Element => {
-            const {
-              attributes: { title, id, calendar_event, image },
-            } = opp;
-            const cardImage = image?.image?.data?.attributes.url ?? "";
+            const { attributes } = opp;
+            const oppData = {
+              title: attributes.title,
+              id: attributes.id,
+              calendarEvent: attributes.calendar_event,
+              image: attributes.image?.image?.data?.attributes || null,
+            };
 
             return (
               <OppEventCard
-                key={title}
-                title={title}
-                slug={id}
-                calendarEvent={calendar_event}
-                image={cardImage}
+                key={oppData.title}
+                details={oppData}
                 sectionType={sectionType}
               />
             );
