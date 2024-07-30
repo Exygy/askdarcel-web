@@ -150,9 +150,7 @@ const InnerServiceDiscoveryResults = ({
     sortAlgoliaSubcategoryRefinements,
   } = category;
 
-  const escapeApostrophes = (string: string) => {
-    return string.replace(/'/g, "\\'");
-  };
+  const escapeApostrophes = (str: string): string => str.replace(/'/g, "\\'");
 
   return (
     <>
