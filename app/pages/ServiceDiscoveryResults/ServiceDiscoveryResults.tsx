@@ -88,9 +88,14 @@ export const ServiceDiscoveryResults = ({
       });
   }, [category.id]);
 
+  const escapeApostrophes = (str: string): string => str.replace(/'/g, "\\'");
+  const algoliaCategoryName = parentCategory?.name
+    ? escapeApostrophes(parentCategory.name)
+    : null;
+
   // TS compiler requires explict null type checks
   if (
-    parentCategory !== null &&
+    algoliaCategoryName !== null &&
     eligibilities !== null &&
     subcategories !== null &&
     userLocation !== null
@@ -100,7 +105,7 @@ export const ServiceDiscoveryResults = ({
         eligibilities={eligibilities}
         subcategories={subcategories}
         category={category}
-        algoliaCategoryName={parentCategory.name}
+        algoliaCategoryName={algoliaCategoryName}
         searchState={searchState}
         onSearchStateChange={onSearchStateChange}
         searchRadius={searchRadius}
@@ -150,8 +155,6 @@ const InnerServiceDiscoveryResults = ({
     sortAlgoliaSubcategoryRefinements,
   } = category;
 
-  const escapeApostrophes = (str: string): string => str.replace(/'/g, "\\'");
-
   return (
     <>
       <SecondaryNavigationWrapper>
@@ -174,12 +177,10 @@ const InnerServiceDiscoveryResults = ({
           onSearchStateChange={onSearchStateChange}
         >
           {category.disableGeoLocation ? (
-            <Configure
-              filters={`categories:'${escapeApostrophes(algoliaCategoryName)}'`}
-            />
+            <Configure filters={`categories:'${algoliaCategoryName}'`} />
           ) : (
             <Configure
-              filters={`categories:'${escapeApostrophes(algoliaCategoryName)}'`}
+              filters={`categories:'${algoliaCategoryName}'`}
               aroundLatLng={`${location.lat}, ${location.lng}`}
               aroundRadius={searchRadius}
               aroundPrecision={1600}
