@@ -88,9 +88,14 @@ export const ServiceDiscoveryResults = ({
       });
   }, [category.id]);
 
+  const escapeApostrophes = (str: string): string => str.replace(/'/g, "\\'");
+  const algoliaCategoryName = parentCategory?.name
+    ? escapeApostrophes(parentCategory.name)
+    : null;
+
   // TS compiler requires explict null type checks
   if (
-    parentCategory !== null &&
+    algoliaCategoryName !== null &&
     eligibilities !== null &&
     subcategories !== null &&
     userLocation !== null
@@ -100,7 +105,7 @@ export const ServiceDiscoveryResults = ({
         eligibilities={eligibilities}
         subcategories={subcategories}
         category={category}
-        algoliaCategoryName={parentCategory.name}
+        algoliaCategoryName={algoliaCategoryName}
         searchState={searchState}
         onSearchStateChange={onSearchStateChange}
         searchRadius={searchRadius}
