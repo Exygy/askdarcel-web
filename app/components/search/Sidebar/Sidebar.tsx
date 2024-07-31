@@ -12,7 +12,7 @@ import RefinementListFilter from "components/search/Refinements/RefinementListFi
 import FacetRefinementList from "components/search/Refinements/FacetRefinementList";
 import { eligibilityMap as ucsfEligibilityMap } from "components/ucsf/RefinementLists/ucsfEligibilitiesMap";
 import { Button } from "components/ui/inline/Button/Button";
-import MapToggleButtons from "./MapToggleButtons";
+import MobileMapToggleButtons from "./MobileMapToggleButtons";
 import styles from "./Sidebar.module.scss";
 
 const Sidebar = ({
@@ -24,8 +24,8 @@ const Sidebar = ({
   subcategories = [],
   subcategoryNames = [],
   sortAlgoliaSubcategoryRefinements = false,
-  collapseMap,
-  setCollapseMap,
+  isMapCollapses,
+  setIsMapCollapsed,
 }: {
   setSearchRadius: (radius: string) => void;
   searchRadius: string;
@@ -35,8 +35,8 @@ const Sidebar = ({
   subcategories?: Category[];
   subcategoryNames?: string[];
   sortAlgoliaSubcategoryRefinements?: boolean;
-  collapseMap: boolean;
-  setCollapseMap: (_collapseMap: boolean) => void;
+  isMapCollapses: boolean;
+  setIsMapCollapsed: (_isMapCollapses: boolean) => void;
 }) => {
   const [filterMenuVisible, setfilterMenuVisible] = useState(false);
   let categoryRefinementJsx: React.ReactElement | null = null;
@@ -180,9 +180,9 @@ const Sidebar = ({
         >
           Filters
         </Button>
-        <MapToggleButtons
-          collapseMap={collapseMap}
-          setCollapseMap={setCollapseMap}
+        <MobileMapToggleButtons
+          isMapCollapses={isMapCollapses}
+          setIsMapCollapsed={setIsMapCollapsed}
         />
       </div>
       <div

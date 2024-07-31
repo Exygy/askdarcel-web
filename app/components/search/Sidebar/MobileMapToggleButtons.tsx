@@ -1,13 +1,14 @@
 import React from "react";
 import classNames from "classnames";
-import styles from "./MapToggleButtons.module.scss";
+import styles from "./MobileMapToggleButtons.module.scss";
 
-const MapToggleButtons = ({
-  collapseMap,
-  setCollapseMap,
+// Collapses and expands map view for mobile
+const MobileMapToggleButtons = ({
+  isMapCollapses,
+  setIsMapCollapsed,
 }: {
-  collapseMap: boolean;
-  setCollapseMap: (_collapseMap: boolean) => void;
+  isMapCollapses: boolean;
+  setIsMapCollapsed: (_isMapCollapses: boolean) => void;
 }) => {
   return (
     <div className={styles.mapListToggleContainer}>
@@ -18,10 +19,10 @@ const MapToggleButtons = ({
           styles.mapButton,
           "no-transition"
         )}
-        onClick={() => setCollapseMap(false)}
+        onClick={() => setIsMapCollapsed(false)}
         aria-label="Expand map"
       >
-        <span className={!collapseMap ? styles.activeView : ""}>
+        <span className={!isMapCollapses ? styles.activeView : ""}>
           <i className="fa-solid fa-map" />
         </span>
       </button>
@@ -32,10 +33,10 @@ const MapToggleButtons = ({
           styles.listButton,
           "no-transition"
         )}
-        onClick={() => setCollapseMap(true)}
+        onClick={() => setIsMapCollapsed(true)}
         aria-label="Collapse map"
       >
-        <span className={collapseMap ? styles.activeView : ""}>
+        <span className={isMapCollapses ? styles.activeView : ""}>
           <i className="fa-solid fa-list" />
         </span>
       </button>
@@ -43,4 +44,4 @@ const MapToggleButtons = ({
   );
 };
 
-export default MapToggleButtons;
+export default MobileMapToggleButtons;
