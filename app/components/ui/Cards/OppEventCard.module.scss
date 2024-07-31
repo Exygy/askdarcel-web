@@ -23,9 +23,16 @@
   }
 
   .cardImage {
-    height: auto;
+    min-height: 200px;
     width: 100%;
     object-fit: cover;
+
+    // Sizes and positions empty image icon
+    display: flex;
+    font-size: 200px;
+    color: $gray-100;
+    align-items: center;
+    justify-content: center;
 
     &.event {
       max-width: 40%;

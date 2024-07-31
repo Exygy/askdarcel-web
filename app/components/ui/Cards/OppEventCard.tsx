@@ -1,8 +1,8 @@
 import React from "react";
 import { Button } from "components/ui/inline/Button/Button";
 import { StrapiModel } from "models/Strapi";
+import { FormattedDate } from "components/ui/Cards/FormattedDate";
 import styles from "./OppEventCard.module.scss";
-import { FormattedDate } from "./FormattedDate";
 
 interface OppEventCardProps {
   details: {
@@ -19,16 +19,20 @@ export const OppEventCard = (props: OppEventCardProps) => {
     details: { title, id, calendarEvent, imageUrl },
     sectionType,
   } = props;
-  // TODO: waiting on design
-  const url = imageUrl || "/placeholder.img";
-
   return (
     <div className={`${styles.oppEventCard} ${styles[sectionType]}`}>
-      <img
-        alt={title}
-        src={url}
-        className={`${styles.cardImage} ${styles[sectionType]}`}
-      />
+      {imageUrl ? (
+        <img
+          alt={title}
+          src={imageUrl}
+          className={`${styles.cardImage} ${styles[sectionType]}`}
+        />
+      ) : (
+        <div className={`${styles.cardImage} ${styles[sectionType]}`}>
+          <i className="fa-solid fa-image" />
+        </div>
+      )}
+
       <div className={styles.content}>
         <div>
           <h4 className={styles.contentTitle}>
