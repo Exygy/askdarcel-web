@@ -41,7 +41,7 @@ export const SearchResultsPage = () => {
   const { search } = useLocation();
   const { userLocation } = useAppContext();
   const [lastPush, setLastPush] = useState(Date.now());
-  const [isMapCollapses, setIsMapCollapsed] = useState(false);
+  const [isMapCollapsed, setIsMapCollapsed] = useState(false);
 
   const [searchState, setSearchState] = useState<SearchState | null>(null);
   const [searchRadius, setSearchRadius] = useState(
@@ -116,7 +116,7 @@ export const SearchResultsPage = () => {
       userLocation={{ lat: userLocation.lat, lng: userLocation.lng }}
       lastPush={lastPush}
       setLastPush={setLastPush}
-      isMapCollapses={isMapCollapses}
+      isMapCollapsed={isMapCollapsed}
       setIsMapCollapsed={setIsMapCollapsed}
       searchState={searchState}
       searchRadius={searchRadius}
@@ -132,7 +132,7 @@ const InnerSearchResults = ({
   userLocation,
   lastPush,
   setLastPush,
-  isMapCollapses,
+  isMapCollapsed,
   setIsMapCollapsed,
   searchState,
   searchRadius,
@@ -143,7 +143,7 @@ const InnerSearchResults = ({
   userLocation: GeoCoordinates;
   lastPush: number;
   setLastPush: (time: number) => void;
-  isMapCollapses: boolean;
+  isMapCollapsed: boolean;
   setIsMapCollapsed: (listExpanded: boolean) => void;
   searchState: SearchState;
   searchRadius: string;
@@ -218,13 +218,13 @@ const InnerSearchResults = ({
             setSearchRadius={setSearchRadius}
             searchRadius={searchRadius}
             isSearchResultsPage
-            isMapCollapses={isMapCollapses}
+            isMapCollapsed={isMapCollapsed}
             setIsMapCollapsed={setIsMapCollapsed}
           />
 
           <div className={styles.results}>
             <SearchResults
-              mobileMapIsCollapsed={isMapCollapses}
+              mobileMapIsCollapsed={isMapCollapsed}
               setAroundLatLng={setAroundLatLng}
               searchQuery={untranslatedQuery}
             />

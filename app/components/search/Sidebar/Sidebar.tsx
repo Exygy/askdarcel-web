@@ -24,7 +24,7 @@ const Sidebar = ({
   subcategories = [],
   subcategoryNames = [],
   sortAlgoliaSubcategoryRefinements = false,
-  isMapCollapses,
+  isMapCollapsed,
   setIsMapCollapsed,
 }: {
   setSearchRadius: (radius: string) => void;
@@ -35,8 +35,8 @@ const Sidebar = ({
   subcategories?: Category[];
   subcategoryNames?: string[];
   sortAlgoliaSubcategoryRefinements?: boolean;
-  isMapCollapses: boolean;
-  setIsMapCollapsed: (_isMapCollapses: boolean) => void;
+  isMapCollapsed: boolean;
+  setIsMapCollapsed: (_isMapCollapsed: boolean) => void;
 }) => {
   const [filterMenuVisible, setfilterMenuVisible] = useState(false);
   let categoryRefinementJsx: React.ReactElement | null = null;
@@ -181,7 +181,7 @@ const Sidebar = ({
           Filters
         </Button>
         <MobileMapToggleButtons
-          isMapCollapses={isMapCollapses}
+          isMapCollapsed={isMapCollapsed}
           setIsMapCollapsed={setIsMapCollapsed}
         />
       </div>

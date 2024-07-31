@@ -4,11 +4,11 @@ import styles from "./MobileMapToggleButtons.module.scss";
 
 // Collapses and expands map view for mobile
 const MobileMapToggleButtons = ({
-  isMapCollapses,
+  isMapCollapsed,
   setIsMapCollapsed,
 }: {
-  isMapCollapses: boolean;
-  setIsMapCollapsed: (_isMapCollapses: boolean) => void;
+  isMapCollapsed: boolean;
+  setIsMapCollapsed: (_isMapCollapsed: boolean) => void;
 }) => {
   return (
     <div className={styles.mapListToggleContainer}>
@@ -22,7 +22,7 @@ const MobileMapToggleButtons = ({
         onClick={() => setIsMapCollapsed(false)}
         aria-label="Expand map"
       >
-        <span className={!isMapCollapses ? styles.activeView : ""}>
+        <span className={!isMapCollapsed ? styles.activeView : ""}>
           <i className="fa-solid fa-map" />
         </span>
       </button>
@@ -36,7 +36,7 @@ const MobileMapToggleButtons = ({
         onClick={() => setIsMapCollapsed(true)}
         aria-label="Collapse map"
       >
-        <span className={isMapCollapses ? styles.activeView : ""}>
+        <span className={isMapCollapsed ? styles.activeView : ""}>
           <i className="fa-solid fa-list" />
         </span>
       </button>

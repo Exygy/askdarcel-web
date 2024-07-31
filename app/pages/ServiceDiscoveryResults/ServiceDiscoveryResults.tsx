@@ -68,7 +68,7 @@ export const ServiceDiscoveryResults = ({
   const eligibilities = useEligibilitiesForCategory(category.id);
   const subcategories = useSubcategoriesForCategory(category.id);
   const [searchState, setSearchState] = useState(urlToSearchState(location));
-  const [isMapCollapses, setIsMapCollapsed] = useState(false);
+  const [isMapCollapsed, setIsMapCollapsed] = useState(false);
   const [searchRadius, setSearchRadius] = useState(
     searchState?.configure?.aroundRadius || "all"
   );
@@ -110,7 +110,7 @@ export const ServiceDiscoveryResults = ({
         onSearchStateChange={onSearchStateChange}
         searchRadius={searchRadius}
         setSearchRadius={setSearchRadius}
-        isMapCollapses={isMapCollapses}
+        isMapCollapsed={isMapCollapsed}
         setIsMapCollapsed={setIsMapCollapsed}
         userLatLng={{ lat: userLocation.lat, lng: userLocation.lng }}
       />
@@ -130,7 +130,7 @@ const InnerServiceDiscoveryResults = ({
   onSearchStateChange,
   searchRadius,
   setSearchRadius,
-  isMapCollapses,
+  isMapCollapsed,
   setIsMapCollapsed,
   userLatLng,
 }: {
@@ -142,8 +142,8 @@ const InnerServiceDiscoveryResults = ({
   onSearchStateChange: (nextSearchState: SearchState) => void;
   searchRadius: string;
   setSearchRadius: (radius: string) => void;
-  isMapCollapses: boolean;
-  setIsMapCollapsed: (_isMapCollapses: boolean) => void;
+  isMapCollapsed: boolean;
+  setIsMapCollapsed: (_isMapCollapsed: boolean) => void;
   userLatLng: { lat: number; lng: number };
 }) => {
   const [aroundLatLang, setAroundLatLng] = useState(userLatLng);
@@ -198,13 +198,13 @@ const InnerServiceDiscoveryResults = ({
               sortAlgoliaSubcategoryRefinements={
                 sortAlgoliaSubcategoryRefinements
               }
-              isMapCollapses={isMapCollapses}
+              isMapCollapsed={isMapCollapsed}
               setIsMapCollapsed={setIsMapCollapsed}
             />
 
             <div className={styles.results}>
               <SearchResults
-                mobileMapIsCollapsed={isMapCollapses}
+                mobileMapIsCollapsed={isMapCollapsed}
                 categoryId={categoryId}
                 setAroundLatLng={setAroundLatLng}
               />
