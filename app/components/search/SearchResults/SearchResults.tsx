@@ -14,7 +14,10 @@ import ResultsPagination from "components/search/Pagination/ResultsPagination";
 // import { TextListing } from "components/Texting/Texting";
 import { Tooltip } from "react-tippy";
 import { LabelTag } from "components/ui/LabelTag";
-import { SearchHit, transformHits } from "../../../models/SearchHits";
+import {
+  SearchHit,
+  addRecurringScheduleToHits,
+} from "../../../models/SearchHits";
 import styles from "./SearchResults.module.scss";
 import ClearSearchButton from "../Refinements/ClearSearchButton";
 
@@ -33,13 +36,6 @@ const SearchResults = ({
   categoryId?: string;
   searchQuery?: string | null;
 }) => {
-  const category = CATEGORIES.find((c) => c.id === categoryId);
-  const sortBy24HourAvailability = Boolean(category?.sortBy24HourAvailability);
-  const hits = transformHits(
-    searchResults ? (searchResults.hits as unknown as SearchHit[]) : [],
-    sortBy24HourAvailability
-  );
-
   const [centerCoords] = useState(null);
   const [googleMapObject, setMapObject] = useState<google.maps.Map | null>(
     null
@@ -58,6 +54,12 @@ const SearchResults = ({
 
   if (!searchResults) return null;
 
+  const category = CATEGORIES.find((c) => c.id === categoryId);
+  const sortBy24HourAvailability = Boolean(category?.sortBy24HourAvailability);
+
+  const searchMapHitData =
+
+  // TODO: Would these values ever not be set?
   const currentPage = searchResults.page ?? 0;
   const hitsPerPage = searchResults.hitsPerPage ?? 20;
 
