@@ -33,11 +33,8 @@ const SearchResults = ({
   categoryId?: string;
   searchQuery?: string | null;
 }) => {
-  const category = CATEGORIES.find((c) => c.id === categoryId);
-  const sortBy24HourAvailability = Boolean(category?.sortBy24HourAvailability);
   const hits = transformHits(
-    searchResults ? (searchResults.hits as unknown as SearchHit[]) : [],
-    sortBy24HourAvailability
+    searchResults ? (searchResults.hits as unknown as SearchHit[]) : []
   );
 
   const [centerCoords] = useState(null);
