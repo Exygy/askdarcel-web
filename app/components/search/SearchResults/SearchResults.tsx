@@ -13,24 +13,26 @@ import ResultsPagination from "components/search/Pagination/ResultsPagination";
 // import { TextListing } from "components/Texting/Texting";
 import { Tooltip } from "react-tippy";
 import { LabelTag } from "components/ui/LabelTag";
-import { SearchHit, transformHits } from "../../../models/SearchHits";
+import {
+  SearchHit,
+  addRecurringScheduleToSeachHits,
+} from "../../../models/SearchHits";
 import styles from "./SearchResults.module.scss";
 import ClearSearchButton from "../Refinements/ClearSearchButton";
 
-// NOTE: We will re-implement the texting feature so leaving these comments in the project until then
-
+// @param {boolean} mobileMapIsCollapsed -
 const SearchResults = ({
   searchResults,
-  overlayMapWithSearchResults,
+  mobileMapIsCollapsed,
   setAroundLatLng,
   searchQuery,
 }: {
   searchResults: SearchResultsProps;
-  overlayMapWithSearchResults: boolean;
+  mobileMapIsCollapsed: boolean;
   setAroundLatLng: (latLng: { lat: number; lng: number }) => void;
   searchQuery?: string | null;
 }) => {
-  const hits = transformHits(
+  const hits = addRecurringScheduleToSeachHits(
     searchResults ? (searchResults.hits as unknown as SearchHit[]) : []
   );
 
@@ -59,7 +61,7 @@ const SearchResults = ({
     <div className={styles.searchResultsAndMapContainer}>
       <div
         className={`${styles.searchResultsContainer} ${
-          overlayMapWithSearchResults ? styles.overlayMapWithSearchResults : ""
+          mobileMapIsCollapsed ? styles.mobileMapIsCollapsed : ""
         }`}
       >
         {!hits.length ? (
@@ -105,7 +107,7 @@ const SearchResults = ({
         mapObject={googleMapObject}
         setMapObject={setMapObject}
         setAroundLatLng={setAroundLatLng}
-        overlayMapWithSearchResults={overlayMapWithSearchResults}
+        mobileMapIsCollapsed={mobileMapIsCollapsed}
       />
     </div>
   );
