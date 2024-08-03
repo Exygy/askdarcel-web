@@ -151,7 +151,6 @@ const InnerServiceDiscoveryResults = ({
   const {
     name: categoryName,
     slug: categorySlug,
-    id: categoryId,
     sortAlgoliaSubcategoryRefinements,
   } = category;
 
@@ -205,7 +204,6 @@ const InnerServiceDiscoveryResults = ({
             <div className={styles.results}>
               <SearchResults
                 overlayMapWithSearchResults={collapseMap}
-                categoryId={categoryId}
                 setAroundLatLng={setLocation}
               />
             </div>
