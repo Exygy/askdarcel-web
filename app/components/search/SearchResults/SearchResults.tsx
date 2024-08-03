@@ -5,7 +5,6 @@ import {
   connectStateResults,
   SearchResults as SearchResultsProps,
 } from "react-instantsearch/connectors";
-import { CATEGORIES } from "pages/constants";
 import { SearchMap } from "components/search/SearchMap/SearchMap";
 import { formatPhoneNumber, renderAddressMetadata } from "utils";
 import { removeAsterisksAndHashes } from "utils/strings";
@@ -16,26 +15,29 @@ import { Tooltip } from "react-tippy";
 import { LabelTag } from "components/ui/LabelTag";
 import {
   SearchHit,
-  addRecurringScheduleToHits,
+  addRecurringScheduleToSeachHits,
 } from "../../../models/SearchHits";
 import styles from "./SearchResults.module.scss";
 import ClearSearchButton from "../Refinements/ClearSearchButton";
 
-// NOTE: We will re-implement the texting feature so leaving these comments in the project until then
-
+// @param {boolean} mobileMapIsCollapsed -
 const SearchResults = ({
   searchResults,
-  overlayMapWithSearchResults,
+  mobileMapIsCollapsed,
   setAroundLatLng,
   categoryId,
   searchQuery,
 }: {
   searchResults: SearchResultsProps;
-  overlayMapWithSearchResults: boolean;
+  mobileMapIsCollapsed: boolean;
   setAroundLatLng: (latLng: { lat: number; lng: number }) => void;
   categoryId?: string;
   searchQuery?: string | null;
 }) => {
+  const hits = addRecurringScheduleToSeachHits(
+    searchResults ? (searchResults.hits as unknown as SearchHit[]) : []
+  );
+
   const [centerCoords] = useState(null);
   const [googleMapObject, setMapObject] = useState<google.maps.Map | null>(
     null
@@ -54,10 +56,7 @@ const SearchResults = ({
 
   if (!searchResults) return null;
 
-  const category = CATEGORIES.find((c) => c.id === categoryId);
-  const sortBy24HourAvailability = Boolean(category?.sortBy24HourAvailability);
-
-  const searchMapHitData =
+  const searchMapHitData = {};
 
   // TODO: Would these values ever not be set?
   const currentPage = searchResults.page ?? 0;
@@ -67,7 +66,7 @@ const SearchResults = ({
     <div className={styles.searchResultsAndMapContainer}>
       <div
         className={`${styles.searchResultsContainer} ${
-          overlayMapWithSearchResults ? styles.overlayMapWithSearchResults : ""
+          mobileMapIsCollapsed ? styles.mobileMapIsCollapsed : ""
         }`}
       >
         {!hits.length ? (
@@ -113,7 +112,7 @@ const SearchResults = ({
         mapObject={googleMapObject}
         setMapObject={setMapObject}
         setAroundLatLng={setAroundLatLng}
-        overlayMapWithSearchResults={overlayMapWithSearchResults}
+        mobileMapIsCollapsed={mobileMapIsCollapsed}
       />
     </div>
   );

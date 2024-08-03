@@ -39,7 +39,7 @@
     z-index: 2;
     background: #fff;
     transition: top 200ms ease-in-out;
-    &.overlayMapWithSearchResults {
+    &.mobileMapIsCollapsed {
       top: calc(-50vh + 20px);
       z-index: 1;
     }

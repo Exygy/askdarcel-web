@@ -37,7 +37,7 @@ export type SearchHit = ServiceHit | OrganizationHit;
  * Transform Algolia search hits such that each hit has a recurringSchedule that
  * uses the time helper classes.
  */
-export const addRecurringScheduleToHits = (
+export const addRecurringScheduleToSeachHits = (
   hits: SearchHit[],
   sortBy24HourAvailability: boolean = false
 ) => {

@@ -22,7 +22,7 @@ export const SearchMap = ({
   mapObject,
   setMapObject,
   setAroundLatLng,
-  overlayMapWithSearchResults,
+  mobileMapIsCollapsed,
 }: {
   hits: SearchHit[];
   hitsPerPage: number;
@@ -30,7 +30,7 @@ export const SearchMap = ({
   mapObject: google.maps.Map | null;
   setMapObject: (map: any) => void;
   setAroundLatLng: (latLng: { lat: number; lng: number }) => void;
-  overlayMapWithSearchResults: boolean;
+  mobileMapIsCollapsed: boolean;
 }) => {
   const { userLocation } = useAppContext();
   if (userLocation === null) {
@@ -41,6 +41,13 @@ export const SearchMap = ({
     );
   }
 
+  function handleSearchThisAreaClick() {
+    const center = mapObject?.getCenter() || null;
+    if (center?.lat() && center?.lng()) {
+      setAroundLatLng({ lat: center.lat(), lng: center.lng() });
+    }
+  }
+
   const { lat, lng } = userLocation;
 
   return (
@@ -49,19 +56,14 @@ export const SearchMap = ({
         {/* If map is being overlaid, hide the search area button. It is is neither clickable
             nor relevant in this mode.
         */}
-        {!overlayMapWithSearchResults && (
+        {!mobileMapIsCollapsed && (
           <Button
             addClass="searchAreaButton"
             variant="primary"
             iconName="fas fa-search"
             iconVariant="before"
             mobileFullWidth={false}
-            onClick={() => {
-              const center = mapObject?.getCenter() || null;
-              if (center?.lat() && center?.lng()) {
-                setAroundLatLng({ lat: center.lat(), lng: center.lng() });
-              }
-            }}
+            onClick={() => handleSearchThisAreaClick()}
           >
             Search this area
           </Button>
