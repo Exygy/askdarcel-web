@@ -41,7 +41,7 @@ export const SearchResultsPage = () => {
   const { search } = useLocation();
   const { userLocation } = useAppContext();
   const [lastPush, setLastPush] = useState(Date.now());
-  const [collapseMap, setCollapseMap] = useState(false);
+  const [isMapCollapsed, setIsMapCollapsed] = useState(false);
 
   const [searchState, setSearchState] = useState<SearchState | null>(null);
   const [searchRadius, setSearchRadius] = useState(
@@ -116,8 +116,8 @@ export const SearchResultsPage = () => {
       userLocation={{ lat: userLocation.lat, lng: userLocation.lng }}
       lastPush={lastPush}
       setLastPush={setLastPush}
-      collapseMap={collapseMap}
-      setCollapseMap={setCollapseMap}
+      isMapCollapsed={isMapCollapsed}
+      setIsMapCollapsed={setIsMapCollapsed}
       searchState={searchState}
       searchRadius={searchRadius}
       setSearchRadius={setSearchRadius}
@@ -132,8 +132,8 @@ const InnerSearchResults = ({
   userLocation,
   lastPush,
   setLastPush,
-  collapseMap,
-  setCollapseMap,
+  isMapCollapsed,
+  setIsMapCollapsed,
   searchState,
   searchRadius,
   setSearchRadius,
@@ -143,14 +143,14 @@ const InnerSearchResults = ({
   userLocation: GeoCoordinates;
   lastPush: number;
   setLastPush: (time: number) => void;
-  collapseMap: boolean;
-  setCollapseMap: (listExpanded: boolean) => void;
+  isMapCollapsed: boolean;
+  setIsMapCollapsed: (listExpanded: boolean) => void;
   searchState: SearchState;
   searchRadius: string;
   setSearchRadius: (radius: string) => void;
   untranslatedQuery: string | undefined | null;
 }) => {
-  const [location, setLocation] = useState({
+  const [aroundLatLang, setAroundLatLng] = useState({
     lat: userLocation.lat,
     lng: userLocation.lng,
   });
@@ -209,7 +209,7 @@ const InnerSearchResults = ({
         createURL={(state: any) => `search?${qs.stringify(state)}`}
       >
         <Configure
-          aroundLatLng={`${location.lat}, ${location.lng}`}
+          aroundLatLng={`${aroundLatLang.lat}, ${aroundLatLang.lng}`}
           aroundRadius={searchRadius}
           aroundPrecision={1600}
         />
@@ -218,14 +218,14 @@ const InnerSearchResults = ({
             setSearchRadius={setSearchRadius}
             searchRadius={searchRadius}
             isSearchResultsPage
-            collapseMap={collapseMap}
-            setCollapseMap={setCollapseMap}
+            isMapCollapsed={isMapCollapsed}
+            setIsMapCollapsed={setIsMapCollapsed}
           />
 
           <div className={styles.results}>
             <SearchResults
-              overlayMapWithSearchResults={collapseMap}
-              setAroundLatLng={setLocation}
+              mobileMapIsCollapsed={isMapCollapsed}
+              setAroundLatLng={setAroundLatLng}
               searchQuery={untranslatedQuery}
             />
           </div>

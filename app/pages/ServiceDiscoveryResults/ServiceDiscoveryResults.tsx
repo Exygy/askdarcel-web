@@ -68,7 +68,7 @@ export const ServiceDiscoveryResults = ({
   const eligibilities = useEligibilitiesForCategory(category.id);
   const subcategories = useSubcategoriesForCategory(category.id);
   const [searchState, setSearchState] = useState(urlToSearchState(location));
-  const [collapseMap, setCollapseMap] = useState(false);
+  const [isMapCollapsed, setIsMapCollapsed] = useState(false);
   const [searchRadius, setSearchRadius] = useState(
     searchState?.configure?.aroundRadius || "all"
   );
@@ -110,8 +110,8 @@ export const ServiceDiscoveryResults = ({
         onSearchStateChange={onSearchStateChange}
         searchRadius={searchRadius}
         setSearchRadius={setSearchRadius}
-        collapseMap={collapseMap}
-        setCollapseMap={setCollapseMap}
+        isMapCollapsed={isMapCollapsed}
+        setIsMapCollapsed={setIsMapCollapsed}
         userLatLng={{ lat: userLocation.lat, lng: userLocation.lng }}
       />
     );
@@ -130,8 +130,8 @@ const InnerServiceDiscoveryResults = ({
   onSearchStateChange,
   searchRadius,
   setSearchRadius,
-  collapseMap,
-  setCollapseMap,
+  isMapCollapsed,
+  setIsMapCollapsed,
   userLatLng,
 }: {
   eligibilities: object[];
@@ -142,11 +142,11 @@ const InnerServiceDiscoveryResults = ({
   onSearchStateChange: (nextSearchState: SearchState) => void;
   searchRadius: string;
   setSearchRadius: (radius: string) => void;
-  collapseMap: boolean;
-  setCollapseMap: (_collapseMap: boolean) => void;
+  isMapCollapsed: boolean;
+  setIsMapCollapsed: (_isMapCollapsed: boolean) => void;
   userLatLng: { lat: number; lng: number };
 }) => {
-  const [location, setLocation] = useState(userLatLng);
+  const [aroundLatLang, setAroundLatLng] = useState(userLatLng);
   const subcategoryNames = subcategories.map((c) => c.name);
   const {
     name: categoryName,
@@ -181,7 +181,7 @@ const InnerServiceDiscoveryResults = ({
           ) : (
             <Configure
               filters={`categories:'${algoliaCategoryName}'`}
-              aroundLatLng={`${location.lat}, ${location.lng}`}
+              aroundLatLng={`${aroundLatLang.lat}, ${aroundLatLang.lng}`}
               aroundRadius={searchRadius}
               aroundPrecision={1600}
             />
@@ -198,15 +198,15 @@ const InnerServiceDiscoveryResults = ({
               sortAlgoliaSubcategoryRefinements={
                 sortAlgoliaSubcategoryRefinements
               }
-              collapseMap={collapseMap}
-              setCollapseMap={setCollapseMap}
+              isMapCollapsed={isMapCollapsed}
+              setIsMapCollapsed={setIsMapCollapsed}
             />
 
             <div className={styles.results}>
               <SearchResults
-                overlayMapWithSearchResults={collapseMap}
+                mobileMapIsCollapsed={isMapCollapsed}
                 categoryId={categoryId}
-                setAroundLatLng={setLocation}
+                setAroundLatLng={setAroundLatLng}
               />
             </div>
           </div>
