@@ -244,8 +244,7 @@ export namespace StrapiApi {
   export interface OpportunityResponse extends BaseDatumAttributesResponse {
     title: string;
     description: string;
-    startdate: string;
-    enddate: string;
+    calendar_event: CalendarEventResponse;
     venue: string;
     email: string;
     organizer: string;
@@ -262,12 +261,12 @@ export namespace StrapiApi {
     };
   }
 
-  interface DateResponse {
+  export interface CalendarEventResponse {
     id: number;
     startdate: string;
-    enddate: string;
-    starttime: string;
-    endtime: string;
+    enddate: string | null;
+    starttime: string | null;
+    endtime: string | null;
     recurrence: "none" | "daily" | "weekly" | "monthly" | "yearly";
   }
 
@@ -276,7 +275,7 @@ export namespace StrapiApi {
     venue: string;
     admissions: string;
     description: string;
-    date: DateResponse;
+    calendar_event: CalendarEventResponse;
     address: AddressResponse;
     image: {
       id: number;

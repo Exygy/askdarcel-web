@@ -6,6 +6,8 @@ import {
 import { SearchMap } from "components/search/SearchMap/SearchMap";
 import ResultsPagination from "components/search/Pagination/ResultsPagination";
 import { SearchResult } from "components/search/SearchResults/SeachResult";
+// import { Texting } from "components/Texting";
+// import { TextListing } from "components/Texting/Texting";
 import {
   SearchHit,
   addRecurringScheduleToSeachHits,
