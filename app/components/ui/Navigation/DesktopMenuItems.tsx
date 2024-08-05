@@ -33,10 +33,22 @@ const DesktopMenuItems = ({
     }
   };
 
+  const handleFocusOut = (event: FocusEvent) => {
+    if (
+      menuRef.current &&
+      !menuRef.current.contains(event.relatedTarget as Node)
+    ) {
+      setActiveDesktopSubMenu(null);
+    }
+  };
+
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
+    menuRef.current?.addEventListener("focusout", handleFocusOut);
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      menuRef.current?.removeEventListener("focusout", handleFocusOut);
     };
   }, []);
 
