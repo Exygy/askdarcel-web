@@ -40,16 +40,16 @@ export const Navigation = () => {
   const { data: navigationResponse } = useNavigationData();
   const [mobileNavigationSidebarIsOpen, setMobileNavigationSidebarIsOpen] =
     useState(false);
-  const [whichActiveMobileSubMenu, setActiveMobileSubMenu] = useState("");
+  const [activeMobileSubMenu, setActiveMobileSubMenu] = useState("");
   const toggleMobileNav = () =>
     setMobileNavigationSidebarIsOpen((prev) => !prev);
-  const [whichActiveDesktopSubMenu, setsetActiveDesktopSubMenu] = useState("");
+  const [activeDesktopSubMenu, setActiveDesktopSubMenu] = useState("");
 
   const logoData = extractLogoFromNavigationResponse(navigationResponse);
   const menuData =
     extractNavigationMenusFromNavigationResponse(navigationResponse);
-  const mobileSubMenuIsActive = !!whichActiveMobileSubMenu;
-  const desktopSubMenuIsActive = !!whichActiveDesktopSubMenu;
+  const mobileSubMenuIsActive = !!activeMobileSubMenu;
+  const desktopSubMenuIsActive = !!activeDesktopSubMenu;
 
   const pushPanelIconDisplay = () => {
     if (mobileNavigationSidebarIsOpen && mobileSubMenuIsActive) {
@@ -71,10 +71,10 @@ export const Navigation = () => {
   };
 
   const togglesetActiveDesktopSubMenu = (next: string) => {
-    if (desktopSubMenuIsActive && whichActiveDesktopSubMenu === next) {
-      setsetActiveDesktopSubMenu("");
+    if (desktopSubMenuIsActive && activeDesktopSubMenu === next) {
+      setActiveDesktopSubMenu("");
     } else {
-      setsetActiveDesktopSubMenu(next);
+      setActiveDesktopSubMenu(next);
     }
   };
 
@@ -92,7 +92,7 @@ export const Navigation = () => {
           {menuData?.map((menuDataItem) => (
             <MobileMenuItems
               menuItem={menuDataItem}
-              whichActiveMobileSubMenu={whichActiveMobileSubMenu}
+              activeMobileSubMenu={activeMobileSubMenu}
               setActiveMobileSubMenu={setActiveMobileSubMenu}
               key={menuDataItem.id}
             />
@@ -120,7 +120,7 @@ export const Navigation = () => {
                 {menuData?.map((menuDataItem) => (
                   <DesktopMenuItems
                     menuItem={menuDataItem}
-                    whichActiveDesktopSubMenu={whichActiveDesktopSubMenu}
+                    activeDesktopSubMenu={activeDesktopSubMenu}
                     togglesetActiveDesktopSubMenu={
                       togglesetActiveDesktopSubMenu
                     }
@@ -158,11 +158,11 @@ function menuItemHasLinks(
 
 const DesktopMenuItems = ({
   menuItem,
-  whichActiveDesktopSubMenu,
+  activeDesktopSubMenu,
   togglesetActiveDesktopSubMenu,
 }: {
   menuItem: ExtractedNavigationMenusFromNavigationResponse[number];
-  whichActiveDesktopSubMenu: string;
+  activeDesktopSubMenu: string;
   togglesetActiveDesktopSubMenu: (uniqueKey: string) => void;
 }) => {
   if (menuItemHasLinks(menuItem)) {
@@ -175,9 +175,7 @@ const DesktopMenuItems = ({
         <button
           type="button"
           aria-haspopup="menu"
-          aria-expanded={
-            whichActiveDesktopSubMenu === uniqueKey ? "true" : "false"
-          }
+          aria-expanded={activeDesktopSubMenu === uniqueKey ? "true" : "false"}
           onClick={() => togglesetActiveDesktopSubMenu(uniqueKey)}
           className={desktopNavigationStyles.navigationMenuHeader}
         >
@@ -189,7 +187,7 @@ const DesktopMenuItems = ({
 
         <div
           style={{
-            display: whichActiveDesktopSubMenu === uniqueKey ? "block" : "none",
+            display: activeDesktopSubMenu === uniqueKey ? "block" : "none",
           }}
           className={`${desktopNavigationStyles.navigationMenuList}`}
         >
@@ -231,11 +229,11 @@ TODO:
 */
 const MobileMenuItems = ({
   menuItem,
-  whichActiveMobileSubMenu,
+  activeMobileSubMenu,
   setActiveMobileSubMenu,
 }: {
   menuItem: ExtractedNavigationMenusFromNavigationResponse[number];
-  whichActiveMobileSubMenu: string;
+  activeMobileSubMenu: string;
   setActiveMobileSubMenu: (uniqueKey: string) => void;
 }) => {
   if (menuItemHasLinks(menuItem)) {
@@ -248,9 +246,7 @@ const MobileMenuItems = ({
         <button
           type="button"
           aria-haspopup="menu"
-          aria-expanded={
-            whichActiveMobileSubMenu === uniqueKey ? "true" : "false"
-          }
+          aria-expanded={activeMobileSubMenu === uniqueKey ? "true" : "false"}
           onClick={() => setActiveMobileSubMenu(uniqueKey)}
           className={mobileNavigationStyles.mobileNavigationMenuHeader}
         >
@@ -261,7 +257,7 @@ const MobileMenuItems = ({
         </button>
         <ul
           className={`${mobileNavigationStyles.mobileNavigationMenuList} ${
-            whichActiveMobileSubMenu === uniqueKey
+            activeMobileSubMenu === uniqueKey
               ? mobileNavigationStyles.mobileNavigationMenuListOpen
               : ""
           }`}
