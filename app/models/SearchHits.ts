@@ -1,3 +1,7 @@
+import {
+  Hit,
+  SearchResults as SearchResultsType,
+} from "react-instantsearch/connectors";
 import { Service } from "./Service";
 import { Organization } from "./Organization";
 import { ScheduleDay, parseAlgoliaSchedule } from "./Schedule";
@@ -37,56 +41,94 @@ export type SearchHit = ServiceHit | OrganizationHit;
  * Transform Algolia search hits such that each hit has a recurringSchedule that
  * uses the time helper classes.
  */
-export const addRecurringScheduleToSeachHits = (
-  hits: SearchHit[],
-  sortBy24HourAvailability: boolean = false
-) => {
-  const hitsWithRecurringSchedule = hits.flatMap((hit) => {
-    switch (hit.type) {
-      case "resource":
-        return {
-          ...hit,
-          recurringSchedule: hit.schedule?.length
-            ? parseAlgoliaSchedule(hit.schedule)
-            : null,
-        };
-      case "service": {
-        const schedule = hit.schedule || hit.resource_schedule;
-        return {
-          ...hit,
-          recurringSchedule: schedule?.length
-            ? parseAlgoliaSchedule(schedule)
-            : null,
-        };
-      }
-      default:
-        // The item is neither a service or resource and should be removed.
-        // A 0 element array removes the item from the mapped array
-        return [];
-    }
-  });
+export const getRecurringScheduleForSeachHit = (hit: SearchHit) => {
+  let result = null;
 
-  // Some of our tile category results that may provide more urgent services need to be sorted
-  // by 24 hour availability. Moreover, in some cases, certain services, that have "24/7" in
-  // their name should be prioritized as well. Thus, this logic orders hits by 24/7
-  // availability, and if there are ties, where both services in the comparison are open 24/7,
-  // the logic breaks the tie by alphabetical rank – this is a heuristic of sorts
-  // to prioritize services with names beginning with the numeric "24".
-  return sortBy24HourAvailability
-    ? hitsWithRecurringSchedule.sort((a, b) => {
-        const aIsOpen24_7 =
-          a.recurringSchedule && a.recurringSchedule.isOpen24_7();
-        const bIsOpen24_7 =
-          b.recurringSchedule && b.recurringSchedule.isOpen24_7();
-        if (aIsOpen24_7 === bIsOpen24_7) {
-          return a.name <= b.name ? -1 : 1;
-        }
+  if (hit.type === "resource") {
+    result = {
+      recurringSchedule: hit.schedule?.length
+        ? parseAlgoliaSchedule(hit.schedule)
+        : null,
+    };
+  }
 
-        if (aIsOpen24_7) {
-          return -1;
-        }
+  if (hit.type === "service") {
+    const schedule = hit.schedule || hit.resource_schedule;
 
-        return 1;
-      })
-    : hitsWithRecurringSchedule;
+    result = {
+      recurringSchedule: schedule?.length
+        ? parseAlgoliaSchedule(schedule)
+        : null,
+    };
+  }
+
+  return result;
 };
+
+type TransformedSearchHit = Hit<
+  SearchHit & {
+    recurringSchedule: string;
+    resultIndex: string;
+    markerTag: string;
+    long_description: string;
+    path: string;
+    headline: string;
+    resource_path: string;
+    geoLocPath: string;
+    lat: string;
+    phoneNumber: string;
+    url: string;
+  }
+>;
+export interface SearchMapHitData
+  extends SearchResultsType<TransformedSearchHit> {
+  hits: TransformedSearchHit[];
+}
+
+export function transformSearchResults(
+  searchResults: SearchResultsType
+): SearchMapHitData {
+  const currentPage = searchResults.page ?? 0;
+  const hitsPerPage = searchResults.hitsPerPage ?? 20;
+
+  const transformedHits = searchResults.hits.reduce((acc, hit, index) => {
+    // TODO: Would these values ever not be set?
+    const resultIndex = `${currentPage * hitsPerPage + index + 1}`;
+    let markerTag = resultIndex;
+
+    if (index > 0) {
+      const alphabeticalIndex = (index + 9).toString(36).toUpperCase();
+      markerTag += alphabeticalIndex;
+    }
+    const phoneNumber = hit?.phones?.[0]?.number;
+    const url = hit.type === "service" ? hit.url : hit.website;
+    const basePath = hit.type === "service" ? `services` : `organizations`;
+    // handle resources and services slightly differently.
+    let entryId = hit.resource_id;
+    if (hit.type === "service") {
+      entryId = hit.service_id;
+    }
+
+    const nextHit = {
+      ...hit,
+      recurringSchedule: getRecurringScheduleForSeachHit(hit),
+      resultIndex,
+      markerTag,
+      long_description: hit.long_description || "No description, yet...",
+      path: `/${basePath}/${entryId}`,
+      headline: `${markerTag}. ${hit.name}`,
+      resource_path: hit.resource_id ? `/organizations/${hit.resource_id}` : "",
+      geoLocPath: `http://google.com/maps/dir/?api=1&destination=${hit._geoloc.lat},${hit._geoloc.lng}`,
+      phoneNumber,
+      url,
+    };
+
+    acc.push(nextHit);
+    return acc;
+  }, []);
+
+  return {
+    ...searchResults,
+    hits: transformedHits,
+  };
+}

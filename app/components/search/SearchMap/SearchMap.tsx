@@ -17,16 +17,12 @@ import config from "../../../config";
 
 export const SearchMap = ({
   hits,
-  hitsPerPage,
-  page,
   mapObject,
   setMapObject,
   setAroundLatLng,
   mobileMapIsCollapsed,
 }: {
   hits: SearchHit[];
-  hitsPerPage: number;
-  page: number;
   mapObject: google.maps.Map | null;
   setMapObject: (map: any) => void;
   setAroundLatLng: (latLng: { lat: number; lng: number }) => void;
@@ -85,11 +81,12 @@ export const SearchMap = ({
           {hits.reduce((markers, hit, index) => {
             // Add a marker for each address of each hit
             hit.addresses?.forEach((addr: any, i: number) => {
+              const key = `${hit.id}.${addr.latitude}.${addr.longitude}.${
+                addr.address_1
+              }.${addr.address_2 || ""}`;
               markers.push(
                 <SearchHitMarker
-                  key={`${hit.id}.${addr.latitude}.${addr.longitude}.${
-                    addr.address_1
-                  }.${addr.address_2 || ""}`}
+                  key={key}
                   lat={addr.latitude}
                   lng={addr.longitude}
                   tag={hit.markerTag}

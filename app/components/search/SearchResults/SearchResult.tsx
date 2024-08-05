@@ -8,14 +8,7 @@ import { removeAsterisksAndHashes } from "utils/strings";
 import ReactMarkdown from "react-markdown";
 import styles from "./SearchResults.module.scss";
 
-export const SearchResult = ({
-  hit,
-  index,
-}: {
-  hit: SearchHit;
-  index: number;
-  // categoryId: string | undefined;
-}) => {
+export const SearchResult = ({ hit }: { hit: SearchHit }) => {
   // Keep for Phase 2:
   // const [textingIsOpen, setTextingIsOpen] = useState(false);
 
@@ -75,7 +68,7 @@ export const SearchResult = ({
           <div className={styles.titleContainer}>
             <div>
               <h2 className={styles.title}>
-                {index}.{" "}
+                {hit.resultIndex}.{" "}
                 <Link
                   to={{ pathname: `/${basePath}/${hit.id}` }}
                   className={`notranslate ${styles.titleLink}`}
