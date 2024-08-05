@@ -85,13 +85,6 @@ export const SearchMap = ({
           {hits.reduce((markers, hit, index) => {
             // Add a marker for each address of each hit
             hit.addresses?.forEach((addr: any, i: number) => {
-              // Append letter to index number if there are multiple addresses per service
-              let tag = `${page * hitsPerPage + index + 1}`;
-              if (i > 0) {
-                const alphabeticalIndex = (i + 9).toString(36).toUpperCase();
-                tag += alphabeticalIndex;
-              }
-
               markers.push(
                 <SearchHitMarker
                   key={`${hit.id}.${addr.latitude}.${addr.longitude}.${
@@ -99,7 +92,7 @@ export const SearchMap = ({
                   }.${addr.address_2 || ""}`}
                   lat={addr.latitude}
                   lng={addr.longitude}
-                  tag={tag}
+                  tag={hit.markerTag}
                   hit={hit}
                 />
               );
@@ -126,7 +119,7 @@ const SearchHitMarker = ({
 }) => (
   <Tooltip
     arrow
-    html={<SearchEntry hitNumber={tag} hit={hit} />}
+    html={<SearchEntry hit={hit} />}
     interactive
     position="bottom"
     theme="light"

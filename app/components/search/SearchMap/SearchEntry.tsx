@@ -11,7 +11,6 @@ const {
 } = whiteLabel;
 
 type Props = {
-  hitNumber: string;
   hit: SearchHit;
 };
 
@@ -34,23 +33,15 @@ export default class SearchEntry extends Component<Props> {
   }
 
   render() {
-    const { hit, hitNumber } = this.props;
-    const description = hit.long_description || "No description, yet...";
+    const { hit } = this.props;
     const { recurringSchedule, type } = hit;
 
-    // handle resources and services slightly differently.
-    let basePath = "organizations";
-    let entryId = hit.resource_id;
-    if (type === "service") {
-      basePath = "services";
-      entryId = hit.service_id;
-    }
     return (
-      <Link to={{ pathname: `/${basePath}/${entryId}` }}>
+      <Link to={{ pathname: hit.path }}>
         <li className={`results-table-entry ${type}-entry`}>
           <div className="entry-details">
             <div className="entry-header">
-              <h4 className="entry-headline">{`${hitNumber}. ${hit.name}`}</h4>
+              <h4 className="entry-headline">{hit.headline}</h4>
               {hit.is_mohcd_funded && (
                 <div className="mohcd-funded">
                   <img src={mohcdSeal} alt="MOHCD seal" />
@@ -76,7 +67,7 @@ export default class SearchEntry extends Component<Props> {
             <div className="entry-body">
               <ReactMarkdown
                 className="rendered-markdown search-entry-body"
-                source={description}
+                source={hit.long_description}
               />
             </div>
           </div>
