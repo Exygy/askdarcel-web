@@ -86,14 +86,12 @@ const SearchResults = ({
           </div>
         ) : (
           <>
-            {searchQuery && (
-              <div className={styles.searchResultsHeader}>
-                <h2>{`${searchResults.nbHits} search results ${
-                  searchQuery && ` for ${searchQuery}`
-                }`}</h2>
-                <ClearSearchButton />
-              </div>
-            )}
+            <div className={styles.searchResultsHeader}>
+              <h2>{`${searchResults.nbHits} results ${
+                searchQuery && ` for ${searchQuery}`
+              }`}</h2>
+              <ClearSearchButton />
+            </div>
             {hits.map((hit, index) => (
               <SearchResult
                 hit={hit}
