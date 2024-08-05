@@ -4,7 +4,7 @@ import Our415Logo from "../assets/img/Our415_logo-hori.svg";
 import SFSeal from "../assets/img/sf-seal.png";
 import LinkSFLogo from "../assets/img/link-sf.png";
 import config from "../config";
-import styles from "../components/ui/Navigation.module.scss";
+import styles from "../components/ui/Navigation/Navigation.module.scss";
 
 // Include new white label here
 type WhiteLabelSiteKey =
