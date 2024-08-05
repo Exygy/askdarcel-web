@@ -118,10 +118,6 @@ export const Navigation = () => {
                 {menuData?.map((menuDataItem) => (
                   <DesktopMenuItems
                     menuItem={menuDataItem}
-                    activeDesktopSubMenu={activeDesktopSubMenu}
-                    togglesetActiveDesktopSubMenu={
-                      togglesetActiveDesktopSubMenu
-                    }
                     key={menuDataItem.id}
                   />
                 ))}
