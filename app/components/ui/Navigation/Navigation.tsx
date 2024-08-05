@@ -16,31 +16,29 @@ const PAGE_WRAP_ID = "page-wrap";
 
 export const Navigation = () => {
   const { data: navigationResponse } = useNavigationData();
-  const [mobileNavigationSidebarIsOpen, setMobileNavigationSidebarIsOpen] =
-    useState(false);
-  const [activeMobileSubMenu, setActiveMobileSubMenu] = useState("");
-  const toggleMobileNav = () =>
-    setMobileNavigationSidebarIsOpen((prev) => !prev);
+  const [mobileNavigationIsOpen, setMobileNavigationIsOpen] = useState(false);
+  const [activeMobileSubMenu, setActiveMobileSubMenu] = useState(null);
+  const toggleMobileNav = () => setMobileNavigationIsOpen((prev) => !prev);
 
   const logoData = extractLogoFromNavigationResponse(navigationResponse);
   const menuData =
     extractNavigationMenusFromNavigationResponse(navigationResponse);
   const mobileSubMenuIsActive = !!activeMobileSubMenu;
 
-  const pushPanelIconDisplay = () => {
-    if (mobileNavigationSidebarIsOpen && mobileSubMenuIsActive) {
+  const mobileNavIconDisplay = () => {
+    if (mobileNavigationIsOpen && mobileSubMenuIsActive) {
       return "fa-arrow-left";
     }
-    if (mobileNavigationSidebarIsOpen) {
+    if (mobileNavigationIsOpen) {
       return "fa-xmark";
     }
 
     return ` fa-bars`;
   };
 
-  const handleActivatePushPanelClick = () => {
+  const handleOpenMobileNavigation = () => {
     if (mobileSubMenuIsActive) {
-      setActiveMobileSubMenu("");
+      setActiveMobileSubMenu(null);
     } else {
       toggleMobileNav();
     }
@@ -49,8 +47,8 @@ export const Navigation = () => {
   return (
     <>
       <MobileNavigation
-        isOpen={mobileNavigationSidebarIsOpen}
-        setIsOpen={setMobileNavigationSidebarIsOpen}
+        isOpen={mobileNavigationIsOpen}
+        setIsOpen={setMobileNavigationIsOpen}
         menuData={menuData}
       />
       <div id={PAGE_WRAP_ID}>
@@ -80,10 +78,10 @@ export const Navigation = () => {
             <button
               type="button"
               aria-label="navigation menu"
-              className={`fas ${pushPanelIconDisplay()} ${
+              className={`fas ${mobileNavIconDisplay()} ${
                 styles.activatePushPanelButton
               }`}
-              onClick={handleActivatePushPanelClick}
+              onClick={handleOpenMobileNavigation}
             />
           </div>
         </nav>
