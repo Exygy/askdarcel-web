@@ -30,19 +30,18 @@ export const OppEventCardSection = (props: OppEventCardSectionProps) => {
       {events && (
         <div className={`${styles.cardsContainer} ${styles[sectionType]}`}>
           {events?.map((event): JSX.Element => {
-            const {
-              attributes: { title, id, date, image },
-            } = event;
-            const cardImage = image?.image?.data?.attributes.url ?? "";
+            const { attributes } = event;
+            const eventData = {
+              title: attributes.title,
+              id: attributes.id,
+              calendarEvent: attributes.calendar_event,
+              imageUrl: attributes.image?.image?.data?.attributes.url || null,
+            };
 
             return (
               <OppEventCard
-                key={title}
-                title={title}
-                slug={id}
-                startDate={new Date(date?.startdate)}
-                endDate={new Date(date?.enddate)}
-                image={cardImage}
+                key={eventData.title}
+                details={eventData}
                 sectionType={sectionType}
               />
             );
@@ -52,19 +51,18 @@ export const OppEventCardSection = (props: OppEventCardSectionProps) => {
       {opportunities && (
         <div className={`${styles.cardsContainer} ${styles[sectionType]}`}>
           {opportunities?.map((opp): JSX.Element => {
-            const {
-              attributes: { title, id, startdate, enddate, image },
-            } = opp;
-            const cardImage = image?.image?.data?.attributes.url ?? "";
+            const { attributes } = opp;
+            const oppData = {
+              title: attributes.title,
+              id: attributes.id,
+              calendarEvent: attributes.calendar_event,
+              imageUrl: attributes.image?.image?.data?.attributes.url || null,
+            };
 
             return (
               <OppEventCard
-                key={title}
-                title={title}
-                slug={id}
-                startDate={new Date(startdate)}
-                endDate={new Date(enddate)}
-                image={cardImage}
+                key={oppData.title}
+                details={oppData}
                 sectionType={sectionType}
               />
             );
