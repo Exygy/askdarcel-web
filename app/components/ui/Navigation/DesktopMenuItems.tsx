@@ -43,12 +43,14 @@ const DesktopMenuItems = ({
   };
 
   useEffect(() => {
+    const currentRef = menuRef.current;
+
     document.addEventListener("mousedown", handleClickOutside);
-    menuRef.current?.addEventListener("focusout", handleFocusOut);
+    currentRef?.addEventListener("focusout", handleFocusOut);
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
-      menuRef.current?.removeEventListener("focusout", handleFocusOut);
+      currentRef?.removeEventListener("focusout", handleFocusOut);
     };
   }, []);
 

@@ -1,7 +1,7 @@
 import React from "react";
-import MobileMenuItems from "./MobileMenuItems";
 import styles from "components/ui/Navigation/MobileNavigation.module.scss";
 import { push as SidebarPushPanel } from "react-burger-menu";
+import MobileMenuItems from "./MobileMenuItems";
 import { ExtractedNavigationMenusFromNavigationResponse } from "../../../models/Strapi";
 import { OUTER_CONTAINER_ID } from "../../../App";
 
@@ -29,7 +29,7 @@ const MobileNavigation = ({
   menuData,
 }: {
   isOpen: boolean;
-  setIsOpen: (isOpen: boolean) => void;
+  setIsOpen: (_: boolean) => void;
   menuData: ExtractedNavigationMenusFromNavigationResponse | null;
 }) => {
   const [activeMobileSubMenu, setActiveMobileSubMenu] = React.useState("");
