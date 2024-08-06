@@ -1,9 +1,10 @@
 import React from "react";
 import styles from "components/ui/Navigation/MobileNavigation.module.scss";
-import { push as SidebarPushPanel } from "react-burger-menu"; // TODO: use slide and move close button into sidebar
+import { push as SidebarPushPanel } from "react-burger-menu"; // TODO: use slide instead of push and move close button into sidebar
 import MobileMenuItems from "./MobileMenuItems";
 import { ExtractedNavigationMenusFromNavigationResponse } from "../../../models/Strapi";
 import { OUTER_CONTAINER_ID } from "../../../App";
+import { GoogleTranslate } from "../GoogleTranslate";
 
 const PAGE_WRAP_ID = "page-wrap";
 const BURGER_STYLES = {
@@ -59,6 +60,11 @@ const MobileNavigation = ({
             key={menuDataItem.id}
           />
         ))}
+        {isOpen && (
+          <div className={styles.mobileNavigationMenuTranslate}>
+            <GoogleTranslate />
+          </div>
+        )}
       </div>
     </SidebarPushPanel>
   );
