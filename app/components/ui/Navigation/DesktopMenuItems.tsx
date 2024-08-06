@@ -39,7 +39,6 @@ const DesktopMenuItems = ({
       !menuRef.current.contains(event.relatedTarget as Node)
     ) {
       setActiveDesktopSubMenu(null);
-      menuRef.current.blur();
     }
   };
 
