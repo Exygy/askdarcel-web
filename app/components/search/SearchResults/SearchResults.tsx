@@ -9,8 +9,6 @@ import { SearchMap } from "components/search/SearchMap/SearchMap";
 import { formatPhoneNumber, renderAddressMetadata } from "utils";
 import { removeAsterisksAndHashes } from "utils/strings";
 import ResultsPagination from "components/search/Pagination/ResultsPagination";
-// import { Texting } from "components/Texting";
-// import { TextListing } from "components/Texting/Texting";
 import { Tooltip } from "react-tippy";
 import { LabelTag } from "components/ui/LabelTag";
 import {
@@ -92,7 +90,6 @@ const SearchResults = ({
               <SearchResult
                 hit={hit}
                 index={currentPage * hitsPerPage + index + 1}
-                // categoryId={categoryId} // Keep for category ticket
                 key={`${hit.id} - ${hit.name}`}
               />
             ))}
@@ -113,54 +110,7 @@ const SearchResults = ({
   );
 };
 
-const SearchResult = ({
-  hit,
-  index,
-}: {
-  hit: SearchHit;
-  index: number;
-  // categoryId: string | undefined;
-}) => {
-  // Keep for Phase 2:
-  // const [textingIsOpen, setTextingIsOpen] = useState(false);
-
-  // let listing: TextListing;
-  // if (hit.type === "service") {
-  //   listing = {
-  //     listingName: hit.name,
-  //     type: hit.type,
-  //     serviceId: hit.id,
-  //   };
-  // } else {
-  //   listing = {
-  //     listingName: hit.name,
-  //     type: hit.type,
-  //     resourceId: hit.id,
-  //   };
-  // }
-
-  // const toggleTextingModal = () => setTextingIsOpen(!textingIsOpen);
-  // TODO: this bookmarkAdded boolean should be set in accordance with the value of the bookmark model
-  // returned by the API. Fetching the model from the API will need to be done in such a way that it does not
-  // block the rendering of the search results and yet does not cause the button to flash in a distracting manner
-
-  // const texting = (
-  //   <div
-  //     className={styles.sideLink}
-  //     data-field="text-me"
-  //     role="button"
-  //     tabIndex={0}
-  //     onClick={toggleTextingModal}
-  //   >
-  //     <img
-  //       src={icon("text-message")}
-  //       alt="chat-bubble"
-  //       className={styles.sideLinkIcon}
-  //     />
-  //     <div className={styles.sideLinkText}>Text me the info</div>
-  //   </div>
-  // );
-
+const SearchResult = ({ hit, index }: { hit: SearchHit; index: number }) => {
   const phoneNumber = hit?.phones?.[0]?.number;
   const url = hit.type === "service" ? hit.url : hit.website;
   const basePath = hit.type === "service" ? `services` : `organizations`;
@@ -169,12 +119,6 @@ const SearchResult = ({
 
   return (
     <div className={styles.searchResult}>
-      {/* Keep for Phase 2: */}
-      {/* <Texting
-        closeModal={toggleTextingModal}
-        listing={listing}
-        isShowing={textingIsOpen}
-      /> */}
       <div className={styles.searchResultContentContainer}>
         <div>
           <div className={styles.titleContainer}>
