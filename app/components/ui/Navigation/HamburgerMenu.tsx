@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 import { NavLink } from "react-router-dom";
 import { push as Menu, State } from "react-burger-menu";
-import whiteLabel from "../../utils/whitelabel";
+import whiteLabel from "../../../utils/whitelabel";
 import styles from "./HamburgerMenu.module.scss";
 
 const { showReportCrisis } = whiteLabel;
