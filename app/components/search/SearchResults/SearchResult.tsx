@@ -1,5 +1,5 @@
 import React from "react";
-import { SearchHit } from "models";
+import { TransformedSearchHit } from "models";
 import { Link } from "react-router-dom";
 import { LabelTag } from "components/ui/LabelTag";
 import { Tooltip } from "react-tippy";
@@ -8,7 +8,7 @@ import { removeAsterisksAndHashes } from "utils/strings";
 import ReactMarkdown from "react-markdown";
 import styles from "./SearchResults.module.scss";
 
-export const SearchResult = ({ hit }: { hit: SearchHit }) => {
+export const SearchResult = ({ hit }: { hit: TransformedSearchHit }) => {
   // Keep for Phase 2:
   // const [textingIsOpen, setTextingIsOpen] = useState(false);
 
@@ -68,7 +68,7 @@ export const SearchResult = ({ hit }: { hit: SearchHit }) => {
           <div className={styles.titleContainer}>
             <div>
               <h2 className={styles.title}>
-                {hit.resultIndex}.{" "}
+                {hit.resultIndexDisplay}.{" "}
                 <Link
                   to={{ pathname: `/${basePath}/${hit.id}` }}
                   className={`notranslate ${styles.titleLink}`}
@@ -118,8 +118,8 @@ export const SearchResult = ({ hit }: { hit: SearchHit }) => {
             <ReactMarkdown
               className={`rendered-markdown ${styles.description}`}
               source={
-                hit.long_description
-                  ? removeAsterisksAndHashes(hit.long_description)
+                hit.longDescription
+                  ? removeAsterisksAndHashes(hit.longDescription)
                   : undefined
               }
               linkTarget="_blank"

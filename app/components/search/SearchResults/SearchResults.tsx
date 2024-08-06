@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  connectStateResults,
-  SearchResults as SearchResultsType,
-} from "react-instantsearch/connectors";
+import { connectStateResults } from "react-instantsearch/connectors";
 import { SearchMap } from "components/search/SearchMap/SearchMap";
 import ResultsPagination from "components/search/Pagination/ResultsPagination";
 import { SearchResult } from "components/search/SearchResults/SearchResult";
@@ -10,6 +7,7 @@ import { SearchResult } from "components/search/SearchResults/SearchResult";
 // import { TextListing } from "components/Texting/Texting";
 import {
   SearchMapHitData,
+  SearchResultsResponse,
   TransformedSearchHit,
   transformSearchResults,
 } from "../../../models/SearchHits";
@@ -23,7 +21,7 @@ const SearchResults = ({
   setAroundLatLng,
   searchQuery,
 }: {
-  searchResults: SearchResultsType;
+  searchResults: SearchResultsResponse;
   mobileMapIsCollapsed: boolean;
   setAroundLatLng: (latLng: { lat: number; lng: number }) => void;
   searchQuery?: string | null;

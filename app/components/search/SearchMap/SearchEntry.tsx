@@ -67,7 +67,7 @@ export default class SearchEntry extends Component<Props> {
             <div className="entry-body">
               <ReactMarkdown
                 className="rendered-markdown search-entry-body"
-                source={hit.long_description}
+                source={hit.longDescription}
               />
             </div>
           </div>

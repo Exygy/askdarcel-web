@@ -1,6 +1,6 @@
 import {
   Hit,
-  SearchResults as SearchResultsType,
+  SearchResults as AlogliaSearchResultsType,
 } from "react-instantsearch/connectors";
 import { Service } from "./Service";
 import { Organization } from "./Organization";
@@ -26,7 +26,6 @@ export interface ServiceHit
   service_id: number;
   service_of: string;
 }
-
 export interface OrganizationHit
   extends Omit<Organization, "schedule" | "recurringSchedule">,
     BaseHit {
@@ -34,67 +33,58 @@ export interface OrganizationHit
   schedule: ScheduleDay[];
   recurringSchedule: RecurringSchedule | null;
 }
-
 export type SearchHit = ServiceHit | OrganizationHit;
-
-/**
- * Transform Algolia search hits such that each hit has a recurringSchedule that
- * uses the time helper classes.
- */
-export const getRecurringScheduleForSeachHit = (hit: SearchHit) => {
-  let result = null;
-
-  if (hit.type === "resource") {
-    result = {
-      recurringSchedule: hit.schedule?.length
-        ? parseAlgoliaSchedule(hit.schedule)
-        : null,
-    };
-  }
-
-  if (hit.type === "service") {
-    const schedule = hit.schedule || hit.resource_schedule;
-
-    result = {
-      recurringSchedule: schedule?.length
-        ? parseAlgoliaSchedule(schedule)
-        : null,
-    };
-  }
-
-  return result;
-};
-
+export type SearchResultsResponse = AlogliaSearchResultsType<SearchHit>;
 export type TransformedSearchHit = Hit<
   SearchHit & {
-    recurringSchedule: string;
-    resultIndex: string;
+    recurringSchedule: RecurringSchedule | null;
+    resultIndexDisplay: string;
     markerTag: string;
-    long_description: string;
+    longDescription: string;
     path: string;
     headline: string;
     resource_path: string;
     geoLocPath: string;
-    lat: string;
     phoneNumber: string;
     url: string;
   }
 >;
 export interface SearchMapHitData
-  extends SearchResultsType<TransformedSearchHit> {
+  extends AlogliaSearchResultsType<TransformedSearchHit> {
   hits: TransformedSearchHit[];
 }
 
+// TODO: Determine if we need this code
+export const getRecurringScheduleForSeachHit = (
+  hit: SearchHit
+): RecurringSchedule | null => {
+  let result = null;
+
+  if (hit.type === "resource") {
+    result = hit.schedule?.length ? parseAlgoliaSchedule(hit.schedule) : null;
+  }
+
+  if (hit.type === "service") {
+    const schedule = hit.schedule || hit.resource_schedule;
+
+    result = schedule?.length ? parseAlgoliaSchedule(schedule) : null;
+  }
+
+  return result;
+};
+
+//
 export function transformSearchResults(
-  searchResults: SearchResultsType
+  searchResults: SearchResultsResponse
 ): SearchMapHitData {
+  // Algolia's api response types these properties as optional, although in practice they always appear
+  // in results in our searches
   const currentPage = searchResults.page ?? 0;
   const hitsPerPage = searchResults.hitsPerPage ?? 20;
 
   const transformedHits = searchResults.hits.reduce((acc, hit, index) => {
-    // TODO: Would these values ever not be set?
-    const resultIndex = `${currentPage * hitsPerPage + index + 1}`;
-    let markerTag = resultIndex;
+    const resultIndexDisplay = `${currentPage * hitsPerPage + index + 1}`;
+    let markerTag = resultIndexDisplay;
 
     if (index > 0) {
       const alphabeticalIndex = (index + 9).toString(36).toUpperCase();
@@ -112,9 +102,9 @@ export function transformSearchResults(
     const nextHit = {
       ...hit,
       recurringSchedule: getRecurringScheduleForSeachHit(hit),
-      resultIndex,
+      resultIndexDisplay,
       markerTag,
-      long_description: hit.long_description || "No description, yet...",
+      longDescription: hit.long_description || "No description, yet...",
       path: `/${basePath}/${entryId}`,
       headline: `${markerTag}. ${hit.name}`,
       resource_path: hit.resource_id ? `/organizations/${hit.resource_id}` : "",
@@ -125,7 +115,7 @@ export function transformSearchResults(
 
     acc.push(nextHit);
     return acc;
-  }, []);
+  }, [] as TransformedSearchHit[]);
 
   return {
     ...searchResults,
