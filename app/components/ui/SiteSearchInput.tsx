@@ -25,6 +25,7 @@ export const SiteSearchInput = () => {
 
     if (query) {
       searchState.query = query;
+      searchState.page = "1";
     } else {
       delete searchState.query;
     }
