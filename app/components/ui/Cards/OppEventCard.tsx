@@ -38,9 +38,11 @@ export const OppEventCard = (props: OppEventCardProps) => {
           <h4 className={styles.contentTitle}>
             <a href={id}>{title}</a>
           </h4>
-          <div className={styles.contentTime}>
-            <FormattedDate calendarEvent={calendarEvent} />
-          </div>
+          {calendarEvent && (
+            <div className={styles.contentTime}>
+              <FormattedDate calendarEvent={calendarEvent} />
+            </div>
+          )}
         </div>
 
         <Button arrowVariant="after" variant="linkBlue" size="lg">
