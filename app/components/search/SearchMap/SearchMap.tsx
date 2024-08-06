@@ -12,7 +12,7 @@ import {
   CustomMarker,
 } from "components/ui/MapElements";
 import "./SearchMap.scss";
-import { SearchHit } from "../../../models";
+import { TransformedSearchHit } from "../../../models";
 import config from "../../../config";
 
 export const SearchMap = ({
@@ -22,7 +22,7 @@ export const SearchMap = ({
   setAroundLatLng,
   mobileMapIsCollapsed,
 }: {
-  hits: SearchHit[];
+  hits: TransformedSearchHit[];
   mapObject: google.maps.Map | null;
   setMapObject: (map: any) => void;
   setAroundLatLng: (latLng: { lat: number; lng: number }) => void;
@@ -78,14 +78,15 @@ export const SearchMap = ({
           options={createMapOptions}
         >
           <UserLocationMarker lat={lat} lng={lng} key={1} />
-          {hits.reduce((markers, hit, index) => {
+          {hits.reduce((markers, hit) => {
             // Add a marker for each address of each hit
-            hit.addresses?.forEach((addr: any, i: number) => {
+            hit.addresses?.forEach((addr: any) => {
               const key = `${hit.id}.${addr.latitude}.${addr.longitude}.${
                 addr.address_1
               }.${addr.address_2 || ""}`;
+
               markers.push(
-                <SearchHitMarker
+                <GoogleSearchHitMarkerWorkaround
                   key={key}
                   lat={addr.latitude}
                   lng={addr.longitude}
@@ -104,14 +105,15 @@ export const SearchMap = ({
 
 // The GoogleMap component expects children to be passed lat/long,
 // even though we don't use them here.
+//
 /* eslint-disable react/no-unused-prop-types */
-const SearchHitMarker = ({
+const GoogleSearchHitMarkerWorkaround = ({
   hit,
   tag,
 }: {
   lat: any;
   lng: any;
-  hit: SearchHit;
+  hit: TransformedSearchHit;
   tag: string;
 }) => (
   <Tooltip

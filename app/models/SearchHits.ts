@@ -65,7 +65,7 @@ export const getRecurringScheduleForSeachHit = (hit: SearchHit) => {
   return result;
 };
 
-type TransformedSearchHit = Hit<
+export type TransformedSearchHit = Hit<
   SearchHit & {
     recurringSchedule: string;
     resultIndex: string;

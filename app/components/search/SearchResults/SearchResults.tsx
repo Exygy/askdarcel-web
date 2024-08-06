@@ -10,6 +10,7 @@ import { SearchResult } from "components/search/SearchResults/SearchResult";
 // import { TextListing } from "components/Texting/Texting";
 import {
   SearchMapHitData,
+  TransformedSearchHit,
   transformSearchResults,
 } from "../../../models/SearchHits";
 import styles from "./SearchResults.module.scss";
@@ -47,6 +48,19 @@ const SearchResults = ({
 
   const searchMapHitData: SearchMapHitData =
     transformSearchResults(searchResults);
+  const hasNoResults = searchMapHitData.nbHits === 0;
+
+  const NoResultsDisplay = () => (
+    <div className={`${styles.noResultsMessage}`}>
+      <div className={styles.noResultsText}>
+        No results {searchQuery && `for ${` "${searchQuery}" `}`} found in your
+        area.
+        <br /> Try a different location, filter, or search term.
+      </div>
+
+      {searchQuery && <ClearSearchButton />}
+    </div>
+  );
 
   return (
     <div className={styles.searchResultsAndMapContainer}>
@@ -55,22 +69,8 @@ const SearchResults = ({
           mobileMapIsCollapsed ? styles.mobileMapIsCollapsed : ""
         }`}
       >
-        {!searchMapHitData.hits.length ? (
-          <div
-            className={`${styles.noResultsMessage} ${
-              searchMapHitData.hits && searchMapHitData.hits.length
-                ? styles.hidden
-                : ""
-            }`}
-          >
-            <div className={styles.noResultsText}>
-              No results {searchQuery && `for ${` "${searchQuery}" `}`} found in
-              your area.
-              <br /> Try a different location, filter, or search term.
-            </div>
-
-            {searchQuery && <ClearSearchButton />}
-          </div>
+        {hasNoResults ? (
+          <NoResultsDisplay />
         ) : (
           <>
             {searchQuery && (
@@ -81,14 +81,10 @@ const SearchResults = ({
                 <ClearSearchButton />
               </div>
             )}
-            {searchMapHitData.hits.map((hit) => (
+            {searchMapHitData.hits.map((hit: TransformedSearchHit) => (
               <SearchResult hit={hit} key={`${hit.id} - ${hit.name}`} />
             ))}
-            <ResultsPagination
-              noResults={
-                !searchMapHitData.hits || !searchMapHitData.hits.length
-              }
-            />
+            <ResultsPagination noResults={hasNoResults} />
           </>
         )}
       </div>
