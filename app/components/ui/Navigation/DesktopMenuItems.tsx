@@ -77,10 +77,10 @@ const DesktopMenuItems = ({
           style={{
             display: activeDesktopSubMenu === uniqueKey ? "block" : "none",
           }}
-          className={`${styles.navigationMenuList}`}
+          className={`${styles.navigationSubMenu}`}
         >
           {menuItem.link.map((linkItem: StrapiModel.Link) => (
-            <span key={linkItem.id} className={styles.navigationMenuListItem}>
+            <span key={linkItem.id} className={styles.navigationSubMenuItem}>
               <Link
                 to={linkItem.url}
                 className={styles.navigationMenuLink}

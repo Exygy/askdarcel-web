@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "components/ui/Navigation/MobileNavigation.module.scss";
-import { push as SidebarPushPanel } from "react-burger-menu";
+import { push as SidebarPushPanel } from "react-burger-menu"; // TODO: use slide and move close button into sidebar
 import MobileMenuItems from "./MobileMenuItems";
 import { ExtractedNavigationMenusFromNavigationResponse } from "../../../models/Strapi";
 import { OUTER_CONTAINER_ID } from "../../../App";
@@ -46,6 +46,7 @@ const MobileNavigation = ({
       pageWrapId={PAGE_WRAP_ID}
       right
       styles={BURGER_STYLES}
+      className={styles.sidebar}
       width="275px"
     >
       <div className={styles.mobileNavigationContainer}>

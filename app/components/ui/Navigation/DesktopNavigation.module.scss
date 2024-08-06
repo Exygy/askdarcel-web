@@ -18,7 +18,7 @@
   }
 }
 
-.navigationMenuList {
+.navigationSubMenu {
   position: absolute;
   z-index: 999;
   top: 65px;
@@ -44,7 +44,7 @@
   }
 }
 
-.navigationMenuListItem,
+.navigationSubMenuItem,
 .navigationMenuHeader {
   a {
     padding: $spacing-2 $spacing-4;
@@ -75,7 +75,7 @@
   }
 }
 
-.navigationMenuList .navigationMenuLink {
+.navigationSubMenu .navigationMenuLink {
   // flex ensures each menu link fills width of widest item
   display: flex;
   text-decoration: none;

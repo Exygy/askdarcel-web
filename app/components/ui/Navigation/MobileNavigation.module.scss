@@ -3,6 +3,12 @@
 
 // Edit naming conventions for clarity
 
+.sidebar {
+  @media screen and (min-width: $break-tablet-s) {
+    display: none;
+  }
+}
+
 .mobileNavigationMenuContainer {
   display: flex;
   flex-direction: row;
@@ -13,10 +19,6 @@
     font-size: 18px;
     font-family: Montserrat;
     font-weight: 500;
-  }
-
-  @media screen and (min-width: $break-tablet-s) {
-    display: none;
   }
 }
 
