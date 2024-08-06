@@ -27,12 +27,14 @@ const DesktopMenuItems = ({
     setActiveDesktopSubMenu((prev) => (prev === uniqueKey ? null : uniqueKey));
   };
 
+  //   If submenu is open and user clicks away from it, close the submenu
   const handleClickOutside = (event: MouseEvent) => {
     if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
       setActiveDesktopSubMenu(null);
     }
   };
 
+  //   If submenu is open and user tab navigates away from it, close the submenu
   const handleFocusOut = (event: FocusEvent) => {
     if (
       menuRef.current &&
