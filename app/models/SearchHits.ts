@@ -18,11 +18,11 @@ export interface ServiceHit
   extends Omit<Service, "schedule" | "recurringSchedule" | "instructions">,
     BaseHit {
   type: "service";
-  instructions: string[];
-  phones: PhoneNumber[];
+  instructions: string[] | [];
+  phones: PhoneNumber[] | [];
   recurringSchedule: RecurringSchedule | null;
-  resource_schedule: ScheduleDay[];
-  schedule: ScheduleDay[];
+  resource_schedule: ScheduleDay[] | [];
+  schedule: ScheduleDay[] | [];
   service_id: number;
   service_of: string;
 }
@@ -33,8 +33,8 @@ export interface OrganizationHit
   schedule: ScheduleDay[];
   recurringSchedule: RecurringSchedule | null;
 }
-export type SearchHit = ServiceHit | OrganizationHit;
 export type SearchResultsResponse = AlogliaSearchResultsType<SearchHit>;
+export type SearchHit = ServiceHit | OrganizationHit;
 export type TransformedSearchHit = Hit<
   SearchHit & {
     recurringSchedule: RecurringSchedule | null;
@@ -45,8 +45,8 @@ export type TransformedSearchHit = Hit<
     headline: string;
     resource_path: string;
     geoLocPath: string;
-    phoneNumber: string;
-    url: string;
+    phoneNumber: string | null;
+    websiteUrl: string | null;
   }
 >;
 export interface SearchMapHitData
@@ -90,8 +90,8 @@ export function transformSearchResults(
       const alphabeticalIndex = (index + 9).toString(36).toUpperCase();
       markerTag += alphabeticalIndex;
     }
-    const phoneNumber = hit?.phones?.[0]?.number;
-    const url = hit.type === "service" ? hit.url : hit.website;
+    const phoneNumber = hit?.phones?.[0]?.number || null;
+    const websiteUrl = hit.type === "service" ? hit.url : hit.website;
     const basePath = hit.type === "service" ? `services` : `organizations`;
     // handle resources and services slightly differently.
     let entryId = hit.resource_id;
@@ -99,7 +99,7 @@ export function transformSearchResults(
       entryId = hit.service_id;
     }
 
-    const nextHit = {
+    const nextHit: TransformedSearchHit = {
       ...hit,
       recurringSchedule: getRecurringScheduleForSeachHit(hit),
       resultIndexDisplay,
@@ -110,7 +110,7 @@ export function transformSearchResults(
       resource_path: hit.resource_id ? `/organizations/${hit.resource_id}` : "",
       geoLocPath: `http://google.com/maps/dir/?api=1&destination=${hit._geoloc.lat},${hit._geoloc.lng}`,
       phoneNumber,
-      url,
+      websiteUrl,
     };
 
     acc.push(nextHit);
