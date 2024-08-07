@@ -98,9 +98,9 @@ export const Navigation = () => {
             />
           </div>
         </nav>
-        <div className="container">
+        <main className="container" id="main">
           <Router />
-        </div>
+        </main>
       </div>
     </>
   );
