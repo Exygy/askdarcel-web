@@ -1,7 +1,13 @@
-@import "../../styles/utils/_helpers.scss";
-@import "../../styles/utils/_colors.scss";
+@import "../../../styles/utils/_helpers.scss";
+@import "../../../styles/utils/_colors.scss";
 
 // Edit naming conventions for clarity
+
+.sidebar {
+  @media screen and (min-width: $break-tablet-s) {
+    display: none;
+  }
+}
 
 .mobileNavigationMenuContainer {
   display: flex;
@@ -97,4 +103,8 @@
   font-family: Montserrat;
   font-weight: 500;
   font-size: 16px;
+}
+
+.mobileNavigationMenuTranslate {
+  padding: $general-spacing-md;
 }

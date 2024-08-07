@@ -3,8 +3,6 @@ import { connectStateResults } from "react-instantsearch/connectors";
 import { SearchMap } from "components/search/SearchMap/SearchMap";
 import ResultsPagination from "components/search/Pagination/ResultsPagination";
 import { SearchResult } from "components/search/SearchResults/SearchResult";
-// import { Texting } from "components/Texting";
-// import { TextListing } from "components/Texting/Texting";
 import {
   SearchMapHitData,
   SearchResultsResponse,
@@ -14,7 +12,6 @@ import {
 import styles from "./SearchResults.module.scss";
 import ClearSearchButton from "../Refinements/ClearSearchButton";
 
-// @param {boolean} mobileMapIsCollapsed -
 const SearchResults = ({
   searchResults,
   mobileMapIsCollapsed,
