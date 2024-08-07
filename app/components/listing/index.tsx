@@ -6,7 +6,6 @@ export * from "./OrganizationCard";
 export * from "./OrganizationDetails";
 export * from "./RelativeOpeningTime";
 export * from "../ui/Cards/ServiceCard";
-export * from "./ServiceDetails";
 export * from "./StreetViewImage";
 export * from "./ContactInfoTableRows";
 export * from "./TableOfLocationTimes";
