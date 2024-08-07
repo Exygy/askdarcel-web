@@ -155,13 +155,6 @@ const InnerSearchResults = ({
     lng: userLocation.lng,
   });
 
-  useEffect(() => {
-    const qsParams = qs.parse(window.location.search.slice(1));
-    qsParams.page = "1";
-    const newUrl = `?${qs.stringify(qsParams)}`;
-    history.replace(newUrl);
-  }, [untranslatedQuery, history]);
-
   return (
     <div className={styles.container}>
       <Helmet>
