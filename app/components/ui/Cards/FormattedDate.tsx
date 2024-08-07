@@ -21,13 +21,15 @@ export const FormattedDate = ({
     const endTimeDateStr = `${calendarEvent.startdate} ${calendarEvent.endtime}`;
     const formattedStartTime = formatEventTime(startTimeDateStr);
     const formattedEndTime = formatEventTime(endTimeDateStr);
-    const endTimeDisplay = calendarEvent.endtime ? `- ${formattedEndTime}` : "";
-    // Defensively coding for a missing start time until we get clearer direction from client about required data
+
+    // Defensively coding for a missing time fields until we get clearer direction from client about required data
     // fields
+    const endTimeDisplay =
+      formattedEndTime === "Invalid Date" ? "" : `- ${formattedEndTime}`;
+    const starTimeDisplay =
+      formattedStartTime === "Invalid Date" ? -1 : formattedStartTime;
     const timeDisplay =
-      formattedStartTime === "Invalid Date"
-        ? ""
-        : `· ${formattedStartTime} ${endTimeDisplay}`;
+      starTimeDisplay === -1 ? "" : `· ${formattedStartTime} ${endTimeDisplay}`;
 
     return <p>{`${formattedStartDate} ${timeDisplay}`}</p>;
   }
