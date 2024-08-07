@@ -22,12 +22,14 @@ export const FormattedDate = ({
     const formattedStartTime = formatEventTime(startTimeDateStr);
     const formattedEndTime = formatEventTime(endTimeDateStr);
     const endTimeDisplay = calendarEvent.endtime ? `- ${formattedEndTime}` : "";
-    const timeDisplay = formattedStartTime ? `· ${formattedStartTime} ${endTimeDisplay}` : "";
+    // Defensively coding for a missing start time until we get clearer direction from client about required data
+    // fields
+    const timeDisplay =
+      formattedStartTime === "Invalid Date"
+        ? ""
+        : `· ${formattedStartTime} ${endTimeDisplay}`;
 
     return <p>{`${formattedStartDate} ${timeDisplay}`}</p>;
-    return (
-      <p>{`${formattedStartDate} · ${formattedStartTime} ${endTimeDisplay}`}</p>
-    );
   }
 
   return <p>{`${formattedStartDate} - ${formattedEndDate}`}</p>;
