@@ -15,7 +15,7 @@ export const SearchResult = ({ hit }: { hit: TransformedSearchHit }) => (
         <div className={styles.titleContainer}>
           <div>
             <h2 className={styles.title}>
-              {hit.resultIndexDisplay}.{" "}
+              {hit.indexDisplay}.{" "}
               <Link
                 to={{ pathname: hit.path }}
                 className={`notranslate ${styles.titleLink}`}

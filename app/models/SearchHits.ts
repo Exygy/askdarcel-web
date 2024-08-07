@@ -38,7 +38,7 @@ export type SearchHit = ServiceHit | OrganizationHit;
 export type TransformedSearchHit = Hit<
   SearchHit & {
     recurringSchedule: RecurringSchedule | null;
-    resultIndexDisplay: string;
+    indexDisplay: string;
     markerTag: string;
     longDescription: string;
     path: string;
@@ -83,8 +83,8 @@ export function transformSearchResults(
   const hitsPerPage = searchResults.hitsPerPage ?? 20;
 
   const transformedHits = searchResults.hits.reduce((acc, hit, index) => {
-    const resultIndexDisplay = `${currentPage * hitsPerPage + index + 1}`;
-    let markerTag = resultIndexDisplay;
+    const indexDisplay = `${currentPage * hitsPerPage + index + 1}`;
+    let markerTag = indexDisplay;
 
     if (index > 0) {
       const alphabeticalIndex = (index + 9).toString(36).toUpperCase();
@@ -102,12 +102,11 @@ export function transformSearchResults(
     const nextHit: TransformedSearchHit = {
       ...hit,
       recurringSchedule: getRecurringScheduleForSeachHit(hit),
-      resultIndexDisplay,
+      indexDisplay,
       markerTag,
       longDescription: hit.long_description || "No description, yet...",
       path: `/${basePath}/${entryId}`,
       headline: `${markerTag}. ${hit.name}`,
-      resource_path: hit.resource_id ? `/organizations/${hit.resource_id}` : "",
       geoLocPath: `http://google.com/maps/dir/?api=1&destination=${hit._geoloc.lat},${hit._geoloc.lng}`,
       phoneNumber,
       websiteUrl,
