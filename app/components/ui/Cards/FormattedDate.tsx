@@ -3,17 +3,12 @@ import React from "react";
 import formatEventDate from "utils/formatEventDate";
 import formatEventTime from "utils/formatEventTime";
 
-const ERROR_MESSAGE = "Invalid Date: missing property {startdate}";
-
 // Renders a human-friendly date
 export const FormattedDate = ({
   calendarEvent,
 }: {
   calendarEvent: StrapiModel.CalendarEvent;
 }): JSX.Element => {
-  if (calendarEvent?.startdate === undefined) {
-    return <em>{ERROR_MESSAGE}</em>;
-  }
   const formattedStartDate = formatEventDate(calendarEvent.startdate);
   // If the end date is unset, let's assume it's a single day event and assign the enddate to the startdate
   const formattedEndDate = formatEventDate(
@@ -22,14 +17,21 @@ export const FormattedDate = ({
   const isSingleDayEvent = formattedStartDate === formattedEndDate;
 
   if (isSingleDayEvent) {
-    const formattedStartTime = formatEventTime(calendarEvent.startdate);
-    const endTimeDisplay = calendarEvent.endtime
-      ? `- ${formatEventTime(calendarEvent.endtime)}`
-      : "";
+    const startTimeDateStr = `${calendarEvent.startdate} ${calendarEvent.starttime}`;
+    const endTimeDateStr = `${calendarEvent.startdate} ${calendarEvent.endtime}`;
+    const formattedStartTime = formatEventTime(startTimeDateStr);
+    const formattedEndTime = formatEventTime(endTimeDateStr);
 
-    return (
-      <p>{`${formattedStartDate} · ${formattedStartTime} ${endTimeDisplay}`}</p>
-    );
+    // Defensively coding for a missing time fields until we get clearer direction from client about required data
+    // fields
+    const endTimeDisplay =
+      formattedEndTime === "Invalid Date" ? "" : `- ${formattedEndTime}`;
+    const starTimeDisplay =
+      formattedStartTime === "Invalid Date" ? -1 : formattedStartTime;
+    const timeDisplay =
+      starTimeDisplay === -1 ? "" : `· ${formattedStartTime} ${endTimeDisplay}`;
+
+    return <p>{`${formattedStartDate} ${timeDisplay}`}</p>;
   }
 
   return <p>{`${formattedStartDate} - ${formattedEndDate}`}</p>;
