@@ -7,7 +7,6 @@ export type Step =
 
 export interface ServiceCategory {
   algoliaCategoryName: string;
-  sortBy24HourAvailability?: boolean;
   disableGeoLocation?: boolean;
   sortAlgoliaSubcategoryRefinements?: boolean;
   id: string;

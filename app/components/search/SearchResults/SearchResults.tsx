@@ -3,11 +3,8 @@ import {
   connectStateResults,
   SearchResults as SearchResultsProps,
 } from "react-instantsearch/connectors";
-import { CATEGORIES } from "pages/constants";
 import { SearchMap } from "components/search/SearchMap/SearchMap";
 import ResultsPagination from "components/search/Pagination/ResultsPagination";
-// import { Texting } from "components/Texting";
-// import { TextListing } from "components/Texting/Texting";
 import { SearchResult } from "components/search/SearchResults/SearchResult";
 import {
   SearchHit,
@@ -16,25 +13,19 @@ import {
 import styles from "./SearchResults.module.scss";
 import ClearSearchButton from "../Refinements/ClearSearchButton";
 
-// @param {boolean} mobileMapIsCollapsed -
 const SearchResults = ({
   searchResults,
   mobileMapIsCollapsed,
   setAroundLatLng,
-  categoryId,
   searchQuery,
 }: {
   searchResults: SearchResultsProps;
   mobileMapIsCollapsed: boolean;
   setAroundLatLng: (latLng: { lat: number; lng: number }) => void;
-  categoryId?: string;
   searchQuery?: string | null;
 }) => {
-  const category = CATEGORIES.find((c) => c.id === categoryId);
-  const sortBy24HourAvailability = Boolean(category?.sortBy24HourAvailability);
   const hits = addRecurringScheduleToSeachHits(
-    searchResults ? (searchResults.hits as unknown as SearchHit[]) : [],
-    sortBy24HourAvailability
+    searchResults ? (searchResults.hits as unknown as SearchHit[]) : []
   );
 
   const [centerCoords] = useState(null);
@@ -91,7 +82,6 @@ const SearchResults = ({
               <SearchResult
                 hit={hit}
                 index={currentPage * hitsPerPage + index + 1}
-                // categoryId={categoryId} // Keep for category ticket
                 key={`${hit.id} - ${hit.name}`}
               />
             ))}
