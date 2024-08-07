@@ -53,9 +53,11 @@ export const ServiceListingPage = () => {
   }
 
   const { resource, recurringSchedule } = service;
-  const formattedLongDescription = removeAsterisksAndHashes(
-    service.long_description
-  );
+
+  // Returning `undefined` instead of `null` since consuming code prefers this
+  const formattedLongDescription = service.long_description
+    ? removeAsterisksAndHashes(service.long_description)
+    : undefined;
   const locations = getServiceLocations(service, resource, recurringSchedule);
   const allActions = getOrganizationActions(resource);
   const sidebarActions = allActions.filter((a) =>
@@ -149,9 +151,9 @@ export const ServiceListingPage = () => {
               <ServiceCard
                 service={{
                   ...srv,
-                  long_description: removeAsterisksAndHashes(
-                    srv.long_description
-                  ),
+                  long_description: srv.long_description
+                    ? removeAsterisksAndHashes(srv.long_description)
+                    : null,
                 }}
                 key={srv.id}
               />
