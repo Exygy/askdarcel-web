@@ -73,7 +73,8 @@ export const getRecurringScheduleForSeachHit = (
   return result;
 };
 
-//
+// Returns a view model of search result data for use in downstream components
+// Developers are encouraged to manage computed properties here rather than within presentational components
 export function transformSearchResults(
   searchResults: SearchResultsResponse
 ): SearchMapHitData {
