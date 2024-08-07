@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect, useRef } from "react";
+import { Link, useLocation } from "react-router-dom";
 import styles from "components/ui/Navigation/Navigation.module.scss";
 import desktopNavigationStyles from "components/ui/Navigation/DesktopNavigation.module.scss";
 import { GoogleTranslate } from "components/ui/GoogleTranslate";
@@ -11,6 +11,7 @@ import { Router } from "../../../Router";
 import { useNavigationData } from "../../../hooks/StrapiAPI";
 import DesktopMenuItems from "./DesktopMenuItems";
 import MobileNavigation from "./MobileNavigation";
+import NavigationFocusReset from "./NavigationFocusReset";
 
 const PAGE_WRAP_ID = "page-wrap";
 
@@ -24,6 +25,16 @@ export const Navigation = () => {
   const menuData =
     extractNavigationMenusFromNavigationResponse(navigationResponse);
   const mobileSubMenuIsActive = !!activeMobileSubMenu;
+
+  const location = useLocation();
+  const hiddenInputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    if (hiddenInputRef.current) {
+      hiddenInputRef.current.focus();
+      hiddenInputRef.current.blur();
+    }
+  }, [location]);
 
   const mobileNavIconDisplay = () => {
     if (mobileNavigationIsOpen && mobileSubMenuIsActive) {
@@ -46,6 +57,8 @@ export const Navigation = () => {
 
   return (
     <>
+      <NavigationFocusReset />
+      <a href="#main">Skip to main content</a>
       <MobileNavigation
         isOpen={mobileNavigationIsOpen}
         setIsOpen={setMobileNavigationIsOpen}
