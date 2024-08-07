@@ -22,7 +22,9 @@ export const FormattedDate = ({
     const formattedStartTime = formatEventTime(startTimeDateStr);
     const formattedEndTime = formatEventTime(endTimeDateStr);
     const endTimeDisplay = calendarEvent.endtime ? `- ${formattedEndTime}` : "";
+    const timeDisplay = formattedStartTime ? `· ${formattedStartTime} ${endTimeDisplay}` : "";
 
+    return <p>{`${formattedStartDate} ${timeDisplay}`}</p>;
     return (
       <p>{`${formattedStartDate} · ${formattedStartTime} ${endTimeDisplay}`}</p>
     );
