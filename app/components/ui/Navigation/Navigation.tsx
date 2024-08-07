@@ -12,6 +12,7 @@ import { useNavigationData } from "../../../hooks/StrapiAPI";
 import DesktopMenuItems from "./DesktopMenuItems";
 import MobileNavigation from "./MobileNavigation";
 import NavigationFocusReset from "./NavigationFocusReset";
+import SkipButton from "./SkipButton";
 
 const PAGE_WRAP_ID = "page-wrap";
 
@@ -58,7 +59,7 @@ export const Navigation = () => {
   return (
     <>
       <NavigationFocusReset />
-      <a href="#main">Skip to main content</a>
+      <SkipButton />
       <MobileNavigation
         isOpen={mobileNavigationIsOpen}
         setIsOpen={setMobileNavigationIsOpen}
