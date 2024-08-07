@@ -43,7 +43,6 @@ export type TransformedSearchHit = Hit<
     longDescription: string;
     path: string;
     headline: string;
-    resource_path: string;
     geoLocPath: string;
     phoneNumber: string | null;
     websiteUrl: string | null;
