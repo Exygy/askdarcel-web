@@ -25,6 +25,8 @@ export namespace StrapiModel {
     > {}
   export interface NavigationMenu
     extends Omit<StrapiApi.NavigationMenuResponse, "__component"> {}
+  export interface CalendarEvent extends StrapiApi.CalendarEventResponse {}
+  export interface Image extends StrapiApi.ImageResponse {}
 }
 
 export function extractNavigationMenusFromNavigationResponse(
