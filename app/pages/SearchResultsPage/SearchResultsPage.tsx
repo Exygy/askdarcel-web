@@ -6,7 +6,7 @@ import algoliasearch from "algoliasearch/lite";
 import { InstantSearch, Configure, SearchBox } from "react-instantsearch/dom";
 import qs, { ParsedQs } from "qs";
 
-import { GeoCoordinates, useAppContext, whiteLabel } from "utils";
+import { GeoCoordinates, useAppContext, websiteConfig } from "utils";
 import { post } from "utils/DataService";
 
 import { Loader } from "components/ui";
@@ -159,7 +159,7 @@ const InnerSearchResults = ({
     <div className={styles.container}>
       <Helmet>
         <title>{`${searchState.query ?? "Services"} in San Francisco | ${
-          whiteLabel.title
+          websiteConfig.title
         }`}</title>
         <meta
           name="description"

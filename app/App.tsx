@@ -7,14 +7,19 @@ import Intercom from "react-intercom";
 import { Helmet } from "react-helmet-async";
 import { useHistory } from "react-router-dom";
 import { SiteSearchProvider } from "./hooks/SiteSearch";
-import { GeoCoordinates, getLocation, whiteLabel, AppProvider } from "./utils";
+import {
+  GeoCoordinates,
+  getLocation,
+  websiteConfig,
+  AppProvider,
+} from "./utils";
 import { Footer, Navigation, UserWay } from "./components/ui";
 
 import config from "./config";
 import MetaImage from "./assets/img/Our415_OG.png";
 import styles from "./App.module.scss";
 
-const { intercom, siteUrl, title, userWay } = whiteLabel;
+const { intercom, siteUrl, title, userWay } = websiteConfig;
 export const OUTER_CONTAINER_ID = "outer-container";
 
 export const App = () => {

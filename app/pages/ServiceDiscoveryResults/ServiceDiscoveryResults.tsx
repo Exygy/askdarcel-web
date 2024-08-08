@@ -7,7 +7,7 @@ import { Helmet } from "react-helmet-async";
 import { match as Match, RouteComponentProps } from "react-router-dom";
 
 import * as dataService from "utils/DataService";
-import { useAppContext, whiteLabel } from "utils";
+import { useAppContext, websiteConfig } from "utils";
 
 import { Loader } from "components/ui";
 import SearchResults from "components/search/SearchResults/SearchResults";
@@ -148,11 +148,7 @@ const InnerServiceDiscoveryResults = ({
 }) => {
   const [aroundLatLang, setAroundLatLng] = useState(userLatLng);
   const subcategoryNames = subcategories.map((c) => c.name);
-  const {
-    name: categoryName,
-    slug: categorySlug,
-    sortAlgoliaSubcategoryRefinements,
-  } = category;
+  const { name: categoryName, sortAlgoliaSubcategoryRefinements } = category;
 
   return (
     <>
@@ -161,7 +157,7 @@ const InnerServiceDiscoveryResults = ({
       </SecondaryNavigationWrapper>
       <div className={styles.container}>
         <Helmet>
-          <title>{`${categoryName} in San Francisco | ${whiteLabel.title}`}</title>
+          <title>{`${categoryName} in San Francisco | ${websiteConfig.title}`}</title>
           <meta
             name="description"
             content={`A list of ${categoryName} in San Francisco`}
@@ -191,7 +187,6 @@ const InnerServiceDiscoveryResults = ({
               searchRadius={searchRadius}
               isSearchResultsPage={false}
               eligibilities={eligibilities}
-              categorySlug={categorySlug}
               subcategories={subcategories}
               subcategoryNames={subcategoryNames}
               sortAlgoliaSubcategoryRefinements={

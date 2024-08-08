@@ -4,4 +4,4 @@ export * from "./time";
 export * from "./useAppContext";
 export * from "./SessionCacher";
 export * from "./AuthService";
-export { default as whiteLabel } from "./whitelabel";
+export { default as websiteConfig } from "./websiteConfig";

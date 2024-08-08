@@ -3,13 +3,13 @@ import React, { useState } from "react";
 import { icon as assetIcon } from "assets";
 import { Button } from "components/ui/inline/Button/Button";
 import { QrCodeModal } from "components/ui/QrCodeModal/QrCodeModal"; // todo: remove QrCodeModal from project
-import whiteLabel from "utils/whitelabel";
+import websiteConfig from "utils/websiteConfig";
 import { CATEGORIES } from "pages/constants";
 import { CustomDropdown as Dropdown } from "./CustomDropdown";
 
 import styles from "./Header.module.scss";
 
-const { showHeaderQrCode, showPrintResultsBtn } = whiteLabel;
+const { showHeaderQrCode, showPrintResultsBtn } = websiteConfig;
 
 export const Header = ({
   resultsTitle,
