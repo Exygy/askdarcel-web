@@ -20,7 +20,7 @@ jobs:
       - run: npm i
       - run: npm run prettier
       - run: npm run lint
-  build_app:
+  build_and_testapp:
     runs-on: ubuntu-latest
     environment: "dev"
     steps:
@@ -35,6 +35,7 @@ jobs:
           key: npm-${{ hashFiles('package-lock.json') }}
           restore-keys: npm-
       - run: npm i
+      - run: npm run test
       - run: npm run build
         env:
           AUTH0_DOMAIN: ${{ secrets.AUTH0_DOMAIN }}
