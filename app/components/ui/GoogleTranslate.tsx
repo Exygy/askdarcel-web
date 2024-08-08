@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps -- allows empty array argument in useEffect */
 /* eslint-disable no-new -- allows calling `new` for initializer */
-
 import React, { useEffect } from "react";
 
 /**
@@ -10,7 +9,6 @@ import React, { useEffect } from "react";
  * adding the third-party scripts and initializing on demand, we can render the widget into both desktop and mobile
  * navigation view.
  */
-
 declare const window: {
   googleTranslateElementInit: () => void;
 } & Window;
