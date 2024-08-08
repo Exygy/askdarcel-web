@@ -53,7 +53,7 @@ export const GoogleTranslate = () => {
   // When the user navigates with a `lang` query param,
   // interpret that as an explicit ask to translate the site
   // into that target language.
-  if (targetLangCode && languages.includes(targetLangCode)) {
+  if (targetLangCode && SUPPORTED_LANGUAGES.includes(targetLangCode)) {
     setCookie("googtrans", `/en/${targetLangCode}`, { path: "/" });
   }
 
