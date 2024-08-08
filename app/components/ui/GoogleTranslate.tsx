@@ -19,14 +19,14 @@ const GOOGLE_TRANSLATE_CONFIG = {
   pageLanguage: "auto/en",
 };
 export const GoogleTranslate = () => {
-  useEffect(() => {
-    function googleTranslateElementInit() {
-      new (window as any).google.translate.TranslateElement(
-        GOOGLE_TRANSLATE_CONFIG,
-        "google_translate_element"
-      );
-    }
+  function googleTranslateElementInit() {
+    new (window as any).google.translate.TranslateElement(
+      GOOGLE_TRANSLATE_CONFIG,
+      "google_translate_element"
+    );
+  }
 
+  useEffect(() => {
     const addScript = document.createElement("script");
     addScript.setAttribute(
       "src",
