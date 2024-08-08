@@ -18,11 +18,6 @@ declare const window: {
 } & Window;
 
 export const GoogleTranslate = () => {
-  const { search } = useLocation();
-
-  const params = new URLSearchParams(search);
-  const targetLangCode = params.get("lang");
-  const [, setCookie] = useCookies(["googtrans"]);
   const languages = ["en", "es", "tl", "zh-TW"];
 
   useEffect(() => {
@@ -30,7 +25,7 @@ export const GoogleTranslate = () => {
       new (window as any).google.translate.TranslateElement(
         {
           includedLanguages: `${languages.join(",")}`,
-          pageLanguage: targetLangCode || "auto/en",
+          pageLanguage: "auto/en",
         },
         "google_translate_element"
       );
@@ -44,16 +39,6 @@ export const GoogleTranslate = () => {
     document.body.appendChild(addScript);
     window.googleTranslateElementInit = googleTranslateElementInit;
   }, []);
-
-  // TODO @rosschapman: Let's explore this use case, this may not be something we care about supporting?
-  // Google Translate determines translation source and target
-  // with a "googtrans" cookie.
-  // When the user navigates with a `lang` query param,
-  // interpret that as an explicit ask to translate the site
-  // into that target language.
-  if (targetLangCode && languages.includes(targetLangCode)) {
-    setCookie("googtrans", `/en/${targetLangCode}`, { path: "/" });
-  }
 
   return <div id="google_translate_element" />;
 };
