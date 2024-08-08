@@ -13,16 +13,16 @@ declare const window: {
   googleTranslateElementInit: () => void;
 } & Window;
 
+const SUPPORTED_LANGUAGES = ["en", "es", "tl", "zh-TW"];
+const GOOGLE_TRANSLATE_CONFIG = {
+  includedLanguages: `${SUPPORTED_LANGUAGES.join(",")}`,
+  pageLanguage: "auto/en",
+};
 export const GoogleTranslate = () => {
-  const languages = ["en", "es", "tl", "zh-TW"];
-
   useEffect(() => {
     function googleTranslateElementInit() {
       new (window as any).google.translate.TranslateElement(
-        {
-          includedLanguages: `${languages.join(",")}`,
-          pageLanguage: "auto/en",
-        },
+        GOOGLE_TRANSLATE_CONFIG,
         "google_translate_element"
       );
     }
