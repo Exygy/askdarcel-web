@@ -148,11 +148,7 @@ const InnerServiceDiscoveryResults = ({
 }) => {
   const [aroundLatLang, setAroundLatLng] = useState(userLatLng);
   const subcategoryNames = subcategories.map((c) => c.name);
-  const {
-    name: categoryName,
-    slug: categorySlug,
-    sortAlgoliaSubcategoryRefinements,
-  } = category;
+  const { name: categoryName, sortAlgoliaSubcategoryRefinements } = category;
 
   return (
     <>
@@ -191,7 +187,6 @@ const InnerServiceDiscoveryResults = ({
               searchRadius={searchRadius}
               isSearchResultsPage={false}
               eligibilities={eligibilities}
-              categorySlug={categorySlug}
               subcategories={subcategories}
               subcategoryNames={subcategoryNames}
               sortAlgoliaSubcategoryRefinements={
