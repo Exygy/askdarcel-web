@@ -55,9 +55,6 @@ interface WhiteLabelSite {
   siteUrl: string;
   title: string;
   userWay: boolean;
-  weGlot?: {
-    apiKey: string;
-  };
 }
 
 // Include a domain in config.js
@@ -148,9 +145,6 @@ const SFFamilies: WhiteLabelSite = {
   siteUrl: "https://our415.sfserviceguide.org",
   title: "Our 415",
   userWay: true,
-  weGlot: {
-    apiKey: "wg_5d69415032907833ac16f892ee6369778",
-  },
 } as const;
 
 const SFServiceGuide: WhiteLabelSite = {
