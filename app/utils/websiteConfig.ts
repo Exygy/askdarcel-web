@@ -47,9 +47,6 @@ interface WebsiteConfigSite {
   siteUrl: string;
   title: string;
   userWay: boolean;
-  weGlot?: {
-    apiKey: string;
-  };
 }
 
 const configKey = "defaultWebsiteConfig";
