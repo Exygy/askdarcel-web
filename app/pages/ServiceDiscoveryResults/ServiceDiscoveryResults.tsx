@@ -7,7 +7,7 @@ import { Helmet } from "react-helmet-async";
 import { match as Match, RouteComponentProps } from "react-router-dom";
 
 import * as dataService from "utils/DataService";
-import { useAppContext, whiteLabel } from "utils";
+import { useAppContext, websiteConfig } from "utils";
 
 import { Loader } from "components/ui";
 import SearchResults from "components/search/SearchResults/SearchResults";
@@ -161,7 +161,7 @@ const InnerServiceDiscoveryResults = ({
       </SecondaryNavigationWrapper>
       <div className={styles.container}>
         <Helmet>
-          <title>{`${categoryName} in San Francisco | ${whiteLabel.title}`}</title>
+          <title>{`${categoryName} in San Francisco | ${websiteConfig.title}`}</title>
           <meta
             name="description"
             content={`A list of ${categoryName} in San Francisco`}

@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
-import whiteLabel from "utils/whitelabel";
+import websiteConfig from "utils/websiteConfig";
 import { RelativeOpeningTime } from "components/listing/RelativeOpeningTime";
 import type { SearchHit } from "models/SearchHits";
 import "./SearchEntry.scss";
 
 const {
   appImages: { mohcdSeal },
-} = whiteLabel;
+} = websiteConfig;
 
 type Props = {
   hitNumber: string;
