@@ -2,8 +2,6 @@
 /* eslint-disable no-new -- allows calling `new` for initializer */
 
 import React, { useEffect } from "react";
-import { useCookies } from "react-cookie";
-import { useLocation } from "react-router-dom";
 
 /**
  * A Google translate widget component for use across multiple components
