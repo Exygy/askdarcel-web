@@ -1,10 +1,10 @@
 import React, { ReactNode } from "react";
 import { NavLink } from "react-router-dom";
 import { push as Menu, State } from "react-burger-menu";
-import whiteLabel from "../../../utils/whitelabel";
+import websiteConfig from "../../../utils/websiteConfig";
 import styles from "./HamburgerMenu.module.scss";
 
-const { showReportCrisis } = whiteLabel;
+const { showReportCrisis } = websiteConfig;
 
 const burgerStyles = {
   bmBurgerButton: {

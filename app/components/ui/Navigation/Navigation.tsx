@@ -11,6 +11,8 @@ import { Router } from "../../../Router";
 import { useNavigationData } from "../../../hooks/StrapiAPI";
 import DesktopMenuItems from "./DesktopMenuItems";
 import MobileNavigation from "./MobileNavigation";
+import NavigationFocusReset from "./NavigationFocusReset";
+import SkipButton from "./SkipButton";
 
 const PAGE_WRAP_ID = "page-wrap";
 
@@ -46,6 +48,8 @@ export const Navigation = () => {
 
   return (
     <>
+      <NavigationFocusReset />
+      <SkipButton />
       <MobileNavigation
         isOpen={mobileNavigationIsOpen}
         setIsOpen={setMobileNavigationIsOpen}
@@ -85,9 +89,9 @@ export const Navigation = () => {
             />
           </div>
         </nav>
-        <div className="container">
+        <main className="container" id="main">
           <Router />
-        </div>
+        </main>
       </div>
     </>
   );

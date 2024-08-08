@@ -95,9 +95,9 @@ export const OrganizationListingPage = () => {
             <ServiceCard
               service={{
                 ...srv,
-                long_description: removeAsterisksAndHashes(
-                  srv.long_description
-                ),
+                long_description: srv.long_description
+                  ? removeAsterisksAndHashes(srv.long_description)
+                  : null,
               }}
               key={srv.id}
             />
