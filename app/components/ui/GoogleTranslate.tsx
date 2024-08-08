@@ -30,7 +30,7 @@ export const GoogleTranslate = () => {
       new (window as any).google.translate.TranslateElement(
         {
           includedLanguages: `${languages.join(",")}`,
-          pageLanguage: targetLangCode || "en",
+          pageLanguage: targetLangCode || "auto/en",
         },
         "google_translate_element"
       );
