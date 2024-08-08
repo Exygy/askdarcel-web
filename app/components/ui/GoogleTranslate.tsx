@@ -17,21 +17,23 @@ declare const window: {
   googleTranslateElementInit: () => void;
 } & Window;
 
+const SUPPORTED_LANGUAGES = ["en", "es", "tl", "zh-TW"];
+const GOOGLE_TRANSLATE_CONFIG = {
+  includedLanguages: `${SUPPORTED_LANGUAGES.join(",")}`,
+  pageLanguage: "auto/en",
+};
+
 export const GoogleTranslate = () => {
   const { search } = useLocation();
 
   const params = new URLSearchParams(search);
   const targetLangCode = params.get("lang");
   const [, setCookie] = useCookies(["googtrans"]);
-  const languages = ["en", "es", "tl", "zh-TW"];
 
   useEffect(() => {
     function googleTranslateElementInit() {
       new (window as any).google.translate.TranslateElement(
-        {
-          includedLanguages: `${languages.join(",")}`,
-          pageLanguage: targetLangCode || "en",
-        },
+        GOOGLE_TRANSLATE_CONFIG,
         "google_translate_element"
       );
     }
@@ -51,7 +53,7 @@ export const GoogleTranslate = () => {
   // When the user navigates with a `lang` query param,
   // interpret that as an explicit ask to translate the site
   // into that target language.
-  if (targetLangCode && languages.includes(targetLangCode)) {
+  if (targetLangCode && SUPPORTED_LANGUAGES.includes(targetLangCode)) {
     setCookie("googtrans", `/en/${targetLangCode}`, { path: "/" });
   }
 
