@@ -5,7 +5,7 @@ import { Button } from "components/ui/inline/Button/Button";
 import { QrCodeModal } from "components/ui/QrCodeModal/QrCodeModal"; // todo: remove QrCodeModal from project
 import websiteConfig from "utils/websiteConfig";
 import { CATEGORIES } from "pages/constants";
-import { CustomDropdown as Dropdown } from "./CustomDropdown";
+import { CategoryDropdown } from "./CategoryDropdown";
 
 import styles from "./Header.module.scss";
 
@@ -19,13 +19,6 @@ export const Header = ({
   // translateResultsTitle?: boolean;
 }) => {
   const [qrCodeModalOpen, setQrCodeModalOpen] = useState(false);
-  const [currentCategory, setCurrentCategory] =
-    useState<string>("food-resources");
-
-  const handleCategoryChange = (slug: string) => {
-    setCurrentCategory(slug);
-    window.location.href = slug;
-  };
 
   const title = resultsTitle === "" ? "All categories" : resultsTitle;
 
@@ -36,12 +29,7 @@ export const Header = ({
           <h1 className="sr-only">
             {title === resultsTitle ?? "Search results"}
           </h1>
-          <Dropdown
-            categories={CATEGORIES}
-            currentCategory={currentCategory}
-            onCategoryChange={handleCategoryChange}
-            resultsTitle={title}
-          />
+          <CategoryDropdown categories={CATEGORIES} resultsTitle={title} />
         </div>
         <Button
           onClick={() => {

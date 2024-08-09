@@ -1,0 +1,84 @@
+@import "../../../styles/utils/_helpers.scss";
+@import "../../../styles/utils/_colors.scss";
+
+// TODO make this DRY with DesktopNavigation scss
+
+.navigationMenuContainer {
+  position: relative;
+  min-width: 160px;
+}
+
+.navigationSubMenu {
+  position: absolute;
+  z-index: 999;
+  top: 40px;
+  left: 0;
+  background: $white;
+  box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.2);
+  border-radius: $rounded-md;
+  overflow: hidden;
+  font-weight: 400;
+}
+
+.navigationMenuHeader {
+  display: flex;
+  gap: 10px;
+  font-size: 26px;
+  font-weight: bold;
+  cursor: pointer;
+  font-family: Montserrat;
+
+  @include r_max($break-tablet-s) {
+    font-size: 20px;
+  }
+
+  &[aria-expanded="true"] {
+    color: $color-brand-dark;
+  }
+
+  &:hover {
+    color: $color-brand-dark;
+  }
+}
+
+.navigationSubMenuItem,
+.navigationMenuHeader {
+  a {
+    padding: $spacing-2 $spacing-4;
+  }
+
+  a:hover {
+    background: $gray-50;
+    color: inherit;
+  }
+
+  .navigationMenuLink {
+    &:focus {
+      border-radius: 0;
+      margin: 3px;
+    }
+  }
+}
+
+.navigationMenuLink {
+  font-family: Montserrat;
+  font-size: 18px;
+  text-decoration: none;
+  color: $text-primary;
+
+  &:hover {
+    text-decoration: none;
+    color: $color-brand-dark;
+  }
+}
+
+.navigationSubMenu .navigationMenuLink {
+  display: flex;
+  text-decoration: none;
+  color: $text-primary;
+
+  &:hover {
+    text-decoration: none;
+    color: $text-primary;
+  }
+}
