@@ -35,17 +35,24 @@ export interface OrganizationHit
 }
 export type SearchResultsResponse = AlogliaSearchResultsType<SearchHit>;
 export type SearchHit = ServiceHit | OrganizationHit;
+type MarkerLocation = {
+  id: string;
+  lat: string;
+  long: string;
+  tag: string;
+};
 export type TransformedSearchHit = Hit<
   SearchHit & {
     recurringSchedule: RecurringSchedule | null;
-    indexDisplay: string;
-    markerTag: string;
+    resultListIndexDisplay: string;
     longDescription: string;
     path: string;
     headline: string;
     geoLocPath: string;
     phoneNumber: string | null;
     websiteUrl: string | null;
+    markerLocations: MarkerLocation[] | [];
+    addressDisplay: string;
   }
 >;
 export interface SearchMapHitData
@@ -72,6 +79,45 @@ export const getRecurringScheduleForSeachHit = (
   return result;
 };
 
+function getMarkerLocations(
+  hit: SearchHit,
+  resultListIndexDisplay: string
+): MarkerLocation[] | [] {
+  if (!hit.addresses) return [];
+
+  return hit.addresses.map((address, idx) => {
+    let markerTag = resultListIndexDisplay;
+    // unique ID for use as iteration key
+    const id = `${hit.id}.${idx}`;
+
+    if (idx > 0) {
+      const alphabeticalIndex = (idx + 9).toString(36).toUpperCase();
+      markerTag = `${resultListIndexDisplay}${alphabeticalIndex}`;
+    }
+
+    return {
+      id,
+      lat: address.latitude,
+      long: address.longitude,
+      tag: markerTag,
+    };
+  });
+}
+
+function getAddressDisplay(hit: SearchHit) {
+  if (hit.addresses?.length === 0) {
+    return `No address found`;
+  }
+  if (hit.addresses && hit.addresses.length > 1) {
+    return `Multiple locations`;
+  }
+  if (hit.addresses && hit.addresses[0].address_1) {
+    return `${hit.addresses[0].address_1}`;
+  }
+
+  return `No address found`;
+}
+
 // Returns a view model of search result data for use in downstream components
 // Developers are encouraged to manage computed properties here rather than within presentational components
 export function transformSearchResults(
@@ -83,33 +129,24 @@ export function transformSearchResults(
   const hitsPerPage = searchResults.hitsPerPage ?? 20;
 
   const transformedHits = searchResults.hits.reduce((acc, hit, index) => {
-    const indexDisplay = `${currentPage * hitsPerPage + index + 1}`;
-    let markerTag = indexDisplay;
-
-    if (index > 0) {
-      const alphabeticalIndex = (index + 9).toString(36).toUpperCase();
-      markerTag += alphabeticalIndex;
-    }
     const phoneNumber = hit?.phones?.[0]?.number || null;
     const websiteUrl = hit.type === "service" ? hit.url : hit.website;
     const basePath = hit.type === "service" ? `services` : `organizations`;
-    // handle resources and services slightly differently.
-    let entryId = hit.resource_id;
-    if (hit.type === "service") {
-      entryId = hit.service_id;
-    }
+    const hitId = hit.type === "service" ? hit.service_id : hit.resource_id;
+    const resultListIndexDisplay = `${currentPage * hitsPerPage + index + 1}`;
 
     const nextHit: TransformedSearchHit = {
       ...hit,
       recurringSchedule: getRecurringScheduleForSeachHit(hit),
-      indexDisplay,
-      markerTag,
+      resultListIndexDisplay,
       longDescription: hit.long_description || "No description, yet...",
-      path: `/${basePath}/${entryId}`,
-      headline: `${markerTag}. ${hit.name}`,
+      path: `/${basePath}/${hitId}`,
+      headline: `${resultListIndexDisplay}. ${hit.name}`,
       geoLocPath: `http://google.com/maps/dir/?api=1&destination=${hit._geoloc.lat},${hit._geoloc.lng}`,
       phoneNumber,
       websiteUrl,
+      markerLocations: getMarkerLocations(hit, resultListIndexDisplay),
+      addressDisplay: getAddressDisplay(hit),
     };
 
     acc.push(nextHit);

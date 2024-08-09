@@ -15,23 +15,6 @@ interface Props {
 }
 
 export default class SearchEntry extends Component<Props> {
-  renderAddressMetadata() {
-    const { hit } = this.props;
-    const { addresses: rawAddresses } = hit;
-    const addresses = rawAddresses || [];
-
-    if (addresses.length === 0) {
-      return <span>No address found</span>;
-    }
-    if (addresses.length > 1) {
-      return <span>Multiple locations</span>;
-    }
-    if (addresses[0].address_1) {
-      return <span>{addresses[0].address_1}</span>;
-    }
-    return <span>No address found</span>;
-  }
-
   render() {
     const { hit } = this.props;
     const { recurringSchedule, type } = hit;
@@ -57,7 +40,7 @@ export default class SearchEntry extends Component<Props> {
               </p>
             )}
             <p className="entry-meta">
-              {this.renderAddressMetadata()}
+              {hit.addressDisplay}
               {recurringSchedule && (
                 <span className="entry-schedule">
                   <RelativeOpeningTime recurringSchedule={recurringSchedule} />
