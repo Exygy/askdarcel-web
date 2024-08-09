@@ -90,6 +90,8 @@ function getLocations(
     // unique ID for use as iteration key
     const id = `${hit.id}.${idx}`;
 
+    // With multiple locations append an incrementing alpha character. For example, if the first result has two
+    // addresses, it would appear on the map with two locations labeled 1A and 1B.
     if (idx > 0) {
       const alphabeticalIndex = (idx + 9).toString(36).toUpperCase();
       label = `${resultListIndexDisplay}${alphabeticalIndex}`;
