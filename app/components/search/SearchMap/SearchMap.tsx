@@ -80,13 +80,13 @@ export const SearchMap = ({
           <UserLocationMarker lat={lat} lng={lng} key={1} />
           {hits.reduce((markers, hit) => {
             // Add a marker for each address of each hit
-            hit.markerLocations.forEach((markerLocation) => {
+            hit.locations.forEach((location) => {
               markers.push(
                 <GoogleSearchHitMarkerWorkaround
-                  key={markerLocation.id}
-                  lat={markerLocation.lat}
-                  lng={markerLocation.long}
-                  tag={markerLocation.label}
+                  key={location.id}
+                  lat={location.lat}
+                  lng={location.long}
+                  tag={location.label}
                   hit={hit}
                 />
               );

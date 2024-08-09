@@ -35,7 +35,7 @@ export interface OrganizationHit
 }
 export type SearchResultsResponse = AlogliaSearchResultsType<SearchHit>;
 export type SearchHit = ServiceHit | OrganizationHit;
-type MarkerLocation = {
+type Location = {
   id: string;
   lat: string;
   long: string;
@@ -51,7 +51,7 @@ export type TransformedSearchHit = Hit<
     geoLocPath: string;
     phoneNumber: string | null;
     websiteUrl: string | null;
-    markerLocations: MarkerLocation[] | [];
+    locations: Location[] | [];
     addressDisplay: string;
   }
 >;
@@ -79,10 +79,10 @@ export const getRecurringScheduleForSeachHit = (
   return result;
 };
 
-function getMarkerLocations(
+function getLocations(
   hit: SearchHit,
   resultListIndexDisplay: string
-): MarkerLocation[] | [] {
+): Location[] | [] {
   if (!hit.addresses) return [];
 
   return hit.addresses.map((address, idx) => {
@@ -145,7 +145,7 @@ export function transformSearchResults(
       geoLocPath: `http://google.com/maps/dir/?api=1&destination=${hit._geoloc.lat},${hit._geoloc.lng}`,
       phoneNumber,
       websiteUrl,
-      markerLocations: getMarkerLocations(hit, resultListIndexDisplay),
+      locations: getLocations(hit, resultListIndexDisplay),
       addressDisplay: getAddressDisplay(hit),
     };
 
