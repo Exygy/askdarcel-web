@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { ServiceCategory } from "pages/constants";
-import styles from "./CategoryDropdown.module.scss";
 import { Link } from "react-router-dom";
+import styles from "./CategoryDropdown.module.scss";
 
 export const CategoryDropdown = ({
   categories,
