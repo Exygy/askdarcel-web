@@ -39,7 +39,7 @@ type MarkerLocation = {
   id: string;
   lat: string;
   long: string;
-  tag: string;
+  label: string;
 };
 export type TransformedSearchHit = Hit<
   SearchHit & {
@@ -86,20 +86,20 @@ function getMarkerLocations(
   if (!hit.addresses) return [];
 
   return hit.addresses.map((address, idx) => {
-    let markerTag = resultListIndexDisplay;
+    let markerLabel = resultListIndexDisplay;
     // unique ID for use as iteration key
     const id = `${hit.id}.${idx}`;
 
     if (idx > 0) {
       const alphabeticalIndex = (idx + 9).toString(36).toUpperCase();
-      markerTag = `${resultListIndexDisplay}${alphabeticalIndex}`;
+      markerLabel = `${resultListIndexDisplay}${alphabeticalIndex}`;
     }
 
     return {
       id,
       lat: address.latitude,
       long: address.longitude,
-      tag: markerTag,
+      label: markerLabel,
     };
   });
 }

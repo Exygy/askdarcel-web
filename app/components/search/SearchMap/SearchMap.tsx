@@ -86,7 +86,7 @@ export const SearchMap = ({
                   key={markerLocation.id}
                   lat={markerLocation.lat}
                   lng={markerLocation.long}
-                  tag={markerLocation.tag}
+                  tag={markerLocation.label}
                   hit={hit}
                 />
               );
