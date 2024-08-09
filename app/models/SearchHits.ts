@@ -86,20 +86,20 @@ function getLocations(
   if (!hit.addresses) return [];
 
   return hit.addresses.map((address, idx) => {
-    let markerLabel = resultListIndexDisplay;
+    let label = resultListIndexDisplay;
     // unique ID for use as iteration key
     const id = `${hit.id}.${idx}`;
 
     if (idx > 0) {
       const alphabeticalIndex = (idx + 9).toString(36).toUpperCase();
-      markerLabel = `${resultListIndexDisplay}${alphabeticalIndex}`;
+      label = `${resultListIndexDisplay}${alphabeticalIndex}`;
     }
 
     return {
       id,
       lat: address.latitude,
       long: address.longitude,
-      label: markerLabel,
+      label,
     };
   });
 }
