@@ -1,4 +1,4 @@
-import assignIn from "lodash/assignIn";
+import assignIn from "lodash.assignin";
 
 function setAuthHeaders(resp: Response): void {
   const { headers } = resp;
