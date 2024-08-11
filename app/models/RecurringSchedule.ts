@@ -3,8 +3,8 @@
  */
 
 import { invert } from "utils/arrays";
-import sortBy from "lodash/sortBy";
-import minBy from "lodash/minBy";
+import sortBy from "lodash.sortby";
+import minBy from "lodash.minby";
 
 // WARNING: This must match Moment.js's day of week to integer mapping.
 export const DAY_TO_INT = Object.freeze({
