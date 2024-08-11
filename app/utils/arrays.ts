@@ -18,22 +18,9 @@ export function uniqBy<T>(arr: T[], key: keyof T): T[] {
 export function invert<T>(object: T) {
   const result = {};
   Object.keys(object).forEach((key) => {
-    let value = object[key];
-    if (value != null && typeof value.toString !== "function") {
-      value = toString.call(value);
-    }
+    const value = object[key];
+
     result[value] = key;
   });
   return result;
-}
-
-export function sortBy(key) {
-  // eslint-disable-next-line no-nested-ternary
-  return (a, b) => (a[key] > b[key] ? 1 : b[key] > a[key] ? -1 : 0);
-}
-
-export function minBy(collection, key) {
-  // slower because need to create a lambda function for each call...
-  const select = (a, b) => (a[key] <= b[key] ? a : b);
-  return collection.reduce(select, {});
 }
