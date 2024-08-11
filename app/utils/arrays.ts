@@ -19,7 +19,6 @@ export function invert<T>(object: T) {
   const result = {};
   Object.keys(object).forEach((key) => {
     const value = object[key];
-
     result[value] = key;
   });
   return result;
