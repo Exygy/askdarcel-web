@@ -33,6 +33,7 @@ export const Header = ({
     <div className={styles.header}>
       <div className={styles.headerInner}>
         <div>
+          <h2 className="sr-only">Browse services by category</h2>
           <Dropdown
             categories={CATEGORIES}
             currentCategory={currentCategory}
