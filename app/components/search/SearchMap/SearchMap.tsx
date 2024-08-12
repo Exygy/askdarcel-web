@@ -48,6 +48,7 @@ export const SearchMap = ({
 
   return (
     <div className="results-map">
+      <h2 className="sr-only">Map of search results</h2>
       <div className="map-wrapper">
         {/* If map is being overlaid, hide the search area button. It is is neither clickable
             nor relevant in this mode.
@@ -80,17 +81,13 @@ export const SearchMap = ({
           <UserLocationMarker lat={lat} lng={lng} key={1} />
           {hits.reduce((markers, hit) => {
             // Add a marker for each address of each hit
-            hit.addresses?.forEach((addr: any) => {
-              const key = `${hit.id}.${addr.latitude}.${addr.longitude}.${
-                addr.address_1
-              }.${addr.address_2 || ""}`;
-
+            hit.locations.forEach((location) => {
               markers.push(
                 <GoogleSearchHitMarkerWorkaround
-                  key={key}
-                  lat={addr.latitude}
-                  lng={addr.longitude}
-                  tag={hit.markerTag}
+                  key={location.id}
+                  lat={location.lat}
+                  lng={location.long}
+                  tag={location.label}
                   hit={hit}
                 />
               );

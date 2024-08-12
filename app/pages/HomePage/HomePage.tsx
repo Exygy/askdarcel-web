@@ -30,6 +30,7 @@ export const HomePage = () => {
 
   return (
     <>
+      <h1 className="sr-only">Homepage</h1>
       {hero && (
         <Hero
           backgroundImage={hero.background_image.data?.attributes.url ?? ""}
