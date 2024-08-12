@@ -17,7 +17,7 @@ const DropdownSubmenu = ({
   title: string;
   links: { id: number | string; url: string; text: string }[];
   activeSubMenu: string | null;
-  handleMenuToggle: (uniqueKey: string | null) => void;
+  handleMenuToggle: (key: string | null) => void;
   uniqueKey: string;
   menuRef: React.RefObject<HTMLDivElement>;
   variant?: "navigation" | "category";
