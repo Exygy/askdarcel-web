@@ -23,11 +23,20 @@ const DesktopMenuItems = ({
   const { activeSubMenu, handleMenuToggle, menuRef } = useMenuToggle();
 
   if (menuItemHasLinks(menuItem)) {
+    const uniqueKey = menuItem.title;
+    const links = menuItem.link.map((linkItem) => ({
+      id: linkItem.id,
+      url: linkItem.url,
+      text: linkItem.text,
+    }));
+
     return (
       <DropdownSubmenu
-        menuItem={menuItem}
+        title={menuItem.title}
+        links={links}
         activeSubMenu={activeSubMenu}
         handleMenuToggle={handleMenuToggle}
+        uniqueKey={uniqueKey}
         menuRef={menuRef}
       />
     );

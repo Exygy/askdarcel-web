@@ -1,24 +1,28 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import styles from "components/ui/Navigation/DesktopNavigation.module.scss";
-import { StrapiModel } from "../../../models/Strapi";
+import navStyles from "./DesktopNavigation.module.scss";
+import categoryStyles from "./CategoryDropdown.module.scss";
 
 // This component is the dropdown submenu used by both DesktopMenuItems and CategoryDropdown, created in service of DRY code
 
 const DropdownSubmenu = ({
-  menuItem,
+  title,
+  links,
   activeSubMenu,
   handleMenuToggle,
+  uniqueKey,
   menuRef,
+  variant = "navigation",
 }: {
-  menuItem: StrapiModel.NavigationMenu;
+  title: string;
+  links: { id: number | string; url: string; text: string }[];
   activeSubMenu: string | null;
   handleMenuToggle: (uniqueKey: string | null) => void;
+  uniqueKey: string;
   menuRef: React.RefObject<HTMLDivElement>;
+  variant?: "navigation" | "category";
 }) => {
-  const uniqueKey = menuItem.title;
-
-  // TODO: may need to import both stylesheets and conditionally render?
+  const styles = variant === "navigation" ? navStyles : categoryStyles;
 
   return (
     <div
@@ -33,7 +37,7 @@ const DropdownSubmenu = ({
         onClick={() => handleMenuToggle(uniqueKey)}
         className={styles.navigationMenuHeader}
       >
-        {menuItem.title}
+        {title}
         <span className={`fas fa-chevron-down ${styles.chevron}`} />
       </button>
 
@@ -43,7 +47,7 @@ const DropdownSubmenu = ({
         }}
         className={`${styles.navigationSubMenu}`}
       >
-        {menuItem.link.map((linkItem: StrapiModel.Link) => (
+        {links.map((linkItem) => (
           <span key={linkItem.id} className={styles.navigationSubMenuItem}>
             <Link
               to={linkItem.url}

@@ -5,7 +5,7 @@ import { Button } from "components/ui/inline/Button/Button";
 import { QrCodeModal } from "components/ui/QrCodeModal/QrCodeModal"; // todo: remove QrCodeModal from project
 import websiteConfig from "utils/websiteConfig";
 import { CATEGORIES } from "pages/constants";
-import { CategoryDropdown } from "./CategoryDropdown";
+import { CategoryDropdown } from "../../ui/Navigation/CategoryDropdown";
 
 import styles from "./Header.module.scss";
 
