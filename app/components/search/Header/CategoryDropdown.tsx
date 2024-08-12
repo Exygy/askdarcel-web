@@ -1,7 +1,8 @@
-import React, { useState, useRef, useEffect } from "react";
+import React from "react";
 import { ServiceCategory } from "pages/constants";
 import { Link } from "react-router-dom";
 import styles from "./CategoryDropdown.module.scss";
+import { useMenuToggle } from "../../../hooks/MenuHooks";
 
 export const CategoryDropdown = ({
   categories,
@@ -10,67 +11,37 @@ export const CategoryDropdown = ({
   categories: Readonly<ServiceCategory[]>;
   resultsTitle: string;
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const handleToggle = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const menuRef = useRef<HTMLDivElement | null>(null);
-
-  const handleClickOutside = (event: MouseEvent) => {
-    if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-      setIsOpen(false);
-    }
-  };
-
-  const handleFocusOut = (event: FocusEvent) => {
-    if (
-      menuRef.current &&
-      !menuRef.current.contains(event.relatedTarget as Node)
-    ) {
-      setIsOpen(false);
-    }
-  };
-
-  useEffect(() => {
-    const currentRef = menuRef.current;
-
-    document.addEventListener("mousedown", handleClickOutside);
-    currentRef?.addEventListener("focusout", handleFocusOut);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      currentRef?.removeEventListener("focusout", handleFocusOut);
-    };
-  }, []);
+  const { activeSubMenu, handleMenuToggle, menuRef } = useMenuToggle();
 
   return (
     <div className={styles.navigationMenuContainer} ref={menuRef}>
       <button
         type="button"
         aria-haspopup="menu"
-        aria-expanded={isOpen ? "true" : "false"}
-        onClick={handleToggle}
+        aria-expanded={activeSubMenu === resultsTitle ? "true" : "false"}
+        onClick={() => handleMenuToggle(resultsTitle)}
         className={styles.navigationMenuHeader}
       >
         {resultsTitle}
-        <span className={isOpen ? styles.arrowUp : styles.arrowDown}>
-          <i className={`fas fa-chevron-${isOpen ? "up" : "down"}`} />
+        <span
+          className={
+            activeSubMenu === resultsTitle ? styles.arrowUp : styles.arrowDown
+          }
+        >
+          <i
+            className={`fas fa-chevron-${
+              activeSubMenu === resultsTitle ? "up" : "down"
+            }`}
+          />
         </span>
       </button>
-      {isOpen && (
-        <div
-          style={{
-            display: isOpen ? "block" : "none",
-          }}
-          className={`${styles.navigationSubMenu}`}
-        >
+      {activeSubMenu === resultsTitle && (
+        <div className={`${styles.navigationSubMenu}`}>
           <span className={styles.navigationSubMenuItem}>
             <Link
               to="/search"
               className={styles.navigationMenuLink}
-              onClick={() => setIsOpen(false)}
+              onClick={() => handleMenuToggle(null)}
             >
               All categories
             </Link>
@@ -80,7 +51,7 @@ export const CategoryDropdown = ({
               <Link
                 to={`/${category.slug}/results`}
                 className={styles.navigationMenuLink}
-                onClick={() => null}
+                onClick={() => handleMenuToggle(null)}
               >
                 {category.name}
               </Link>
