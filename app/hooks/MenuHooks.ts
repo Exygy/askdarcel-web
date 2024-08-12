@@ -8,12 +8,14 @@ export function useMenuToggle() {
     setActiveSubMenu((prev) => (prev === uniqueKey ? null : uniqueKey));
   };
 
+  //   If submenu is open and user clicks away from it, close the submenu
   const handleClickOutside = (event: MouseEvent) => {
     if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
       setActiveSubMenu(null);
     }
   };
 
+  //   If submenu is open and user tab navigates away from it, close the submenu
   const handleFocusOut = (event: FocusEvent) => {
     if (
       menuRef.current &&
