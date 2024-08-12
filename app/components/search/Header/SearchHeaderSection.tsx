@@ -11,9 +11,8 @@ export const SearchHeaderSection = ({
   descriptionText: string;
 }) => (
   <div className={styles.searchHeaderContainer}>
-    {/* mobileInnerContainer ^ */}
     <div className={styles.searchHeaderContainerLeft}>
-      <h2>Services</h2>
+      <h1 className={styles.title}>Services</h1>
       <SiteSearchInput />
     </div>
     <span>{descriptionText}</span>

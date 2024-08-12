@@ -64,6 +64,7 @@ const SearchResults = ({
           mobileMapIsCollapsed ? styles.mobileMapIsCollapsed : ""
         }`}
       >
+        <h2 className="sr-only">Search results</h2>
         {hasNoResults ? (
           <NoResultsDisplay />
         ) : (
