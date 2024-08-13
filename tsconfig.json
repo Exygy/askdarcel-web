@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "baseUrl": "app",
-    "lib": ["dom", "dom.iterable", "es2015"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "es2015"
+    ],
     "target": "es2015",
     "allowJs": true, // Allow a mix of JS and TS until we fully migrate to TS.
     "jsx": "react",
@@ -12,9 +16,19 @@
     "skipLibCheck": true // Don't type check .d.ts files, which mostly come from third party libraries.
   },
   "paths": {
-    "*": ["app/index.d.ts"]
+    "*": [
+      "app/index.d.ts"
+    ]
   },
-  "files": ["@types/block-content-to-react.d.ts", "declaration.d.ts"],
-  "include": ["app"],
-  "exclude": ["node_modules"]
+  "files": [
+    "@types/block-content-to-react.d.ts",
+    "declaration.d.ts",
+    "jest.config.js"
+  ],
+  "include": [
+    "app"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
