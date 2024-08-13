@@ -1,7 +1,6 @@
 import React from "react";
 import { ServiceCategory } from "pages/constants";
-import { useMenuToggle } from "../../../hooks/MenuHooks";
-import DropdownSubmenu from "./DropdownSubmenu";
+import DropdownMenu from "./DropdownMenu";
 
 export const CategoryDropdown = ({
   categories,
@@ -10,8 +9,6 @@ export const CategoryDropdown = ({
   categories: Readonly<ServiceCategory[]>;
   resultsTitle: string;
 }) => {
-  const { activeSubMenu, handleMenuToggle, menuRef } = useMenuToggle();
-
   const links = [
     {
       id: "all-categories",
@@ -28,13 +25,10 @@ export const CategoryDropdown = ({
   const uniqueKey = resultsTitle;
 
   return (
-    <DropdownSubmenu
+    <DropdownMenu
       title={resultsTitle}
       links={links}
-      activeSubMenu={activeSubMenu}
-      handleMenuToggle={handleMenuToggle}
       uniqueKey={uniqueKey}
-      menuRef={menuRef}
       variant="category"
     />
   );

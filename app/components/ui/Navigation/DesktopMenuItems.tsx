@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styles from "components/ui/Navigation/DesktopNavigation.module.scss";
 import { useMenuToggle } from "../../../hooks/MenuHooks";
-import DropdownSubmenu from "./DropdownSubmenu";
+import DropdownMenu from "./DropdownMenu";
 
 import {
   StrapiModel,
@@ -20,7 +20,7 @@ const DesktopMenuItems = ({
 }: {
   menuItem: ExtractedNavigationMenusFromNavigationResponse[number];
 }) => {
-  const { activeSubMenu, handleMenuToggle, menuRef } = useMenuToggle();
+  const { handleMenuToggle } = useMenuToggle();
 
   if (menuItemHasLinks(menuItem)) {
     const uniqueKey = menuItem.title;
@@ -31,13 +31,10 @@ const DesktopMenuItems = ({
     }));
 
     return (
-      <DropdownSubmenu
+      <DropdownMenu
         title={menuItem.title}
         links={links}
-        activeSubMenu={activeSubMenu}
-        handleMenuToggle={handleMenuToggle}
         uniqueKey={uniqueKey}
-        menuRef={menuRef}
       />
     );
   }

@@ -2,27 +2,24 @@ import React from "react";
 import { Link } from "react-router-dom";
 import navStyles from "./DesktopNavigation.module.scss";
 import categoryStyles from "./CategoryDropdown.module.scss";
+import { useMenuToggle } from "../../../hooks/MenuHooks";
 
 // This component is the dropdown submenu used by both DesktopMenuItems and CategoryDropdown, created in service of DRY code
 
-const DropdownSubmenu = ({
+const DropdownMenu = ({
   title,
   links,
-  activeSubMenu,
-  handleMenuToggle,
   uniqueKey,
-  menuRef,
   variant = "navigation",
 }: {
   title: string;
   links: { id: number | string; url: string; text: string }[];
-  activeSubMenu: string | null;
-  handleMenuToggle: (key: string | null) => void;
   uniqueKey: string;
-  menuRef: React.RefObject<HTMLDivElement>;
   variant?: "navigation" | "category";
 }) => {
   const styles = variant === "navigation" ? navStyles : categoryStyles;
+
+  const { activeSubMenu, handleMenuToggle, menuRef } = useMenuToggle();
 
   return (
     <div
@@ -52,7 +49,7 @@ const DropdownSubmenu = ({
             <Link
               to={linkItem.url}
               className={styles.navigationMenuLink}
-              onClick={() => handleMenuToggle(null)}
+              onClick={() => handleMenuToggle(null)} // This doesn't matter anymore now that we have the useEffect that resets focus
             >
               {linkItem.text}
             </Link>
@@ -63,4 +60,4 @@ const DropdownSubmenu = ({
   );
 };
 
-export default DropdownSubmenu;
+export default DropdownMenu;
