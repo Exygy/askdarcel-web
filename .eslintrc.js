@@ -25,15 +25,7 @@ module.exports = {
         tsx: "never",
       },
     ],
-    "import/no-extraneous-dependencies": ["error", {
-      "devDependencies": [
-        "**/*{.,_}{test,spec}.{ts,tsx}", // tests where the extension or filename suffix denotes that it is a test
-        "**/jest.config.ts", // jest config
-        "**/jest.setup.ts" // jest setup
-      ],
-      "optionalDependencies": false
-    }
-    ],
+    "import/no-extraneous-dependencies": "error",
     "import/no-named-as-default": 0,
     "import/no-named-as-default-member": 0,
     "import/prefer-default-export": "off",

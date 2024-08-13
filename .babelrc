@@ -13,12 +13,6 @@
   ],
   "plugins": [
     "@babel/plugin-proposal-class-properties",
-    "react-hot-loader/babel",
-    [
-      "@babel/plugin-proposal-decorators",
-      {
-        "legacy": true
-      }
-    ]
+    "react-hot-loader/babel"
   ]
 }
