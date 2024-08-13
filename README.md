@@ -131,6 +131,7 @@ There are two live instances - a [staging instance](https://our415-staging-a91cd
 We use [Jest](https://jestjs.io/) as a test runner and [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/) for component testing. Developers should become familiar with these tools.
 
 Tests files should be co-located next to the source file in the file system and use the name of their source file with the suffix `*.test.tsx`.
+
 ```
 app
 └── components
@@ -139,12 +140,15 @@ app
 ```
 
 To run tests:
+
 ```sh
 npm run test # Run all tests and exit
 npm run test:watch # Watch files for changes and rerun tests related to changed files
 npm run test:watch:all # Watch files for changes and rerun all tests when something changes
 ```
+
 ### Acceptance testing
+
 We do not currently support high-level acceptance testing that simulates workflows that cannot be tested through React Testing Library.
 
 ## Pull Requests
