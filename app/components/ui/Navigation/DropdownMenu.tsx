@@ -46,11 +46,7 @@ const DropdownMenu = ({
       >
         {links.map((linkItem) => (
           <span key={linkItem.id} className={styles.navigationSubMenuItem}>
-            <Link
-              to={linkItem.url}
-              className={styles.navigationMenuLink}
-              onClick={() => handleMenuToggle(null)} // This doesn't matter anymore now that we have the useEffect that resets focus
-            >
+            <Link to={linkItem.url} className={styles.navigationMenuLink}>
               {linkItem.text}
             </Link>
           </span>
