@@ -1,4 +1,4 @@
 {
-  "*.{tsx,js,ts,json}": ["npm run prettier"],
+  "*.{js,jsx,ts,tsx,json}": ["npm run prettier"],
   "*.{js,jsx,ts,tsx}": ["npm run lint"]
 }
