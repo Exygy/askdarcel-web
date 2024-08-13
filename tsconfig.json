@@ -14,6 +14,7 @@
   "paths": {
     "*": ["app/index.d.ts"]
   },
-  "include": ["app", "cypress"],
+  "files": ["@types/block-content-to-react.d.ts", "declaration.d.ts"],
+  "include": ["app"],
   "exclude": ["node_modules"]
 }

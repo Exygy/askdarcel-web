@@ -120,43 +120,17 @@ And to run the dev server, run
 npm run dev
 ```
 
-## End to end testing
-
-#### Quick summary of what TestCafe is and how it works
-
-It's a framework for running end-to-end tests (read: real browser tests) that injects your tests onto an existing web page. Architecturally, they spin up a lightweight proxy server that wraps your web page, and when you connect a browser to the proxy server, it serves the requested page with the test driver injected into it.
-
-It's essentially an alternative to writing Selenium tests, and I've found it nice to use because it mimics many of the common HTML5 DOM APIs and because they've added a lot of reasonable default behavior that Selenium lacks, such as properly waiting for events to finish running and for elements to appear before running your assertions.
-
-#### How to run
-
-If you are not using Docker and all the services are bound to localhost, then you should just be able to run:
-
-```
-$ npm run testcafe -- --skip-js-errors chrome testcafe/*.js
-```
-
-Note: Make sure you have the dev server running (`npm run dev`) before you try running the above
-
-If you are using Docker, then you'll need to run it somewhat like this:
-
-```
-$ docker-compose run --rm -p 1337:1337 -e BASE_URL=http://web:8080 web npm run testcafe -- --skip-js-errors remote --skip-js-errors --hostname localhost --ports 1337,1338 ./testcafe/
-```
-
-This will spin up a web server at http://localhost:1337/ and print out a URL to use. You should manually enter it into your browser to start the tests.
-
 ## Branches and Deployments
 
-There are two protected branches - development and main. Main is the default branch which will be the latest, stable codebase. Development will be where updates get deployed to a staging instance where QA can be performed. Any PR's created against these branches run a series of checks - like building the app, running unit tests, and linting the files. 
+There are two protected branches - development and main. Main is the default branch which will be the latest, stable codebase. Development will be where updates get deployed to a staging instance where QA can be performed. Any PR's created against these branches run a series of checks - like building the app, running unit tests, and linting the files.
 
-There are two live instances - a [staging instance](https://our415-staging-a91cdc6d7b2b.herokuapp.com/) and a [production instance](https://our415-abb7eecb7449.herokuapp.com/). Merges onto the development branch deploys the development branch to the staging isntance. Merges onto the main branch deploys the main branch to the production instance. See the [github workflows](https://github.com/Exygy/askdarcel-web/tree/main/.github/workflows) for the details. 
+There are two live instances - a [staging instance](https://our415-staging-a91cdc6d7b2b.herokuapp.com/) and a [production instance](https://our415-abb7eecb7449.herokuapp.com/). Merges onto the development branch deploys the development branch to the staging isntance. Merges onto the main branch deploys the main branch to the production instance. See the [github workflows](https://github.com/Exygy/askdarcel-web/tree/main/.github/workflows) for the details. Environment variables used in the deployments are set in github environments - 'prod' supplies the production instance and 'dev' supplies the staging instance..
 
 ## Pull Requests
 
 Pull requests are opened to the development branch. When opening a pull request please fill out the as much of the pull request template you can, which includes tagging the issue your PR is related to, a description of your PR, indicating the type of change, including details for the reviewer about how to test your PR, and a testing checklist. Additionally, officially link the notion ticket to the PR using GitHub's linking UI.
 
-When your PR is ready for review, add the needs review(s) label to help surface it to our internal team. You can assign people as reviewers to surface the work further. If you put up a PR that is not yet ready for eyes, add the wip label.
+When your PR is ready for review, add the needs review(s) label to help surface it to the other devs. You can assign people as reviewers to surface the work further. If you put up a PR that is not yet ready for eyes, add the wip label.
 
 Once the PR has been approved, you either (1) squash and merge the commits if your changes are just in one package, or (2) rebase and merge your commits if your commits are cleanly separated across multiple packages to allow the versions to propagate appropriately.
 

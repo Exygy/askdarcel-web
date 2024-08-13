@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////////////////////////////////////////////
 // TOP LEVEL IMPORTS - DO NOT ADD CSS HERE
 
-@import "utils/helpers";
 @import "utils/reset";
+@import "utils/helpers";
 
 // Basic Styles
 @import "st-base/forms";
@@ -11,6 +11,4 @@
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // PAGE SPECIFIC STYLES
-@import "components/listing-page";
-@import "components/org-page";
 @import "components/map";

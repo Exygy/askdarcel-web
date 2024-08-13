@@ -1,0 +1,21 @@
+@import "../../../styles/utils/_helpers.scss";
+
+.mastheadContainer {
+  background: $surface-4;
+  padding: $spacing-24 $general-spacing-md;
+}
+
+.innerContainer {
+  max-width: $width-content;
+  margin: auto;
+}
+
+.mastheadHeader {
+  color: $text-tertiary;
+}
+
+@media screen and (max-width: $break-tablet-p) {
+  .mastheadContainer {
+    padding: $general-spacing-xl $general-spacing-md;
+  }
+}
