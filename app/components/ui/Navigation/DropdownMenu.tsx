@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import navStyles from "./DesktopNavigation.module.scss";
-import categoryStyles from "./CategoryDropdown.module.scss";
+import styles from "./DropdownMenu.module.scss";
 import { useMenuToggle } from "../../../hooks/MenuHooks";
+import classNames from "classnames";
 
 // This component is the dropdown submenu used by both DesktopMenuItems and CategoryDropdown, created in service of DRY code
 
@@ -17,16 +17,15 @@ const DropdownMenu = ({
   uniqueKey: string;
   variant?: "navigation" | "category";
 }) => {
-  const styles = variant === "navigation" ? navStyles : categoryStyles;
-
   const { activeSubMenu, handleMenuToggle, menuRef } = useMenuToggle();
 
+  const containerClass = classNames(
+    styles.navigationMenuContainer,
+    variant === "category" && styles.categoryMenuContainer
+  );
+
   return (
-    <div
-      className={styles.navigationMenuContainer}
-      key={uniqueKey}
-      ref={menuRef}
-    >
+    <div className={containerClass} key={uniqueKey} ref={menuRef}>
       <button
         type="button"
         aria-haspopup="menu"

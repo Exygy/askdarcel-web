@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import styles from "components/ui/Navigation/DesktopNavigation.module.scss";
+import styles from "components/ui/Navigation/DropdownMenu.module.scss";
 import { useMenuToggle } from "../../../hooks/MenuHooks";
 import DropdownMenu from "./DropdownMenu";
 
