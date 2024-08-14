@@ -4,8 +4,6 @@ import classNames from "classnames";
 import styles from "./DropdownMenu.module.scss";
 import { useMenuToggle } from "../../../hooks/MenuHooks";
 
-// This component is the dropdown submenu used by both DesktopMenuItems and CategoryDropdown, created in service of DRY code
-
 const DropdownMenu = ({
   title,
   links,

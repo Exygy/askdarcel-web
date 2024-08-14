@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import styles from "components/ui/Navigation/DropdownMenu.module.scss";
-import { useMenuToggle } from "../../../hooks/MenuHooks";
 import DropdownMenu from "./DropdownMenu";
 
 import {
@@ -20,8 +19,6 @@ const DesktopMenuItems = ({
 }: {
   menuItem: ExtractedNavigationMenusFromNavigationResponse[number];
 }) => {
-  const { handleMenuToggle } = useMenuToggle();
-
   if (menuItemHasLinks(menuItem)) {
     const uniqueKey = menuItem.title;
     const links = menuItem.link.map((linkItem) => ({
@@ -45,7 +42,6 @@ const DesktopMenuItems = ({
       key={uniqueKey}
       to={menuItem.url}
       className={styles.navigationMenuLink}
-      onClick={() => handleMenuToggle(null)}
     >
       {menuItem.text}
     </Link>
