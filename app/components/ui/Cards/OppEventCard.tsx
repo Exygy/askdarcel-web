@@ -19,10 +19,6 @@ export const OppEventCard = (props: OppEventCardProps) => {
     details: { title, id, calendarEvent, imageUrl },
     sectionType,
   } = props;
-
-  const topLevelSlug = sectionType === "event" ? "events" : "opportunities";
-  const fullSlug = `/${topLevelSlug}/${id}`;
-
   return (
     <div className={`${styles.oppEventCard} ${styles[sectionType]}`}>
       {imageUrl ? (
@@ -40,7 +36,7 @@ export const OppEventCard = (props: OppEventCardProps) => {
       <div className={styles.content}>
         <div>
           <h4 className={styles.contentTitle}>
-            <a href={fullSlug}>{title}</a>
+            <a href={id}>{title}</a>
           </h4>
           {calendarEvent && (
             <div className={styles.contentTime}>
@@ -49,7 +45,7 @@ export const OppEventCard = (props: OppEventCardProps) => {
           )}
         </div>
 
-        <Button arrowVariant="after" variant="linkBlue" size="lg" isVisualOnly>
+        <Button arrowVariant="after" variant="linkBlue" size="lg">
           View more
         </Button>
       </div>
