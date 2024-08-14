@@ -91,17 +91,30 @@
   font-size: 12px;
 }
 
-.desktopNavigationContainer {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
+.categoryMenuContainer {
+  position: relative;
+  min-width: 160px;
 
-  // Adds separator
-  border-right: 1px solid black;
-  padding-right: $spacing-2;
-  margin-right: $spacing-6;
+  .navigationSubMenu {
+    top: 50px;
+    left: 0;
+  }
 
-  > * {
-    font-weight: 600;
+  .navigationMenuHeader {
+    gap: 10px;
+    font-size: 26px;
+    font-family: Montserrat;
+
+    @include r_max($break-tablet-s) {
+      font-size: 20px;
+    }
+  }
+
+  .navigationMenuHeader .chevron {
+    font-size: 20px;
+
+    @include r_max($break-tablet-s) {
+      font-size: 16px;
+    }
   }
 }

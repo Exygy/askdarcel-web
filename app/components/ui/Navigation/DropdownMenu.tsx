@@ -1,35 +1,31 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import navStyles from "./DesktopNavigation.module.scss";
-import categoryStyles from "./CategoryDropdown.module.scss";
+import classNames from "classnames";
+import styles from "./DropdownMenu.module.scss";
+import { useMenuToggle } from "../../../hooks/MenuHooks";
 
 // This component is the dropdown submenu used by both DesktopMenuItems and CategoryDropdown, created in service of DRY code
 
-const DropdownSubmenu = ({
+const DropdownMenu = ({
   title,
   links,
-  activeSubMenu,
-  handleMenuToggle,
   uniqueKey,
-  menuRef,
   variant = "navigation",
 }: {
   title: string;
   links: { id: number | string; url: string; text: string }[];
-  activeSubMenu: string | null;
-  handleMenuToggle: (key: string | null) => void;
   uniqueKey: string;
-  menuRef: React.RefObject<HTMLDivElement>;
   variant?: "navigation" | "category";
 }) => {
-  const styles = variant === "navigation" ? navStyles : categoryStyles;
+  const { activeSubMenu, handleMenuToggle, menuRef } = useMenuToggle();
+
+  const containerClass = classNames(
+    styles.navigationMenuContainer,
+    variant === "category" && styles.categoryMenuContainer
+  );
 
   return (
-    <div
-      className={styles.navigationMenuContainer}
-      key={uniqueKey}
-      ref={menuRef}
-    >
+    <div className={containerClass} key={uniqueKey} ref={menuRef}>
       <button
         type="button"
         aria-haspopup="menu"
@@ -49,11 +45,7 @@ const DropdownSubmenu = ({
       >
         {links.map((linkItem) => (
           <span key={linkItem.id} className={styles.navigationSubMenuItem}>
-            <Link
-              to={linkItem.url}
-              className={styles.navigationMenuLink}
-              onClick={() => handleMenuToggle(null)}
-            >
+            <Link to={linkItem.url} className={styles.navigationMenuLink}>
               {linkItem.text}
             </Link>
           </span>
@@ -63,4 +55,4 @@ const DropdownSubmenu = ({
   );
 };
 
-export default DropdownSubmenu;
+export default DropdownMenu;
