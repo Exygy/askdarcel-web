@@ -5,7 +5,7 @@ import { Button } from "components/ui/inline/Button/Button";
 import { QrCodeModal } from "components/ui/QrCodeModal/QrCodeModal"; // todo: remove QrCodeModal from project
 import websiteConfig from "utils/websiteConfig";
 import { CATEGORIES } from "pages/constants";
-import { CustomDropdown as Dropdown } from "./CustomDropdown";
+import DropdownMenu from "components/ui/Navigation/DropdownMenu";
 
 import styles from "./Header.module.scss";
 
@@ -19,26 +19,34 @@ export const Header = ({
   // translateResultsTitle?: boolean;
 }) => {
   const [qrCodeModalOpen, setQrCodeModalOpen] = useState(false);
-  const [currentCategory, setCurrentCategory] =
-    useState<string>("food-resources");
-
-  const handleCategoryChange = (slug: string) => {
-    setCurrentCategory(slug);
-    window.location.href = slug;
-  };
 
   const title = resultsTitle === "" ? "All categories" : resultsTitle;
+
+  const links = [
+    {
+      id: "all-categories",
+      url: "/search",
+      text: "All categories",
+    },
+    ...CATEGORIES.map((category) => ({
+      id: category.slug,
+      url: `/${category.slug}/results`,
+      text: category.name,
+    })),
+  ];
 
   return (
     <div className={styles.header}>
       <div className={styles.headerInner}>
         <div>
-          <h2 className="sr-only">Browse services by category</h2>
-          <Dropdown
-            categories={CATEGORIES}
-            currentCategory={currentCategory}
-            onCategoryChange={handleCategoryChange}
-            resultsTitle={title}
+          <h1 className="sr-only">
+            {title === resultsTitle ?? "Search results"}
+          </h1>
+          <DropdownMenu
+            title={resultsTitle}
+            links={links}
+            uniqueKey={resultsTitle}
+            variant="category"
           />
         </div>
         <Button
