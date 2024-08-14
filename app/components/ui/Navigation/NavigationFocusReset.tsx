@@ -2,24 +2,33 @@ import React, { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 
 /* 
-  Resets focus state for a11y, by focusing and unfocusing an off-screen element at the top of the page when page location changes
-  Since filters change the location, the logic is to only reset focus when a main-level page change occurs (not when user filters a search)
+  Resets focus state for a11y by focusing and unfocusing an off-screen element at the top of the page when the page location changes.
+  The focus reset occurs on all page location changes except for top-level category and search page filter changes.
 */
 export const NavigationFocusReset: React.FC = () => {
   const location = useLocation();
   const hiddenInputRef = useRef<HTMLInputElement | null>(null);
-  const previousPathSegmentRef = useRef<string>("");
+  const previousPathRef = useRef<string>("");
 
   useEffect(() => {
-    const currentPathSegment = location.pathname.split("/")[1];
+    const currentPath = location.pathname;
 
-    if (currentPathSegment !== previousPathSegmentRef.current) {
+    const isCategoryPage = currentPath.includes("results");
+    const isSearchPage = currentPath.includes("query");
+    const pathHasFilters = isCategoryPage || isSearchPage;
+
+    // Check if the current path is different from the previous path
+    const pathChanged = currentPath !== previousPathRef.current;
+
+    // Focus reset should occur if the path changed and it's not just a filter change
+    if (pathChanged && (!pathHasFilters || previousPathRef.current === "")) {
       if (hiddenInputRef.current) {
         hiddenInputRef.current.focus();
         hiddenInputRef.current.blur();
       }
-      previousPathSegmentRef.current = currentPathSegment;
     }
+
+    previousPathRef.current = currentPath;
   }, [location]);
 
   return (
