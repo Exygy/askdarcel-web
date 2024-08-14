@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { connectStateResults } from "react-instantsearch/connectors";
 import { SearchMap } from "components/search/SearchMap/SearchMap";
 import ResultsPagination from "components/search/Pagination/ResultsPagination";
@@ -39,6 +39,19 @@ const SearchResults = ({
     };
   }, [googleMapObject, centerCoords]);
 
+  // Scroll to the top and move focus to the first result after pagination
+  const firstResultRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+
+    if (firstResultRef.current) {
+      firstResultRef.current.focus();
+    }
+  }, [searchResults?.page]);
+
   if (!searchResults) return null;
 
   const searchMapHitData: SearchMapHitData =
@@ -77,8 +90,12 @@ const SearchResults = ({
                 <ClearSearchButton />
               </div>
             )}
-            {searchMapHitData.hits.map((hit: TransformedSearchHit) => (
-              <SearchResult hit={hit} key={`${hit.id} - ${hit.name}`} />
+            {searchMapHitData.hits.map((hit: TransformedSearchHit, index) => (
+              <SearchResult
+                hit={hit}
+                key={`${hit.id} - ${hit.name}`}
+                ref={index === 0 ? firstResultRef : null}
+              />
             ))}
             <ResultsPagination noResults={hasNoResults} />
           </>
