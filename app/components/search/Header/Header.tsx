@@ -16,9 +16,7 @@ export const Header = ({
   resultsTitle: string;
   // translateResultsTitle?: boolean;
 }) => {
-
   const title = resultsTitle === "" ? "All categories" : resultsTitle;
-
 
   const links = [
     {
