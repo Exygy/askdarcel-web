@@ -1,15 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 
-import { icon as assetIcon } from "assets";
 import { Button } from "components/ui/inline/Button/Button";
-import { QrCodeModal } from "components/ui/QrCodeModal/QrCodeModal"; // todo: remove QrCodeModal from project
 import websiteConfig from "utils/websiteConfig";
 import { CATEGORIES } from "pages/constants";
 import DropdownMenu from "components/ui/Navigation/DropdownMenu";
 
 import styles from "./Header.module.scss";
 
-const { showHeaderQrCode, showPrintResultsBtn } = websiteConfig;
+const { showPrintResultsBtn } = websiteConfig;
 
 export const Header = ({
   resultsTitle,
@@ -18,9 +16,9 @@ export const Header = ({
   resultsTitle: string;
   // translateResultsTitle?: boolean;
 }) => {
-  const [qrCodeModalOpen, setQrCodeModalOpen] = useState(false);
 
   const title = resultsTitle === "" ? "All categories" : resultsTitle;
+
 
   const links = [
     {
@@ -50,20 +48,6 @@ export const Header = ({
           />
         </div>
         <Button
-          onClick={() => {
-            setQrCodeModalOpen(true);
-          }}
-          addClass={`${styles.qrCodeBtn} ${
-            showHeaderQrCode ? styles.showBtn : ""
-          }`}
-          styleType="transparent"
-        >
-          <>
-            <img src={assetIcon("qr-code")} alt="QR code icon" />
-            <span className={styles.btnText}>Resource List QR Code</span>
-          </>
-        </Button>
-        <Button
           iconName="fas fa-print"
           iconVariant="before"
           variant="secondary"
@@ -77,7 +61,6 @@ export const Header = ({
         >
           Print all results
         </Button>
-        <QrCodeModal isOpen={qrCodeModalOpen} setIsOpen={setQrCodeModalOpen} />
       </div>
     </div>
   );
