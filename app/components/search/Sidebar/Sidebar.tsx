@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import type { Category } from "models/Meta";
 
@@ -36,6 +36,29 @@ const Sidebar = ({
   setIsMapCollapsed: (_isMapCollapsed: boolean) => void;
 }) => {
   const [filterMenuVisible, setfilterMenuVisible] = useState(false);
+  const filterMenuRef = useRef<HTMLDivElement>(null);
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      filterMenuRef.current &&
+      !filterMenuRef.current.contains(event.target as Node)
+    ) {
+      setfilterMenuVisible(false);
+    }
+  };
+
+  useEffect(() => {
+    if (filterMenuVisible) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [filterMenuVisible]);
+
   let categoryRefinementJsx: React.ReactElement | null = null;
   let eligibilityRefinementJsx: React.ReactElement | null = null;
   const orderByLabel = (a: { label: string }, b: { label: string }) =>
@@ -142,6 +165,7 @@ const Sidebar = ({
         />
       </div>
       <div
+        ref={filterMenuRef}
         className={`${styles.filtersContainer} ${
           filterMenuVisible ? styles.showFilters : ""
         }`}
