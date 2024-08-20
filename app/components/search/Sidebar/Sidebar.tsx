@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
+import useClickOutside from "../../../hooks/MenuHooks";
 
 import type { Category } from "models/Meta";
 
@@ -38,26 +39,11 @@ const Sidebar = ({
   const [filterMenuVisible, setfilterMenuVisible] = useState(false);
   const filterMenuRef = useRef<HTMLDivElement>(null);
 
-  const handleClickOutside = (event: MouseEvent) => {
-    if (
-      filterMenuRef.current &&
-      !filterMenuRef.current.contains(event.target as Node)
-    ) {
-      setfilterMenuVisible(false);
-    }
-  };
-
-  useEffect(() => {
-    if (filterMenuVisible) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [filterMenuVisible]);
+  useClickOutside(
+    filterMenuRef,
+    () => setfilterMenuVisible(false),
+    filterMenuVisible
+  );
 
   let categoryRefinementJsx: React.ReactElement | null = null;
   let eligibilityRefinementJsx: React.ReactElement | null = null;

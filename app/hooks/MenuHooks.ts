@@ -43,3 +43,28 @@ export function useMenuToggle() {
     menuRef,
   };
 }
+
+// For use in modals, dropdowns, etc.
+function useClickOutside<T extends HTMLElement>(
+  ref: React.RefObject<T>,
+  callback: () => void, // i.e. setIsActive(false)
+  isActive: boolean = true
+) {
+  useEffect(() => {
+    if (!isActive) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (ref.current && !ref.current.contains(event.target as Node)) {
+        callback();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [ref, callback, isActive]);
+}
+
+export default useClickOutside;
