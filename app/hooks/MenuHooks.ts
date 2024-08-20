@@ -51,18 +51,20 @@ function useClickOutside<T extends HTMLElement>(
   isActive: boolean = true
 ) {
   useEffect(() => {
-    if (!isActive) return;
-
     const handleClickOutside = (event: MouseEvent) => {
       if (ref.current && !ref.current.contains(event.target as Node)) {
         callback();
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
+    if (isActive) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
 
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      if (isActive) {
+        document.removeEventListener("mousedown", handleClickOutside);
+      }
     };
   }, [ref, callback, isActive]);
 }
