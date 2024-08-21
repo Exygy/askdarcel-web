@@ -1,8 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import dropdownMenuStyles from "components/ui/Navigation/DropdownMenu.module.scss";
 import desktopNavigationStyles from "components/ui/Navigation/DesktopNavigation.module.scss";
-import classNames from "classnames";
 import DropdownMenu from "./DropdownMenu";
 
 import {
@@ -43,10 +41,7 @@ const DesktopMenuItems = ({
     <Link
       key={uniqueKey}
       to={menuItem.url}
-      className={classNames(
-        dropdownMenuStyles.menuLink,
-        desktopNavigationStyles.navigationMenuLink
-      )}
+      className={desktopNavigationStyles.navigationMenuLink}
     >
       {menuItem.text}
     </Link>
