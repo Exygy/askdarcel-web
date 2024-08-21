@@ -110,6 +110,10 @@
     border-bottom: 1px solid $border-gray;
     flex-direction: column;
     width: 100vw;
+
+    p {
+      font-size: 14px;
+    }
   }
 }
 
@@ -298,10 +302,6 @@
     display: block;
     padding: 20px 0;
     border-left: 0;
-
-    li {
-      font-size: 16px;
-    }
   }
 
   .sideLink {
