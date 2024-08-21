@@ -5,7 +5,7 @@
   margin: $general-spacing-lg auto $spacing-0;
 
   @include r_max($break-desktop-s) {
-    margin: $general-spacing-lg $spacing-0 $spacing-0;
+    margin: $spacing-0 $spacing-0;
     max-width: 100%;
   }
 
