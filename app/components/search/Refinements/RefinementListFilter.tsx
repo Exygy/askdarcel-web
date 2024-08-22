@@ -1,13 +1,11 @@
-import { Item } from "components/search/Refinements/FacetRefinementList";
 import React from "react";
-import { connectRefinementList } from "react-instantsearch/connectors";
+import {
+  connectRefinementList,
+  RefinementListProvided,
+} from "react-instantsearch/connectors";
 import styles from "./RefinementFilters.module.scss";
 
-type Props = {
-  items: Item[];
-  refine: (value: string[]) => void;
-};
-const RefinementListFilter = ({ items, refine }: Props) => {
+const RefinementListFilter = ({ items, refine }: RefinementListProvided) => {
   return (
     <ul>
       {items.map((item) => (
