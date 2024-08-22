@@ -1,13 +1,7 @@
+import { Item } from "components/search/Refinements/FacetRefinementList";
 import React from "react";
 import { connectRefinementList } from "react-instantsearch/connectors";
 import styles from "./RefinementFilters.module.scss";
-
-type Item = {
-  label: string;
-  value: string[];
-  count: number;
-  isRefined: boolean;
-};
 
 type Props = {
   items: Item[];

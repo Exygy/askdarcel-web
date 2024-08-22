@@ -7,8 +7,11 @@ import {
 import ClearAllFilters from "components/search/Refinements/ClearAllFilters";
 import OpenNowFilter from "components/search/Refinements/OpenNowFilter";
 import RefinementListFilter from "components/search/Refinements/RefinementListFilter";
-import FacetRefinementList from "components/search/Refinements/FacetRefinementList";
+import FacetRefinementList, {
+  Item,
+} from "components/search/Refinements/FacetRefinementList";
 import { Button } from "components/ui/inline/Button/Button";
+import { Hit } from "react-instantsearch/connectors";
 import useClickOutside from "../../../hooks/MenuHooks";
 import MobileMapToggleButtons from "./MobileMapToggleButtons";
 import styles from "./Sidebar.module.scss";
@@ -96,9 +99,7 @@ const Sidebar = ({
         <RefinementListFilter
           attribute="eligibilities"
           limit={100}
-          transformItems={(items: { label: string }[]) =>
-            items.sort(orderByLabel)
-          }
+          transformItems={(items: Hit<Item>[]) => items.sort(orderByLabel)}
         />
       );
     }
@@ -116,8 +117,11 @@ const Sidebar = ({
             as checkboxes in the ServiceDiscoveryForm view.
           */
           limit={100}
-          transformItems={(items: { label: string }[]) =>
+          transformItems={(items: Hit<Item>[]) =>
             items
+              // Intersects the total list of _categories_ for every hit returned in the result set with the list of
+              // _subcategories_ fetched from the ShelterTech API (`/api/categories/subcategories?id=${categoryID}`)
+              // for the currently selected category.
               .filter(({ label }) => subcategoryNames.includes(label))
               .sort(
                 sortAlgoliaSubcategoryRefinements
