@@ -3,7 +3,7 @@ import { connectRefinementList } from "react-instantsearch/connectors";
 import type { Hit } from "react-instantsearch-core";
 import styles from "./RefinementFilters.module.scss";
 
-type Item = {
+export type Item = {
   count: number;
   isRefined: boolean;
   label: string;
