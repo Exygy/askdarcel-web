@@ -109,7 +109,7 @@ const Sidebar = ({
           attribute="categories"
           // The number of tagged categories returned by Algolia can be very large.
           // We set an artificially high limit to attempt capturing all the subcategories
-          // that the returned set contain the desired subcategories; these are the initial subcategories displayed
+          // so that the returned set contain the desired subcategories; these are the initial subcategories displayed
           // to the user as checkboxes in the ServiceDiscoveryForm view.
           limit={100}
           // Algolia returns all categories of the union of returned services.
