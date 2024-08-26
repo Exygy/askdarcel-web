@@ -5,8 +5,6 @@
 # This key needs access to the following APIs:
 # - Maps JavaScript API
 # - Street View API
-# Note that the settings for this key are in Google Cloud Platform under the
-# AskDarcel project
 GOOGLE_API_KEY: "<ENTER_YOUR_GOOGLE_API_KEY_HERE>"
 
 # Please replace the entire value of the ALGOLIA_INDEX_PREFIX setting with your
