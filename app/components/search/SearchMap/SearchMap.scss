@@ -5,15 +5,16 @@
 }
 
 .results-map {
+  position: sticky;
   width: 100%;
   min-width: 300px;
+  height: calc(100vh - 265px);
 
   @media screen and (max-width: $break-tablet-p) {
     height: 25rem;
   }
 
   @media screen and (max-width: $break-tablet-s) {
-    position: relative;
     min-height: 250px;
   }
 }
