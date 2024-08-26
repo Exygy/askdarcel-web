@@ -173,6 +173,7 @@
   color: $text-secondary;
 
   &::before {
+    content: "\f3c5"; // Location pin icon
     font-family: "Font Awesome 5 Free";
     font-weight: 900;
     margin-right: $general-spacing-xs;
@@ -236,6 +237,7 @@
 .icon-phone {
   margin-bottom: $general-spacing-md;
   &::before {
+    content: "\f095"; // phone icon
     transform: scaleX(-1);
     font-family: "Font Awesome 5 Free";
     font-weight: 900;
@@ -247,6 +249,7 @@
 
 .icon-popout {
   &::before {
+    content: "\f35d"; // popout icon
     font-family: "Font Awesome 5 Free";
     font-weight: 900;
   }
