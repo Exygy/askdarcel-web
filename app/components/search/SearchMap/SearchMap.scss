@@ -8,7 +8,8 @@
   position: sticky;
   width: 100%;
   min-width: 300px;
-  height: calc(100vh - 265px);
+  height: calc(100vh - 290px);
+  top: $header-height;
 
   @media screen and (max-width: $break-tablet-p) {
     height: 25rem;
