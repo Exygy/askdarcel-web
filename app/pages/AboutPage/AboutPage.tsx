@@ -4,7 +4,7 @@ import { StrapiModel } from "models/Strapi";
 import { Masthead } from "../../components/ui/Masthead/Masthead";
 import { EmailSignup } from "../../components/EmailSignup/Emailsignup";
 import { TwoColumnContentSection } from "../../components/ui/TwoColumnContentSection/TwoColumnContentSection";
-import { usePageContent } from "../../hooks/StrapiAPI";
+import { usePageContent } from "hooks/StrapiAPI";
 
 export const AboutPage = () => {
   const { data, isLoading } = usePageContent("About");

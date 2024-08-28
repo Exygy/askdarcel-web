@@ -6,7 +6,7 @@ import SFSeal from "assets/img/sf-seal-white.png";
 import DCYFLogo from "assets/img/dcyf-white.png";
 import { StrapiModel } from "models/Strapi";
 import { FooterColumn } from "./FooterColumn";
-import { useFooterData } from "../../../hooks/StrapiAPI";
+import { useFooterData } from "hooks/StrapiAPI";
 
 import "./Footer.scss";
 

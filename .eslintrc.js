@@ -25,7 +25,10 @@ module.exports = {
         tsx: "never",
       },
     ],
-    "import/no-extraneous-dependencies": "error",
+    "import/no-extraneous-dependencies": [
+      "error",
+      { devDependencies: true },
+    ],
     "import/no-named-as-default": 0,
     "import/no-named-as-default-member": 0,
     "import/prefer-default-export": "off",
@@ -109,10 +112,6 @@ module.exports = {
     {
       files: ["tools/**", "webpack.config.js"],
       rules: {
-        "import/no-extraneous-dependencies": [
-          "error",
-          { devDependencies: true },
-        ],
         // The tools and webpack.config.js are entrypoints and don't require
         // exports.
         "import/no-unused-modules": "off",
