@@ -90,11 +90,14 @@ export const Navigation = () => {
         className={mobileNavigationStyles.sidebar}
         width="275px"
       >
-        <MobileNavigation
-          isOpen={mobileNavigationIsOpen}
-          setSubMenu={setActiveMobileSubMenu}
-          activeSubMenu={activeMobileSubMenu}
-        />
+        {menuData && (
+          <MobileNavigation
+            isOpen={mobileNavigationIsOpen}
+            setSubMenu={setActiveMobileSubMenu}
+            activeSubMenu={activeMobileSubMenu}
+            menuData={menuData}
+          />
+        )}
       </SidebarPushPanel>
       <div id={PAGE_WRAP_ID}>
         <nav className={styles.siteNav}>

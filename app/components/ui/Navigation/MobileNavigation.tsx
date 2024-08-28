@@ -1,11 +1,8 @@
 import React from "react";
 import mobileNavigationStyles from "components/ui/Navigation/MobileNavigation.module.scss";
-
-import { useNavigationData } from "hooks/StrapiAPI";
 import { Link } from "react-router-dom";
 import {
   ExtractedNavigationMenusFromNavigationResponse,
-  extractNavigationMenusFromNavigationResponse,
   StrapiModel,
 } from "models/Strapi";
 import { GoogleTranslate } from "../GoogleTranslate";
@@ -14,18 +11,15 @@ interface MobileNavigationProps {
   isOpen: boolean;
   activeSubMenu: string;
   setSubMenu: (value: string) => void;
+  menuData: ExtractedNavigationMenusFromNavigationResponse;
 }
 
 export const MobileNavigation = ({
-  isOpen,
+  isOpen = false,
   activeSubMenu,
   setSubMenu,
+  menuData,
 }: MobileNavigationProps) => {
-  const { data: navigationResponse } = useNavigationData();
-
-  const menuData =
-    extractNavigationMenusFromNavigationResponse(navigationResponse);
-
   function menuItemHasLinks(
     menuItem: ExtractedNavigationMenusFromNavigationResponse[number]
   ): menuItem is StrapiModel.NavigationMenu {
