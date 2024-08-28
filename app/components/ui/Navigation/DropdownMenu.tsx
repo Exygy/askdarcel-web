@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import classNames from "classnames";
-import styles from "./DropdownMenu.module.scss";
 import { useMenuToggle } from "hooks/MenuHooks";
+import styles from "./DropdownMenu.module.scss";
 
 const DropdownMenu = ({
   title,
