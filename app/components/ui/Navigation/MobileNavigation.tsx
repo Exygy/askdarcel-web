@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import mobileNavigationStyles from "components/ui/Navigation/MobileNavigation.module.scss";
 
 import { useNavigationData } from "hooks/StrapiAPI";
@@ -10,14 +10,18 @@ import {
 } from "models/Strapi";
 import { GoogleTranslate } from "../GoogleTranslate";
 
+interface MobileNavigationProps {
+  isOpen: boolean;
+  activeSubMenu: string;
+  setSubMenu: (value: string) => void;
+}
+
 export const MobileNavigation = ({
-  mobileNavigationIsOpen,
-}: {
-  mobileNavigationIsOpen: boolean;
-}) => {
+  isOpen,
+  activeSubMenu,
+  setSubMenu,
+}: MobileNavigationProps) => {
   const { data: navigationResponse } = useNavigationData();
-  // const [mobileNavigationIsOpen, setMobileNavigationIsOpen] = useState(false);
-  const [activeMobileSubMenu, setActiveMobileSubMenu] = useState("");
 
   const menuData =
     extractNavigationMenusFromNavigationResponse(navigationResponse);
@@ -28,86 +32,86 @@ export const MobileNavigation = ({
     return "link" in menuItem;
   }
   const closeMobileMenu = () => {
-    setActiveMobileSubMenu("");
+    setSubMenu("");
   };
 
   return (
-    <div className={mobileNavigationStyles.mobileNavigationContainer}>
-      {menuData?.map((menuDataItem) => {
-        if (menuItemHasLinks(menuDataItem)) {
-          const uniqueKey = menuDataItem.title;
+    <>
+      <div className={mobileNavigationStyles.mobileNavigationContainer}>
+        {menuData?.map((menuDataItem) => {
+          if (menuItemHasLinks(menuDataItem)) {
+            const uniqueKey = menuDataItem.title;
+
+            return (
+              <div
+                className={mobileNavigationStyles.mobileNavigationMenuContainer}
+                key={uniqueKey}
+              >
+                <button
+                  type="button"
+                  aria-haspopup="menu"
+                  aria-expanded={activeSubMenu === uniqueKey ? "true" : "false"}
+                  onClick={() => setSubMenu(uniqueKey)}
+                  className={mobileNavigationStyles.mobileNavigationMenuHeader}
+                >
+                  {menuDataItem.title}
+                  <span
+                    className={`fas fa-chevron-right ${mobileNavigationStyles.chevron}`}
+                  />
+                </button>
+                <ul
+                  className={`${
+                    mobileNavigationStyles.mobileNavigationMenuList
+                  } ${
+                    activeSubMenu === uniqueKey
+                      ? mobileNavigationStyles.mobileNavigationMenuListOpen
+                      : ""
+                  }`}
+                >
+                  {menuDataItem.link.map((linkItem: StrapiModel.Link) => (
+                    <li
+                      key={linkItem.id}
+                      className={
+                        mobileNavigationStyles.mobileNavigationMenuListItem
+                      }
+                    >
+                      <Link
+                        to={linkItem.url}
+                        className={
+                          mobileNavigationStyles.mobileNavigationMenuLink
+                        }
+                        onClick={closeMobileMenu}
+                      >
+                        {linkItem.text}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            );
+          }
 
           return (
-            <div
-              className={mobileNavigationStyles.mobileNavigationMenuContainer}
-              key={uniqueKey}
+            <li
+              key={menuDataItem.url}
+              className={mobileNavigationStyles.mobileNavigationMenuListItem}
             >
-              <button
-                type="button"
-                aria-haspopup="menu"
-                aria-expanded={
-                  activeMobileSubMenu === uniqueKey ? "true" : "false"
-                }
-                onClick={() => setActiveMobileSubMenu(uniqueKey)}
-                className={mobileNavigationStyles.mobileNavigationMenuHeader}
+              <Link
+                to={menuDataItem.url}
+                className={mobileNavigationStyles.mobileNavigationMenuLink}
+                onClick={closeMobileMenu}
               >
-                {menuDataItem.title}
-                <span
-                  className={`fas fa-chevron-right ${mobileNavigationStyles.chevron}`}
-                />
-              </button>
-              <ul
-                className={`${
-                  mobileNavigationStyles.mobileNavigationMenuList
-                } ${
-                  activeMobileSubMenu === uniqueKey
-                    ? mobileNavigationStyles.mobileNavigationMenuListOpen
-                    : ""
-                }`}
-              >
-                {menuDataItem.link.map((linkItem: StrapiModel.Link) => (
-                  <li
-                    key={linkItem.id}
-                    className={
-                      mobileNavigationStyles.mobileNavigationMenuListItem
-                    }
-                  >
-                    <Link
-                      to={linkItem.url}
-                      className={
-                        mobileNavigationStyles.mobileNavigationMenuLink
-                      }
-                      onClick={closeMobileMenu}
-                    >
-                      {linkItem.text}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
+                {menuDataItem.text}
+              </Link>
+            </li>
           );
-        }
-
-        return (
-          <li
-            key={menuDataItem.url}
-            className={mobileNavigationStyles.mobileNavigationMenuListItem}
-          >
-            <Link
-              to={menuDataItem.url}
-              className={mobileNavigationStyles.mobileNavigationMenuLink}
-              onClick={closeMobileMenu}
-            >
-              {menuDataItem.text}
-            </Link>
-          </li>
-        );
-      })}
-      {mobileNavigationIsOpen && (
+        })}
+      </div>
+      {isOpen && (
         <div className={mobileNavigationStyles.mobileNavigationMenuTranslate}>
           <GoogleTranslate />
         </div>
       )}
-    </div>
+    </>
   );
 };
