@@ -58,6 +58,9 @@ export interface ServiceParams
   schedule?: ScheduleParams;
 }
 
+const UNKNOWN_ERROR_MESSAGE =
+  "We were unable to process the request. Please contact your site administrator.";
+
 // TODO This should be serviceAtLocation
 export const getServiceLocations = (
   service: Service,
@@ -94,8 +97,9 @@ export const generateServiceDetails = (
     .map((row) => ({ title: row[0], value: row[1] }));
 
 // Determine if a service has its own schedule, or should inherit
-export const shouldServiceInheritScheduleFromOrg = (service: Service) =>
-  service.schedule && service.schedule.schedule_days.length > 0;
+export const shouldServiceInheritScheduleFromOrg = (
+  service: Partial<Service>
+) => service.schedule && service.schedule.schedule_days.length > 0;
 
 /**
  * Return a Promise with the fetched Service.
@@ -103,15 +107,25 @@ export const shouldServiceInheritScheduleFromOrg = (service: Service) =>
  * Also perform a transformation from the raw API representation of schedules
  * into a nicer-to-use data model of RecurringSchedules.
  */
-export const fetchService = (id: string) =>
+export const fetchService = (id: string): Promise<string | Service> =>
   get(`/api/v2/services/${id}`)
-    .then(({ service }: { service: Service }) => {
-      console.table(service);
-      const recurringSchedule = shouldServiceInheritScheduleFromOrg(service)
-        ? parseAPISchedule(service.schedule)
-        : parseAPISchedule(service.resource.schedule);
-      return { ...service, recurringSchedule };
+    .then(({ response }: { response: Partial<Service> }) => {
+      if (shouldServiceInheritScheduleFromOrg(response) && response.schedule) {
+        const recurringSchedule = parseAPISchedule(response.schedule);
+        return { ...response, recurringSchedule } as Service;
+      }
+
+      if (response.resource?.schedule) {
+        const recurringSchedule = parseAPISchedule(response.resource?.schedule);
+        return { ...response, recurringSchedule } as Service;
+      }
+
+      return UNKNOWN_ERROR_MESSAGE;
     })
-    .catch((reason) => {
-      console.log("I AM HERE");
+    .catch((reason: unknown) => {
+      if (typeof reason === "string") {
+        return reason;
+      }
+
+      return UNKNOWN_ERROR_MESSAGE;
     });
