@@ -16,7 +16,6 @@ export interface Instruction {
   instruction: string;
 }
 
-// A Service is provided by an Organization
 export interface Service {
   id: number;
   name: string;
@@ -51,8 +50,7 @@ export interface Service {
   wait_time: Date | null;
 }
 
-export interface ServiceParams
-  extends Omit<Partial<Service>, "notes" | "schedule"> {
+export interface ServiceParams extends Omit<any, "notes" | "schedule"> {
   shouldInheritScheduleFromParent: boolean;
   notes?: Partial<Note>[];
   schedule?: ScheduleParams;
@@ -97,9 +95,8 @@ export const generateServiceDetails = (
     .map((row) => ({ title: row[0], value: row[1] }));
 
 // Determine if a service has its own schedule, or should inherit
-export const shouldServiceInheritScheduleFromOrg = (
-  service: Partial<Service>
-) => service.schedule && service.schedule.schedule_days.length > 0;
+export const shouldServiceInheritScheduleFromOrg = (service: any) =>
+  service.schedule && service.schedule.schedule_days.length > 0;
 
 /**
  * Return a Promise with the fetched Service.
@@ -107,25 +104,28 @@ export const shouldServiceInheritScheduleFromOrg = (
  * Also perform a transformation from the raw API representation of schedules
  * into a nicer-to-use data model of RecurringSchedules.
  */
+
+export function fetchServiceSuccessHandler({ service }: { service: any }) {
+  if (shouldServiceInheritScheduleFromOrg(service) && service.schedule) {
+    const recurringSchedule = parseAPISchedule(service.schedule as Schedule);
+    return { ...service, recurringSchedule } as Service;
+  }
+
+  if (service.resource?.schedule) {
+    const recurringSchedule = parseAPISchedule(
+      service.resource?.schedule as Schedule
+    );
+    return { ...service, recurringSchedule } as Service;
+  }
+
+  return UNKNOWN_ERROR_MESSAGE;
+}
+
+// TODO:
+export function fetchServiceFailureHandler(fetchError: unknown) {
+  return `There was a problem with the api response: ${fetchError}`;
+}
 export const fetchService = (id: string): Promise<string | Service> =>
   get(`/api/v2/services/${id}`)
-    .then(({ response }: { response: Partial<Service> }) => {
-      if (shouldServiceInheritScheduleFromOrg(response) && response.schedule) {
-        const recurringSchedule = parseAPISchedule(response.schedule);
-        return { ...response, recurringSchedule } as Service;
-      }
-
-      if (response.resource?.schedule) {
-        const recurringSchedule = parseAPISchedule(response.resource?.schedule);
-        return { ...response, recurringSchedule } as Service;
-      }
-
-      return UNKNOWN_ERROR_MESSAGE;
-    })
-    .catch((reason: unknown) => {
-      if (typeof reason === "string") {
-        return reason;
-      }
-
-      return UNKNOWN_ERROR_MESSAGE;
-    });
+    .then(fetchServiceSuccessHandler)
+    .catch(fetchServiceFailureHandler);
