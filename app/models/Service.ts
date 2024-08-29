@@ -103,10 +103,15 @@ export const shouldServiceInheritScheduleFromOrg = (service: Service) =>
  * Also perform a transformation from the raw API representation of schedules
  * into a nicer-to-use data model of RecurringSchedules.
  */
-export const fetchService = (id: string): Promise<Service> =>
-  get(`/api/v2/services/${id}`).then(({ service }: { service: Service }) => {
-    const recurringSchedule = shouldServiceInheritScheduleFromOrg(service)
-      ? parseAPISchedule(service.schedule)
-      : parseAPISchedule(service.resource.schedule);
-    return { ...service, recurringSchedule };
-  });
+export const fetchService = (id: string) =>
+  get(`/api/v2/services/${id}`)
+    .then(({ service }: { service: Service }) => {
+      console.table(service);
+      const recurringSchedule = shouldServiceInheritScheduleFromOrg(service)
+        ? parseAPISchedule(service.schedule)
+        : parseAPISchedule(service.resource.schedule);
+      return { ...service, recurringSchedule };
+    })
+    .catch((reason) => {
+      console.log("I AM HERE");
+    });

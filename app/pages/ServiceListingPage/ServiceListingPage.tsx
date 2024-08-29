@@ -41,7 +41,12 @@ export const ServiceListingPage = () => {
   useEffect(() => window.scrollTo(0, 0), []);
 
   useEffect(() => {
-    fetchService(id).then((s) => setService(s));
+    fetchService(id)
+      .then((s) => setService(s))
+      .catch((error) => {
+        console.error("foo", error);
+        setService(null);
+      });
     // TODO Handle Errors
   }, [id]);
 
