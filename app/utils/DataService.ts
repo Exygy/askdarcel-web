@@ -67,7 +67,7 @@ export function get(
 }
 
 // Devs should note that Shelter Tech's endpoint is a thin wrapper over the Google Cloud SDK for ruby. If we were
-// to procure the credentials we call Google's translation service directly.
+// to procure the credentials we could call Google's translation service directly.
 export function translate(
   text: string,
   sourceLanguage: string

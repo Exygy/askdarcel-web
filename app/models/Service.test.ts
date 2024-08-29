@@ -6,7 +6,6 @@ import {
 
 // TODO: Intentionally using partial data here during MVP phase of testing. Let's replace with complete fixtures once
 // we are live.
-
 describe("#fetchServiceSuccessHandler", () => {
   it("will return a Service that inherits the schedule from its organization", () => {
     const serviceFixture = {
