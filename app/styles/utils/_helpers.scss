@@ -109,7 +109,7 @@ a {
     color: $text-link-hover;
     text-decoration: underline;
   }
-  @include transition(all 0.2s);
+  transition: all 0.2s;
 }
 
 em {
