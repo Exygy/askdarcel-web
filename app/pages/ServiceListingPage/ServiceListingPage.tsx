@@ -61,16 +61,6 @@ export const ServiceListingPage = () => {
         sidebarActions={[]}
         onClickAction={() => "noop"}
       >
-        {/* <ListingPageHeader title={service.name} dataCy="service-page-title">
-          <ServiceProgramDetails service={service} organization={resource} />
-        </ListingPageHeader>
-
-        <span className="no-print">
-          <ActionBarMobile
-            actions={mobileActions}
-            onClickAction={onClickAction}
-          />
-        </span> */}
         {error}
       </ListingPageWrapper>
     );

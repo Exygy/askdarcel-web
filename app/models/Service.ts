@@ -98,13 +98,6 @@ export const generateServiceDetails = (
 export const shouldServiceInheritScheduleFromOrg = (service: any) =>
   service.schedule && service.schedule.schedule_days.length > 0;
 
-/**
- * Return a Promise with the fetched Service.
- *
- * Also perform a transformation from the raw API representation of schedules
- * into a nicer-to-use data model of RecurringSchedules.
- */
-
 export function fetchServiceSuccessHandler({ service }: { service: any }) {
   if (shouldServiceInheritScheduleFromOrg(service) && service.schedule) {
     const recurringSchedule = parseAPISchedule(service.schedule as Schedule);
@@ -121,10 +114,10 @@ export function fetchServiceSuccessHandler({ service }: { service: any }) {
   return UNKNOWN_ERROR_MESSAGE;
 }
 
-// TODO:
 export function fetchServiceFailureHandler(fetchError: unknown) {
   return `There was a problem with the api response: ${fetchError}`;
 }
+
 export const fetchService = (id: string): Promise<string | Service> =>
   get(`/api/v2/services/${id}`)
     .then(fetchServiceSuccessHandler)
