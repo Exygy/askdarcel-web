@@ -74,7 +74,6 @@ module.exports = {
       reducers: path.resolve(appRoot, "reducers"),
       styles: path.resolve(appRoot, "styles"),
       utils: path.resolve(appRoot, "utils"),
-      models: path.resolve(appRoot, "models"),
     },
   },
   plugins: [
