@@ -59,7 +59,7 @@ export interface ServiceParams extends Omit<any, "notes" | "schedule"> {
 const UNKNOWN_ERROR_MESSAGE =
   "We were unable to process the request. Please contact your site administrator.";
 
-interface FetchServiceError {
+export interface FetchServiceError {
   message: string;
   error: Error | null;
 }
