@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import { Helmet } from "react-helmet-async";
-import algoliasearch from "algoliasearch/lite";
+import { liteClient } from "algoliasearch/lite";
 import { InstantSearch, Configure, SearchBox } from "react-instantsearch/dom";
 import qs, { ParsedQs } from "qs";
 
@@ -17,7 +17,7 @@ import config from "../../config";
 import styles from "./SearchResultsPage.module.scss";
 
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-const searchClient = algoliasearch(
+const searchClient = liteClient(
   config.ALGOLIA_APPLICATION_ID,
   config.ALGOLIA_READ_ONLY_API_KEY
 );

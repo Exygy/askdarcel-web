@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import algoliasearch from "algoliasearch/lite";
+import { liteClient } from "algoliasearch/lite";
 import { InstantSearch, Configure } from "react-instantsearch/dom";
 import qs from "qs";
 import { Helmet } from "react-helmet-async";
@@ -34,7 +34,7 @@ type SearchState = {
 };
 
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-const searchClient = algoliasearch(
+const searchClient = liteClient(
   config.ALGOLIA_APPLICATION_ID,
   config.ALGOLIA_READ_ONLY_API_KEY
 );

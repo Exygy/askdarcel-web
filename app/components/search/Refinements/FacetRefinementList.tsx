@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { connectRefinementList } from "react-instantsearch/connectors";
-import type { RefinementListProvided } from "react-instantsearch-core";
+import { CurrentRefinements } from "react-instantsearch";
+import { RefinementListProvided } from "react-instantsearch-core";
 import styles from "./RefinementFilters.module.scss";
 
 type Props = {
@@ -90,34 +90,36 @@ class FacetRefinementList extends Component<Props, State> {
     const mapKeys = Object.keys(mapping);
 
     return (
-      <ul>
-        {mapKeys.map((key) => {
-          const refinementHasResults = this.refinementHasResults(key);
-          // for each map key, display it as a filtering option
-          // for onClick of each option, call refine on the values of the key
-          // eslint-disable-next-line prefer-template
-          return (
-            <li key={key}>
-              <label
-                className={`${styles.checkBox} ${
-                  !refinementHasResults ? styles.disabled : ""
-                }`}
-              >
-                {key}
-                <input
-                  type="checkbox"
-                  className={styles.refinementInput}
-                  onChange={this.changeRefinement.bind(this, key)}
-                  checked={isChecked[key]}
-                  disabled={!refinementHasResults}
-                />
-              </label>
-            </li>
-          );
-        })}
-      </ul>
+      <CurrentRefinements>
+        <ul>
+          {mapKeys.map((key) => {
+            const refinementHasResults = this.refinementHasResults(key);
+            // for each map key, display it as a filtering option
+            // for onClick of each option, call refine on the values of the key
+            // eslint-disable-next-line prefer-template
+            return (
+              <li key={key}>
+                <label
+                  className={`${styles.checkBox} ${
+                    !refinementHasResults ? styles.disabled : ""
+                  }`}
+                >
+                  {key}
+                  <input
+                    type="checkbox"
+                    className={styles.refinementInput}
+                    onChange={this.changeRefinement.bind(this, key)}
+                    checked={isChecked[key]}
+                    disabled={!refinementHasResults}
+                  />
+                </label>
+              </li>
+            );
+          })}
+        </ul>
+      </CurrentRefinements>
     );
   }
 }
 
-export default connectRefinementList<Props>(FacetRefinementList);
+export default FacetRefinementList;

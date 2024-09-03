@@ -113,6 +113,7 @@ const GoogleSearchHitMarkerWorkaround = ({
   hit: TransformedSearchHit;
   tag: string;
 }) => (
+  // @ts-ignore */
   <Tooltip
     arrow
     html={<SearchEntry hit={hit} />}

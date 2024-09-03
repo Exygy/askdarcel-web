@@ -48,6 +48,7 @@ export const SearchResult = forwardRef<HTMLDivElement, SearchResultProps>(
                   <LabelTag label={hit.categories[0].toString()} />
                 )}
                 {hit.categories.length > 1 && (
+                  // @ts-ignore */
                   <Tooltip
                     title={hit.categories.slice(1).join(", ")}
                     position="top"
