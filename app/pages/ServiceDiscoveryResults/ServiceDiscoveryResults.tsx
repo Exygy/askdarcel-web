@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { liteClient } from "algoliasearch/lite";
-import { InstantSearch, Configure } from "react-instantsearch/dom";
+import { InstantSearch, Configure } from "react-instantsearch";
 import qs from "qs";
 import { Helmet } from "react-helmet-async";
 
@@ -24,14 +24,12 @@ import {
 import config from "../../config";
 import { CATEGORIES, ServiceCategory } from "../constants";
 import styles from "./ServiceDiscoveryResults.module.scss";
+import { AroundRadius } from "algoliasearch";
 
 type MatchParams = { categorySlug: string };
 type RouterLocation = RouteComponentProps["location"];
-type SearchState = {
-  configure?: {
-    aroundRadius?: string;
-  };
-};
+// TODO: type fix
+type SearchState = any;
 
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 const searchClient = liteClient(
@@ -140,7 +138,7 @@ const InnerServiceDiscoveryResults = ({
   algoliaCategoryName: string;
   searchState: SearchState;
   onSearchStateChange: (nextSearchState: SearchState) => void;
-  searchRadius: string;
+  searchRadius: AroundRadius;
   setSearchRadius: (radius: string) => void;
   isMapCollapsed: boolean;
   setIsMapCollapsed: (_isMapCollapsed: boolean) => void;
@@ -168,8 +166,8 @@ const InnerServiceDiscoveryResults = ({
         <InstantSearch
           searchClient={searchClient}
           indexName={`${config.ALGOLIA_INDEX_PREFIX}_services_search`}
-          searchState={searchState}
-          onSearchStateChange={onSearchStateChange}
+          initialUiState={searchState}
+          onStateChange={onSearchStateChange}
         >
           {category.disableGeoLocation ? (
             <Configure filters={`categories:'${algoliaCategoryName}'`} />

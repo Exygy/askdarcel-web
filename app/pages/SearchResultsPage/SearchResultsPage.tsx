@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
+
 import { useCookies } from "react-cookie";
 import { Helmet } from "react-helmet-async";
 import { liteClient } from "algoliasearch/lite";
-import { InstantSearch, Configure, SearchBox } from "react-instantsearch/dom";
+import { InstantSearch, Configure, SearchBox } from "react-instantsearch";
 import qs, { ParsedQs } from "qs";
 
 import { GeoCoordinates, useAppContext, websiteConfig } from "utils";
@@ -141,7 +142,7 @@ const InnerSearchResults = ({
   isMapCollapsed: boolean;
   setIsMapCollapsed: (listExpanded: boolean) => void;
   searchState: SearchState;
-  searchRadius: string;
+  searchRadius: AroundRadius;
   setSearchRadius: (radius: string) => void;
   untranslatedQuery: string | undefined | null;
 }) => {
@@ -169,8 +170,8 @@ const InnerSearchResults = ({
       <InstantSearch
         searchClient={searchClient}
         indexName={`${config.ALGOLIA_INDEX_PREFIX}_services_search`}
-        searchState={searchState}
-        onSearchStateChange={(nextSearchState: SearchState) => {
+        initialUiState={searchState}
+        onStateChange={(nextSearchState: SearchState) => {
           const THRESHOLD = 700;
           const newPush = Date.now();
           setLastPush(newPush);
@@ -194,7 +195,14 @@ const InnerSearchResults = ({
             history.push(newUrl);
           }
         }}
-        createURL={(state: any) => `search?${qs.stringify(state)}`}
+        routing={{
+          router: history({
+            // TODO: type fix
+            createUrl({ routeState }: any) {
+              return `search?${qs.stringify(routeState)}`;
+            },
+          }),
+        }}
       >
         <Configure
           aroundLatLng={`${aroundLatLang.lat}, ${aroundLatLang.lng}`}

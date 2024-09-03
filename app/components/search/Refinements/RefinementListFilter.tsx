@@ -1,30 +1,29 @@
 import React from "react";
-import {
-  connectRefinementList,
-  RefinementListProvided,
-} from "react-instantsearch/connectors";
+import { CurrentRefinements } from "react-instantsearch";
 import styles from "./RefinementFilters.module.scss";
 
-const RefinementListFilter = ({ items, refine }: RefinementListProvided) => {
+const RefinementListFilter = ({ items, refine }: any) => {
   return (
-    <ul>
-      {items.map((item) => (
-        <li key={item.label}>
-          <label className={styles.checkBox}>
-            {item.label}
-            <input
-              className={styles.refinementInput}
-              type="checkbox"
-              checked={item.isRefined}
-              onChange={() => {
-                refine(item.value);
-              }}
-            />
-          </label>
-        </li>
-      ))}
-    </ul>
+    <CurrentRefinements>
+      <ul>
+        {items.map((item: any) => (
+          <li key={item.label}>
+            <label className={styles.checkBox}>
+              {item.label}
+              <input
+                className={styles.refinementInput}
+                type="checkbox"
+                checked={item.isRefined}
+                onChange={() => {
+                  refine(item.value);
+                }}
+              />
+            </label>
+          </li>
+        ))}
+      </ul>
+    </CurrentRefinements>
   );
 };
 
-export default connectRefinementList(RefinementListFilter);
+export default RefinementListFilter;

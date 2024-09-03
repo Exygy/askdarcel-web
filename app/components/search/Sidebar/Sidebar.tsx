@@ -9,7 +9,7 @@ import OpenNowFilter from "components/search/Refinements/OpenNowFilter";
 import RefinementListFilter from "components/search/Refinements/RefinementListFilter";
 import FacetRefinementList from "components/search/Refinements/FacetRefinementList";
 import { Button } from "components/ui/inline/Button/Button";
-import { RefinementListProvided } from "react-instantsearch/connectors";
+import { AroundRadius } from "algoliasearch";
 import useClickOutside from "../../../hooks/MenuHooks";
 import MobileMapToggleButtons from "./MobileMapToggleButtons";
 import styles from "./Sidebar.module.scss";
@@ -26,7 +26,7 @@ const Sidebar = ({
   setIsMapCollapsed,
 }: {
   setSearchRadius: (radius: string) => void;
-  searchRadius: string;
+  searchRadius: AroundRadius;
   isSearchResultsPage: boolean;
   eligibilities?: object[];
   subcategories?: Category[];

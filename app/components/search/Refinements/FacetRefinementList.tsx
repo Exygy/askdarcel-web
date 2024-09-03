@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { CurrentRefinements } from "react-instantsearch";
-import { RefinementListProvided } from "react-instantsearch-core";
 import styles from "./RefinementFilters.module.scss";
 
 type Props = {
-  items: RefinementListProvided["items"];
+  // TODO: fix
+  items: any[];
   refine: (value: string[]) => void;
   currentRefinement: string[];
   mapping: Record<string, string[]>;
