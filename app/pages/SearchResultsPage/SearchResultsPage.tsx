@@ -16,6 +16,8 @@ import Sidebar from "components/search/Sidebar/Sidebar";
 import { Header } from "components/search/Header/Header";
 import config from "../../config";
 import styles from "./SearchResultsPage.module.scss";
+import { AroundRadius } from "algoliasearch";
+import { history as instantSearchHistory } from "instantsearch.js/es/lib/routers";
 
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 const searchClient = liteClient(
@@ -25,7 +27,7 @@ const searchClient = liteClient(
 /* eslint-enable @typescript-eslint/no-unsafe-argument */
 
 interface ConfigureState {
-  aroundRadius?: string;
+  aroundRadius?: AroundRadius;
   [key: string]: any;
 }
 
@@ -45,7 +47,7 @@ export const SearchResultsPage = () => {
   const [isMapCollapsed, setIsMapCollapsed] = useState(false);
 
   const [searchState, setSearchState] = useState<SearchState | null>(null);
-  const [searchRadius, setSearchRadius] = useState(
+  const [searchRadius, setSearchRadius] = useState<AroundRadius>(
     searchState?.configure?.aroundRadius ?? "all"
   );
 
@@ -143,7 +145,7 @@ const InnerSearchResults = ({
   setIsMapCollapsed: (listExpanded: boolean) => void;
   searchState: SearchState;
   searchRadius: AroundRadius;
-  setSearchRadius: (radius: string) => void;
+  setSearchRadius: (radius: AroundRadius) => void;
   untranslatedQuery: string | undefined | null;
 }) => {
   const [aroundLatLang, setAroundLatLng] = useState({
@@ -196,9 +198,9 @@ const InnerSearchResults = ({
           }
         }}
         routing={{
-          router: history({
+          router: instantSearchHistory({
             // TODO: type fix
-            createUrl({ routeState }: any) {
+            createURL({ routeState }) {
               return `search?${qs.stringify(routeState)}`;
             },
           }),

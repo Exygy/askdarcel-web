@@ -1,125 +1,110 @@
-import React, { Component } from "react";
-import { CurrentRefinements } from "react-instantsearch";
+import React, { Component, useEffect, useState } from "react";
+import {
+  RefinementList,
+  useCurrentRefinements,
+  useRefinementList,
+} from "react-instantsearch";
 import styles from "./RefinementFilters.module.scss";
+import { connectRefinementList } from "instantsearch.js/es/connectors";
+import { useConnector } from "react-instantsearch";
 
-type Props = {
-  // TODO: fix
-  items: any[];
-  refine: (value: string[]) => void;
-  currentRefinement: string[];
+interface Props {
   mapping: Record<string, string[]>;
-};
+  attribute: string;
+}
 
 type State = {
   isChecked: Record<string, boolean>;
+  limit: number;
 };
 
 // Todo: This component could potentially be consolidated with the the Refinement List Filter
 // component when categories/eligibilities are standardized across the homepage Service
 // Pathways results and the Search Results pages
-class FacetRefinementList extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.changeRefinement = this.changeRefinement.bind(this);
-    this.setChecks = this.setChecks.bind(this);
-    const checks = this.setChecks();
-    this.state = {
-      isChecked: checks,
-    };
-  }
+const FacetRefinementList = ({ attribute, mapping }: Props) => {
+  const mapKeys = Object.keys(mapping);
+  const [checked, setChecked] = useState<Record<string, boolean>>({});
+  const {
+    items,
+    hasExhaustiveItems,
+    createURL,
+    refine,
+    sendEvent,
+    searchForItems,
+    isFromSearch,
+    canRefine,
+    canToggleShowMore,
+    isShowingMore,
+    toggleShowMore,
+  } = useRefinementList({ attribute, limit: 100 });
 
-  componentDidUpdate(prevProps: Props) {
-    const { currentRefinement } = this.props;
-    if (
-      currentRefinement.sort().join(",") !==
-      prevProps.currentRefinement.sort().join(",")
-    ) {
-      const checks = this.setChecks();
+  useEffect(() => {
+    if (items.sort().join(",")) {
+      mapKeys.forEach((key) => {
+        // checked[key] = keyHasAtLeastOneRefined(key);
+        checked[key] = true;
+      });
       // setState is done in a condition so it won't create loop
-      this.setState({ isChecked: checks }); // eslint-disable-line react/no-did-update-set-state
+      setChecked(checked); // eslint-disable-line react/no-did-update-set-state
     }
-  }
+  }, [items]);
 
-  setChecks(): Record<string, boolean> {
-    const { mapping } = this.props;
-    const mapKeys = Object.keys(mapping);
-    const checks: Record<string, boolean> = {};
-    mapKeys.forEach((key) => {
-      checks[key] = this.keyHasAtLeastOneRefined(key);
-    });
-    return checks;
-  }
-
-  changeRefinement(key: string) {
+  const changeRefinement = (key: string) => {
     // eslint-disable-line no-unused-vars
-    const { refine } = this.props;
-    const { currentRefinement } = this.props;
-    const { mapping } = this.props;
-    const { isChecked } = this.state;
-    let newRefinement;
-    if (isChecked[key]) {
-      // If key currently checked, unrefine every sub-element (filter through current refinement)
-      newRefinement = currentRefinement.filter(
-        (value) => !mapping[key].includes(value)
-      );
-    } else {
-      // If key currently unchecked, refine all sub-elements
-      newRefinement = currentRefinement.concat(mapping[key]);
-    }
-    refine(newRefinement);
-  }
+    // let newRefinement;
+    // if (checked[key]) {
+    //   // If key currently checked, unrefine every sub-element (filter through current refinement)
+    //   newRefinement = items.filter(
+    //     (value) => !mapping[key].includes(value)
+    //   );
+    // } else {
+    //   // If key currently unchecked, refine all sub-elements
+    //   newRefinement = items.concat(mapping[key]);
+    // }
+    // refine(newRefinement);
+  };
 
-  keyHasAtLeastOneRefined(key: string) {
-    const { currentRefinement } = this.props;
-    const { mapping } = this.props;
-    return mapping[key].some((value) => currentRefinement.includes(value));
-  }
+  // const keyHasAtLeastOneRefined = (key: string) =>  {
+  //   return mapping[key].some((value) => items.includes(value));
+  // }
 
-  refinementHasResults(key: string) {
+  function refinementHasResults(key: string) {
     // this check that a key (checkbox) has at least one sub-elements that is refined
     // e.g if Learning Disabilities is can be refined but not Visual Impairment,
     // Disability is still enabled as a checkbox
-    const { items } = this.props;
-    const { mapping } = this.props;
     return items.some((item) => mapping[key].includes(item.label));
   }
 
-  render() {
-    const { isChecked } = this.state;
-    const { mapping } = this.props;
-    const mapKeys = Object.keys(mapping);
+  return (
+    <ul>
+      {mapKeys.map((key) => {
+        // const refinementHasResults = refinementHasResults(key);
+        const refinementHasResults = true;
+        // for each map key, display it as a filtering option
+        // for onClick of each option, call refine on the values of the key
+        // eslint-disable-next-line prefer-template
+        return (
+          <li key={key}>
+            <label
+              className={`${styles.checkBox} ${
+                !refinementHasResults ? styles.disabled : ""
+              }`}
+            >
+              {key}
+              <input
+                type="checkbox"
+                className={styles.refinementInput}
+                onChange={() => changeRefinement(key)}
+                checked={checked[key]}
+                disabled={!refinementHasResults}
+              />
+            </label>
+          </li>
+        );
+      })}
+    </ul>
+  );
+};
 
-    return (
-      <CurrentRefinements>
-        <ul>
-          {mapKeys.map((key) => {
-            const refinementHasResults = this.refinementHasResults(key);
-            // for each map key, display it as a filtering option
-            // for onClick of each option, call refine on the values of the key
-            // eslint-disable-next-line prefer-template
-            return (
-              <li key={key}>
-                <label
-                  className={`${styles.checkBox} ${
-                    !refinementHasResults ? styles.disabled : ""
-                  }`}
-                >
-                  {key}
-                  <input
-                    type="checkbox"
-                    className={styles.refinementInput}
-                    onChange={this.changeRefinement.bind(this, key)}
-                    checked={isChecked[key]}
-                    disabled={!refinementHasResults}
-                  />
-                </label>
-              </li>
-            );
-          })}
-        </ul>
-      </CurrentRefinements>
-    );
-  }
-}
-
+// @ts-ignore
 export default FacetRefinementList;

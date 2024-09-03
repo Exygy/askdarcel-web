@@ -3,24 +3,23 @@ import { SearchMap } from "components/search/SearchMap/SearchMap";
 import ResultsPagination from "components/search/Pagination/ResultsPagination";
 import { SearchResult } from "components/search/SearchResults/SearchResult";
 import {
-  SearchResultsResponse,
   TransformedSearchHit,
   transformSearchResults,
 } from "models/SearchHits";
+import { useInstantSearch } from "react-instantsearch";
 import styles from "./SearchResults.module.scss";
 import ClearSearchButton from "../Refinements/ClearSearchButton";
 
 const SearchResults = ({
-  searchResults,
   mobileMapIsCollapsed,
   setAroundLatLng,
   searchQuery,
 }: {
-  searchResults: SearchResultsResponse;
   mobileMapIsCollapsed: boolean;
   setAroundLatLng: (latLng: { lat: number; lng: number }) => void;
   searchQuery?: string | null;
 }) => {
+  const { results: searchResults } = useInstantSearch();
   const [centerCoords] = useState(null);
   const [googleMapObject, setMapObject] = useState<google.maps.Map | null>(
     null

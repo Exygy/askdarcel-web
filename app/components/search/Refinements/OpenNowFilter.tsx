@@ -1,5 +1,5 @@
 import React from "react";
-import { connectRefinementList } from "react-instantsearch/connectors";
+import { useRefinementList } from "react-instantsearch";
 import { getCurrentDayTime } from "utils/index";
 import styles from "./RefinementFilters.module.scss";
 
@@ -25,13 +25,26 @@ type Props = {
  * filter should filter for organizations or services which have 'Su-10:00' in
  * the open_times array.
  */
-const OpenNowFilter = ({ currentRefinement, refine }: Props) => {
-  const isActive = currentRefinement.length !== 0;
+const OpenNowFilter = ({ attribute }: { attribute: string }) => {
+  const {
+    items,
+    hasExhaustiveItems,
+    createURL,
+    refine,
+    sendEvent,
+    searchForItems,
+    isFromSearch,
+    canRefine,
+    canToggleShowMore,
+    isShowingMore,
+    toggleShowMore,
+  } = useRefinementList({ attribute, limit: 100 });
+  const isActive = items.length !== 0;
   const toggleRefinement = () => {
     if (isActive) {
-      refine([]);
+      refine("");
     } else {
-      refine([getCurrentDayTime()]);
+      refine(getCurrentDayTime());
     }
   };
 
@@ -51,4 +64,4 @@ const OpenNowFilter = ({ currentRefinement, refine }: Props) => {
   );
 };
 
-export default connectRefinementList(OpenNowFilter);
+export default OpenNowFilter;

@@ -9,10 +9,10 @@ import OpenNowFilter from "components/search/Refinements/OpenNowFilter";
 import RefinementListFilter from "components/search/Refinements/RefinementListFilter";
 import FacetRefinementList from "components/search/Refinements/FacetRefinementList";
 import { Button } from "components/ui/inline/Button/Button";
-import { AroundRadius } from "algoliasearch";
 import useClickOutside from "../../../hooks/MenuHooks";
 import MobileMapToggleButtons from "./MobileMapToggleButtons";
 import styles from "./Sidebar.module.scss";
+import { AroundRadius } from "algoliasearch";
 
 const Sidebar = ({
   setSearchRadius,
@@ -25,7 +25,7 @@ const Sidebar = ({
   isMapCollapsed,
   setIsMapCollapsed,
 }: {
-  setSearchRadius: (radius: string) => void;
+  setSearchRadius: (radius: AroundRadius) => void;
   searchRadius: AroundRadius;
   isSearchResultsPage: boolean;
   eligibilities?: object[];
@@ -69,7 +69,7 @@ const Sidebar = ({
   };
 
   const onChangeValue = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchRadius(evt.target.value);
+    setSearchRadius(Number(evt.target.value));
   };
 
   // Currently, the Search Results Page uses generic categories/eligibilities while the
@@ -77,16 +77,11 @@ const Sidebar = ({
   // of these to use as based on the isSearchResultsPage value
   if (isSearchResultsPage) {
     categoryRefinementJsx = (
-      <FacetRefinementList
-        attribute="categories"
-        limit={100}
-        mapping={categoriesMapping}
-      />
+      <FacetRefinementList attribute="categories" mapping={categoriesMapping} />
     );
     eligibilityRefinementJsx = (
       <FacetRefinementList
         attribute="eligibilities"
-        limit={100}
         mapping={eligibilitiesMapping}
       />
     );
@@ -96,10 +91,8 @@ const Sidebar = ({
       eligibilityRefinementJsx = (
         <RefinementListFilter
           attribute="eligibilities"
-          limit={100}
-          transformItems={(items: RefinementListProvided["items"]) =>
-            items.sort(orderByLabel)
-          }
+          // TODO: type fix
+          transformItems={(items: any[]) => items.sort(orderByLabel)}
         />
       );
     }
@@ -111,13 +104,16 @@ const Sidebar = ({
           // We set an artificially high limit to attempt capturing all the subcategories
           // so that the returned set contain the desired subcategories; these are the initial subcategories displayed
           // to the user as checkboxes in the ServiceDiscoveryForm view.
-          limit={100}
+
           // Algolia returns all categories of the union of returned services.
           // We filter out any of these categories that are not children of the selected top level
           // category returned from the api (`/api/categories/subcategories?id=${categoryID}`).
-          transformItems={(items: RefinementListProvided["items"]) =>
+          // TODO: type fix
+          transformItems={(items: any[]) =>
             items
-              .filter(({ label }) => subcategoryNames.includes(label))
+              .filter(({ label }: { label: string }) =>
+                subcategoryNames.includes(label)
+              )
               .sort(
                 sortAlgoliaSubcategoryRefinements
                   ? orderByPriorityRanking
@@ -201,7 +197,7 @@ const Sidebar = ({
               name="searchRadius"
               onChange={onChangeValue}
               value="400"
-              checked={searchRadius === "400"}
+              checked={searchRadius === 400}
               className={styles.refinementInput}
             />
           </label>
@@ -212,7 +208,7 @@ const Sidebar = ({
               name="searchRadius"
               onChange={onChangeValue}
               value="1600"
-              checked={searchRadius === "1600"}
+              checked={searchRadius === 1600}
               className={styles.refinementInput}
             />
           </label>
@@ -223,7 +219,7 @@ const Sidebar = ({
               name="searchRadius"
               onChange={onChangeValue}
               value="4828"
-              checked={searchRadius === "4828"}
+              checked={searchRadius === 4828}
               className={styles.refinementInput}
             />
           </label>

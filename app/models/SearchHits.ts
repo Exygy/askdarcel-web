@@ -41,7 +41,6 @@ type Location = {
 };
 export type TransformedSearchHit = Hit<
   SearchHit & {
-    objectID: string;
     recurringSchedule: RecurringSchedule | null;
     resultListIndexDisplay: string;
     longDescription: string;
@@ -139,7 +138,7 @@ export function transformSearchResults(
       // @ts-ignore
       const resultListIndexDisplay = `${currentPage * hitsPerPage + index + 1}`;
 
-      const nextHit: TransformedSearchHit = {
+      const nextHit = {
         ...hit,
         recurringSchedule: getRecurringScheduleForSeachHit(hit),
         resultListIndexDisplay,

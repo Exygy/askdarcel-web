@@ -139,7 +139,7 @@ const InnerServiceDiscoveryResults = ({
   searchState: SearchState;
   onSearchStateChange: (nextSearchState: SearchState) => void;
   searchRadius: AroundRadius;
-  setSearchRadius: (radius: string) => void;
+  setSearchRadius: (radius: AroundRadius) => void;
   isMapCollapsed: boolean;
   setIsMapCollapsed: (_isMapCollapsed: boolean) => void;
   userLatLng: { lat: number; lng: number };
