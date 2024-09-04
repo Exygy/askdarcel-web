@@ -16,6 +16,7 @@ import Sidebar from "components/search/Sidebar/Sidebar";
 import { Header } from "components/search/Header/Header";
 import config from "../../config";
 import styles from "./SearchResultsPage.module.scss";
+import { history as instantSearchHistory } from "instantsearch.js/es/lib/routers";
 
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 const searchClient = liteClient(
@@ -171,12 +172,13 @@ const InnerSearchResults = ({
         searchClient={searchClient}
         indexName={`${config.ALGOLIA_INDEX_PREFIX}_services_search`}
         initialUiState={searchState}
-        onStateChange={(nextSearchState: SearchState) => {
+        onStateChange={({ uiState, setUiState }) => {
+          setUiState(uiState);
           const THRESHOLD = 700;
           const newPush = Date.now();
           setLastPush(newPush);
           const urlParams = {
-            ...nextSearchState,
+            ...uiState,
             // With our setup, the onSearchStateChange event only runs as a result of editing
             // refinements. It is not called when the user enters a new query in the search
             // input field. Thus, the query value will not have changed. However, of relevance to
@@ -186,16 +188,15 @@ const InnerSearchResults = ({
             query: untranslatedQuery,
           };
 
-          const newUrl = nextSearchState
-            ? `search?${qs.stringify(urlParams)}`
-            : "";
+          const newUrl = uiState ? `search?${qs.stringify(urlParams)}` : "";
           if (lastPush && newPush - lastPush <= THRESHOLD) {
             history.replace(newUrl);
           } else {
             history.push(newUrl);
           }
         }}
-        createURL={(state: any) => `search?${qs.stringify(state)}`}
+        // createURL={(state: any) => `search?${qs.stringify(state)}`}
+        routing={true}
       >
         <Configure
           aroundLatLng={`${aroundLatLang.lat}, ${aroundLatLang.lng}`}
