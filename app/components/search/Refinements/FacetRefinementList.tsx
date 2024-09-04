@@ -39,7 +39,7 @@ const FacetRefinementList = ({ attribute, mapping }: Props) => {
   } = useRefinementList({ attribute, limit: 100 });
 
   const keyHasAtLeastOneRefined = (key: string) => {
-    return mapping[key].some((value) => items.includes(value));
+    return mapping[key].some((value) => items.includes(value as any));
   };
 
   useEffect(() => {

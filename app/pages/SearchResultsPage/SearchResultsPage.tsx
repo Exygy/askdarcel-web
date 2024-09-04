@@ -200,8 +200,8 @@ const InnerSearchResults = ({
         routing={{
           router: instantSearchHistory({
             // TODO: type fix
-            createURL({ routeState }) {
-              return `search?${qs.stringify(routeState)}`;
+            createURL(state) {
+              return `search?${qs.stringify(state)}`;
             },
           }),
         }}
