@@ -13,7 +13,6 @@ export const SearchHeaderSection = ({
   <div className={styles.searchHeaderContainer}>
     <div className={styles.searchHeaderContainerLeft}>
       <h1 className={styles.title}>Services</h1>
-      <SiteSearchInput />
     </div>
     <span>{descriptionText}</span>
   </div>

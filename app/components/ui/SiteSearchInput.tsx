@@ -1,9 +1,10 @@
-import React, { FormEvent } from "react";
+import React, { FormEvent, useState } from "react";
 import { useHistory } from "react-router-dom";
 import cn from "classnames";
 import qs from "qs";
 import { useSiteSearch } from "hooks/SiteSearch";
 import styles from "./SiteSearchInput.module.scss";
+import { useSearchBox } from "react-instantsearch";
 
 /**
  * Sitewide listing search component
@@ -11,26 +12,32 @@ import styles from "./SiteSearchInput.module.scss";
  * - Updates the url querystring on every search
  * - Allows empty searches by removing `query=` query param from querystring
  */
-export const SiteSearchInput = () => {
-  const { query, setQuery } = useSiteSearch();
+export const SiteSearchInput = (props: any) => {
+  // const { query, setQuery } = useSiteSearch();
+  const { query, refine, clear } = useSearchBox(props);
   const history = useHistory();
+  const [inputValue, setInputValue] = useState(query);
 
   // eg: `?page=1` -> `page=1`
   const removeQueryStringStart = (querystring: string) => querystring.slice(1);
+  function setQuery(newQuery: any) {
+    setInputValue(newQuery);
+  }
 
   const submitSearch = (e: FormEvent) => {
     e.preventDefault();
-    const queryString = removeQueryStringStart(window.location.search);
-    const searchState = qs.parse(queryString);
+    // const queryString = removeQueryStringStart(window.location.search);
+    // const searchState = qs.parse(queryString);
 
-    if (query) {
-      searchState.query = query;
-      searchState.page = "1";
-    } else {
-      delete searchState.query;
-    }
+    // if (inputValue) {
+    //   searchState.query = inputValue;
+    //   searchState.page = "1";
+    // } else {
+    //   delete searchState.query;
+    // }
+    // history.push(`/search?${qs.stringify(searchState)}`);
+    refine(inputValue);
 
-    history.push(`/search?${qs.stringify(searchState)}`);
     return false;
   };
 
@@ -42,7 +49,7 @@ export const SiteSearchInput = () => {
     >
       <input
         onChange={(e) => setQuery(e.target.value)}
-        value={query}
+        value={inputValue}
         type="text"
         className={styles.searchField}
         placeholder="Search for a service or organization"

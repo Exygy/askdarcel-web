@@ -17,6 +17,7 @@ import { Header } from "components/search/Header/Header";
 import config from "../../config";
 import styles from "./SearchResultsPage.module.scss";
 import { history as instantSearchHistory } from "instantsearch.js/es/lib/routers";
+import { SiteSearchInput } from "components/ui/SiteSearchInput";
 
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 const searchClient = liteClient(
@@ -35,6 +36,8 @@ interface SearchState extends ParsedQs {
   query?: string | null;
   [key: string]: any;
 }
+
+const INDEX_NAME = `${config.ALGOLIA_INDEX_PREFIX}_services_search`;
 
 /** Wrapper component that handles state management, URL parsing, and external API requests. */
 export const SearchResultsPage = () => {
@@ -66,8 +69,10 @@ export const SearchResultsPage = () => {
 
   useEffect(() => {
     const qsParams = qs.parse(search.slice(1));
-    setUntranslatedQuery(qsParams.query ? (qsParams.query as string) : "");
-    delete qsParams.query;
+    setUntranslatedQuery(
+      qsParams[INDEX_NAME].query ? (qsParams[INDEX_NAME].query as string) : ""
+    );
+    // delete qsParams["production_services_search[query]"];
     setNonQuerySearchParams(qsParams);
   }, [search]);
 
@@ -170,7 +175,7 @@ const InnerSearchResults = ({
 
       <InstantSearch
         searchClient={searchClient}
-        indexName={`${config.ALGOLIA_INDEX_PREFIX}_services_search`}
+        indexName={INDEX_NAME}
         initialUiState={searchState}
         onStateChange={({ uiState, setUiState }) => {
           setUiState(uiState);
@@ -185,7 +190,7 @@ const InnerSearchResults = ({
             // non-English queries, the nextSearchState arg that's passed to this callback includes
             // the _translated_ query rather than the user's original untranslated input.
             // For various reasons, we want to urlParams query value to be the untranslated query.
-            query: untranslatedQuery,
+            // query: untranslatedQuery,
           };
 
           const newUrl = uiState ? `search?${qs.stringify(urlParams)}` : "";
@@ -195,14 +200,13 @@ const InnerSearchResults = ({
             history.push(newUrl);
           }
         }}
-        // createURL={(state: any) => `search?${qs.stringify(state)}`}
-        routing={true}
       >
         <Configure
           aroundLatLng={`${aroundLatLang.lat}, ${aroundLatLang.lng}`}
           aroundRadius={searchRadius}
           aroundPrecision={1600}
         />
+        <SiteSearchInput />
         <div className={styles.flexContainer}>
           <Sidebar
             setSearchRadius={setSearchRadius}
@@ -219,11 +223,6 @@ const InnerSearchResults = ({
               searchQuery={untranslatedQuery}
             />
           </div>
-        </div>
-        <div className={styles.hiddenSearchBox}>
-          {/* The SearchBox component needs to be insde the InstantSearch component for the
-          search query term to be passed to InstantSearch internals but it can be hidden */}
-          <SearchBox />
         </div>
       </InstantSearch>
     </div>
