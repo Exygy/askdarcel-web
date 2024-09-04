@@ -38,56 +38,43 @@ const FacetRefinementList = ({ attribute, mapping }: Props) => {
     toggleShowMore,
   } = useRefinementList({ attribute, limit: 100 });
 
-  useEffect(() => {
-    if (items.sort().join(",")) {
-      mapKeys.forEach((key) => {
-        // checked[key] = keyHasAtLeastOneRefined(key);
-        checked[key] = true;
-      });
-      // setState is done in a condition so it won't create loop
-      setChecked(checked); // eslint-disable-line react/no-did-update-set-state
-    }
-  }, [items]);
-
-  const changeRefinement = (key: string) => {
-    // eslint-disable-line no-unused-vars
-    // let newRefinement;
-    // if (checked[key]) {
-    //   // If key currently checked, unrefine every sub-element (filter through current refinement)
-    //   newRefinement = items.filter(
-    //     (value) => !mapping[key].includes(value)
-    //   );
-    // } else {
-    //   // If key currently unchecked, refine all sub-elements
-    //   newRefinement = items.concat(mapping[key]);
-    // }
-    // refine(newRefinement);
+  const keyHasAtLeastOneRefined = (key: string) => {
+    return mapping[key].some((value) => items.includes(value));
   };
 
-  // const keyHasAtLeastOneRefined = (key: string) =>  {
-  //   return mapping[key].some((value) => items.includes(value));
-  // }
+  useEffect(() => {
+    mapKeys.forEach((key) => {
+      checked[key] = keyHasAtLeastOneRefined(key);
+    });
+    setChecked(checked);
+  }, []);
 
-  function refinementHasResults(key: string) {
+  const changeRefinement = (key: string) => {
+    refine(key);
+    mapKeys.forEach((key) => {
+      checked[key] = keyHasAtLeastOneRefined(key);
+    });
+    setChecked(checked);
+  };
+
+  const refinementHasResults = (key: string) => {
     // this check that a key (checkbox) has at least one sub-elements that is refined
     // e.g if Learning Disabilities is can be refined but not Visual Impairment,
     // Disability is still enabled as a checkbox
     return items.some((item) => mapping[key].includes(item.label));
-  }
+  };
 
   return (
     <ul>
       {mapKeys.map((key) => {
-        // const refinementHasResults = refinementHasResults(key);
-        const refinementHasResults = true;
+        const hasResults = refinementHasResults(key);
         // for each map key, display it as a filtering option
         // for onClick of each option, call refine on the values of the key
-        // eslint-disable-next-line prefer-template
         return (
           <li key={key}>
             <label
               className={`${styles.checkBox} ${
-                !refinementHasResults ? styles.disabled : ""
+                !hasResults ? styles.disabled : ""
               }`}
             >
               {key}
@@ -96,7 +83,7 @@ const FacetRefinementList = ({ attribute, mapping }: Props) => {
                 className={styles.refinementInput}
                 onChange={() => changeRefinement(key)}
                 checked={checked[key]}
-                disabled={!refinementHasResults}
+                disabled={!hasResults}
               />
             </label>
           </li>

@@ -6,6 +6,7 @@ const ExtendedDefinePlugin = require("extended-define-webpack-plugin");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
+const webpack = require('webpack');
 
 let userConfig = {};
 
@@ -104,6 +105,9 @@ module.exports = {
       patterns: [{ from: "public", to: path.resolve(__dirname, "public") }],
     }),
     new NodePolyfillPlugin(),
+    new webpack.ProvidePlugin({
+      process: 'process/browser.js'
+    }),
   ],
   devtool: "source-map",
   module: {
