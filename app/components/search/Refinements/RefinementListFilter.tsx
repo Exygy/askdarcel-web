@@ -2,9 +2,9 @@ import React from "react";
 import { CurrentRefinements } from "react-instantsearch";
 import styles from "./RefinementFilters.module.scss";
 
-const RefinementListFilter = ({ items, refine }: any) => {
+const RefinementListFilter = () => {
   return (
-    <CurrentRefinements>
+    TODODODODOD<CurrentRefinements>
       <ul>
         {items.map((item: any) => (
           <li key={item.label}>

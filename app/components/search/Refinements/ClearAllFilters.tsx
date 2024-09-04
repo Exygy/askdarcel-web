@@ -5,20 +5,18 @@ import { CurrentRefinements } from "react-instantsearch";
 // import { RefinementList } from "react-instantsearch/dom";
 
 const ClearAllFilter = ({ items, refine, setSearchRadius }: any) => (
-  <CurrentRefinements>
-    <Button
-      tabIndex={0}
-      variant="linkBlue"
-      onClick={() => {
-        refine(items);
-        setSearchRadius("all");
-      }}
-      mobileFullWidth={false}
-      size="lg"
-    >
-      Clear all
-    </Button>
-  </CurrentRefinements>
+  <Button
+    tabIndex={0}
+    variant="linkBlue"
+    onClick={() => {
+      refine(items);
+      setSearchRadius("all");
+    }}
+    mobileFullWidth={false}
+    size="lg"
+  >
+    Clear all
+  </Button>
 );
 
 export default ClearAllFilter;
