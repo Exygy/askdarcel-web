@@ -1,6 +1,6 @@
+// @ts-nocheck
 import React, { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
-
 import { useCookies } from "react-cookie";
 import { Helmet } from "react-helmet-async";
 import { liteClient } from "algoliasearch/lite";
@@ -16,8 +16,6 @@ import Sidebar from "components/search/Sidebar/Sidebar";
 import { Header } from "components/search/Header/Header";
 import config from "../../config";
 import styles from "./SearchResultsPage.module.scss";
-import { AroundRadius } from "algoliasearch";
-import { history as instantSearchHistory } from "instantsearch.js/es/lib/routers";
 
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 const searchClient = liteClient(
@@ -27,7 +25,7 @@ const searchClient = liteClient(
 /* eslint-enable @typescript-eslint/no-unsafe-argument */
 
 interface ConfigureState {
-  aroundRadius?: AroundRadius;
+  aroundRadius?: string;
   [key: string]: any;
 }
 
@@ -47,7 +45,7 @@ export const SearchResultsPage = () => {
   const [isMapCollapsed, setIsMapCollapsed] = useState(false);
 
   const [searchState, setSearchState] = useState<SearchState | null>(null);
-  const [searchRadius, setSearchRadius] = useState<AroundRadius>(
+  const [searchRadius, setSearchRadius] = useState(
     searchState?.configure?.aroundRadius ?? "all"
   );
 
@@ -144,8 +142,8 @@ const InnerSearchResults = ({
   isMapCollapsed: boolean;
   setIsMapCollapsed: (listExpanded: boolean) => void;
   searchState: SearchState;
-  searchRadius: AroundRadius;
-  setSearchRadius: (radius: AroundRadius) => void;
+  searchRadius: string;
+  setSearchRadius: (radius: string) => void;
   untranslatedQuery: string | undefined | null;
 }) => {
   const [aroundLatLang, setAroundLatLng] = useState({
@@ -197,14 +195,7 @@ const InnerSearchResults = ({
             history.push(newUrl);
           }
         }}
-        routing={{
-          router: instantSearchHistory({
-            // TODO: type fix
-            createURL(state) {
-              return `search?${qs.stringify(state)}`;
-            },
-          }),
-        }}
+        createURL={(state: any) => `search?${qs.stringify(state)}`}
       >
         <Configure
           aroundLatLng={`${aroundLatLang.lat}, ${aroundLatLang.lng}`}

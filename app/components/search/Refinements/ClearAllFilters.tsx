@@ -1,8 +1,13 @@
 import React from "react";
-// import { Refinement, RefinementValue } from "react-instantsearch-core";
+
+// import type { Refinement, RefinementValue } from "react-instantsearch-core";
 import { Button } from "components/ui/inline/Button/Button";
-import { CurrentRefinements } from "react-instantsearch";
-// import { RefinementList } from "react-instantsearch/dom";
+
+// type Props = {
+//   items: Refinement[];
+//   refine: (value: Refinement[] | RefinementValue | RefinementValue[]) => void;
+//   setSearchRadius: (radius: string) => void;
+// };
 
 const ClearAllFilter = ({ items, refine, setSearchRadius }: any) => (
   <Button

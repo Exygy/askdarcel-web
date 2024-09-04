@@ -1,12 +1,12 @@
 import React from "react";
-import { useRefinementList } from "react-instantsearch";
+// import { connectRefinementList } from "react-instantsearch/connectors";
 import { getCurrentDayTime } from "utils/index";
 import styles from "./RefinementFilters.module.scss";
 
-type Props = {
-  currentRefinement: string[];
-  refine: (value: string[]) => void;
-};
+// type Props = {
+//   currentRefinement: string[];
+//   refine: (value: string[]) => void;
+// };
 
 /**
  * A custom Algolia InstantSearch RefinementList widget representing the Open
@@ -25,26 +25,13 @@ type Props = {
  * filter should filter for organizations or services which have 'Su-10:00' in
  * the open_times array.
  */
-const OpenNowFilter = ({ attribute }: { attribute: string }) => {
-  const {
-    items,
-    hasExhaustiveItems,
-    createURL,
-    refine,
-    sendEvent,
-    searchForItems,
-    isFromSearch,
-    canRefine,
-    canToggleShowMore,
-    isShowingMore,
-    toggleShowMore,
-  } = useRefinementList({ attribute, limit: 100 });
-  const isActive = items.length !== 0;
+const OpenNowFilter = ({ currentRefinement, refine }: any) => {
+  const isActive = currentRefinement.length !== 0;
   const toggleRefinement = () => {
     if (isActive) {
-      refine("");
+      refine([]);
     } else {
-      refine(getCurrentDayTime());
+      refine([getCurrentDayTime()]);
     }
   };
 
