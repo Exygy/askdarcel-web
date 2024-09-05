@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { useCookies } from "react-cookie";
@@ -18,6 +17,7 @@ import config from "../../config";
 import styles from "./SearchResultsPage.module.scss";
 import { history as instantSearchHistory } from "instantsearch.js/es/lib/routers";
 import { SiteSearchInput } from "components/ui/SiteSearchInput";
+import { AroundRadius } from "algoliasearch";
 
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 const searchClient = liteClient(
@@ -27,7 +27,7 @@ const searchClient = liteClient(
 /* eslint-enable @typescript-eslint/no-unsafe-argument */
 
 interface ConfigureState {
-  aroundRadius?: string;
+  aroundRadius?: AroundRadius;
   [key: string]: any;
 }
 
@@ -70,7 +70,9 @@ export const SearchResultsPage = () => {
   useEffect(() => {
     const qsParams = qs.parse(search.slice(1));
     setUntranslatedQuery(
-      qsParams[INDEX_NAME].query ? (qsParams[INDEX_NAME].query as string) : ""
+      qsParams[`${INDEX_NAME}.query}`]
+        ? (qsParams[`${INDEX_NAME}.query}`] as string)
+        : ""
     );
     // delete qsParams["production_services_search[query]"];
     setNonQuerySearchParams(qsParams);
@@ -148,8 +150,8 @@ const InnerSearchResults = ({
   isMapCollapsed: boolean;
   setIsMapCollapsed: (listExpanded: boolean) => void;
   searchState: SearchState;
-  searchRadius: string;
-  setSearchRadius: (radius: string) => void;
+  searchRadius: AroundRadius;
+  setSearchRadius: (radius: AroundRadius) => void;
   untranslatedQuery: string | undefined | null;
 }) => {
   const [aroundLatLang, setAroundLatLng] = useState({
@@ -195,11 +197,18 @@ const InnerSearchResults = ({
 
           const newUrl = uiState ? `search?${qs.stringify(urlParams)}` : "";
           if (lastPush && newPush - lastPush <= THRESHOLD) {
-            history.replace(newUrl);
+            history.push(newUrl);
           } else {
             history.push(newUrl);
           }
         }}
+        // routing={{
+        //   router: instantSearchHistory({
+        //     createURL({ qsModule, routeState, location }) {
+        //       return `search?${qs.stringify(routeState)}`;
+        //     },
+        //   }),
+        // }}
       >
         <Configure
           aroundLatLng={`${aroundLatLang.lat}, ${aroundLatLang.lng}`}
