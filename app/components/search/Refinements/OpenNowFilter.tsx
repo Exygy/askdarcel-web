@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  useCurrentRefinements,
-  useRefinementList,
-  UseRefinementListProps,
-} from "react-instantsearch";
+import { useRefinementList, UseRefinementListProps } from "react-instantsearch";
 // import { connectRefinementList } from "react-instantsearch/connectors";
 import { getCurrentDayTime } from "utils/index";
 import styles from "./RefinementFilters.module.scss";
@@ -43,7 +39,7 @@ const OpenNowFilter = (props: Props) => {
         id="openNow"
         className={styles.refinementInput}
         value="openNow"
-        // checked={false}
+        checked={false}
         onChange={toggleRefinement}
       />
     </label>
