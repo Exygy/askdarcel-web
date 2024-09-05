@@ -5,7 +5,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
-const webpack = require('webpack');
+const webpack = require("webpack");
 
 let userConfig = {};
 
@@ -111,7 +111,7 @@ module.exports = {
     // dep tree/module cache.
     // See: https://stackoverflow.com/questions/41359504/webpack-bundle-js-uncaught-referenceerror-process-is-not-defined
     new webpack.ProvidePlugin({
-      process: 'process/browser.js'
+      process: "process/browser.js",
     }),
   ],
   devtool: "source-map",
