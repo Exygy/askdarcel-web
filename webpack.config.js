@@ -109,6 +109,7 @@ module.exports = {
     // `Uncaught ReferenceError: process is not defined` in AlogliaSearchCore.js
     // However this error didn't surface until a subsequent PR was merged, which might have forced a rebuild of the
     // dep tree/module cache.
+    // See: https://stackoverflow.com/questions/41359504/webpack-bundle-js-uncaught-referenceerror-process-is-not-defined
     new webpack.ProvidePlugin({
       process: 'process/browser.js'
     }),
