@@ -15,7 +15,6 @@ import Sidebar from "components/search/Sidebar/Sidebar";
 import { Header } from "components/search/Header/Header";
 import config from "../../config";
 import styles from "./SearchResultsPage.module.scss";
-import { history as instantSearchHistory } from "instantsearch.js/es/lib/routers";
 import { SiteSearchInput } from "components/ui/SiteSearchInput";
 import { AroundRadius } from "algoliasearch";
 
@@ -138,15 +137,15 @@ export const SearchResultsPage = () => {
         searchClient={searchClient}
         indexName={INDEX_NAME}
         initialUiState={searchState}
-        onStateChange={({ uiState, setUiState }) => {
-          setUiState(uiState);
-          const THRESHOLD = 700;
-          const newPush = Date.now();
-          setLastPush(newPush);
-          const urlParams = {
-            ...uiState,
-          };
-        }}
+        // onStateChange={({ uiState, setUiState }) => {
+        //   setUiState(uiState);
+        //   const THRESHOLD = 700;
+        //   const newPush = Date.now();
+        //   setLastPush(newPush);
+        //   const urlParams = {
+        //     ...uiState,
+        //   };
+        // }}
         routing={true}
       >
         <Configure

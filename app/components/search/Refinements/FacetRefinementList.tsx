@@ -50,7 +50,7 @@ const FacetRefinementList = ({ attribute, mapping }: Props) => {
   }, []);
 
   const changeRefinement = (key: string) => {
-    refine(key);
+    refine([key, "hello_phonecall"]);
     mapKeys.forEach((key) => {
       checked[key] = keyHasAtLeastOneRefined(key);
     });

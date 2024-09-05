@@ -1,8 +1,6 @@
 import React, { FormEvent, useState } from "react";
 import { useHistory } from "react-router-dom";
 import cn from "classnames";
-import qs from "qs";
-import { useSiteSearch } from "hooks/SiteSearch";
 import styles from "./SiteSearchInput.module.scss";
 import { useSearchBox } from "react-instantsearch";
 
@@ -13,7 +11,6 @@ import { useSearchBox } from "react-instantsearch";
  * - Allows empty searches by removing `query=` query param from querystring
  */
 export const SiteSearchInput = (props: any) => {
-  // const { query, setQuery } = useSiteSearch();
   const { query, refine, clear } = useSearchBox(props);
   const history = useHistory();
   const [inputValue, setInputValue] = useState(query);
