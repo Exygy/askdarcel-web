@@ -2,7 +2,6 @@ const { readFileSync, existsSync } = require("fs");
 const yaml = require("js-yaml");
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const ExtendedDefinePlugin = require("extended-define-webpack-plugin");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
@@ -96,9 +95,9 @@ module.exports = {
       },
       favicon: "app/assets/img/our-415-favicon.png",
     }),
-    new ExtendedDefinePlugin({
-      CONFIG: config,
+    new webpack.DefinePlugin({
       NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+      CONFIG: JSON.stringify(config),
     }),
     new ForkTsCheckerWebpackPlugin(),
     new CopyPlugin({
