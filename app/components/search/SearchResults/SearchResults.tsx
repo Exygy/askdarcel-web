@@ -42,8 +42,6 @@ const SearchResults = ({
     }
   }, []);
 
-  if (!searchResults) return null;
-
   const searchMapHitData: any = transformSearchResults(searchResults);
   const hasNoResults = searchMapHitData.nbHits === 0;
 

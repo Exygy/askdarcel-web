@@ -167,7 +167,7 @@ const Sidebar = ({
         <ClearAllFilters setSearchRadius={setSearchRadius} />
         <div className={styles.filterGroup}>
           <div className={styles.filterTitle}>Availability</div>
-          {/* <OpenNowFilter attribute="open_times" /> */}
+          <OpenNowFilter attribute="open_times" />
         </div>
 
         <div

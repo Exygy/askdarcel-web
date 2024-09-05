@@ -1,89 +1,83 @@
-import React, { Component, useEffect, useState } from "react";
-import {
-  RefinementList,
-  useCurrentRefinements,
-  useRefinementList,
-} from "react-instantsearch";
+import React, { useEffect, useState } from "react";
+import { useRefinementList, UseRefinementListProps } from "react-instantsearch";
 import styles from "./RefinementFilters.module.scss";
-import { connectRefinementList } from "instantsearch.js/es/connectors";
-import { useConnector } from "react-instantsearch";
 
-interface Props {
+interface Props extends UseRefinementListProps {
   mapping: Record<string, string[]>;
-  attribute: string;
 }
 
-type State = {
-  isChecked: Record<string, boolean>;
-  limit: number;
+const REFINEMENTS_CONFIG = {
+  limit: 100,
+  operator: "or" as const,
 };
 
 // Todo: This component could potentially be consolidated with the the Refinement List Filter
 // component when categories/eligibilities are standardized across the homepage Service
 // Pathways results and the Search Results pages
 const FacetRefinementList = ({ attribute, mapping }: Props) => {
-  const mapKeys = Object.keys(mapping);
+  const mappingLabels = Object.keys(mapping);
   const [checked, setChecked] = useState<Record<string, boolean>>({});
-  const {
-    items,
-    hasExhaustiveItems,
-    createURL,
-    refine,
-    sendEvent,
-    searchForItems,
-    isFromSearch,
-    canRefine,
-    canToggleShowMore,
-    isShowingMore,
-    toggleShowMore,
-  } = useRefinementList({ attribute, limit: 100 });
+  const { items, refine } = useRefinementList({
+    attribute,
+    ...REFINEMENTS_CONFIG,
+  });
 
-  const keyHasAtLeastOneRefined = (key: string) => {
-    return mapping[key].some((value) => items.includes(value as any));
+  const keyHasAtLeastOneRefined = (key: string): boolean => {
+    const refined = items.filter((item) => item.isRefined);
+    const refinedItemLabels = refined.map((item) => item.label);
+    const anyCommon = refinedItemLabels.filter((label) =>
+      mapping[key].includes(label)
+    );
+
+    return anyCommon.length > 0;
   };
-
-  useEffect(() => {
-    mapKeys.forEach((key) => {
-      checked[key] = keyHasAtLeastOneRefined(key);
-    });
-    setChecked(checked);
-  }, []);
 
   const changeRefinement = (key: string) => {
-    refine([key, "hello_phonecall"]);
-    mapKeys.forEach((key) => {
-      checked[key] = keyHasAtLeastOneRefined(key);
+    mapping[key].forEach((mappingValue) => {
+      refine(mappingValue);
     });
+
+    if (checked[key]) {
+      checked[key] = false;
+    } else {
+      checked[key] = keyHasAtLeastOneRefined(key);
+    }
+
     setChecked(checked);
   };
 
-  const refinementHasResults = (key: string) => {
-    // this check that a key (checkbox) has at least one sub-elements that is refined
-    // e.g if Learning Disabilities is can be refined but not Visual Impairment,
-    // Disability is still enabled as a checkbox
+  const refinementMappingHasResults = (key: string) => {
     return items.some((item) => mapping[key].includes(item.label));
   };
 
+  useEffect(() => {
+    mappingLabels.forEach((key) => {
+      checked[key] = keyHasAtLeastOneRefined(key);
+    });
+
+    setChecked(checked);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <ul>
-      {mapKeys.map((key) => {
-        const hasResults = refinementHasResults(key);
-        // for each map key, display it as a filtering option
-        // for onClick of each option, call refine on the values of the key
+      {mappingLabels.map((mappingLabel) => {
+        const mappingHasResults = refinementMappingHasResults(mappingLabel);
+
         return (
-          <li key={key}>
+          <li key={mappingLabel}>
             <label
               className={`${styles.checkBox} ${
-                !hasResults ? styles.disabled : ""
+                !mappingHasResults ? styles.disabled : ""
               }`}
             >
-              {key}
+              {mappingLabel}
               <input
                 type="checkbox"
                 className={styles.refinementInput}
-                onChange={() => changeRefinement(key)}
-                checked={checked[key]}
-                disabled={!hasResults}
+                onChange={() => changeRefinement(mappingLabel)}
+                checked={checked[mappingLabel]}
+                disabled={!mappingHasResults}
               />
             </label>
           </li>
@@ -93,5 +87,4 @@ const FacetRefinementList = ({ attribute, mapping }: Props) => {
   );
 };
 
-// @ts-ignore
 export default FacetRefinementList;
