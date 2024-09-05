@@ -52,6 +52,10 @@ export const SearchResultsPage = () => {
   const [searchRadius, setSearchRadius] = useState(
     searchState?.configure?.aroundRadius ?? "all"
   );
+  const [aroundLatLang, setAroundLatLng] = useState({
+    lat: userLocation?.lat,
+    lng: userLocation?.lng,
+  });
 
   // In cases where we translate a query into English, we use this value
   // to represent the user's original, untranslated input. The untranslatedQuery
@@ -115,51 +119,6 @@ export const SearchResultsPage = () => {
   }
 
   return (
-    <InnerSearchResults
-      history={history}
-      userLocation={{ lat: userLocation.lat, lng: userLocation.lng }}
-      lastPush={lastPush}
-      setLastPush={setLastPush}
-      isMapCollapsed={isMapCollapsed}
-      setIsMapCollapsed={setIsMapCollapsed}
-      searchState={searchState}
-      searchRadius={searchRadius}
-      setSearchRadius={setSearchRadius}
-      untranslatedQuery={untranslatedQuery}
-    />
-  );
-};
-
-/** Stateless inner component that just handles presentation. */
-const InnerSearchResults = ({
-  history,
-  userLocation,
-  lastPush,
-  setLastPush,
-  isMapCollapsed,
-  setIsMapCollapsed,
-  searchState,
-  searchRadius,
-  setSearchRadius,
-  untranslatedQuery,
-}: {
-  history: any;
-  userLocation: GeoCoordinates;
-  lastPush: number;
-  setLastPush: (time: number) => void;
-  isMapCollapsed: boolean;
-  setIsMapCollapsed: (listExpanded: boolean) => void;
-  searchState: SearchState;
-  searchRadius: AroundRadius;
-  setSearchRadius: (radius: AroundRadius) => void;
-  untranslatedQuery: string | undefined | null;
-}) => {
-  const [aroundLatLang, setAroundLatLng] = useState({
-    lat: userLocation.lat,
-    lng: userLocation.lng,
-  });
-
-  return (
     <div className={styles.container}>
       <Helmet>
         <title>{`${searchState.query ?? "Services"} in San Francisco | ${
@@ -186,29 +145,9 @@ const InnerSearchResults = ({
           setLastPush(newPush);
           const urlParams = {
             ...uiState,
-            // With our setup, the onSearchStateChange event only runs as a result of editing
-            // refinements. It is not called when the user enters a new query in the search
-            // input field. Thus, the query value will not have changed. However, of relevance to
-            // non-English queries, the nextSearchState arg that's passed to this callback includes
-            // the _translated_ query rather than the user's original untranslated input.
-            // For various reasons, we want to urlParams query value to be the untranslated query.
-            // query: untranslatedQuery,
           };
-
-          const newUrl = uiState ? `search?${qs.stringify(urlParams)}` : "";
-          if (lastPush && newPush - lastPush <= THRESHOLD) {
-            history.push(newUrl);
-          } else {
-            history.push(newUrl);
-          }
         }}
-        // routing={{
-        //   router: instantSearchHistory({
-        //     createURL({ qsModule, routeState, location }) {
-        //       return `search?${qs.stringify(routeState)}`;
-        //     },
-        //   }),
-        // }}
+        routing={true}
       >
         <Configure
           aroundLatLng={`${aroundLatLang.lat}, ${aroundLatLang.lng}`}
