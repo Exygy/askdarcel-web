@@ -9,41 +9,38 @@ import styles from "./Header.module.scss";
 
 const { showPrintResultsBtn } = websiteConfig;
 
-export const Header = ({
-  resultsTitle,
-}: // translateResultsTitle = true,
-{
-  resultsTitle: string;
-  // translateResultsTitle?: boolean;
-}) => {
-  const title = resultsTitle === "" ? "All categories" : resultsTitle;
+interface Props {
+  currentCategory?: string;
+}
 
-  const links = [
-    {
-      id: "all-categories",
-      url: "/search",
-      text: "All categories",
-    },
-    ...CATEGORIES.map((category) => ({
-      id: category.slug,
-      url: `/${category.slug}/results`,
-      text: category.name,
-    })),
-  ];
+const DROPDOWN_LINKS = [
+  {
+    id: "all-categories",
+    url: "/search",
+    text: "All categories",
+  },
+  ...CATEGORIES.map((category) => ({
+    id: category.slug,
+    url: `/${category.slug}/results`,
+    text: category.name,
+  })),
+];
+export const Header = ({ currentCategory }: Props) => {
+  const title = currentCategory || "All categories";
 
-  const uniqueId = crypto.randomUUID();
+  const uuid = crypto.randomUUID();
 
   return (
     <div className={styles.header}>
       <div className={styles.headerInner}>
         <div>
           <h1 className="sr-only">
-            {title === resultsTitle ?? "Search results"}
+            {title === currentCategory ?? "Search results"}
           </h1>
           <DropdownMenu
-            id={uniqueId}
-            title={resultsTitle}
-            links={links}
+            id={uuid}
+            title={title}
+            links={DROPDOWN_LINKS}
             variant="category"
           />
         </div>

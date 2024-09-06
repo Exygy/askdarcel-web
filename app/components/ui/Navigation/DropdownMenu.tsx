@@ -42,9 +42,9 @@ const DropdownMenu = ({
         className={`${styles.navigationSubMenu}`}
       >
         {links.map((linkItem) => {
-          const key = crypto.randomUUID();
+          const uuid = crypto.randomUUID();
           return (
-            <span key={key} className={styles.navigationSubMenuItem}>
+            <span key={uuid} className={styles.navigationSubMenuItem}>
               <Link to={linkItem.url} className={styles.menuLink}>
                 {linkItem.text}
               </Link>

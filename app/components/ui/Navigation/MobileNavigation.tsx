@@ -62,10 +62,10 @@ export const MobileNavigation = ({
                   }`}
                 >
                   {menuDataItem.link.map((linkItem: StrapiModel.Link) => {
-                    const key = crypto.randomUUID();
+                    const uuid = crypto.randomUUID();
                     return (
                       <li
-                        key={key}
+                        key={uuid}
                         className={
                           mobileNavigationStyles.mobileNavigationMenuListItem
                         }
