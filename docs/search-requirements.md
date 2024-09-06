@@ -9,3 +9,5 @@ A working checklist of search functionlity that we commit to supporting. To be u
 1. Facet refinements should be preserved across queries
 1. Facet refinements should be preserved when clicking "Back to Services" from a Service detail page
 1. The query should be preserved when clicking "Back to Services" from a Service detail page
+1. Geo state should be preserved in the URL
+1. Translated (to en) text should be sent do Algolia, and untranslated query text should be displayed in input

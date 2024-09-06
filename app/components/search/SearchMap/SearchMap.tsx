@@ -113,7 +113,8 @@ const GoogleSearchHitMarkerWorkaround = ({
   hit: TransformedSearchHit;
   tag: string;
 }) => (
-  // @ts-ignore */
+  // TODO: Figure out why TS complaining after pckg update
+  // @ts-ignore
   <Tooltip
     arrow
     html={<SearchEntry hit={hit} />}

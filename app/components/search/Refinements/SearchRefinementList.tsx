@@ -6,7 +6,7 @@ interface Props extends UseRefinementListProps {
   mapping: Record<string, string[]>;
 }
 
-const REFINEMENTS_CONFIG = {
+const DEFAULT_CONFIG = {
   limit: 100,
   operator: "or" as const,
 };
@@ -16,7 +16,7 @@ const SearchRefinementList = ({ attribute, mapping }: Props) => {
   const [checked, setChecked] = useState<Record<string, boolean>>({});
   const { items, refine } = useRefinementList({
     attribute,
-    ...REFINEMENTS_CONFIG,
+    ...DEFAULT_CONFIG,
   });
 
   const keyHasAtLeastOneRefined = (key: string): boolean => {
