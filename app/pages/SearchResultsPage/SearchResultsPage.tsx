@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import { Helmet } from "react-helmet-async";
 import { liteClient } from "algoliasearch/lite";
-import { InstantSearch, Configure, SearchBox } from "react-instantsearch";
+import { InstantSearch, Configure } from "react-instantsearch";
 import qs, { ParsedQs } from "qs";
 
-import { GeoCoordinates, useAppContext, websiteConfig } from "utils";
+import { DEFAULT_AROUND_PRECISION, useAppContext, websiteConfig } from "utils";
 import { translate } from "utils/DataService";
 
 import { Loader } from "components/ui";
 import SearchResults from "components/search/SearchResults/SearchResults";
 import Sidebar from "components/search/Sidebar/Sidebar";
 import { Header } from "components/search/Header/Header";
-import config from "../../config";
-import styles from "./SearchResultsPage.module.scss";
 import { SiteSearchInput } from "components/ui/SiteSearchInput";
 import { AroundRadius } from "algoliasearch";
+import config from "../../config";
+import styles from "./SearchResultsPage.module.scss";
 
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 const searchClient = liteClient(
@@ -41,10 +41,8 @@ const INDEX_NAME = `${config.ALGOLIA_INDEX_PREFIX}_services_search`;
 /** Wrapper component that handles state management, URL parsing, and external API requests. */
 export const SearchResultsPage = () => {
   const [cookies] = useCookies(["googtrans"]);
-  const history = useHistory();
   const { search } = useLocation();
   const { userLocation } = useAppContext();
-  const [lastPush, setLastPush] = useState(Date.now());
   const [isMapCollapsed, setIsMapCollapsed] = useState(false);
 
   const [searchState, setSearchState] = useState<SearchState | null>(null);
@@ -136,22 +134,12 @@ export const SearchResultsPage = () => {
       <InstantSearch
         searchClient={searchClient}
         indexName={INDEX_NAME}
-        initialUiState={searchState}
-        // onStateChange={({ uiState, setUiState }) => {
-        //   setUiState(uiState);
-        //   const THRESHOLD = 700;
-        //   const newPush = Date.now();
-        //   setLastPush(newPush);
-        //   const urlParams = {
-        //     ...uiState,
-        //   };
-        // }}
         routing={true}
       >
         <Configure
           aroundLatLng={`${aroundLatLang.lat}, ${aroundLatLang.lng}`}
           aroundRadius={searchRadius}
-          aroundPrecision={1600}
+          aroundPrecision={DEFAULT_AROUND_PRECISION}
         />
         <SiteSearchInput />
         <div className={styles.flexContainer}>

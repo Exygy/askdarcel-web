@@ -1,13 +1,21 @@
 import React from "react";
-import { CurrentRefinements, useCurrentRefinements } from "react-instantsearch";
+import { useRefinementList, UseRefinementListProps } from "react-instantsearch";
 import styles from "./RefinementFilters.module.scss";
 
-const RefinementListFilter = (props: any) => {
-  const { items, canRefine, refine } = useCurrentRefinements(props);
-  const foo = props.transformItems;
+interface Props extends UseRefinementListProps {
+  transform: UseRefinementListProps["transformItems"];
+  attribute: string;
+}
+const BrowseRefinementList = ({ attribute, transform }: Props) => {
+  const { items, refine } = useRefinementList({
+    attribute,
+    sortBy: ["name:asc"],
+    transformItems: transform,
+  });
+
   return (
     <ul>
-      {foo(items).map((item: any) => (
+      {items.map((item) => (
         <li key={item.label}>
           <label className={styles.checkBox}>
             {item.label}
@@ -26,4 +34,4 @@ const RefinementListFilter = (props: any) => {
   );
 };
 
-export default RefinementListFilter;
+export default BrowseRefinementList;

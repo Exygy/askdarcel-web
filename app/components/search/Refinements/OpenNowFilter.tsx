@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRefinementList, UseRefinementListProps } from "react-instantsearch";
-// import { connectRefinementList } from "react-instantsearch/connectors";
 import { getCurrentDayTime } from "utils/index";
 import styles from "./RefinementFilters.module.scss";
 
@@ -24,9 +23,21 @@ interface Props extends UseRefinementListProps {}
  * the open_times array.
  */
 const OpenNowFilter = (props: Props) => {
-  const { refine } = useRefinementList(props);
+  const { refine, items } = useRefinementList(props);
+  const [checked, setChecked] = useState(false);
+
+  useEffect(() => {
+    if (items.map((item) => item.value).includes(getCurrentDayTime())) {
+      setChecked(true);
+    }
+  }, [items]);
 
   const toggleRefinement = () => {
+    if (checked) {
+      setChecked(false);
+    } else if (items.map((item) => item.value).includes(getCurrentDayTime())) {
+      setChecked(true);
+    }
     refine(getCurrentDayTime());
   };
 
@@ -39,7 +50,7 @@ const OpenNowFilter = (props: Props) => {
         id="openNow"
         className={styles.refinementInput}
         value="openNow"
-        checked={false}
+        checked={checked}
         onChange={toggleRefinement}
       />
     </label>

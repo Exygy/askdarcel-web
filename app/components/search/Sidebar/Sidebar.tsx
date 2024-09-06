@@ -7,20 +7,21 @@ import {
 } from "utils/refinementMappings";
 import ClearAllFilters from "components/search/Refinements/ClearAllFilters";
 import OpenNowFilter from "components/search/Refinements/OpenNowFilter";
-import RefinementListFilter from "components/search/Refinements/RefinementListFilter";
-import FacetRefinementList from "components/search/Refinements/FacetRefinementList";
+import BrowseRefinementList from "components/search/Refinements/BrowseRefinementList";
+import SearchRefinementList from "components/search/Refinements/SearchRefinementList";
 import { Button } from "components/ui/inline/Button/Button";
+import { AroundRadius } from "algoliasearch";
 import useClickOutside from "../../../hooks/MenuHooks";
 import MobileMapToggleButtons from "./MobileMapToggleButtons";
 import styles from "./Sidebar.module.scss";
-import { AroundRadius } from "algoliasearch";
+import { DEFAULT_AROUND_PRECISION } from "utils";
 
 const Sidebar = ({
   setSearchRadius,
   searchRadius,
   isSearchResultsPage,
-  eligibilities = [],
-  subcategories = [],
+  eligibilities,
+  subcategories,
   subcategoryNames = [],
   sortAlgoliaSubcategoryRefinements = false,
   isMapCollapsed,
@@ -29,9 +30,9 @@ const Sidebar = ({
   setSearchRadius: (radius: AroundRadius) => void;
   searchRadius: AroundRadius;
   isSearchResultsPage: boolean;
-  eligibilities?: object[];
-  subcategories?: Category[];
-  subcategoryNames?: string[];
+  eligibilities?: object[] | null;
+  subcategories?: Category[] | null;
+  subcategoryNames?: string[] | null;
   sortAlgoliaSubcategoryRefinements?: boolean;
   isMapCollapsed: boolean;
   setIsMapCollapsed: (_isMapCollapsed: boolean) => void;
@@ -78,28 +79,26 @@ const Sidebar = ({
   // of these to use as based on the isSearchResultsPage value
   if (isSearchResultsPage) {
     categoryRefinementJsx = (
-      <FacetRefinementList attribute="categories" mapping={categoriesMapping} />
+      <SearchRefinementList
+        attribute="categories"
+        mapping={categoriesMapping}
+      />
     );
     eligibilityRefinementJsx = (
-      <FacetRefinementList
+      <SearchRefinementList
         attribute="eligibilities"
         mapping={eligibilitiesMapping}
       />
     );
   } else {
-    // Service Results Page
     if (eligibilities.length) {
       eligibilityRefinementJsx = (
-        <RefinementListFilter
-          attribute="eligibilities"
-          // TODO: type fix
-          transformItems={(items: any[]) => items.sort(orderByLabel)}
-        />
+        <BrowseRefinementList attribute="eligibilities" />
       );
     }
     if (subcategories.length) {
       categoryRefinementJsx = (
-        <RefinementListFilter
+        <BrowseRefinementList
           attribute="categories"
           // The number of tagged categories returned by Algolia can be very large.
           // We set an artificially high limit to attempt capturing all the subcategories
@@ -109,8 +108,7 @@ const Sidebar = ({
           // Algolia returns all categories of the union of returned services.
           // We filter out any of these categories that are not children of the selected top level
           // category returned from the api (`/api/categories/subcategories?id=${categoryID}`).
-          // TODO: type fix
-          transformItems={(items: any[]) =>
+          transform={(items) =>
             items
               .filter(({ label }: { label: string }) =>
                 subcategoryNames.includes(label)
@@ -208,8 +206,8 @@ const Sidebar = ({
               type="radio"
               name="searchRadius"
               onChange={onChangeValue}
-              value="1600"
-              checked={searchRadius === 1600}
+              value={DEFAULT_AROUND_PRECISION}
+              checked={searchRadius === DEFAULT_AROUND_PRECISION}
               className={styles.refinementInput}
             />
           </label>

@@ -11,10 +11,7 @@ const REFINEMENTS_CONFIG = {
   operator: "or" as const,
 };
 
-// Todo: This component could potentially be consolidated with the the Refinement List Filter
-// component when categories/eligibilities are standardized across the homepage Service
-// Pathways results and the Search Results pages
-const FacetRefinementList = ({ attribute, mapping }: Props) => {
+const SearchRefinementList = ({ attribute, mapping }: Props) => {
   const mappingLabels = Object.keys(mapping);
   const [checked, setChecked] = useState<Record<string, boolean>>({});
   const { items, refine } = useRefinementList({
@@ -87,4 +84,4 @@ const FacetRefinementList = ({ attribute, mapping }: Props) => {
   );
 };
 
-export default FacetRefinementList;
+export default SearchRefinementList;
