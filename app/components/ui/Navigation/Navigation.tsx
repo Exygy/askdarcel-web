@@ -123,6 +123,7 @@ export const Navigation = () => {
                     return (
                       <DropdownMenu
                         key={uniqueKey}
+                        id={uniqueKey}
                         title={menuDataItem.title}
                         links={links}
                       />

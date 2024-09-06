@@ -31,6 +31,8 @@ export const Header = ({
     })),
   ];
 
+  const uniqueId = crypto.randomUUID();
+
   return (
     <div className={styles.header}>
       <div className={styles.headerInner}>
@@ -38,7 +40,12 @@ export const Header = ({
           <h1 className="sr-only">
             {title === resultsTitle ?? "Search results"}
           </h1>
-          <DropdownMenu title={resultsTitle} links={links} variant="category" />
+          <DropdownMenu
+            id={uniqueId}
+            title={resultsTitle}
+            links={links}
+            variant="category"
+          />
         </div>
         <Button
           iconName="fas fa-print"

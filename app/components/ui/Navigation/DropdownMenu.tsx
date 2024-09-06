@@ -8,10 +8,12 @@ const DropdownMenu = ({
   title,
   links,
   variant = "navigation",
+  id,
 }: {
   title: string;
   links: { id: number | string; url: string; text: string }[];
   variant?: "navigation" | "category";
+  id: string;
 }) => {
   const { activeSubMenu, handleMenuToggle, menuRef } = useMenuToggle();
 
@@ -20,15 +22,13 @@ const DropdownMenu = ({
     variant === "category" && styles.categoryMenuContainer
   );
 
-  const uniqueKey = crypto.randomUUID();
-
   return (
-    <div className={containerClass} key={uniqueKey} ref={menuRef}>
+    <div className={containerClass} key={id} ref={menuRef}>
       <button
         type="button"
         aria-haspopup="menu"
-        aria-expanded={activeSubMenu === uniqueKey ? "true" : "false"}
-        onClick={() => handleMenuToggle(uniqueKey)}
+        aria-expanded={activeSubMenu === id ? "true" : "false"}
+        onClick={() => handleMenuToggle(id)}
         className={styles.navigationMenuHeader}
       >
         {title}
@@ -37,7 +37,7 @@ const DropdownMenu = ({
 
       <div
         style={{
-          display: activeSubMenu === uniqueKey ? "block" : "none",
+          display: activeSubMenu === id ? "block" : "none",
         }}
         className={`${styles.navigationSubMenu}`}
       >

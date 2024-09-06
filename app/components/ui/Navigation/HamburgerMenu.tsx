@@ -88,54 +88,37 @@ export const HamburgerMenu = ({
         exact = false,
         external = false,
         linkStyles = styles.menuItem,
-      }) => (
-        <MenuItem
-          key={to}
-          to={to}
-          onClick={toggleMobileNav}
-          exact={exact}
-          linkStyles={linkStyles}
-          external={external}
-        >
-          {text}
-        </MenuItem>
-      )
+      }) =>
+        to.startsWith("http") || to.startsWith("mailto:") ? (
+          <a
+            className={linkStyles}
+            href={to}
+            rel="noopener noreferrer"
+            target={external ? "_blank" : "_self"}
+          >
+            {text}
+          </a>
+        ) : (
+          <NavLink
+            className={linkStyles}
+            activeClassName={styles.active}
+            to={to}
+            onClick={toggleMobileNav}
+            exact={exact}
+          >
+            {text}
+          </NavLink>
+        )
+        // <MenuItem
+        //   key={to}
+        //   to={to}
+        //   onClick={toggleMobileNav}
+        //   exact={exact}
+        //   linkStyles={linkStyles}
+        //   external={external}
+        // >
+        //   {text}
+        // </MenuItem>
     )}
   </Menu>
 );
-
-const MenuItem = ({
-  children,
-  onClick,
-  to,
-  exact,
-  linkStyles,
-  external,
-}: {
-  children: ReactNode;
-  onClick: () => void;
-  to: string;
-  exact: boolean;
-  linkStyles: string;
-  external: boolean;
-}) =>
-  to.startsWith("http") || to.startsWith("mailto:") ? (
-    <a
-      className={linkStyles}
-      href={to}
-      rel="noopener noreferrer"
-      target={external ? "_blank" : "_self"}
-    >
-      {children}
-    </a>
-  ) : (
-    <NavLink
-      className={linkStyles}
-      activeClassName={styles.active}
-      to={to}
-      onClick={onClick}
-      exact={exact}
-    >
-      {children}
-    </NavLink>
-  );

@@ -34,18 +34,17 @@ export const MobileNavigation = ({
       <div className={mobileNavigationStyles.mobileNavigationContainer}>
         {menuData?.map((menuDataItem) => {
           if (menuItemHasLinks(menuDataItem)) {
-            const uniqueKey = crypto.randomUUID();
-
+            const uid = menuDataItem.title;
             return (
               <div
                 className={mobileNavigationStyles.mobileNavigationMenuContainer}
-                key={uniqueKey}
+                key={uid}
               >
                 <button
                   type="button"
                   aria-haspopup="menu"
-                  aria-expanded={activeSubMenu === uniqueKey ? "true" : "false"}
-                  onClick={() => setSubMenu(uniqueKey)}
+                  aria-expanded={activeSubMenu === uid ? "true" : "false"}
+                  onClick={() => setSubMenu(uid)}
                   className={mobileNavigationStyles.mobileNavigationMenuHeader}
                 >
                   {menuDataItem.title}
@@ -57,7 +56,7 @@ export const MobileNavigation = ({
                   className={`${
                     mobileNavigationStyles.mobileNavigationMenuList
                   } ${
-                    activeSubMenu === uniqueKey
+                    activeSubMenu === uid
                       ? mobileNavigationStyles.mobileNavigationMenuListOpen
                       : ""
                   }`}
