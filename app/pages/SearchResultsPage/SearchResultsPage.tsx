@@ -131,12 +131,7 @@ export const SearchResultsPage = () => {
 
       <Header resultsTitle="All categories" />
 
-      <InstantSearch
-        searchClient={searchClient}
-        indexName={INDEX_NAME}
-        initialUiState={{}}
-        routing
-      >
+      <InstantSearch searchClient={searchClient} indexName={INDEX_NAME} routing>
         <Configure
           aroundLatLng={`${aroundLatLang.lat}, ${aroundLatLang.lng}`}
           aroundRadius={searchRadius}
