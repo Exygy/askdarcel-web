@@ -38,12 +38,7 @@ export const Header = ({
           <h1 className="sr-only">
             {title === resultsTitle ?? "Search results"}
           </h1>
-          <DropdownMenu
-            title={resultsTitle}
-            links={links}
-            uniqueKey={resultsTitle}
-            variant="category"
-          />
+          <DropdownMenu title={resultsTitle} links={links} variant="category" />
         </div>
         <Button
           iconName="fas fa-print"

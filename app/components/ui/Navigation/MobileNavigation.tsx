@@ -34,7 +34,7 @@ export const MobileNavigation = ({
       <div className={mobileNavigationStyles.mobileNavigationContainer}>
         {menuData?.map((menuDataItem) => {
           if (menuItemHasLinks(menuDataItem)) {
-            const uniqueKey = menuDataItem.title;
+            const uniqueKey = crypto.randomUUID();
 
             return (
               <div
@@ -62,24 +62,27 @@ export const MobileNavigation = ({
                       : ""
                   }`}
                 >
-                  {menuDataItem.link.map((linkItem: StrapiModel.Link) => (
-                    <li
-                      key={linkItem.id}
-                      className={
-                        mobileNavigationStyles.mobileNavigationMenuListItem
-                      }
-                    >
-                      <Link
-                        to={linkItem.url}
+                  {menuDataItem.link.map((linkItem: StrapiModel.Link) => {
+                    const key = crypto.randomUUID();
+                    return (
+                      <li
+                        key={key}
                         className={
-                          mobileNavigationStyles.mobileNavigationMenuLink
+                          mobileNavigationStyles.mobileNavigationMenuListItem
                         }
-                        onClick={closeMobileMenu}
                       >
-                        {linkItem.text}
-                      </Link>
-                    </li>
-                  ))}
+                        <Link
+                          to={linkItem.url}
+                          className={
+                            mobileNavigationStyles.mobileNavigationMenuLink
+                          }
+                          onClick={closeMobileMenu}
+                        >
+                          {linkItem.text}
+                        </Link>
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
             );
@@ -87,7 +90,7 @@ export const MobileNavigation = ({
 
           return (
             <li
-              key={menuDataItem.url}
+              key={crypto.randomUUID()}
               className={mobileNavigationStyles.mobileNavigationMenuListItem}
             >
               <Link

@@ -7,12 +7,10 @@ import styles from "./DropdownMenu.module.scss";
 const DropdownMenu = ({
   title,
   links,
-  uniqueKey,
   variant = "navigation",
 }: {
   title: string;
   links: { id: number | string; url: string; text: string }[];
-  uniqueKey: string;
   variant?: "navigation" | "category";
 }) => {
   const { activeSubMenu, handleMenuToggle, menuRef } = useMenuToggle();
@@ -21,6 +19,8 @@ const DropdownMenu = ({
     styles.navigationMenuContainer,
     variant === "category" && styles.categoryMenuContainer
   );
+
+  const uniqueKey = crypto.randomUUID();
 
   return (
     <div className={containerClass} key={uniqueKey} ref={menuRef}>
@@ -41,13 +41,16 @@ const DropdownMenu = ({
         }}
         className={`${styles.navigationSubMenu}`}
       >
-        {links.map((linkItem) => (
-          <span key={linkItem.id} className={styles.navigationSubMenuItem}>
-            <Link to={linkItem.url} className={styles.menuLink}>
-              {linkItem.text}
-            </Link>
-          </span>
-        ))}
+        {links.map((linkItem) => {
+          const key = crypto.randomUUID();
+          return (
+            <span key={key} className={styles.navigationSubMenuItem}>
+              <Link to={linkItem.url} className={styles.menuLink}>
+                {linkItem.text}
+              </Link>
+            </span>
+          );
+        })}
       </div>
     </div>
   );
