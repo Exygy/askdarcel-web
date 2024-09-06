@@ -1,4 +1,5 @@
 import { Hit, SearchHits } from "algoliasearch";
+// eslint-disable-next-line import/no-extraneous-dependencies
 import algoliasearchHelper from "algoliasearch-helper";
 import { Service } from "./Service";
 import { Organization } from "./Organization";

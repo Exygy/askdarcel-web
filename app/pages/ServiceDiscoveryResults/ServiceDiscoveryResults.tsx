@@ -22,10 +22,10 @@ import {
   useEligibilitiesForCategory,
   useSubcategoriesForCategory,
 } from "hooks/APIHooks";
+import { SiteSearchInput } from "components/ui/SiteSearchInput";
 import config from "../../config";
 import { CATEGORIES, ServiceCategory } from "../constants";
 import styles from "./ServiceDiscoveryResults.module.scss";
-import { SiteSearchInput } from "components/ui/SiteSearchInput";
 
 type MatchParams = { categorySlug: string };
 type RouterLocation = RouteComponentProps["location"];

@@ -8,8 +8,8 @@ import styles from "./SiteSearchInput.module.scss";
  *
  * - Updates the url querystring on every search
  */
-export const SiteSearchInput = (props: any) => {
-  const { query, refine } = useSearchBox(props);
+export const SiteSearchInput = () => {
+  const { query, refine } = useSearchBox();
   const [inputValue, setInputValue] = useState(query);
 
   function setQuery(newQuery: string) {

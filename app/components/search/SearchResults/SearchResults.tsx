@@ -8,6 +8,7 @@ import {
   transformSearchResults,
 } from "models/SearchHits";
 import { useInstantSearch } from "react-instantsearch";
+// eslint-disable-next-line import/no-extraneous-dependencies
 import algoliasearchHelper from "algoliasearch-helper";
 import styles from "./SearchResults.module.scss";
 import ClearSearchButton from "../Refinements/ClearSearchButton";
