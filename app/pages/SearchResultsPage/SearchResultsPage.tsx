@@ -134,7 +134,8 @@ export const SearchResultsPage = () => {
       <InstantSearch
         searchClient={searchClient}
         indexName={INDEX_NAME}
-        routing={true}
+        initialUiState={{}}
+        routing
       >
         <Configure
           aroundLatLng={`${aroundLatLang.lat}, ${aroundLatLang.lng}`}

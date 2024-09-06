@@ -1,5 +1,4 @@
 import React from "react";
-import { SiteSearchInput } from "components/ui/SiteSearchInput";
 import styles from "./SearchHeaderSection.module.scss";
 
 /**

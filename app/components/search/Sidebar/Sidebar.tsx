@@ -11,10 +11,10 @@ import BrowseRefinementList from "components/search/Refinements/BrowseRefinement
 import SearchRefinementList from "components/search/Refinements/SearchRefinementList";
 import { Button } from "components/ui/inline/Button/Button";
 import { AroundRadius } from "algoliasearch";
+import { DEFAULT_AROUND_PRECISION } from "utils";
 import useClickOutside from "../../../hooks/MenuHooks";
 import MobileMapToggleButtons from "./MobileMapToggleButtons";
 import styles from "./Sidebar.module.scss";
-import { DEFAULT_AROUND_PRECISION } from "utils";
 
 const Sidebar = ({
   setSearchRadius,

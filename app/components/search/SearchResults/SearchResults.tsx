@@ -3,10 +3,12 @@ import { SearchMap } from "components/search/SearchMap/SearchMap";
 import ResultsPagination from "components/search/Pagination/ResultsPagination";
 import { SearchResult } from "components/search/SearchResults/SearchResult";
 import {
+  SearchHit,
   TransformedSearchHit,
   transformSearchResults,
 } from "models/SearchHits";
 import { useInstantSearch } from "react-instantsearch";
+import algoliasearchHelper from "algoliasearch-helper";
 import styles from "./SearchResults.module.scss";
 import ClearSearchButton from "../Refinements/ClearSearchButton";
 
@@ -19,7 +21,10 @@ const SearchResults = ({
   setAroundLatLng: (latLng: { lat: number; lng: number }) => void;
   searchQuery?: string | null;
 }) => {
-  const { results: searchResults } = useInstantSearch();
+  const {
+    results: searchResults,
+  }: { results: algoliasearchHelper.SearchResults<SearchHit> } =
+    useInstantSearch();
   const [centerCoords] = useState(null);
   const [googleMapObject, setMapObject] = useState<google.maps.Map | null>(
     null
@@ -42,7 +47,7 @@ const SearchResults = ({
     }
   }, []);
 
-  const searchMapHitData: any = transformSearchResults(searchResults);
+  const searchMapHitData = transformSearchResults(searchResults);
   const hasNoResults = searchMapHitData.nbHits === 0;
 
   const NoResultsDisplay = () => (

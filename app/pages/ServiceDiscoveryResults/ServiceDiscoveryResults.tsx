@@ -25,6 +25,7 @@ import {
 import config from "../../config";
 import { CATEGORIES, ServiceCategory } from "../constants";
 import styles from "./ServiceDiscoveryResults.module.scss";
+import { SiteSearchInput } from "components/ui/SiteSearchInput";
 
 type MatchParams = { categorySlug: string };
 type RouterLocation = RouteComponentProps["location"];
@@ -115,6 +116,7 @@ export const ServiceDiscoveryResults = ({
           searchClient={searchClient}
           indexName={`${config.ALGOLIA_INDEX_PREFIX}_services_search`}
           initialUiState={searchState}
+          routing
         >
           {category.disableGeoLocation ? (
             <Configure filters={`categories:'${algoliaCategoryName}'`} />
@@ -126,6 +128,7 @@ export const ServiceDiscoveryResults = ({
               aroundPrecision={DEFAULT_AROUND_PRECISION}
             />
           )}
+          <SiteSearchInput />
           <div className={styles.flexContainer}>
             <Sidebar
               setSearchRadius={setSearchRadius}
