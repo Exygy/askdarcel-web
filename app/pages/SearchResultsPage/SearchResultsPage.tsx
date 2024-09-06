@@ -75,7 +75,7 @@ export const SearchResultsPage = () => {
         ? (qsParams[`${INDEX_NAME}.query}`] as string)
         : ""
     );
-    // delete qsParams["production_services_search[query]"];
+    delete qsParams["production_services_search[query]"];
     setNonQuerySearchParams(qsParams);
   }, [search]);
 
