@@ -112,5 +112,19 @@ const GoogleSearchHitMarkerWorkaround = ({
   lng: any;
   hit: TransformedSearchHit;
   tag: string;
-}) => <></>;
+}) => (
+  // TODO: Figure out why TS complaining after pckg update
+  // @ts-ignore
+  <Tooltip
+    arrow
+    html={<SearchEntry hit={hit} />}
+    interactive
+    position="bottom"
+    theme="light"
+    trigger="click"
+    useContext
+  >
+    <CustomMarker text={tag} />
+  </Tooltip>
+);
 /* eslint-enable react/no-unused-prop-types */
