@@ -67,10 +67,10 @@ export function useNavigationData() {
     );
 
   const { data, error, isLoading } = useSWR(`/api/${path}`, dataFetcher) as {
-      data: { data: StrapiApi.StrapiDatumResponse<StrapiApi.HeaderResponse> };
-      error: any;
-      isLoading: boolean;
-    };
+    data: { data: StrapiApi.StrapiDatumResponse<StrapiApi.HeaderResponse> };
+    error: any;
+    isLoading: boolean;
+  };
 
   return {
     data: data?.data ? data?.data.attributes : null,
