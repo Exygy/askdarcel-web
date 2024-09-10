@@ -27,7 +27,8 @@ const OpenNowFilter = (props: Props) => {
   const [isChecked, toggleChecked] = useState(false);
 
   useEffect(() => {
-    if (items.map((item) => item.value).includes(getCurrentDayTime())) {
+    const currentDayTime = getCurrentDayTime();
+    if (items.map((item) => item.value).includes(currentDayTime)) {
       toggleChecked(true);
     } else {
       toggleChecked(false);
@@ -35,12 +36,13 @@ const OpenNowFilter = (props: Props) => {
   }, [items]);
 
   const toggleRefinement = () => {
+    const currentDayTime = getCurrentDayTime();
     if (isChecked) {
       toggleChecked(false);
-    } else if (items.map((item) => item.value).includes(getCurrentDayTime())) {
+    } else if (items.map((item) => item.value).includes(currentDayTime)) {
       toggleChecked(true);
     }
-    refine(getCurrentDayTime());
+    refine(currentDayTime);
   };
 
   return (
