@@ -24,19 +24,21 @@ interface Props extends UseRefinementListProps {}
  */
 const OpenNowFilter = (props: Props) => {
   const { refine, items } = useRefinementList(props);
-  const [checked, setChecked] = useState(false);
+  const [isChecked, toggleChecked] = useState(false);
 
   useEffect(() => {
     if (items.map((item) => item.value).includes(getCurrentDayTime())) {
-      setChecked(true);
+      toggleChecked(true);
+    } else {
+      toggleChecked(false);
     }
   }, [items]);
 
   const toggleRefinement = () => {
-    if (checked) {
-      setChecked(false);
+    if (isChecked) {
+      toggleChecked(false);
     } else if (items.map((item) => item.value).includes(getCurrentDayTime())) {
-      setChecked(true);
+      toggleChecked(true);
     }
     refine(getCurrentDayTime());
   };
@@ -50,7 +52,7 @@ const OpenNowFilter = (props: Props) => {
         id="openNow"
         className={styles.refinementInput}
         value="openNow"
-        checked={checked}
+        checked={isChecked}
         onChange={toggleRefinement}
       />
     </label>
