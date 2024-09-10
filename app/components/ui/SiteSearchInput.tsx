@@ -2,7 +2,6 @@ import React, { FormEvent, useState } from "react";
 import cn from "classnames";
 import { useSearchBox } from "react-instantsearch";
 import styles from "./SiteSearchInput.module.scss";
-import { useHistory } from "react-router-dom";
 
 /**
  * Sitewide listing search component
@@ -12,7 +11,6 @@ import { useHistory } from "react-router-dom";
 export const SiteSearchInput = () => {
   const { query, refine } = useSearchBox();
   const [inputValue, setInputValue] = useState(query);
-  const history = useHistory();
 
   function setQuery(newQuery: string) {
     setInputValue(newQuery);
@@ -21,7 +19,6 @@ export const SiteSearchInput = () => {
   const submitSearch = (e: FormEvent) => {
     e.preventDefault();
 
-    history.push(`/search`);
     refine(inputValue);
 
     return false;

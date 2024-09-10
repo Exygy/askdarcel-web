@@ -3,8 +3,6 @@ import { useRefinementList, UseRefinementListProps } from "react-instantsearch";
 import { getCurrentDayTime } from "utils/index";
 import styles from "./RefinementFilters.module.scss";
 
-interface Props extends UseRefinementListProps {}
-
 /**
  * A custom Algolia InstantSearch RefinementList widget representing the Open
  * Now checkbox.
