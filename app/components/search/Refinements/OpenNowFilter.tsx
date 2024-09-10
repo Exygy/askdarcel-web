@@ -22,8 +22,8 @@ interface Props extends UseRefinementListProps {}
  * filter should filter for organizations or services which have 'Su-10:00' in
  * the open_times array.
  */
-const OpenNowFilter = (props: Props) => {
-  const { refine, items } = useRefinementList(props);
+const OpenNowFilter = () => {
+  const { refine, items } = useRefinementList({ attribute: "open_times" });
   const [isChecked, toggleChecked] = useState(false);
 
   useEffect(() => {
