@@ -7,11 +7,11 @@ interface ListingInfoTableProps<T = any> {
   children?: ReactNode;
 }
 
-export const ListingInfoTable = ({
+export const ListingInfoTable = <T,>({
   rows,
   rowRenderer,
   children,
-}: ListingInfoTableProps) => {
+}: ListingInfoTableProps<T>) => {
   const useRowRenderer = !children && rows && rowRenderer;
 
   return (
