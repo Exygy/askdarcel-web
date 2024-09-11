@@ -31,7 +31,6 @@ interface WebsiteConfigSite {
     showSFSeal: boolean;
   };
   homePageComponent: homepageComponentEnums;
-  intercom: boolean;
   logoLinkDestination: string;
   navLogoStyle: string;
   refinementListLimit: number;
@@ -44,7 +43,6 @@ interface WebsiteConfigSite {
   siteNavStyle: string;
   siteUrl: string;
   title: string;
-  userWay: boolean;
 }
 
 const configKey = "defaultWebsiteConfig";
@@ -65,7 +63,6 @@ services and re-entry programs.`,
     showSFSeal: false,
   },
   homePageComponent: "HomePage",
-  intercom: false,
   logoLinkDestination: "/",
   navLogoStyle: styles.siteNav,
   refinementListLimit: 10,
@@ -76,7 +73,6 @@ services and re-entry programs.`,
   showMobileNav: true,
   showReportCrisis: false,
   siteNavStyle: styles.siteNav,
-  userWay: false,
 } as const;
 
 const appImageDefaults = {
@@ -92,7 +88,6 @@ const defaultWebsiteConfig: WebsiteConfigSite = {
     logoSmall: Our415Logo,
   },
   ...websiteConfigDefaults,
-  intercom: true,
   siteUrl: "https://askdarcel.org",
   showBreakingNews: true,
   title: "Our415",

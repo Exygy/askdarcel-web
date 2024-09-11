@@ -103,13 +103,13 @@ export const ServiceDiscoveryResults = ({
         <SearchHeaderSection descriptionText="Sign up for programs and access resources." />
       </SecondaryNavigationWrapper>
       <div className={styles.container}>
-        <Helmet>
+        {/* <Helmet>
           <title>{`${categoryName} in San Francisco | ${websiteConfig.title}`}</title>
           <meta
             name="description"
             content={`A list of ${categoryName} in San Francisco`}
           />
-        </Helmet>
+        </Helmet> */}
         <Header currentCategory={categoryName} />
 
         <InstantSearch
