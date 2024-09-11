@@ -38,5 +38,6 @@ module.exports = {
       "error",
       { namedComponents: "arrow-function" },
     ],
+    "@typescript-eslint/ban-ts-comment": "warn"
   },
 };

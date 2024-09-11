@@ -18,6 +18,7 @@ import { Router } from "../../../Router";
 import NavigationFocusReset from "./NavigationFocusReset";
 import SkipButton from "./SkipButton";
 import { OUTER_CONTAINER_ID } from "../../../App";
+import { SiteSearchInput } from "components/ui/SiteSearchInput";
 
 const BURGER_STYLES = {
   bmBurgerButton: {
@@ -106,6 +107,7 @@ export const Navigation = () => {
               <Link className={`${styles.navLogo}`} to="/">
                 <img src={logoData?.url} alt={logoData?.alternativeText} />
               </Link>
+              <SiteSearchInput />
             </div>
 
             <div className={`${styles.navRight} no-print`}>

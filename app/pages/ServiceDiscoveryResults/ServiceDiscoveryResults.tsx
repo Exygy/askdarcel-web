@@ -128,7 +128,7 @@ export const ServiceDiscoveryResults = ({
               aroundPrecision={DEFAULT_AROUND_PRECISION}
             />
           )}
-          <SiteSearchInput />
+
           <div className={styles.flexContainer}>
             <Sidebar
               setSearchRadius={setSearchRadius}

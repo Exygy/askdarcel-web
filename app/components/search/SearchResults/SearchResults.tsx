@@ -12,18 +12,24 @@ import { useInstantSearch } from "react-instantsearch";
 import algoliasearchHelper from "algoliasearch-helper";
 import styles from "./SearchResults.module.scss";
 import ClearSearchButton from "../Refinements/ClearSearchButton";
+import { Loader } from "components/ui";
 
 const SearchResults = ({
   mobileMapIsCollapsed,
-  searchQuery,
 }: {
   mobileMapIsCollapsed: boolean;
-  searchQuery?: string | null;
 }) => {
   const {
     results: searchResults,
-  }: { results: algoliasearchHelper.SearchResults<SearchHit> } =
-    useInstantSearch();
+    status,
+    uiState: { query },
+  }: {
+    results: algoliasearchHelper.SearchResults<SearchHit>;
+    status: "idle" | "loading" | "stalled" | "error";
+    uiState: Partial<{
+      query: string;
+    }>;
+  } = useInstantSearch();
   const [centerCoords] = useState(null);
   const [googleMapObject, setMapObject] = useState<google.maps.Map | null>(
     null
@@ -46,18 +52,21 @@ const SearchResults = ({
     }
   }, []);
 
+  if (["loading", "stalled"].includes(status)) {
+    return <Loader />;
+  }
+
   const searchMapHitData = transformSearchResults(searchResults);
   const hasNoResults = searchMapHitData.nbHits === 0;
 
   const NoResultsDisplay = () => (
     <div className={`${styles.noResultsMessage}`}>
       <div className={styles.noResultsText}>
-        No results {searchQuery && `for ${` "${searchQuery}" `}`} found in your
-        area.
+        No results {query && `for ${` "${query}" `}`} found in your area.
         <br /> Try a different location, filter, or search term.
       </div>
 
-      {searchQuery && <ClearSearchButton />}
+      {query && <ClearSearchButton />}
     </div>
   );
 
@@ -73,14 +82,13 @@ const SearchResults = ({
           <NoResultsDisplay />
         ) : (
           <>
-            {searchQuery && (
-              <div className={styles.searchResultsHeader}>
-                <h2>{`${searchResults.nbHits} search results ${
-                  searchQuery && ` for ${searchQuery}`
-                }`}</h2>
-                <ClearSearchButton />
-              </div>
-            )}
+            <div className={styles.searchResultsHeader}>
+              <h2>{`${searchResults.nbHits} search results ${
+                query && ` for ${query}`
+              }`}</h2>
+              <ClearSearchButton />
+            </div>
+
             {searchMapHitData.hits.map(
               (hit: TransformedSearchHit, index: any) => (
                 <SearchResult

@@ -14,10 +14,12 @@ export function uniqBy<T>(arr: T[], key: keyof T): T[] {
   );
 }
 
-export function invert<T extends Record<string, string>>(object: T) {
-  const result: Record<string, string> = {};
+// @ts-ignore
+export function invert(object) {
+  const result = {};
   Object.keys(object).forEach((key) => {
     const value = object[key];
+    // @ts-ignore
     result[value] = key;
   });
 

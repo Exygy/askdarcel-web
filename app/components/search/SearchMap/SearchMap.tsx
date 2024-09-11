@@ -19,7 +19,6 @@ export const SearchMap = ({
   hits,
   mapObject,
   setMapObject,
-  setAroundLatLng,
   mobileMapIsCollapsed,
 }: {
   hits: TransformedSearchHit[];

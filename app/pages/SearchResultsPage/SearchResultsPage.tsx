@@ -26,11 +26,7 @@ export const SearchResultsPage = () => {
         />
 
         <div className={styles.results}>
-          <SearchResults
-            mobileMapIsCollapsed={isMapCollapsed}
-            // setAroundLatLng={{ lat: userLocation.lat, lng: userLocation.lng }}
-            searchQuery={userLocation.lng}
-          />
+          <SearchResults mobileMapIsCollapsed={isMapCollapsed} />
         </div>
       </div>
     </div>
