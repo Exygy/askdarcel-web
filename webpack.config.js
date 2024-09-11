@@ -62,9 +62,6 @@ module.exports = {
     publicPath: "/dist/",
     filename: "bundle.js",
   },
-  optimization: {
-    runtimeChunk: 'single',
-  },
   resolve: {
     extensions: [".tsx", ".ts", ".jsx", ".js"],
     alias: {
@@ -117,7 +114,9 @@ module.exports = {
     new webpack.ProvidePlugin({
       process: "process/browser.js",
     }),
-    new CompressionPlugin(),
+    new CompressionPlugin({
+      test: /\.js(\?.*)?$/i,
+    }),
   ],
   devtool: "source-map",
   module: {
