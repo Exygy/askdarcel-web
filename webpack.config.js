@@ -62,6 +62,9 @@ module.exports = {
     publicPath: "/dist/",
     filename: "bundle.js",
   },
+  optimization: {
+    runtimeChunk: 'single',
+  },
   resolve: {
     extensions: [".tsx", ".ts", ".jsx", ".js"],
     alias: {
