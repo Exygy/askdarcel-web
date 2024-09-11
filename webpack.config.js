@@ -117,6 +117,14 @@ module.exports = {
       process: "process/browser.js",
     }),
     new CompressionPlugin({
+      filename: '[path][base].gz',
+      algorithm: 'gzip',
+      test: /\.(js|css|html|svg)$/,
+      threshold: 10240,
+      minRatio: 0.8,
+      deleteOriginalAssets: false,
+    }),
+    new CompressionPlugin({
       filename: "[path][base].br",
       algorithm: "brotliCompress",
       test: /\.(js|css|html|svg)$/,
