@@ -60,8 +60,7 @@ module.exports = {
   output: {
     path: buildDir,
     publicPath: "/dist/",
-    filename: "[name].[contenthash].js",
-    clean: true,
+    filename: "bundle.[contenthash].js",
   },
   resolve: {
     extensions: [".tsx", ".ts", ".jsx", ".js"],
@@ -213,18 +212,6 @@ module.exports = {
     ],
     client: {
       overlay: false,
-    },
-  },
-  optimization: {
-    runtimeChunk: 'single',
-    splitChunks: {
-      cacheGroups: {
-        vendor: {
-          test: /[\\/]node_modules[\\/]/,
-          name: 'vendors',
-          chunks: 'all',
-        },
-      },
     },
   },
 };
