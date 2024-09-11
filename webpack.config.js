@@ -114,9 +114,7 @@ module.exports = {
     new webpack.ProvidePlugin({
       process: "process/browser.js",
     }),
-    new CompressionPlugin({
-      test: /\.js(\?.*)?$/i,
-    }),
+    new CompressionPlugin(),
   ],
   devtool: "source-map",
   module: {
