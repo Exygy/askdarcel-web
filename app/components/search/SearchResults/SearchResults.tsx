@@ -15,11 +15,9 @@ import ClearSearchButton from "../Refinements/ClearSearchButton";
 
 const SearchResults = ({
   mobileMapIsCollapsed,
-  setAroundLatLng,
   searchQuery,
 }: {
   mobileMapIsCollapsed: boolean;
-  setAroundLatLng: (latLng: { lat: number; lng: number }) => void;
   searchQuery?: string | null;
 }) => {
   const {
@@ -100,7 +98,6 @@ const SearchResults = ({
         hits={searchMapHitData.hits}
         mapObject={googleMapObject}
         setMapObject={setMapObject}
-        setAroundLatLng={setAroundLatLng}
         mobileMapIsCollapsed={mobileMapIsCollapsed}
       />
     </div>

@@ -3,20 +3,23 @@ import SearchResults from "components/search/SearchResults/SearchResults";
 import Sidebar from "components/search/Sidebar/Sidebar";
 import { Header } from "components/search/Header/Header";
 import styles from "./SearchResultsPage.module.scss";
-import { useGeoSearch } from "react-instantsearch-core";
+import { useAppContext } from "utils";
+import { Loader } from "components/ui";
 
 /** Wrapper component that handles state management, URL parsing, and external API requests. */
 export const SearchResultsPage = () => {
   const [isMapCollapsed, setIsMapCollapsed] = useState(false);
-  const { items, refine } = useGeoSearch();
+  const { userLocation } = useAppContext();
+
+  if (!userLocation) {
+    return <Loader />;
+  }
 
   return (
     <div className={styles.container}>
       <Header />
       <div className={styles.flexContainer}>
         <Sidebar
-          setSearchRadius={setSearchRadius}
-          searchRadius={searchRadius}
           isSearchResultsPage
           isMapCollapsed={isMapCollapsed}
           setIsMapCollapsed={setIsMapCollapsed}
@@ -25,8 +28,8 @@ export const SearchResultsPage = () => {
         <div className={styles.results}>
           <SearchResults
             mobileMapIsCollapsed={isMapCollapsed}
-            setAroundLatLng={setAroundLatLng}
-            searchQuery={untranslatedQuery}
+            // setAroundLatLng={{ lat: userLocation.lat, lng: userLocation.lng }}
+            searchQuery={userLocation.lng}
           />
         </div>
       </div>

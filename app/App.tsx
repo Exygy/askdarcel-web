@@ -10,10 +10,11 @@ import {
   getLocation,
   websiteConfig,
   AppProvider,
+  DEFAULT_AROUND_PRECISION,
+  useAppContext,
 } from "./utils";
-import { Footer, Navigation } from "./components/ui";
+import { Footer, Navigation, Loader } from "./components/ui";
 
-import config from "./config";
 import MetaImage from "./assets/img/Our415_OG.png";
 import styles from "./App.module.scss";
 import { Configure, InstantSearch } from "react-instantsearch-core";
@@ -21,18 +22,9 @@ import { liteClient } from "algoliasearch/lite";
 import { useLocation } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import qs, { ParsedQs } from "qs";
-
-import { DEFAULT_AROUND_PRECISION, useAppContext, websiteConfig } from "utils";
 import { translate } from "utils/DataService";
-
-import { Loader } from "components/ui";
-import SearchResults from "components/search/SearchResults/SearchResults";
-import Sidebar from "components/search/Sidebar/Sidebar";
-import { Header } from "components/search/Header/Header";
-import { SiteSearchInput } from "components/ui/SiteSearchInput";
 import { AroundRadius } from "algoliasearch";
 import config from "./config";
-import styles from "./SearchResultsPage.module.scss";
 
 const { siteUrl, title } = websiteConfig;
 export const OUTER_CONTAINER_ID = "outer-container";
@@ -60,13 +52,7 @@ export const App = () => {
   const history = useHistory();
   const [userLocation, setUserLocation] = useState<GeoCoordinates | null>(null);
   const [searchState, setSearchState] = useState<SearchState | null>(null);
-  // const [aroundLatLang, setAroundLatLng] = useState({
-  //   lat: userLocation?.lat,
-  //   lng: userLocation?.lng,
-  // });
-  // const [searchRadius, setSearchRadius] = useState(
-  //   searchState?.configure?.aroundRadius ?? "all"
-  // );
+  const { aroundUserLocationRadius } = useAppContext();
   // In cases where we translate a query into English, we use this value
   // to represent the user's original, untranslated input. The untranslatedQuery
   // is displayed in the UI and stored in the URL params.
@@ -172,8 +158,8 @@ export const App = () => {
           routing
         >
           <Configure
-            aroundLatLng={`${userLocation.aroundLatLang.lat}, ${userLocation.aroundLatLang.lng}`}
-            aroundRadius={"all"}
+            aroundLatLng={`${userLocation.lat}, ${userLocation.lng}`}
+            aroundRadius={aroundUserLocationRadius}
             aroundPrecision={DEFAULT_AROUND_PRECISION}
           />
           <Navigation />

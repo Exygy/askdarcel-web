@@ -1,27 +1,48 @@
-import React, { useMemo, createContext, useContext } from "react";
+import { AroundRadius } from "algoliasearch";
+import React, {
+  useMemo,
+  createContext,
+  useContext,
+  useState,
+  Dispatch,
+  SetStateAction,
+} from "react";
 import { GeoCoordinates } from "utils";
 
 interface Context {
   userLocation: GeoCoordinates | null;
-  aroundUserLocationRadius?: "all" | number;
+  aroundUserLocationRadius?: AroundRadius;
+  aroundLatLng: string | null;
 }
 
-interface AppProviderProps extends Context {
+interface ContextUpdater {
+  setAroundUserLocationRadius: Dispatch<SetStateAction<"all" | number>>;
+  setAroundLatLng: Dispatch<SetStateAction<string | null>>;
+}
+
+interface AppProviderProps {
+  userLocation: GeoCoordinates | null;
   children: React.ReactNode;
 }
 
 export const AppContext = createContext<Context>({
   userLocation: null,
   aroundUserLocationRadius: "all",
+  aroundLatLng: null,
+});
+
+export const AppContextUpdater = createContext<ContextUpdater>({
+  setAroundUserLocationRadius: () => "all",
+  setAroundLatLng: () => "all",
 });
 
 export const useAppContext = () => useContext(AppContext);
+export const useAppContextUpdater = () => useContext(AppContextUpdater);
 
-export const AppProvider = ({
-  children,
-  userLocation,
-  aroundUserLocationRadius,
-}: AppProviderProps) => {
+export const AppProvider = ({ children, userLocation }: AppProviderProps) => {
+  const [aroundUserLocationRadius, setAroundUserLocationRadius] =
+    useState<AroundRadius>("all" as const);
+  const [aroundLatLng, setAroundLatLng] = useState<string | null>(null);
   // We have to use useMemo here to manage the contextValue to ensure that the user's authState
   // propagates downward after authentication. I couldn't find a way to get this to work with
   // useState. Moreover, we can't use a simple object to define contextValue, as the object would
@@ -30,11 +51,18 @@ export const AppProvider = ({
     return {
       userLocation,
       aroundUserLocationRadius,
+      aroundLatLng,
     };
-  }, [userLocation, aroundUserLocationRadius]);
+  }, [userLocation, aroundUserLocationRadius, aroundLatLng]);
 
   return (
-    <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>
+    <AppContext.Provider value={contextValue}>
+      <AppContextUpdater.Provider
+        value={{ setAroundUserLocationRadius, setAroundLatLng }}
+      >
+        {children}
+      </AppContextUpdater.Provider>
+    </AppContext.Provider>
   );
 };
 
