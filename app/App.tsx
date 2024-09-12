@@ -120,7 +120,7 @@ export const App = () => {
     });
   }, [history]);
 
-  if (userLocation === null) {
+  if (!userLocation) {
     return <Loader />;
   }
 

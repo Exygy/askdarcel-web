@@ -1,16 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { liteClient } from "algoliasearch/lite";
-import { InstantSearch, Configure } from "react-instantsearch";
-import qs from "qs";
-import { Helmet } from "react-helmet-async";
 import { match as Match, RouteComponentProps } from "react-router-dom";
 import * as dataService from "utils/DataService";
-import {
-  COORDS_MID_SAN_FRANCISCO,
-  DEFAULT_AROUND_PRECISION,
-  useAppContext,
-  websiteConfig,
-} from "utils";
+import { DEFAULT_AROUND_PRECISION, useAppContext } from "utils";
 import { Loader } from "components/ui";
 import SearchResults from "components/search/SearchResults/SearchResults";
 import Sidebar from "components/search/Sidebar/Sidebar";
@@ -22,24 +13,11 @@ import {
   useEligibilitiesForCategory,
   useSubcategoriesForCategory,
 } from "hooks/APIHooks";
-import { SiteSearchInput } from "components/ui/SiteSearchInput";
-import config from "../../config";
 import { CATEGORIES, ServiceCategory } from "../constants";
 import styles from "./ServiceDiscoveryResults.module.scss";
+import { Configure, useConfigure } from "react-instantsearch-core";
 
 type MatchParams = { categorySlug: string };
-type RouterLocation = RouteComponentProps["location"];
-// TODO: type fix
-type SearchState = any;
-
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-const searchClient = liteClient(
-  config.ALGOLIA_APPLICATION_ID,
-  config.ALGOLIA_READ_ONLY_API_KEY
-);
-
-const urlToSearchState = (location: RouterLocation): SearchState =>
-  qs.parse(location.search.slice(1));
 
 /** Wrapper component that handles state management, URL parsing, and external API requests. */
 export const ServiceDiscoveryResults = ({
@@ -59,16 +37,9 @@ export const ServiceDiscoveryResults = ({
   );
   const eligibilities = useEligibilitiesForCategory(category.id);
   const subcategories = useSubcategoriesForCategory(category.id);
-  const [searchState] = useState(urlToSearchState(location));
   const [isMapCollapsed, setIsMapCollapsed] = useState(false);
-  const [searchRadius, setSearchRadius] = useState(
-    searchState?.configure?.aroundRadius || "all"
-  );
   const { userLocation } = useAppContext();
-  const [aroundLatLng, setAroundLatLng] = useState({
-    lat: userLocation?.lat || COORDS_MID_SAN_FRANCISCO.lat,
-    lng: userLocation?.lng || COORDS_MID_SAN_FRANCISCO.lng,
-  });
+  const { aroundUserLocationRadius, aroundLatLng } = useAppContext();
 
   const subcategoryNames = subcategories?.map((c) => c.name);
   const { name: categoryName, sortAlgoliaSubcategoryRefinements } = category;
@@ -112,7 +83,7 @@ export const ServiceDiscoveryResults = ({
         </Helmet> */}
         <Header currentCategory={categoryName} />
 
-        <InstantSearch
+        {/* <InstantSearch
           searchClient={searchClient}
           indexName={`${config.ALGOLIA_INDEX_PREFIX}_services_search`}
           initialUiState={searchState}
@@ -121,37 +92,31 @@ export const ServiceDiscoveryResults = ({
           {category.disableGeoLocation ? (
             <Configure filters={`categories:'${algoliaCategoryName}'`} />
           ) : (
-            <Configure
-              filters={`categories:'${algoliaCategoryName}'`}
-              aroundLatLng={`${aroundLatLng.lat}, ${aroundLatLng.lng}`}
-              aroundRadius={searchRadius}
-              aroundPrecision={DEFAULT_AROUND_PRECISION}
-            />
-          )}
+            )} */}
+        <Configure
+          filters={`categories:'${algoliaCategoryName}'`}
+          aroundLatLng={aroundLatLng}
+          aroundRadius={aroundUserLocationRadius}
+          aroundPrecision={DEFAULT_AROUND_PRECISION}
+        />
 
-          <div className={styles.flexContainer}>
-            <Sidebar
-              setSearchRadius={setSearchRadius}
-              searchRadius={searchRadius}
-              isSearchResultsPage={false}
-              eligibilities={eligibilities || []}
-              subcategories={subcategories || []}
-              subcategoryNames={subcategoryNames || []}
-              sortAlgoliaSubcategoryRefinements={
-                sortAlgoliaSubcategoryRefinements
-              }
-              isMapCollapsed={isMapCollapsed}
-              setIsMapCollapsed={setIsMapCollapsed}
-            />
+        <div className={styles.flexContainer}>
+          <Sidebar
+            isSearchResultsPage={false}
+            eligibilities={eligibilities || []}
+            subcategories={subcategories || []}
+            subcategoryNames={subcategoryNames || []}
+            sortAlgoliaSubcategoryRefinements={
+              sortAlgoliaSubcategoryRefinements
+            }
+            isMapCollapsed={isMapCollapsed}
+            setIsMapCollapsed={setIsMapCollapsed}
+          />
 
-            <div className={styles.results}>
-              <SearchResults
-                mobileMapIsCollapsed={isMapCollapsed}
-                setAroundLatLng={setAroundLatLng}
-              />
-            </div>
+          <div className={styles.results}>
+            <SearchResults mobileMapIsCollapsed={isMapCollapsed} />
           </div>
-        </InstantSearch>
+        </div>
       </div>
     </>
   );

@@ -22,45 +22,26 @@ export const SearchMap = ({
   hits: TransformedSearchHit[];
   mobileMapIsCollapsed: boolean;
 }) => {
-  const [centerCoords] = useState(null);
   const [googleMapObject, setMapObject] = useState<google.maps.Map | null>(
     null
   );
-
-  useEffect(() => {
-    if (centerCoords && googleMapObject) {
-      googleMapObject.setCenter(centerCoords);
-    }
-    document.body.classList.add("searchResultsPage");
-
-    return () => {
-      document.body.classList.remove("searchResultsPage");
-    };
-  }, [googleMapObject, centerCoords]);
-
   const { userLocation, aroundLatLng } = useAppContext();
   const { setAroundLatLng } = useAppContextUpdater();
 
-  if (userLocation === null) {
-    return (
-      <div className="mapLoaderContainer">
-        <Loader />
-      </div>
-    );
-  }
-
   function handleSearchThisAreaClick() {
-    const center = googleMapObject?.getCenter() || null;
+    const center = googleMapObject?.getCenter();
     if (center?.lat() && center?.lng()) {
       setAroundLatLng(`${center.lat()}, ${center.lng()}`);
     }
   }
 
-  const { lat, lng } = userLocation;
+  const { lat, lng } = userLocation || {};
   const aroundLatLngToMapCenter = {
     lat: Number(aroundLatLng.split(",")[0]),
     lng: Number(aroundLatLng.split(",")[1]),
   };
+
+  // Center the map to the user's choice with a fallback to their location
   const center = aroundLatLng ? aroundLatLngToMapCenter : { lat, lng };
 
   return (
@@ -125,8 +106,8 @@ const GoogleSearchHitMarkerWorkaround = ({
   hit,
   tag,
 }: {
-  lat: any;
-  lng: any;
+  lat: number;
+  lng: number;
   hit: TransformedSearchHit;
   tag: string;
 }) => (

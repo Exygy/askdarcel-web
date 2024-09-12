@@ -1,6 +1,6 @@
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import cn from "classnames";
-import { useSearchBox } from "react-instantsearch";
+import { useClearRefinements, useSearchBox } from "react-instantsearch";
 import styles from "./SiteSearchInput.module.scss";
 
 /**
@@ -10,6 +10,7 @@ import styles from "./SiteSearchInput.module.scss";
  */
 export const SiteSearchInput = () => {
   const { query, refine } = useSearchBox();
+  const { refine: clearRefine } = useClearRefinements();
   const [inputValue, setInputValue] = useState(query);
 
   function setQuery(newQuery: string) {
@@ -19,10 +20,18 @@ export const SiteSearchInput = () => {
   const submitSearch = (e: FormEvent) => {
     e.preventDefault();
 
+    clearRefine();
     refine(inputValue);
 
     return false;
   };
+
+  // Watches changes to the query that can come from other components, like a "Clear Search" button
+  useEffect(() => {
+    if (!query) {
+      setInputValue("");
+    }
+  }, [query]);
 
   return (
     <form

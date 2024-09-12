@@ -36,12 +36,13 @@ const SearchResults = ({
     }
   }, []);
 
-  if (["loading", "stalled"].includes(status)) {
-    return <Loader />;
-  }
-
   const searchMapHitData = transformSearchResults(searchResults);
-  const hasNoResults = searchMapHitData.nbHits === 0;
+
+  // TODO: Account for other states
+  const hasNoResults = searchMapHitData.nbHits === 0 && status === "idle" && (
+    <Loader />
+  );
+  console.log(hasNoResults);
 
   const NoResultsDisplay = () => (
     <div className={`${styles.noResultsMessage}`}>
@@ -53,6 +54,19 @@ const SearchResults = ({
       {query && <ClearSearchButton />}
     </div>
   );
+
+  const searchResultsHeader = () => {
+    return (
+      <div className={styles.searchResultsHeader}>
+        query ?
+        <h2>
+          ${searchResults.nbHits} search results for ${query}
+        </h2>
+        : <h2>${searchResults.nbHits} search results</h2>;
+        <ClearSearchButton />
+      </div>
+    );
+  };
 
   return (
     <div className={styles.searchResultsAndMapContainer}>
@@ -66,22 +80,14 @@ const SearchResults = ({
           <NoResultsDisplay />
         ) : (
           <>
-            <div className={styles.searchResultsHeader}>
-              <h2>{`${searchResults.nbHits} search results ${
-                query && ` for ${query}`
-              }`}</h2>
-              <ClearSearchButton />
-            </div>
-
-            {searchMapHitData.hits.map(
-              (hit: TransformedSearchHit, index: any) => (
-                <SearchResult
-                  hit={hit}
-                  key={`${hit.id} - ${hit.name}`}
-                  ref={index === 0 ? handleFirstResultFocus : null}
-                />
-              )
-            )}
+            {searchResultsHeader}
+            {searchMapHitData.hits.map((hit: TransformedSearchHit, index) => (
+              <SearchResult
+                hit={hit}
+                key={`${hit.id} - ${hit.name}`}
+                ref={index === 0 ? handleFirstResultFocus : null}
+              />
+            ))}
             <div
               className={`${styles.paginationContainer} ${
                 hasNoResults ? styles.hidePagination : ""
