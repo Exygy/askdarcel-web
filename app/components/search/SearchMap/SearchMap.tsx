@@ -35,7 +35,7 @@ export const SearchMap = ({
     }
   }
 
-  const { lat, lng } = userLocation || {};
+  const { lat = 0, lng = 0 } = userLocation || {};
   const aroundLatLngToMapCenter = {
     lat: Number(aroundLatLng.split(",")[0]),
     lng: Number(aroundLatLng.split(",")[1]),
