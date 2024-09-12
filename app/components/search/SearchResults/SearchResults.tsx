@@ -7,7 +7,7 @@ import {
   TransformedSearchHit,
   transformSearchResults,
 } from "models/SearchHits";
-import { useInstantSearch } from "react-instantsearch";
+import { Pagination, useInstantSearch } from "react-instantsearch";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import algoliasearchHelper from "algoliasearch-helper";
 import styles from "./SearchResults.module.scss";
@@ -91,16 +91,32 @@ const SearchResults = ({
             </div>
 
             {searchMapHitData.hits.length}
-            {/* <ResultsPagination noResults={hasNoResults} /> */}
+            <div
+              className={`${styles.paginationContainer} ${
+                hasNoResults ? styles.hidePagination : ""
+              }`}
+            >
+              <div className={styles.resultsPagination}>
+                {/* <Pagination
+                  padding={2}
+                  showLast={false}
+                  showFirst={false}
+                  translations={{
+                    previousPageItemText: "Prev",
+                    nextPageItemText: "Next",
+                  }}
+                /> */}
+              </div>
+            </div>
           </>
         )}
       </div>
-      {/* <SearchMap
+      <SearchMap
         hits={searchMapHitData.hits}
         mapObject={googleMapObject}
         setMapObject={setMapObject}
         mobileMapIsCollapsed={mobileMapIsCollapsed}
-      /> */}
+      />
     </div>
   );
 };
