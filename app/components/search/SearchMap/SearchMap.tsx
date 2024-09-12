@@ -3,7 +3,7 @@ import GoogleMap from "google-map-react";
 import { Tooltip } from "react-tippy";
 import "react-tippy/dist/tippy.css";
 import SearchEntry from "components/search/SearchMap/SearchEntry";
-import { useAppContext } from "utils";
+import { useAppContext, useAppContextUpdater } from "utils";
 import { Loader } from "components/ui";
 import { Button } from "components/ui/inline/Button/Button";
 import {
@@ -24,10 +24,10 @@ export const SearchMap = ({
   hits: TransformedSearchHit[];
   mapObject: google.maps.Map | null;
   setMapObject: (map: any) => void;
-  setAroundLatLng: (latLng: { lat: number; lng: number }) => void;
   mobileMapIsCollapsed: boolean;
 }) => {
   const { userLocation } = useAppContext();
+  const { setAroundLatLng } = useAppContextUpdater();
   if (userLocation === null) {
     return (
       <div className="mapLoaderContainer">
@@ -39,7 +39,7 @@ export const SearchMap = ({
   function handleSearchThisAreaClick() {
     const center = mapObject?.getCenter() || null;
     if (center?.lat() && center?.lng()) {
-      setAroundLatLng({ lat: center.lat(), lng: center.lng() });
+      setAroundLatLng(`${center.lat()}, ${center.lng()}`);
     }
   }
 

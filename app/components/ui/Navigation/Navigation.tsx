@@ -19,6 +19,15 @@ import NavigationFocusReset from "./NavigationFocusReset";
 import SkipButton from "./SkipButton";
 import { OUTER_CONTAINER_ID } from "../../../App";
 import { SiteSearchInput } from "components/ui/SiteSearchInput";
+import { Configure, InstantSearch } from "react-instantsearch-core";
+import { DEFAULT_AROUND_PRECISION, useAppContext } from "utils";
+import { liteClient } from "algoliasearch/lite";
+import config from "./../../../config";
+
+const searchClient = liteClient(
+  config.ALGOLIA_APPLICATION_ID,
+  config.ALGOLIA_READ_ONLY_API_KEY
+);
 
 const BURGER_STYLES = {
   bmBurgerButton: {
@@ -44,6 +53,7 @@ export const Navigation = () => {
   const [mobileNavigationIsOpen, setMobileNavigationIsOpen] = useState(false);
   const [activeMobileSubMenu, setActiveMobileSubMenu] = useState("");
   const toggleMobileNav = () => setMobileNavigationIsOpen((prev) => !prev);
+  const { aroundUserLocationRadius, aroundLatLng } = useAppContext();
 
   const logoData = extractLogoFromNavigationResponse(navigationResponse);
   const menuData =
@@ -79,7 +89,16 @@ export const Navigation = () => {
   };
 
   return (
-    <>
+    <InstantSearch
+      searchClient={searchClient}
+      indexName={`${config.ALGOLIA_INDEX_PREFIX}_services_search`}
+      routing
+    >
+      <Configure
+        aroundLatLng={undefined}
+        aroundRadius={undefined}
+        aroundPrecision={DEFAULT_AROUND_PRECISION}
+      />
       <NavigationFocusReset />
       <SkipButton />
       <SidebarPushPanel
@@ -162,7 +181,7 @@ export const Navigation = () => {
           <Router />
         </main>
       </div>
-    </>
+    </InstantSearch>
   );
 };
 

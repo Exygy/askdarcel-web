@@ -91,12 +91,12 @@ const Sidebar = ({
       />
     );
   } else {
-    if (eligibilities.length) {
+    if (eligibilities?.length) {
       eligibilityRefinementJsx = (
         <BrowseRefinementList attribute="eligibilities" />
       );
     }
-    if (subcategories.length) {
+    if (subcategories?.length) {
       categoryRefinementJsx = (
         <BrowseRefinementList
           attribute="categories"

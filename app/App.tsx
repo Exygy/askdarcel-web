@@ -10,15 +10,11 @@ import {
   getLocation,
   websiteConfig,
   AppProvider,
-  DEFAULT_AROUND_PRECISION,
-  useAppContext,
 } from "./utils";
 import { Footer, Navigation, Loader } from "./components/ui";
 
 import MetaImage from "./assets/img/Our415_OG.png";
 import styles from "./App.module.scss";
-import { Configure, InstantSearch } from "react-instantsearch-core";
-import { liteClient } from "algoliasearch/lite";
 import { useLocation } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import qs, { ParsedQs } from "qs";
@@ -28,10 +24,6 @@ import config from "./config";
 
 const { siteUrl, title } = websiteConfig;
 export const OUTER_CONTAINER_ID = "outer-container";
-const searchClient = liteClient(
-  config.ALGOLIA_APPLICATION_ID,
-  config.ALGOLIA_READ_ONLY_API_KEY
-);
 
 interface ConfigureState {
   aroundRadius?: AroundRadius;
@@ -52,7 +44,7 @@ export const App = () => {
   const history = useHistory();
   const [userLocation, setUserLocation] = useState<GeoCoordinates | null>(null);
   const [searchState, setSearchState] = useState<SearchState | null>(null);
-  const { aroundUserLocationRadius } = useAppContext();
+
   // In cases where we translate a query into English, we use this value
   // to represent the user's original, untranslated input. The untranslatedQuery
   // is displayed in the UI and stored in the URL params.
@@ -152,18 +144,8 @@ export const App = () => {
           <meta property="og:image:width" content="1200" />
           <meta property="og:image:height" content="630" />
         </Helmet>
-        <InstantSearch
-          searchClient={searchClient}
-          indexName={INDEX_NAME}
-          routing
-        >
-          <Configure
-            aroundLatLng={`${userLocation.lat}, ${userLocation.lng}`}
-            aroundRadius={aroundUserLocationRadius}
-            aroundPrecision={DEFAULT_AROUND_PRECISION}
-          />
-          <Navigation />
-        </InstantSearch>
+
+        <Navigation />
         <Footer />
       </AppProvider>
     </div>

@@ -30,6 +30,7 @@ const SearchResults = ({
       query: string;
     }>;
   } = useInstantSearch();
+
   const [centerCoords] = useState(null);
   const [googleMapObject, setMapObject] = useState<google.maps.Map | null>(
     null
@@ -89,25 +90,17 @@ const SearchResults = ({
               <ClearSearchButton />
             </div>
 
-            {searchMapHitData.hits.map(
-              (hit: TransformedSearchHit, index: any) => (
-                <SearchResult
-                  hit={hit}
-                  key={`${hit.id} - ${hit.name}`}
-                  ref={index === 0 ? handleFirstResultFocus : null}
-                />
-              )
-            )}
-            <ResultsPagination noResults={hasNoResults} />
+            {searchMapHitData.hits.length}
+            {/* <ResultsPagination noResults={hasNoResults} /> */}
           </>
         )}
       </div>
-      <SearchMap
+      {/* <SearchMap
         hits={searchMapHitData.hits}
         mapObject={googleMapObject}
         setMapObject={setMapObject}
         mobileMapIsCollapsed={mobileMapIsCollapsed}
-      />
+      /> */}
     </div>
   );
 };
