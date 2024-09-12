@@ -64,7 +64,11 @@ export const Router = () => {
         )}
       />
       <Route exact path="/terms-of-service" component={TermsOfServicePage} />
-      <Route exact path="/:categorySlug/results" component={null} />
+      <Route
+        exact
+        path="/:categorySlug/results"
+        component={ServiceDiscoveryResults}
+      />
 
       <Redirect to="/" />
     </Switch>

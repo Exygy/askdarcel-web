@@ -95,8 +95,8 @@ export const Navigation = () => {
       routing
     >
       <Configure
-        aroundLatLng={undefined}
-        aroundRadius={undefined}
+        aroundLatLng={aroundLatLng}
+        aroundRadius={aroundUserLocationRadius}
         aroundPrecision={DEFAULT_AROUND_PRECISION}
       />
       <NavigationFocusReset />

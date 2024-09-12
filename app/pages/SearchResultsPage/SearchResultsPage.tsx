@@ -6,7 +6,6 @@ import styles from "./SearchResultsPage.module.scss";
 import { useAppContext } from "utils";
 import { Loader } from "components/ui";
 
-/** Wrapper component that handles state management, URL parsing, and external API requests. */
 export const SearchResultsPage = () => {
   const [isMapCollapsed, setIsMapCollapsed] = useState(false);
   const { userLocation } = useAppContext();

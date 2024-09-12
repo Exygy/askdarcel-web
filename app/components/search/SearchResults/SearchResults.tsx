@@ -1,13 +1,12 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useCallback } from "react";
 import { SearchMap } from "components/search/SearchMap/SearchMap";
-import ResultsPagination from "components/search/Pagination/ResultsPagination";
 import { SearchResult } from "components/search/SearchResults/SearchResult";
 import {
   SearchHit,
   TransformedSearchHit,
   transformSearchResults,
 } from "models/SearchHits";
-import { Pagination, useInstantSearch } from "react-instantsearch";
+import { useInstantSearch } from "react-instantsearch";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import algoliasearchHelper from "algoliasearch-helper";
 import styles from "./SearchResults.module.scss";
@@ -30,22 +29,6 @@ const SearchResults = ({
       query: string;
     }>;
   } = useInstantSearch();
-
-  const [centerCoords] = useState(null);
-  const [googleMapObject, setMapObject] = useState<google.maps.Map | null>(
-    null
-  );
-
-  useEffect(() => {
-    if (centerCoords && googleMapObject) {
-      googleMapObject.setCenter(centerCoords);
-    }
-    document.body.classList.add("searchResultsPage");
-
-    return () => {
-      document.body.classList.remove("searchResultsPage");
-    };
-  }, [googleMapObject, centerCoords]);
 
   const handleFirstResultFocus = useCallback((node: HTMLDivElement | null) => {
     if (node) {
@@ -90,7 +73,15 @@ const SearchResults = ({
               <ClearSearchButton />
             </div>
 
-            {searchMapHitData.hits.length}
+            {searchMapHitData.hits.map(
+              (hit: TransformedSearchHit, index: any) => (
+                <SearchResult
+                  hit={hit}
+                  key={`${hit.id} - ${hit.name}`}
+                  ref={index === 0 ? handleFirstResultFocus : null}
+                />
+              )
+            )}
             <div
               className={`${styles.paginationContainer} ${
                 hasNoResults ? styles.hidePagination : ""
@@ -113,14 +104,10 @@ const SearchResults = ({
       </div>
       <SearchMap
         hits={searchMapHitData.hits}
-        mapObject={googleMapObject}
-        setMapObject={setMapObject}
         mobileMapIsCollapsed={mobileMapIsCollapsed}
       />
     </div>
   );
 };
 
-// Connects the Algolia searchState and searchResults to this component
-// Learn more here: https://community.algolia.com/react-instantsearch/connectors/connectStateResults.html
 export default SearchResults;

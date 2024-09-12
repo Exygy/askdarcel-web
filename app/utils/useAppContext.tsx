@@ -7,17 +7,17 @@ import React, {
   Dispatch,
   SetStateAction,
 } from "react";
-import { GeoCoordinates } from "utils";
+import { COORDS_MID_SAN_FRANCISCO, GeoCoordinates } from "utils";
 
 interface Context {
   userLocation: GeoCoordinates | null;
   aroundUserLocationRadius?: AroundRadius;
-  aroundLatLng: string | null;
+  aroundLatLng: string;
 }
 
 interface ContextUpdater {
   setAroundUserLocationRadius: Dispatch<SetStateAction<"all" | number>>;
-  setAroundLatLng: Dispatch<SetStateAction<string | null>>;
+  setAroundLatLng: Dispatch<SetStateAction<string>>;
 }
 
 interface AppProviderProps {
@@ -28,7 +28,7 @@ interface AppProviderProps {
 export const AppContext = createContext<Context>({
   userLocation: null,
   aroundUserLocationRadius: "all",
-  aroundLatLng: null,
+  aroundLatLng: "",
 });
 
 export const AppContextUpdater = createContext<ContextUpdater>({
@@ -42,7 +42,7 @@ export const useAppContextUpdater = () => useContext(AppContextUpdater);
 export const AppProvider = ({ children, userLocation }: AppProviderProps) => {
   const [aroundUserLocationRadius, setAroundUserLocationRadius] =
     useState<AroundRadius>("all" as const);
-  const [aroundLatLng, setAroundLatLng] = useState<string | null>(null);
+  const [aroundLatLng, setAroundLatLng] = useState<string>("");
   // We have to use useMemo here to manage the contextValue to ensure that the user's authState
   // propagates downward after authentication. I couldn't find a way to get this to work with
   // useState. Moreover, we can't use a simple object to define contextValue, as the object would

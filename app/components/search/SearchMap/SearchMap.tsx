@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import GoogleMap from "google-map-react";
 import { Tooltip } from "react-tippy";
 import "react-tippy/dist/tippy.css";
@@ -17,17 +17,30 @@ import config from "../../../config";
 
 export const SearchMap = ({
   hits,
-  mapObject,
-  setMapObject,
   mobileMapIsCollapsed,
 }: {
   hits: TransformedSearchHit[];
-  mapObject: google.maps.Map | null;
-  setMapObject: (map: any) => void;
   mobileMapIsCollapsed: boolean;
 }) => {
-  const { userLocation } = useAppContext();
+  const [centerCoords] = useState(null);
+  const [googleMapObject, setMapObject] = useState<google.maps.Map | null>(
+    null
+  );
+
+  useEffect(() => {
+    if (centerCoords && googleMapObject) {
+      googleMapObject.setCenter(centerCoords);
+    }
+    document.body.classList.add("searchResultsPage");
+
+    return () => {
+      document.body.classList.remove("searchResultsPage");
+    };
+  }, [googleMapObject, centerCoords]);
+
+  const { userLocation, aroundLatLng } = useAppContext();
   const { setAroundLatLng } = useAppContextUpdater();
+
   if (userLocation === null) {
     return (
       <div className="mapLoaderContainer">
@@ -37,13 +50,18 @@ export const SearchMap = ({
   }
 
   function handleSearchThisAreaClick() {
-    const center = mapObject?.getCenter() || null;
+    const center = googleMapObject?.getCenter() || null;
     if (center?.lat() && center?.lng()) {
       setAroundLatLng(`${center.lat()}, ${center.lng()}`);
     }
   }
 
   const { lat, lng } = userLocation;
+  const aroundLatLngToMapCenter = {
+    lat: Number(aroundLatLng.split(",")[0]),
+    lng: Number(aroundLatLng.split(",")[1]),
+  };
+  const center = aroundLatLng ? aroundLatLngToMapCenter : { lat, lng };
 
   return (
     <div className="results-map">
@@ -68,7 +86,7 @@ export const SearchMap = ({
           bootstrapURLKeys={{
             key: config.GOOGLE_API_KEY,
           }}
-          center={{ lat, lng }}
+          center={center}
           defaultZoom={14}
           onGoogleApiLoaded={({ map }) => {
             // SetMapObject shares the Google Map object across parent/sibling components
