@@ -16,7 +16,7 @@ interface Context {
 }
 
 interface ContextUpdater {
-  setAroundUserLocationRadius: Dispatch<SetStateAction<"all" | number>>;
+  setAroundRadius: Dispatch<SetStateAction<"all" | number>>;
   setAroundLatLng: Dispatch<SetStateAction<string>>;
 }
 
@@ -32,7 +32,7 @@ export const AppContext = createContext<Context>({
 });
 
 export const AppContextUpdater = createContext<ContextUpdater>({
-  setAroundUserLocationRadius: () => "all",
+  setAroundRadius: () => "all",
   setAroundLatLng: () => "all",
 });
 
@@ -40,8 +40,9 @@ export const useAppContext = () => useContext(AppContext);
 export const useAppContextUpdater = () => useContext(AppContextUpdater);
 
 export const AppProvider = ({ children, userLocation }: AppProviderProps) => {
-  const [aroundUserLocationRadius, setAroundUserLocationRadius] =
-    useState<AroundRadius>("all" as const);
+  const [aroundUserLocationRadius, setAroundRadius] = useState<AroundRadius>(
+    "all" as const
+  );
   const [aroundLatLng, setAroundLatLng] = useState<string>("");
   // We have to use useMemo here to manage the contextValue to ensure that the user's authState
   // propagates downward after authentication. I couldn't find a way to get this to work with
@@ -57,9 +58,7 @@ export const AppProvider = ({ children, userLocation }: AppProviderProps) => {
 
   return (
     <AppContext.Provider value={contextValue}>
-      <AppContextUpdater.Provider
-        value={{ setAroundUserLocationRadius, setAroundLatLng }}
-      >
+      <AppContextUpdater.Provider value={{ setAroundRadius, setAroundLatLng }}>
         {children}
       </AppContextUpdater.Provider>
     </AppContext.Provider>

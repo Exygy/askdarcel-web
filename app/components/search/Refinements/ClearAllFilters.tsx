@@ -8,7 +8,7 @@ import { useAppContextUpdater } from "utils";
  * Filter clearing component that handles both facet clearing and map boundary reset
  */
 const ClearAllFilter = () => {
-  const { setAroundUserLocationRadius } = useAppContextUpdater();
+  const { setAroundRadius } = useAppContextUpdater();
   const { refine } = useClearRefinements();
   return (
     <Button
@@ -16,7 +16,7 @@ const ClearAllFilter = () => {
       variant="linkBlue"
       onClick={() => {
         refine();
-        setAroundUserLocationRadius("all");
+        setAroundRadius("all");
       }}
       mobileFullWidth={false}
       size="lg"

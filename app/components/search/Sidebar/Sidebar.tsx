@@ -38,7 +38,7 @@ const Sidebar = ({
   const [filterMenuVisible, setfilterMenuVisible] = useState(false);
   const filterMenuRef = useRef<HTMLDivElement>(null);
   const { aroundUserLocationRadius } = useAppContext();
-  const { setAroundUserLocationRadius } = useAppContextUpdater();
+  const { setAroundRadius } = useAppContextUpdater();
 
   useClickOutside(
     filterMenuRef,
@@ -71,7 +71,7 @@ const Sidebar = ({
   };
 
   const onChangeValue = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    setAroundUserLocationRadius(Number(evt.target.value));
+    setAroundRadius(Number(evt.target.value));
   };
 
   // Currently, the Search Results Page uses generic categories/eligibilities while the
