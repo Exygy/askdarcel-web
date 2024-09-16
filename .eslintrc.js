@@ -14,7 +14,7 @@ module.exports = {
   ],
   plugins: ["react", "jsx-a11y", "import", "@typescript-eslint"],
   parser: "@typescript-eslint/parser",
-  parserOptions: { "project": ["./tsconfig.json"] },
+  parserOptions: { project: ["./tsconfig.json"] },
   env: {
     browser: true,
   },
@@ -37,6 +37,6 @@ module.exports = {
       "error",
       { namedComponents: "arrow-function" },
     ],
-    "@typescript-eslint/ban-ts-comment": "warn"
+    "@typescript-eslint/ban-ts-comment": "warn",
   },
 };
