@@ -27,7 +27,7 @@ const searchClient = liteClient(
 
 interface ConfigureState {
   aroundRadius?: AroundRadius;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 interface SearchState extends ParsedQs {
