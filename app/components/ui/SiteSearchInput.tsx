@@ -4,9 +4,10 @@ import { useClearRefinements, useSearchBox } from "react-instantsearch";
 import styles from "./SiteSearchInput.module.scss";
 
 /**
- * Sitewide listing search component
+ * Sitewide listing search component that controls the search query input
  *
- * - Updates the url querystring on every search
+ * The custom submit logic determines that applying a new search term will reset all refinements and
+ * return a fresh set of results for the new query.
  */
 export const SiteSearchInput = () => {
   const { query, refine } = useSearchBox();

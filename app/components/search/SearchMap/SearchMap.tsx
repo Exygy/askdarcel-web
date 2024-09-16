@@ -35,14 +35,21 @@ export const SearchMap = ({
     }
   }
 
-  const { lat = 0, lng = 0 } = userLocation || {};
   const aroundLatLngToMapCenter = {
     lat: Number(aroundLatLng.split(",")[0]),
     lng: Number(aroundLatLng.split(",")[1]),
   };
 
   // Center the map to the user's choice with a fallback to their location
-  const center = aroundLatLng ? aroundLatLngToMapCenter : { lat, lng };
+  const googleMapsCenter = () => {
+    if (aroundLatLng) {
+      return aroundLatLngToMapCenter;
+    } else if (userLocation) {
+      return { lat: userLocation?.lat, lng: userLocation?.lng };
+    } else {
+      return undefined;
+    }
+  };
 
   return (
     <div className="results-map">
@@ -67,7 +74,7 @@ export const SearchMap = ({
           bootstrapURLKeys={{
             key: config.GOOGLE_API_KEY,
           }}
-          center={center}
+          center={googleMapsCenter()}
           defaultZoom={14}
           onGoogleApiLoaded={({ map }) => {
             // SetMapObject shares the Google Map object across parent/sibling components
@@ -76,7 +83,11 @@ export const SearchMap = ({
           }}
           options={createMapOptions}
         >
-          <UserLocationMarker lat={lat} lng={lng} key={1} />
+          <UserLocationMarker
+            lat={userLocation?.lat}
+            lng={userLocation?.lng}
+            key={1}
+          />
           {hits.reduce((markers, hit) => {
             // Add a marker for each address of each hit
             hit.locations.forEach((location: any) => {

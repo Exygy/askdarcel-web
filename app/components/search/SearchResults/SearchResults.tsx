@@ -53,7 +53,7 @@ const SearchResults = ({
     </div>
   );
 
-  const SearchResultsHeader = () => {
+  const searchResultsHeader = () => {
     return (
       <div className={styles.searchResultsHeader}>
         query ?
@@ -78,7 +78,7 @@ const SearchResults = ({
           <NoResultsDisplay />
         ) : (
           <>
-            <SearchResultsHeader />
+            {searchResultsHeader}
             {searchMapHitData.hits.map((hit: TransformedSearchHit, index) => (
               <SearchResult
                 hit={hit}
