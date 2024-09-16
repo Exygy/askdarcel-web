@@ -247,34 +247,6 @@
   }
 }
 
-@media print {
-  .searchResultsContainer {
-    visibility: visible;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    margin: 50px auto;
-    width: 6.5in;
-    display: block;
-  }
-
-  .searchResult {
-    display: block;
-    padding: 20px 0;
-    border-left: 0;
-  }
-
-  .sideLink {
-    display: none;
-    &.showInPrintView {
-      display: block;
-      padding-top: 20px;
-    }
-  }
-}
-
 .paginationContainer {
   position: relative;
   z-index: 2;
