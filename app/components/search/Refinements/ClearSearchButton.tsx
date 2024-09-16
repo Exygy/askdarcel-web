@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "components/ui/inline/Button/Button";
-import { useInstantSearch, useSearchBox } from "react-instantsearch-core";
+import { useSearchBox } from "react-instantsearch-core";
 
 const ClearSearchButton = () => {
   const { clear } = useSearchBox();

@@ -38,11 +38,9 @@ const SearchResults = ({
 
   const searchMapHitData = transformSearchResults(searchResults);
 
-  // TODO: Account for other states
   const hasNoResults = searchMapHitData.nbHits === 0 && status === "idle" && (
     <Loader />
   );
-  console.log(hasNoResults);
 
   const NoResultsDisplay = () => (
     <div className={`${styles.noResultsMessage}`}>
@@ -55,7 +53,7 @@ const SearchResults = ({
     </div>
   );
 
-  const searchResultsHeader = () => {
+  const SearchResultsHeader = () => {
     return (
       <div className={styles.searchResultsHeader}>
         query ?
@@ -80,7 +78,7 @@ const SearchResults = ({
           <NoResultsDisplay />
         ) : (
           <>
-            {searchResultsHeader}
+            <SearchResultsHeader />
             {searchMapHitData.hits.map((hit: TransformedSearchHit, index) => (
               <SearchResult
                 hit={hit}
