@@ -4,8 +4,7 @@ import Sidebar from "components/search/Sidebar/Sidebar";
 import { Header } from "components/search/Header/Header";
 import styles from "./SearchResultsPage.module.scss";
 import { DEFAULT_AROUND_PRECISION, useAppContext } from "utils";
-import { Loader } from "components/ui";
-import { Configure, useInstantSearch } from "react-instantsearch-core";
+import { Configure } from "react-instantsearch-core";
 
 export const SearchResultsPage = () => {
   const [isMapCollapsed, setIsMapCollapsed] = useState(false);

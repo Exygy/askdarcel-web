@@ -1,3 +1,4 @@
+/* eslint-disable */
 const path = require("path");
 
 module.exports = {
@@ -26,6 +27,7 @@ module.exports = {
       },
     },
   },
+  ignorePatterns: ["coverage"],
   rules: {
     "import/no-extraneous-dependencies": ["error", { devDependencies: true }],
     "import/no-named-as-default": 0,

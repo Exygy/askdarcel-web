@@ -15,7 +15,7 @@ import {
 } from "hooks/APIHooks";
 import { CATEGORIES, ServiceCategory } from "../constants";
 import styles from "./ServiceDiscoveryResults.module.scss";
-import { Configure, useConfigure } from "react-instantsearch-core";
+import { Configure } from "react-instantsearch-core";
 
 type MatchParams = { categorySlug: string };
 

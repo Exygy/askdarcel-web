@@ -1,10 +1,9 @@
-import React, { ReactElement, useEffect, useState } from "react";
+import React, { ReactElement, useState } from "react";
 import GoogleMap from "google-map-react";
 import { Tooltip } from "react-tippy";
 import "react-tippy/dist/tippy.css";
 import SearchEntry from "components/search/SearchMap/SearchEntry";
 import { useAppContext, useAppContextUpdater } from "utils";
-import { Loader } from "components/ui";
 import { Button } from "components/ui/inline/Button/Button";
 import {
   createMapOptions,
@@ -90,12 +89,12 @@ export const SearchMap = ({
           />
           {hits.reduce((markers, hit) => {
             // Add a marker for each address of each hit
-            hit.locations.forEach((location: any) => {
+            hit.locations.forEach((location) => {
               markers.push(
                 <GoogleSearchHitMarkerWorkaround
                   key={location.id}
-                  lat={location.lat}
-                  lng={location.long}
+                  lat={Number(location.lat)}
+                  lng={Number(location.long)}
                   tag={location.label}
                   hit={hit}
                 />
@@ -123,6 +122,7 @@ const GoogleSearchHitMarkerWorkaround = ({
   tag: string;
 }) => (
   // TODO: Figure out why TS complaining after pckg update
+  /* eslint-disable @typescript-eslint/ban-ts-comment */
   // @ts-ignore
   <Tooltip
     arrow
