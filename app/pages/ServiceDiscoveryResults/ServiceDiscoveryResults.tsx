@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { liteClient } from "algoliasearch/lite";
-import {
-  InstantSearch,
-  Configure,
-  UseInstantSearchProps,
-  InstantSearchProps,
-} from "react-instantsearch";
-import type { UiState } from "instantsearch.js";
+import { InstantSearch, Configure } from "react-instantsearch";
 import qs from "qs";
 import { Helmet } from "react-helmet-async";
 import { match as Match, RouteComponentProps } from "react-router-dom";
