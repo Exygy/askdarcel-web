@@ -22,6 +22,7 @@ import { SiteSearchInput } from "components/ui/SiteSearchInput";
 import { InstantSearch } from "react-instantsearch-core";
 import { liteClient } from "algoliasearch/lite";
 import config from "./../../../config";
+import { history } from "instantsearch.js/es/lib/routers";
 
 const searchClient = liteClient(
   config.ALGOLIA_APPLICATION_ID,
@@ -90,7 +91,15 @@ export const Navigation = () => {
     <InstantSearch
       searchClient={searchClient}
       indexName={`${config.ALGOLIA_INDEX_PREFIX}_services_search`}
-      routing
+      routing={{
+        router: history({
+          windowTitle({ production_services_search: { query } }) {
+            const queryTitle = query ? `Results for "${query}"` : "Search";
+
+            return queryTitle;
+          },
+        }),
+      }}
     >
       <NavigationFocusReset />
       <SkipButton />

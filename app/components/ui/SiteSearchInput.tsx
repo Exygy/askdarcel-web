@@ -21,8 +21,8 @@ export const SiteSearchInput = () => {
   const submitSearch = (e: FormEvent) => {
     e.preventDefault();
 
-    clearRefine();
     refine(inputValue);
+    clearRefine();
 
     return false;
   };

@@ -6,7 +6,7 @@ import {
   TransformedSearchHit,
   transformSearchResults,
 } from "models/SearchHits";
-import { useInstantSearch } from "react-instantsearch";
+import { useInstantSearch, useSearchBox } from "react-instantsearch";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import algoliasearchHelper from "algoliasearch-helper";
 import styles from "./SearchResults.module.scss";
@@ -21,14 +21,15 @@ const SearchResults = ({
   const {
     results: searchResults,
     status,
-    uiState: { query },
-  }: {
+  }: // uiState: { query },
+  {
     results: algoliasearchHelper.SearchResults<SearchHit>;
     status: "idle" | "loading" | "stalled" | "error";
-    uiState: Partial<{
-      query: string;
-    }>;
+    // uiState: Partial<{
+    //   query: string;
+    // }>;
   } = useInstantSearch();
+  const { query } = useSearchBox();
 
   const handleFirstResultFocus = useCallback((node: HTMLDivElement | null) => {
     if (node) {
@@ -56,11 +57,13 @@ const SearchResults = ({
   const searchResultsHeader = () => {
     return (
       <div className={styles.searchResultsHeader}>
-        query ?
-        <h2>
-          ${searchResults.nbHits} search results for ${query}
-        </h2>
-        : <h2>${searchResults.nbHits} search results</h2>;
+        {query ? (
+          <h2>
+            {searchResults.nbHits} search results for {query}
+          </h2>
+        ) : (
+          <h2>{searchResults.nbHits} search results</h2>
+        )}
         <ClearSearchButton />
       </div>
     );
@@ -78,7 +81,7 @@ const SearchResults = ({
           <NoResultsDisplay />
         ) : (
           <>
-            {searchResultsHeader}
+            {searchResultsHeader()}
             {searchMapHitData.hits.map((hit: TransformedSearchHit, index) => (
               <SearchResult
                 hit={hit}

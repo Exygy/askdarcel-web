@@ -39,7 +39,8 @@ export const SearchMap = ({
     lng: Number(aroundLatLng.split(",")[1]),
   };
 
-  // Center the map to the user's choice with a fallback to their location
+  // Center the map to the user's choice (`aroundLatLng`) with a fallback to our best guess when sniffing their
+  // location on app start (`userLocation`)
   const googleMapsCenter = () => {
     if (aroundLatLng) {
       return aroundLatLngToMapCenter;
