@@ -13,7 +13,7 @@
   display: grid;
   gap: $general-spacing-md;
   margin: $spacing-0 $general-spacing-lg;
-  flex: 0 0 40em;
+  flex: 0 0 640px;
 
   @media screen and (max-width: $break-desktop-s) {
     margin: $spacing-0 $general-spacing-md;
