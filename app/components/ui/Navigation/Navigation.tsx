@@ -22,7 +22,7 @@ import { SiteSearchInput } from "components/ui/SiteSearchInput";
 import { InstantSearch } from "react-instantsearch-core";
 import { liteClient } from "algoliasearch/lite";
 import config from "./../../../config";
-import { history } from "instantsearch.js/es/lib/routers";
+import { history as historyRouter } from "instantsearch.js/es/lib/routers";
 
 const searchClient = liteClient(
   config.ALGOLIA_APPLICATION_ID,
@@ -47,6 +47,7 @@ const BURGER_STYLES = {
 };
 
 const PAGE_WRAP_ID = "page-wrap";
+const INDEX_NAME = `${config.ALGOLIA_INDEX_PREFIX}_services_search`;
 
 export const Navigation = () => {
   const { data: navigationResponse } = useNavigationData();
@@ -90,10 +91,12 @@ export const Navigation = () => {
   return (
     <InstantSearch
       searchClient={searchClient}
-      indexName={`${config.ALGOLIA_INDEX_PREFIX}_services_search`}
+      indexName={INDEX_NAME}
       routing={{
-        router: history({
-          windowTitle({ production_services_search: { query } }) {
+        router: historyRouter({
+          windowTitle(routeState) {
+            const query = routeState[INDEX_NAME]?.query;
+
             const queryTitle = query
               ? `Our415 - Search results for "${query}" in San Francisco`
               : "Our415 - Services in San Francisco";

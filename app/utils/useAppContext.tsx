@@ -7,7 +7,7 @@ import React, {
   Dispatch,
   SetStateAction,
 } from "react";
-import { COORDS_MID_SAN_FRANCISCO, GeoCoordinates } from "utils";
+import { GeoCoordinates } from "utils";
 
 interface Context {
   userLocation: GeoCoordinates | null;

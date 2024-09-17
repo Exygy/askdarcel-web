@@ -12,6 +12,7 @@ import algoliasearchHelper from "algoliasearch-helper";
 import styles from "./SearchResults.module.scss";
 import ClearSearchButton from "../Refinements/ClearSearchButton";
 import { Loader } from "components/ui";
+import ResultsPagination from "components/search/Pagination/ResultsPagination";
 
 const SearchResults = ({
   mobileMapIsCollapsed,
@@ -95,15 +96,7 @@ const SearchResults = ({
               }`}
             >
               <div className={styles.resultsPagination}>
-                {/* <Pagination
-                  padding={2}
-                  showLast={false}
-                  showFirst={false}
-                  translations={{
-                    previousPageItemText: "Prev",
-                    nextPageItemText: "Next",
-                  }}
-                /> */}
+                <ResultsPagination noResults={hasNoResults} />
               </div>
             </div>
           </>
