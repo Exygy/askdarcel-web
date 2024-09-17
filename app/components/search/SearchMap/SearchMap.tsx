@@ -24,7 +24,7 @@ export const SearchMap = ({
 }: {
   hits: TransformedSearchHit[];
   mapObject: google.maps.Map | null;
-  setMapObject: unknown;
+  setMapObject: (map: google.maps.Map) => void;
   setAroundLatLng: (latLng: { lat: number; lng: number }) => void;
   mobileMapIsCollapsed: boolean;
 }) => {

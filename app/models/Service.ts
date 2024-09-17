@@ -26,7 +26,7 @@ export interface Service {
   categories: Category[];
   certified_at: string | null;
   certified: boolean;
-  documents: unknown[];
+  documents: unknown[]; // TODO fix
   eligibilities: Eligibility[];
   email: string | null;
   featured: boolean | null;
@@ -38,7 +38,7 @@ export interface Service {
   notes: Note[];
   program: Program | null;
   recurringSchedule: RecurringSchedule;
-  required_documents: unknown; // TODO fix
+  required_documents: string | null; // TODO fix
   resource: Organization;
   schedule: Schedule;
   short_description: string;
@@ -89,9 +89,9 @@ export const getServiceLocations = (
 // Get all the fields from a service we should render
 export const generateServiceDetails = (service: Service) =>
   [
-    ["How to Apply", service.application_process],
-    ["Required Documents", service.required_documents],
-    ["Fees", service.fee],
+    ["How to Apply", service.application_process || ""],
+    ["Required Documents", service.required_documents || ""],
+    ["Fees", service.fee || ""],
     ["Notes", service.notes.map((d) => d.note).join("\n")],
   ]
     .filter((row) => row[1])

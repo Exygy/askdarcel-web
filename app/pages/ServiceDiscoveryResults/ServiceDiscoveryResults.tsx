@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { liteClient } from "algoliasearch/lite";
-import { InstantSearch, Configure } from "react-instantsearch";
+import {
+  InstantSearch,
+  Configure,
+  UseInstantSearchProps,
+  InstantSearchProps,
+} from "react-instantsearch";
 import type { UiState } from "instantsearch.js";
 import qs from "qs";
 import { Helmet } from "react-helmet-async";
@@ -38,7 +43,7 @@ const searchClient = liteClient(
 );
 
 const urlToSearchState = (location: RouterLocation) =>
-  qs.parse(location.search.slice(1)) as UiState;
+  qs.parse(location.search.slice(1));
 
 /** Wrapper component that handles state management, URL parsing, and external API requests. */
 export const ServiceDiscoveryResults = ({
@@ -58,7 +63,8 @@ export const ServiceDiscoveryResults = ({
   );
   const eligibilities = useEligibilitiesForCategory(category.id);
   const subcategories = useSubcategoriesForCategory(category.id);
-  const [searchState] = useState<UiState>(urlToSearchState(location));
+  /* eslint-disable */
+  const [searchState] = useState<any>(urlToSearchState(location));
   const [isMapCollapsed, setIsMapCollapsed] = useState(false);
   const [searchRadius, setSearchRadius] = useState<number | "all">(
     searchState?.configure?.aroundRadius || "all"
