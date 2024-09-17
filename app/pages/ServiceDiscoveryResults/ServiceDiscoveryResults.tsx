@@ -74,25 +74,7 @@ export const ServiceDiscoveryResults = ({
         <SearchHeaderSection descriptionText="Sign up for programs and access resources." />
       </SecondaryNavigationWrapper>
       <div className={styles.container}>
-        {/* <Helmet>
-          <title>{`${categoryName} in San Francisco | ${websiteConfig.title}`}</title>
-          <meta
-            name="description"
-            content={`A list of ${categoryName} in San Francisco`}
-          />
-        </Helmet> */}
         <Header currentCategory={categoryName} />
-
-        {/* <InstantSearch
-          searchClient={searchClient}
-          indexName={`${config.ALGOLIA_INDEX_PREFIX}_services_search`}
-          initialUiState={searchState}
-          routing
-        >
-          {category.disableGeoLocation ? (
-            <Configure filters={`categories:'${algoliaCategoryName}'`} />
-          ) : (
-            )} */}
         <Configure
           filters={`categories:'${algoliaCategoryName}'`}
           aroundLatLng={aroundLatLng}

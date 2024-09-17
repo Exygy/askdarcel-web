@@ -94,7 +94,9 @@ export const Navigation = () => {
       routing={{
         router: history({
           windowTitle({ production_services_search: { query } }) {
-            const queryTitle = query ? `Results for "${query}"` : "Search";
+            const queryTitle = query
+              ? `Our415 - Search results for "${query}" in San Francisco`
+              : "Our415 - Services in San Francisco";
 
             return queryTitle;
           },
