@@ -27,7 +27,7 @@ module.exports = {
       },
     },
   },
-  ignorePatterns: ["**/*.config.js"],
+  ignorePatterns: ["coverage"],
   rules: {
     "import/no-extraneous-dependencies": ["error", { devDependencies: true }],
     "import/no-named-as-default": 0,

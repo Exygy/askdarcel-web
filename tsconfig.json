@@ -22,5 +22,5 @@
     "webpack.config.js",
     "test"
   ],
-  "exclude": ["node_modules", "coverage"]
+  "exclude": ["node_modules"]
 }
