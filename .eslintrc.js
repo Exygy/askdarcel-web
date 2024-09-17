@@ -27,6 +27,7 @@ module.exports = {
       },
     },
   },
+  ignorePatterns: ["**/*.config.js"],
   rules: {
     "import/no-extraneous-dependencies": ["error", { devDependencies: true }],
     "import/no-named-as-default": 0,
