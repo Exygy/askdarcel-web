@@ -31,9 +31,12 @@ const environmentConfig = [
   "ALGOLIA_INDEX_PREFIX",
   "ALGOLIA_APPLICATION_ID",
   "ALGOLIA_READ_ONLY_API_KEY",
+<<<<<<< HEAD
   "MOHCD_SUBDOMAIN",
   "MOHCD_DOMAIN",
   "SFFAMILIES_DOMAIN",
+=======
+>>>>>>> main
   "AUTH0_AUDIENCE",
   "AUTH0_CLIENT_ID",
   "AUTH0_DOMAIN",
