@@ -43,6 +43,7 @@ export const parseConcatenatedIntegerTime = (integerTime: number | null) => {
   if (integerTime === null) {
     return null;
   }
+
   try {
     // This algorithm is super hacky and slow, as it uses strings to separate the
     // hours digits from the minutes digits.
