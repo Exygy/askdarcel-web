@@ -2,6 +2,7 @@ import React, { FormEvent, useEffect, useState } from "react";
 import cn from "classnames";
 import { useClearRefinements, useSearchBox } from "react-instantsearch";
 import styles from "./SiteSearchInput.module.scss";
+import { useHistory } from "react-router-dom";
 
 /**
  * Sitewide listing search component that controls the search query input
@@ -13,6 +14,7 @@ export const SiteSearchInput = () => {
   const { query, refine } = useSearchBox();
   const { refine: clearRefine } = useClearRefinements();
   const [inputValue, setInputValue] = useState(query);
+  const history = useHistory();
 
   function setQuery(newQuery: string) {
     setInputValue(newQuery);
@@ -23,6 +25,7 @@ export const SiteSearchInput = () => {
 
     refine(inputValue);
     clearRefine();
+    history.push("/search");
 
     return false;
   };
