@@ -259,6 +259,7 @@
   }
 }
 
+// Reformats page to only show search results
 @media print {
   :global(.searchResultsPage) {
     visibility: hidden;

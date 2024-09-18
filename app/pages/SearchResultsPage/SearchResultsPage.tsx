@@ -5,13 +5,14 @@ import { Header } from "components/search/Header/Header";
 import styles from "./SearchResultsPage.module.scss";
 import { DEFAULT_AROUND_PRECISION, useAppContext } from "utils";
 import { Configure } from "react-instantsearch-core";
+import classNames from "classnames";
 
 export const SearchResultsPage = () => {
   const [isMapCollapsed, setIsMapCollapsed] = useState(false);
   const { aroundUserLocationRadius, aroundLatLng } = useAppContext();
 
   return (
-    <div className={styles.container}>
+    <div className={classNames(styles.container, "searchResultsPage")}>
       <Configure
         aroundLatLng={aroundLatLng}
         aroundRadius={aroundUserLocationRadius}

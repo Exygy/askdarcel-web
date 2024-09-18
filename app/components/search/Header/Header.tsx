@@ -50,9 +50,7 @@ export const Header = ({ currentCategory }: Props) => {
           variant="secondary"
           size="lg"
           onClick={() => {
-            document.body.classList.add("searchResultsPage");
             window.print();
-            document.body.classList.remove("searchResultsPage");
           }}
           addClass={`${styles.printAllBtn} ${
             showPrintResultsBtn ? styles.showBtn : ""
