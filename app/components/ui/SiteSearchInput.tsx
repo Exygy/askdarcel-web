@@ -20,6 +20,8 @@ export const SiteSearchInput = () => {
     setInputValue(newQuery);
   }
 
+  // Sets query, clears refinments, and then redirects to the search page. If the user is already on the
+  // search page the last step is basically a noop.
   const submitSearch = (e: FormEvent) => {
     e.preventDefault();
 

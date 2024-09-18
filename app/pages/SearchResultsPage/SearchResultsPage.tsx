@@ -7,6 +7,7 @@ import { DEFAULT_AROUND_PRECISION, useAppContext } from "utils";
 import { Configure } from "react-instantsearch-core";
 import classNames from "classnames";
 
+// NOTE: The .searchResultsPage is added plain so that it can be targeted by print-specific css
 export const SearchResultsPage = () => {
   const [isMapCollapsed, setIsMapCollapsed] = useState(false);
   const { aroundUserLocationRadius, aroundLatLng } = useAppContext();
