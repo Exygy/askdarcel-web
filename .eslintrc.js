@@ -40,6 +40,6 @@ module.exports = {
       { namedComponents: "arrow-function" },
     ],
     "@typescript-eslint/ban-ts-comment": "warn",
-    "@typescript-eslint/prefer-nullish-coalescing": "warn"
+    "@typescript-eslint/prefer-nullish-coalescing": "warn",
   },
 };
