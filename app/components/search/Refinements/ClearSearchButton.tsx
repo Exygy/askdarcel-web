@@ -10,8 +10,9 @@ const ClearSearchButton = () => {
   // const { clear } = useSearchBox();
   // onClick(() => clear);
   // ```
-  // However, in practice using this hook causes unnecessary re-renders when no results are returned.
-  // Fortunately, we can use another hook set the index state manually.
+  // However, for reasons still unknown, in practice using this hook causes unnecessary
+  // re-renders when no results are returned. Fortunately, we can use another hook set
+  // the index state manually.
   const handleOnClick = () =>
     setIndexUiState({
       query: "",
