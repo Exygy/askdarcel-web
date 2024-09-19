@@ -5,12 +5,12 @@ import { useInstantSearch } from "react-instantsearch-core";
 const ClearSearchButton = () => {
   const { setIndexUiState } = useInstantSearch();
 
-  // Algolia does provide a hook that can manage the query state, specifically *clearing*:
+  // Algolia provides a hook that can manage the query state, specifically *clearing*:
   // ```
   // const { clear } = useSearchBox();
   // onClick(() => clear);
   // ```
-  // However in practice using this hook results in unexpected behavior in which it ends causing
+  // However, in practice using this hook produces unexpected behavior  causing
   // unnecessary re-renders when no results are returned. Fortunately resetting the index state
   // achieves what we need.
   const handleOnClick = () =>
