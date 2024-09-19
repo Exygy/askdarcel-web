@@ -18,7 +18,7 @@
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
-  height: $header-height;
+  // height: $header-height;
   justify-content: space-between;
   margin: 0 auto;
   padding: 0 $general-spacing-lg;
@@ -29,15 +29,19 @@
 
 .navLeft {
   display: flex;
-  align-items: center;
+  gap: 5px;
+  flex-direction: column;
+
+  @media screen and (min-width: $break-tablet-s) {
+    flex-direction: row;
+    gap: 32px;
+  }
+
 }
 
 .navRight {
   display: flex;
   align-items: center;
-  @include r_max($break-tablet-s) {
-    display: none;
-  }
 }
 
 .navLogo img {
@@ -48,22 +52,12 @@
   }
 }
 
-.activatePushPanelButton {
-  font-size: 18px !important;
-  font-family: Montserrat;
-  font-weight: 500;
-
-  @include r_min($break-tablet-s) {
-    display: none !important; // !important is needed to override .form-row
-  }
-}
-
 // Until new nav is introduced, screen reader is reading hamburger links on desktop. This fixes that.
-.hamburgerContainer {
-  @media screen and (min-width: $break-tablet-s) {
-    display: none;
-  }
-}
+// .hamburgerContainer {
+//   @media screen and (min-width: $break-tablet-s) {
+//     display: none;
+//   }
+// }
 
 .navigationMenuTranslate {
   width: 154px;
@@ -75,6 +69,7 @@
 }
 
 .desktopNavigationContainer {
+
   display: flex;
   flex-direction: row;
   align-items: center;

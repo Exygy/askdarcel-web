@@ -1,10 +1,15 @@
 @import "../../../styles/utils/_helpers.scss";
 @import "../../../styles/utils/_colors.scss";
 
-.sidebar {
-  @media screen and (min-width: $break-tablet-s) {
-    display: none;
-  }
+.mobileNavigationContainer {
+  // @media screen and (min-width: $break-tablet-s) {
+  //   display: none;
+  // }
+}
+
+.menuActivator {
+  display: flex;
+  align-items: center;
 }
 
 .mobileNavigationMenuContainer {
@@ -109,4 +114,14 @@
   bottom: 0px;
   // Keeps on top of active submenu
   z-index: $z-index-top;
+}
+
+.activatePushPanelButton {
+  font-size: 18px !important;
+  font-family: Montserrat;
+  font-weight: 500;
+
+  // @include r_min($break-tablet-s) {
+  //   display: none !important; // !important is needed to override .form-row
+  // }
 }

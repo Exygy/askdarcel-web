@@ -8,11 +8,11 @@ describe("<MobileNavigation />", () => {
   it("checks a valid user should render the appropriate fields in the right place", () => {
     render(
       <MobileNavigation
-        isOpen
-        setSubMenu={() => {
-          return;
-        }}
-        activeSubMenu=""
+        // isOpen
+        // setSubMenu={() => {
+        //   return;
+        // }}
+        // activeSubMenu=""
         menuData={[]}
       />,
       { wrapper: BrowserRouter }
