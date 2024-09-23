@@ -10,18 +10,10 @@ import { GoogleTranslate } from "../GoogleTranslate";
 import { Button } from "components/ui/inline/Button/Button";
 
 interface MobileNavigationProps {
-  // isOpen: boolean;
-  // activeMobileSubMenu: string;
-  // setActiveMobileSubMenu: (value: string) => void;
   menuData: ExtractedNavigationMenusFromNavigationResponse;
 }
 
-export const MobileNavigation = ({
-  // isOpen = false,
-  // activeMobileSubMenu,
-  // setActiveMobileSubMenu,
-  menuData,
-}: MobileNavigationProps) => {
+export const MobileNavigation = ({ menuData }: MobileNavigationProps) => {
   function menuItemHasLinks(
     menuItem: ExtractedNavigationMenusFromNavigationResponse[number]
   ): menuItem is NavigationMenu {
@@ -35,22 +27,8 @@ export const MobileNavigation = ({
   const toggleMobileNav = () => setMobileNavigationIsOpen((prev) => !prev);
   const mobileSubMenuIsActive = !!activeMobileSubMenu;
   const inSubNavigation = mobileNavigationIsOpen && mobileSubMenuIsActive;
-
-  const mobileNavIconDisplay = () => {
-    if (mobileNavigationIsOpen) {
-      return "xmark";
-    }
-
-    return `bars`;
-  };
-
-  const mobileNavTextDisplay = () => {
-    if (mobileNavigationIsOpen) {
-      return "Close";
-    }
-
-    return "Menu";
-  };
+  const mobileNavIconDisplay = mobileNavigationIsOpen ? "xmark" : "bars";
+  const mobileNavTextDisplay = mobileNavigationIsOpen ? "Close" : "Menu";
 
   const handleOpenMobileNavigation = () => {
     if (inSubNavigation) {
@@ -68,10 +46,10 @@ export const MobileNavigation = ({
         <Button
           onClick={handleOpenMobileNavigation}
           iconVariant="after"
-          iconName={mobileNavIconDisplay()}
+          iconName={mobileNavIconDisplay}
           mobileFullWidth={false}
         >
-          {mobileNavTextDisplay()}
+          {mobileNavTextDisplay}
         </Button>
       </div>
       {mobileNavigationIsOpen && (

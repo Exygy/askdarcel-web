@@ -64,16 +64,16 @@ export const Navigation = () => {
       <div>
         <nav className={styles.siteNav}>
           <div className={styles.primaryRow}>
-            {/* <div className={styles.navLeft}> */}
-            <Link className={`${styles.navLogo}`} to="/">
-              <img src={logoData?.url} alt={logoData?.alternativeText} />
-            </Link>
-            <SiteSearchInput />
-            {/* </div> */}
+            <div className={styles.navLeft}>
+              <Link className={`${styles.navLogo}`} to="/">
+                <img src={logoData?.url} alt={logoData?.alternativeText} />
+              </Link>
+              <SiteSearchInput />
+            </div>
 
-            {/* <div className={`${styles.navRight} no-print`}> */}
-            {menuData && <MobileNavigation menuData={menuData} />}
-            {/* <div className={styles.desktopNavigationContainer}>
+            <div className={`${styles.navRight} no-print`}>
+              {menuData && <MobileNavigation menuData={menuData} />}
+              <div className={styles.desktopNavigationContainer}>
                 {menuData?.map((menuDataItem) => {
                   if (menuItemHasLinks(menuDataItem)) {
                     const links = menuDataItem.link.map((linkItem) => ({
@@ -105,11 +105,11 @@ export const Navigation = () => {
                     </Link>
                   );
                 })}
-              </div> */}
-            {/* <div className={styles.navigationMenuTranslate}>
+              </div>
+              <div className={styles.navigationMenuTranslate}>
                 <GoogleTranslate />
-              </div> */}
-            {/* </div> */}
+              </div>
+            </div>
           </div>
         </nav>
         <main className="container" id="main">

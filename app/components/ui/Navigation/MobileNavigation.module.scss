@@ -2,9 +2,6 @@
 @import "../../../styles/utils/_colors.scss";
 
 .mobileNavigationContainer {
-  // @media screen and (min-width: $break-tablet-s) {
-  //   display: none;
-  // }
   position: absolute;
   border-top: 1px solid $gray-300;
   border-bottom: 1px solid $gray-300;
@@ -19,8 +16,12 @@
 }
 
 .menuActivator {
-  display: flex;
-  align-items: center;
+  display: none;
+
+  @media screen and (max-width: $break-desktop-s) {
+    display: flex;
+    align-items: center;
+  }
 }
 
 .mobileNavigationMenuContainer {
@@ -132,11 +133,7 @@
 
 .mobileNavigationMenuListOpen {
   visibility: visible;
-
-  // Fills out entire sidebar
   width: 100%;
-
-
 }
 
 .mobileTopLevelNavigationMenuItem {
@@ -153,8 +150,4 @@
   font-size: 18px !important;
   font-family: Montserrat;
   font-weight: 500;
-
-  // @include r_min($break-tablet-s) {
-  //   display: none !important; // !important is needed to override .form-row
-  // }
 }

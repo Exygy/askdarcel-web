@@ -23,7 +23,7 @@
   height: $header-height;
   gap: 32px;
 
-  :nth-child(3) {
+  :nth-child(2) {
     margin-left: auto;
   }
 
@@ -77,13 +77,6 @@
   }
 }
 
-// Until new nav is introduced, screen reader is reading hamburger links on desktop. This fixes that.
-// .hamburgerContainer {
-//   @media screen and (min-width: $break-tablet-s) {
-//     display: none;
-//   }
-// }
-
 .navigationMenuTranslate {
   width: 154px;
 
@@ -94,7 +87,6 @@
 }
 
 .desktopNavigationContainer {
-
   display: flex;
   flex-direction: row;
   align-items: center;
