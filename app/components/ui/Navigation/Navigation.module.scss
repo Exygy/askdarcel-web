@@ -18,23 +18,48 @@
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
-  // height: $header-height;
-  justify-content: space-between;
   margin: 0 auto;
-  padding: 0 $general-spacing-lg;
+  padding: $spacing-6;
+  height: $header-height;
+  gap: 32px;
+
+  :nth-child(3) {
+    margin-left: auto;
+  }
+
   @include r_max($break-tablet-s) {
     height: $header-mobile-height;
+    flex-wrap: wrap;
+    padding: $spacing-4_5;
+    gap: $spacing-2_5;
+
+    :nth-child(1) {
+      order: 1;
+    }
+    :nth-child(2) {
+      order: 3;
+      // flex-basis: 100%;
+      width: 400px;
+    }
+    :nth-child(3) {
+      margin-left: auto;
+      order: 2;
+
+    }
   }
+
+
 }
 
 .navLeft {
   display: flex;
-  gap: 5px;
-  flex-direction: column;
+  flex-direction: row;
+  gap: 32px;
 
-  @media screen and (min-width: $break-tablet-s) {
-    flex-direction: row;
-    gap: 32px;
+  @media screen and (max-width: $break-tablet-s) {
+    gap: 5px;
+    flex-direction: column;
+    width: 345px;
   }
 
 }

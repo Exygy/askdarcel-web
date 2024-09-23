@@ -37,14 +37,11 @@ export const MobileNavigation = ({
   const inSubNavigation = mobileNavigationIsOpen && mobileSubMenuIsActive;
 
   const mobileNavIconDisplay = () => {
-    if (inSubNavigation) {
-      return "fa-arrow-left";
-    }
     if (mobileNavigationIsOpen) {
-      return "fa-xmark";
+      return "xmark";
     }
 
-    return ` fa-bars`;
+    return `bars`;
   };
 
   const mobileNavTextDisplay = () => {
@@ -114,6 +111,18 @@ export const MobileNavigation = ({
                         : ""
                     }`}
                   >
+                    <button
+                      type="button"
+                      onClick={closeMobileMenu}
+                      className={
+                        mobileNavigationStyles.mobileNavigationMenuBack
+                      }
+                    >
+                      <span
+                        className={`fas fa-chevron-left ${mobileNavigationStyles.chevron}`}
+                      />
+                      Back
+                    </button>
                     {menuDataItem.link.map((linkItem: LinkModel) => {
                       const uuid = crypto.randomUUID();
                       return (

@@ -42,7 +42,7 @@ export const SiteSearchInput = () => {
   return (
     <form
       onSubmit={submitSearch}
-      className={cn([styles.navSearch, "search-container", "form-row"])}
+      className={cn([styles.navSearch, "form-row"])}
       role="search"
     >
       <input

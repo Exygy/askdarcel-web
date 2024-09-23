@@ -30,8 +30,9 @@
     z-index: 2;
     background: #fff;
     transition: top 200ms ease-in-out;
+
     &.mobileMapIsCollapsed {
-      top: calc(-50vh + 20px);
+      top: calc(-50vh + 260px);
       z-index: 1;
     }
   }

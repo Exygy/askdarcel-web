@@ -37,6 +37,7 @@ $focus-height: calc(#{$input-height} - (#{$border-width} * 2));
     border-radius: 0 $rounded-full $rounded-full 0;
     cursor: pointer;
     height: $input-height;
+    width: 48px;
   }
 
   .searchField,
