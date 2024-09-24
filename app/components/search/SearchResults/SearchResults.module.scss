@@ -33,7 +33,7 @@
 
     // Sets height from top of the viewport on mobile
     &.resultsPositionWhenMapCollapsed {
-      top: calc(-50vh + 260px);
+      top: calc(-50vh + 10px);
       z-index: 1;
     }
   }
