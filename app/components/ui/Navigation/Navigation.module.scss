@@ -38,7 +38,6 @@
     flex-direction: column;
     width: 345px;
   }
-
 }
 
 .navRight {
@@ -69,11 +68,11 @@
   align-items: center;
 
   > :nth-last-child(2) {
-  // Adds separator
-  border-right: 1px solid black;
-  padding-right: $spacing-4;
-  margin-right: $spacing-4;
-}
+    // Adds separator
+    border-right: 1px solid black;
+    padding-right: $spacing-4;
+    margin-right: $spacing-4;
+  }
   // margin-right: $spacing-6;
 
   > * {
@@ -83,7 +82,9 @@
 
 // Less than desktop
 @include r_max($break-desktop-s) {
-  .desktopNavigationContainer { display: none; }
+  .desktopNavigationContainer {
+    display: none;
+  }
   .primaryRow {
     height: $header-mobile-height;
     flex-wrap: wrap;

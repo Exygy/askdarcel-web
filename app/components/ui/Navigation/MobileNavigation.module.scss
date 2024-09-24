@@ -119,7 +119,7 @@
 .mobileNavigationMenuHeader:has(+ .mobileNavigationMenuListOpen),
 .mobileNavigationMenuListOpen + {
   visibility: hidden;
-  display:none;
+  display: none;
 }
 
 .mobileNavigationMenuListOpen {
