@@ -20,6 +20,7 @@ import { InstantSearch } from "react-instantsearch-core";
 import { liteClient } from "algoliasearch/lite";
 import config from "./../../../config";
 import { history as historyRouter } from "instantsearch.js/es/lib/routers";
+import { Loader } from "components/ui/Loader";
 
 const searchClient = liteClient(
   config.ALGOLIA_APPLICATION_ID,
@@ -39,6 +40,10 @@ export const Navigation = () => {
     menuItem: ExtractedNavigationMenusFromNavigationResponse[number]
   ): menuItem is NavigationMenu {
     return "link" in menuItem;
+  }
+
+  if (!menuData) {
+    return <Loader />;
   }
 
   return (
@@ -69,9 +74,9 @@ export const Navigation = () => {
             </Link>
             <SiteSearchInput />
 
-            {menuData && <MobileNavigation menuData={menuData} />}
+            <MobileNavigation menuData={menuData} />
             <div className={styles.desktopNavigationContainer}>
-              {menuData?.map((menuDataItem) => {
+              {menuData.map((menuDataItem) => {
                 if (menuItemHasLinks(menuDataItem)) {
                   const links = menuDataItem.link.map((linkItem) => ({
                     id: linkItem.id,
