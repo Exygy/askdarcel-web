@@ -9,19 +9,10 @@
   top: $header-height;
   background: $white;
   width: 400px;
-
-  @include r_max($break-tablet-s) {
-    top: $header-mobile-height;
-  }
 }
 
 .menuActivator {
   display: none;
-
-  @media screen and (max-width: $break-desktop-s) {
-    display: flex;
-    align-items: center;
-  }
 }
 
 .mobileNavigationMenuContainer {
@@ -150,4 +141,18 @@
   font-size: 18px !important;
   font-family: Montserrat;
   font-weight: 500;
+}
+
+// Less than desktop
+@include r_max($break-desktop-s) {
+  .menuActivator {
+    display: flex;
+    align-items: center;
+  }
+}
+
+@include r_max($break-tablet-s) {
+  .menuNavigationContainer {
+    top: $header-mobile-height;
+  }
 }

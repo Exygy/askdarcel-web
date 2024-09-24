@@ -64,48 +64,44 @@ export const Navigation = () => {
       <div>
         <nav className={styles.siteNav}>
           <div className={styles.primaryRow}>
-            <div className={styles.navLeft}>
-              <Link className={`${styles.navLogo}`} to="/">
-                <img src={logoData?.url} alt={logoData?.alternativeText} />
-              </Link>
-              <SiteSearchInput />
-            </div>
+            <Link className={`${styles.navLogo}`} to="/">
+              <img src={logoData?.url} alt={logoData?.alternativeText} />
+            </Link>
+            <SiteSearchInput />
 
-            <div className={`${styles.navRight} no-print`}>
-              {menuData && <MobileNavigation menuData={menuData} />}
-              <div className={styles.desktopNavigationContainer}>
-                {menuData?.map((menuDataItem) => {
-                  if (menuItemHasLinks(menuDataItem)) {
-                    const links = menuDataItem.link.map((linkItem) => ({
-                      id: linkItem.id,
-                      url: linkItem.url,
-                      text: linkItem.text,
-                    }));
-
-                    const uniqueKey = crypto.randomUUID();
-
-                    return (
-                      <DropdownMenu
-                        key={uniqueKey}
-                        id={uniqueKey}
-                        title={menuDataItem.title}
-                        links={links}
-                      />
-                    );
-                  }
+            {menuData && <MobileNavigation menuData={menuData} />}
+            <div className={styles.desktopNavigationContainer}>
+              {menuData?.map((menuDataItem) => {
+                if (menuItemHasLinks(menuDataItem)) {
+                  const links = menuDataItem.link.map((linkItem) => ({
+                    id: linkItem.id,
+                    url: linkItem.url,
+                    text: linkItem.text,
+                  }));
 
                   const uniqueKey = crypto.randomUUID();
+
                   return (
-                    <Link
+                    <DropdownMenu
                       key={uniqueKey}
-                      to={menuDataItem.url}
-                      className={desktopNavigationStyles.navigationMenuLink}
-                    >
-                      {menuDataItem.text}
-                    </Link>
+                      id={uniqueKey}
+                      title={menuDataItem.title}
+                      links={links}
+                    />
                   );
-                })}
-              </div>
+                }
+
+                const uniqueKey = crypto.randomUUID();
+                return (
+                  <Link
+                    key={uniqueKey}
+                    to={menuDataItem.url}
+                    className={desktopNavigationStyles.navigationMenuLink}
+                  >
+                    {menuDataItem.text}
+                  </Link>
+                );
+              })}
               <div className={styles.navigationMenuTranslate}>
                 <GoogleTranslate />
               </div>

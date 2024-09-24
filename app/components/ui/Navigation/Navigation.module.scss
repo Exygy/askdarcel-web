@@ -23,32 +23,9 @@
   height: $header-height;
   gap: 32px;
 
-  :nth-child(2) {
+  :last-child {
     margin-left: auto;
   }
-
-  @include r_max($break-tablet-s) {
-    height: $header-mobile-height;
-    flex-wrap: wrap;
-    padding: $spacing-4_5;
-    gap: $spacing-2_5;
-
-    :nth-child(1) {
-      order: 1;
-    }
-    :nth-child(2) {
-      order: 3;
-      // flex-basis: 100%;
-      width: 400px;
-    }
-    :nth-child(3) {
-      margin-left: auto;
-      order: 2;
-
-    }
-  }
-
-
 }
 
 .navLeft {
@@ -91,12 +68,51 @@
   flex-direction: row;
   align-items: center;
 
+  > :nth-last-child(2) {
   // Adds separator
   border-right: 1px solid black;
   padding-right: $spacing-4;
-  margin-right: $spacing-6;
+  margin-right: $spacing-4;
+}
+  // margin-right: $spacing-6;
 
   > * {
     font-weight: 600;
+  }
+}
+
+// Less than desktop
+@include r_max($break-desktop-s) {
+  .desktopNavigationContainer { display: none; }
+  .primaryRow {
+    height: $header-mobile-height;
+    flex-wrap: wrap;
+    padding: $spacing-4_5;
+    gap: $spacing-2_5;
+
+    :nth-child(3) {
+      margin-left: auto;
+    }
+  }
+}
+// afasfds
+@include r_max($break-tablet-s) {
+  .primaryRow {
+    height: $header-mobile-height;
+    flex-wrap: wrap;
+    padding: $spacing-4_5;
+    gap: $spacing-2_5;
+
+    :nth-child(1) {
+      order: 1;
+    }
+    :nth-child(2) {
+      order: 3;
+      width: 100%;
+    }
+    :nth-child(3) {
+      margin-left: auto;
+      order: 2;
+    }
   }
 }
