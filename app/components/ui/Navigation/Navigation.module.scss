@@ -23,7 +23,7 @@
   height: $header-height;
   gap: 32px;
 
-  :last-child {
+  > :last-child {
     margin-left: auto;
   }
 }
