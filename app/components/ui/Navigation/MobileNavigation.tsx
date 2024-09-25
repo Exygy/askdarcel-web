@@ -48,6 +48,8 @@ export const MobileNavigation = ({ menuData }: MobileNavigationProps) => {
           iconVariant="after"
           iconName={mobileNavIconDisplay}
           mobileFullWidth={false}
+          styleType="transparent"
+          variant="linkWhite"
         >
           {mobileNavTextDisplay}
         </Button>
