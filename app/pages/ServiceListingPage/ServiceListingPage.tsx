@@ -26,6 +26,9 @@ import {
   Service,
 } from "../../models";
 import styles from "./ServiceListingPage.module.scss";
+import { SearchHit } from "models/SearchHits";
+import algoliasearchHelper from "algoliasearch-helper";
+import { useInstantSearch } from "react-instantsearch-core";
 
 // Page at /services/123
 export const ServiceListingPage = () => {
@@ -36,8 +39,16 @@ export const ServiceListingPage = () => {
     () => (service ? generateServiceDetails(service) : []),
     [service]
   );
-  const { search } = useLocation();
+  const { search, pathname } = useLocation();
+  const serviceId = pathname.split("/")[2];
   const searchState = useMemo(() => qs.parse(search.slice(1)), [search]);
+  const {
+    results: searchResults,
+  }: {
+    results: algoliasearchHelper.SearchResults<SearchHit>;
+  } = useInstantSearch();
+
+  // TODO [OUR415-299]: This is an artifact from SFSG. Let's find out if it's still relevant.
   const { visitDeactivated } = searchState;
 
   useEffect(() => window.scrollTo(0, 0), []);
@@ -54,7 +65,11 @@ export const ServiceListingPage = () => {
     });
   }, [id]);
 
-  if (error) {
+  if (!service && error) {
+    const service = searchResults.hits.find(
+      (hit) => hit.id.toString() === serviceId
+    ) as unknown as Service;
+
     return (
       <ListingPageWrapper
         title="error"
@@ -62,7 +77,19 @@ export const ServiceListingPage = () => {
         sidebarActions={[]}
         onClickAction={() => "noop"}
       >
-        {error.message}
+        <ListingPageHeader title={service.name} dataCy="service-page-title">
+          <ServiceProgramDetails
+            service={service}
+            organization={service.resource}
+          />
+        </ListingPageHeader>
+
+        {/* <span className="no-print">
+          <ActionBarMobile
+            actions={mobileActions}
+            onClickAction={onClickAction}
+          />
+        </span> */}
       </ListingPageWrapper>
     );
   }
@@ -70,6 +97,7 @@ export const ServiceListingPage = () => {
   if (!service) {
     return <Loader />;
   }
+
   if (service.status === "inactive" && !visitDeactivated) {
     return <Redirect to="/" />;
   }
