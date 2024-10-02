@@ -97,7 +97,6 @@ export const ServiceListingPage = () => {
     fetchServiceOrFallback();
   }, [id, pathname]);
 
-  // NOTE:
   if (serviceFallback) {
     const formattedLongDescription = serviceFallback.long_description
       ? removeAsterisksAndHashes(serviceFallback.long_description)
