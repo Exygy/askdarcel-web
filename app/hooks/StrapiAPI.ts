@@ -242,21 +242,6 @@ export interface CalendarEventResponse {
   recurrence: "none" | "daily" | "weekly" | "monthly" | "yearly";
 }
 
-export interface EventResponse extends BaseDatumAttributesResponse {
-  title: string;
-  venue: string;
-  admissions: string;
-  description: string;
-  calendar_event: CalendarEventResponse;
-  address: AddressResponse;
-  image: {
-    id: number;
-    image: StrapiObjectResponse<ImageResponse>;
-  };
-  links: LinkResponse[];
-  event_categories: Array<StrapiDatumResponse<CategoryResponse>>;
-}
-
 export interface HomepageResponse extends BaseDatumAttributesResponse {
   title: string;
   hero: {
