@@ -88,10 +88,7 @@ export const Button = ({
 
   // Links that follow same visual guidelines as buttons
   if (href) {
-    const isExternal =
-      typeof isExternalLink !== "undefined" // passed in prop takes precedence
-        ? isExternalLink
-        : !href?.startsWith("/");
+    const isExternal = isExternalLink ?? !href?.startsWith("/");
 
     const linkProps = isExternal && { target: "_blank", rel: "noreferrer" };
 
