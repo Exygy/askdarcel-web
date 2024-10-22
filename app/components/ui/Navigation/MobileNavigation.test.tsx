@@ -6,14 +6,6 @@ import { MobileNavigation } from "components/ui/Navigation/MobileNavigation";
 
 describe("<MobileNavigation />", () => {
   it("checks a valid user should render the appropriate fields in the right place", () => {
-    render(
-      <MobileNavigation
-        isOpen
-        setSubMenu={() => {}}
-        activeSubMenu=""
-        menuData={[]}
-      />,
-      { wrapper: BrowserRouter }
-    );
+    render(<MobileNavigation menuData={[]} />, { wrapper: BrowserRouter });
   });
 });

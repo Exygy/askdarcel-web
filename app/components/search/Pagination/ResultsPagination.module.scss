@@ -46,14 +46,3 @@
   align-items: center;
   justify-content: center;
 }
-
-.algoliaImgWrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 20px 0 0;
-
-  & > img {
-    height: 16px;
-  }
-}

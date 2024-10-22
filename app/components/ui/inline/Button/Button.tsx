@@ -7,6 +7,17 @@ type StyleType = "transparent" | "text" | "default";
 type SizeType = "xs" | "sm" | "base" | "lg" | "xl";
 type VariantType = "primary" | "secondary" | "linkBlue" | "linkWhite";
 
+/**
+ * NOTE: 😅 This component is an impressively complicated piece of code that
+ * supports a combinatorial number of possibilities. It's a challenge to reason
+ * about what particular combination of parameters to use to achieve your
+ * desired presentation. It also appears incomplete as some style types are not
+ * implemented yet. There's got to be a better way to express button variations
+ * than a single component with over a dozen parameter levers. Let's continue
+ * to use this component with caution until we emerge from the MVP stage of
+ * this project and better understand our north star for subsequent rounds of
+ * development.
+ */
 export const Button = ({
   children,
   onClick,
@@ -23,6 +34,7 @@ export const Button = ({
   href,
   mobileFullWidth = true,
   isVisualOnly = false,
+  isExternalLink,
 }: {
   children: string | JSX.Element;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
@@ -39,6 +51,7 @@ export const Button = ({
   href?: string;
   mobileFullWidth?: boolean;
   isVisualOnly?: boolean; // Maintains button styling as visual cue clickable cards but hidden to screen readers
+  isExternalLink?: boolean;
 }) => {
   const buttonClass = classNames(
     styles.button,
@@ -75,9 +88,10 @@ export const Button = ({
 
   // Links that follow same visual guidelines as buttons
   if (href) {
-    const isExternalLink = !href.startsWith("/");
+    const isExternal = isExternalLink ?? !href?.startsWith("/");
 
-    const linkProps = isExternalLink && { target: "_blank", rel: "noreferrer" };
+    const linkProps = isExternal && { target: "_blank", rel: "noreferrer" };
+
     return (
       <a href={href} className={buttonClass} {...linkProps}>
         {content}

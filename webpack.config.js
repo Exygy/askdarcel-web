@@ -1,3 +1,4 @@
+/* eslint-disable */
 const { readFileSync, existsSync } = require("fs");
 const yaml = require("js-yaml");
 const path = require("path");
@@ -30,11 +31,6 @@ const environmentConfig = [
   "ALGOLIA_INDEX_PREFIX",
   "ALGOLIA_APPLICATION_ID",
   "ALGOLIA_READ_ONLY_API_KEY",
-  "MOHCD_SUBDOMAIN",
-  "MOHCD_DOMAIN",
-  "SFFAMILIES_DOMAIN",
-  "TESTCAFE_RUNNING",
-  "LINKSF_DOMAIN",
   "AUTH0_AUDIENCE",
   "AUTH0_CLIENT_ID",
   "AUTH0_DOMAIN",
