@@ -6,30 +6,19 @@ interface LabelTagProps {
   label: string;
 }
 
-const servicePillStyle = {
-  background: "#FCE8E5",
-};
-
-const organizationPillStyle = {
-  background: "#E1EFFE",
-};
-
 export const LabelTag = (props: LabelTagProps) => {
   const { label } = props;
 
   if (label === "resource") {
     return (
-      <span
-        className={classNames(styles.labelTag)}
-        style={organizationPillStyle}
-      >
+      <span className={classNames(styles.labelTag, styles.organizationType)}>
         Organization
       </span>
     );
   }
 
   return (
-    <span className={classNames(styles.labelTag)} style={servicePillStyle}>
+    <span className={classNames(styles.labelTag, styles.serviceType)}>
       Service
     </span>
   );
