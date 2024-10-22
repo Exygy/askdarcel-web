@@ -2,7 +2,6 @@
 
 .labelTag {
   border-radius: $rounded-full;
-  background: $gray-100;
   color: $text-primary;
   display: flex;
   padding: $general-spacing-xxs $general-spacing-xs;
@@ -18,8 +17,4 @@
     white-space: wrap;
     text-align: center;
   }
-}
-
-.withTooltip {
-  cursor: pointer;
 }

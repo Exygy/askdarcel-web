@@ -4,16 +4,33 @@ import styles from "./LabelTag.module.scss";
 
 interface LabelTagProps {
   label: string;
-  withTooltip?: boolean;
 }
 
+const servicePillStyle = {
+  background: "#FCE8E5",
+};
+
+const organizationPillStyle = {
+  background: "#E1EFFE",
+};
+
 export const LabelTag = (props: LabelTagProps) => {
-  const { label, withTooltip = false } = props;
+  const { label } = props;
 
-  const tagClasses = classNames(
-    styles.labelTag,
-    withTooltip && styles.withTooltip
+  if (label === "resource") {
+    return (
+      <span
+        className={classNames(styles.labelTag)}
+        style={organizationPillStyle}
+      >
+        Organization
+      </span>
+    );
+  }
+
+  return (
+    <span className={classNames(styles.labelTag)} style={servicePillStyle}>
+      Service
+    </span>
   );
-
-  return <span className={tagClasses}>{label}</span>;
 };
