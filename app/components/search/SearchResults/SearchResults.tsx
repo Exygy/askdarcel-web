@@ -64,12 +64,12 @@ const SearchResults = ({
     );
   };
 
-  function handleAction(searchMapAction: SearchMapActions) {
+  const handleAction = (searchMapAction: SearchMapActions) => {
     switch (searchMapAction) {
       case SearchMapActions.SearchThisArea:
         return refinePagination(0);
     }
-  }
+  };
 
   return (
     <div className={styles.searchResultsAndMapContainer}>
