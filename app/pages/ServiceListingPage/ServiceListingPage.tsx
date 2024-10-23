@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import ReactMarkdown from "react-markdown";
-import { useParams, Redirect, useLocation } from "react-router-dom";
+import { useParams, useLocation, Navigate } from "react-router-dom";
 import qs from "qs";
 import {
   ActionBarMobile,
@@ -48,7 +48,7 @@ const INDEX_NAME = `${config.ALGOLIA_INDEX_PREFIX}_services_search`;
 // information with a warning to verify the validity of the information
 // themselves.
 export const ServiceListingPage = () => {
-  const { id } = useParams<{ id: string }>();
+  const { serviceListingId } = useParams();
   const [service, setService] = useState<Service | null>(null);
   const [serviceFallback, setServiceFallback] = useState<Service | null>(null);
   const [error, setError] = useState<FetchServiceError>();
@@ -66,7 +66,7 @@ export const ServiceListingPage = () => {
   useEffect(() => {
     const fetchServiceOrFallback = async () => {
       try {
-        const response = await fetchService(id);
+        const response = await fetchService(serviceListingId as string);
 
         // We need to check the contents of the response since `fetchService`
         // does not throw. TODO: reconsider this design because processing a
@@ -95,7 +95,7 @@ export const ServiceListingPage = () => {
     };
 
     fetchServiceOrFallback();
-  }, [id, pathname]);
+  }, [serviceListingId, pathname]);
 
   if (serviceFallback) {
     const formattedLongDescription = serviceFallback.long_description
@@ -134,7 +134,9 @@ export const ServiceListingPage = () => {
         <ListingInfoSection title="Contact" data-cy="service-contact-section">
           <ListingInfoTable
             rows={[serviceFallback]}
-            rowRenderer={(srv) => <ContactInfoTableRows service={srv} />}
+            rowRenderer={(srv) => (
+              <ContactInfoTableRows key={srv.id} service={srv} />
+            )}
           />
         </ListingInfoSection>
       </ListingPageWrapper>
@@ -158,7 +160,7 @@ export const ServiceListingPage = () => {
     return <Loader />;
   }
   if (service.status === "inactive" && !visitDeactivated) {
-    return <Redirect to="/" />;
+    return <Navigate to="/" />;
   }
 
   const { resource, recurringSchedule } = service;
@@ -234,7 +236,9 @@ export const ServiceListingPage = () => {
       <ListingInfoSection title="Contact" data-cy="service-contact-section">
         <ListingInfoTable
           rows={[service]}
-          rowRenderer={(srv) => <ContactInfoTableRows service={srv} />}
+          rowRenderer={(srv) => (
+            <ContactInfoTableRows key={srv.id} service={srv} />
+          )}
         />
       </ListingInfoSection>
 
@@ -274,7 +278,10 @@ export const ServiceListingPage = () => {
           data-cy="service-tags-section"
         >
           <ListingInfoTable>
-            <LabelTagRows service={service} />
+            <LabelTagRows
+              categories={service.categories}
+              eligibilities={service.eligibilities}
+            />
           </ListingInfoTable>
         </ListingInfoSection>
       )}
