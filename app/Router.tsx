@@ -65,8 +65,6 @@ export const Router = () => {
         path="/:categorySlug/results"
         element={<ServiceDiscoveryResults />}
       />
-
-      {/* <Redirect to="/" /> */}
     </Routes>
   );
 };
