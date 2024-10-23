@@ -34,9 +34,11 @@ export const App = () => {
     }
 
     setTimeout(() => {
-      /* We call setTimeout here to give our views time to update the document title before
-          GA sends its page view event
-      */
+      // We call setTimeout here to give our views time to update the document
+      // title beforeGA sends its page view event
+      // TODO: This hack is old. Let's figure out if it is still necessary or
+      // there is a different modern approach
+      // (see: https://stackoverflow.com/questions/2497200/how-to-listen-for-changes-to-the-title-element/29540461#29540461)
       const page = location.pathname + location.search;
       ReactGA_4.send({
         hitType: "pageview",
