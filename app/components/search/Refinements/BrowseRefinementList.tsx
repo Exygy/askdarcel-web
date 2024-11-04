@@ -16,6 +16,7 @@ const BrowseRefinementList = ({ attribute, transform }: Props) => {
     attribute,
     sortBy: ["name:asc"],
     transformItems: transform,
+    limit: 9999,
   });
 
   useEffect(() => {
