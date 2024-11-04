@@ -12,11 +12,13 @@ interface Props extends UseRefinementListProps {
  */
 const BrowseRefinementList = ({ attribute, transform }: Props) => {
   const [checked, setChecked] = useState<Set<string>>(new Set());
-  const { items, refine } = useRefinementList({
-    attribute,
-    sortBy: ["name:asc"],
-    transformItems: transform,
-  });
+  const { items, refine, canToggleShowMore, isShowingMore, toggleShowMore } =
+    useRefinementList({
+      attribute,
+      sortBy: ["name:asc"],
+      transformItems: transform,
+      limit: 9999,
+    });
 
   useEffect(() => {
     items.forEach((item) => {
@@ -54,6 +56,9 @@ const BrowseRefinementList = ({ attribute, transform }: Props) => {
           </label>
         </li>
       ))}
+      <button onClick={toggleShowMore} disabled={!canToggleShowMore}>
+        {isShowingMore ? "Show less" : "Show more"}
+      </button>
     </ul>
   );
 };
