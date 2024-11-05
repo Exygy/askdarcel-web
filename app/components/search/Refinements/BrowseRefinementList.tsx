@@ -7,6 +7,9 @@ interface Props extends UseRefinementListProps {
   attribute: string;
 }
 
+// Arbitrary upper limit to ensure all refinements are displayed
+const MAXIMUM_ITEMS = 9999;
+
 /**
  * Facet refinement list component for browse interfaces
  */
@@ -16,7 +19,7 @@ const BrowseRefinementList = ({ attribute, transform }: Props) => {
     attribute,
     sortBy: ["name:asc"],
     transformItems: transform,
-    limit: 9999,
+    limit: MAXIMUM_ITEMS,
   });
 
   useEffect(() => {
