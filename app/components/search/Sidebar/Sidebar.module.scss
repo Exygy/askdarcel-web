@@ -44,6 +44,7 @@
     width: 100%;
     top: $header-mobile-height;
     margin: 0;
+    z-index: $z-index-top;
   }
 }
 
@@ -67,7 +68,7 @@
 
   @media screen and (max-width: $break-tablet-s) {
     width: 100%;
-    top: 65px;
+    top: 131px;
     border-top-left-radius: 12px;
     border-top-right-radius: 12px;
     animation-name: slideUp;
