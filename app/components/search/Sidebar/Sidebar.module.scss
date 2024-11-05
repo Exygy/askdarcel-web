@@ -38,13 +38,13 @@
     align-self: flex-start;
     border-right: 0;
     background-color: #fff;
+    z-index: $z-index-filters-menu;
   }
 
   @media screen and (max-width: $break-tablet-s) {
     width: 100%;
     top: $header-mobile-height;
     margin: 0;
-    z-index: $z-index-top;
   }
 }
 
