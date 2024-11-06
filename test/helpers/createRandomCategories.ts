@@ -4,7 +4,6 @@ import { faker } from "@faker-js/faker";
  * Generates an object of categories for use in search refinement components
  *
  * @param size Customize the number of categories
- * @returns
  */
 export function createRandomCategories(size: number) {
   const result: { [key: string]: number } = {};
