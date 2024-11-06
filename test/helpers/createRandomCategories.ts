@@ -12,7 +12,9 @@ export function createRandomCategories(size: number) {
   for (let i = 0; i < size; i++) {
     // Append incrementor because the current version of faker does not support
     // uniqueness
-    result[`${faker.company.name()}_${i}`] = faker.number.int(100);
+    const key = `${faker.company.name()}_${i}`;
+    const value = faker.number.int(100);
+    result[key] = value;
   }
 
   return result;
