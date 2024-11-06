@@ -43,10 +43,12 @@ const BrowseRefinementList = ({ attribute, transform }: Props) => {
     setChecked(checked);
   };
 
+  // console.log(items);
+
   return (
     <ul>
       {items.map((item) => (
-        <li key={item.label}>
+        <li key={item.label} data-testid={"browserefinementlist-item"}>
           <label className={styles.checkBox}>
             {item.label}
             <input
