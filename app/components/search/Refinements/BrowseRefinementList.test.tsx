@@ -5,7 +5,7 @@ import BrowseRefinementList from "components/search/Refinements/BrowseRefinement
 import { createSearchClient } from "../../../../test/helpers/createSearchClient";
 
 describe("BrowseRefinementList", () => {
-  test("renders the correct the number of categories", async () => {
+  test("renders the default limit of 10 refinements", async () => {
     const searchClient = createSearchClient({
       facets: {
         categories: {
