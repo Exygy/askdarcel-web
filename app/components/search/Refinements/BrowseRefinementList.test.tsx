@@ -5,23 +5,27 @@ import BrowseRefinementList from "components/search/Refinements/BrowseRefinement
 import { createSearchClient } from "../../../../test/helpers/createSearchClient";
 
 describe("BrowseRefinementList", () => {
-  test("renders with props", async () => {
+  test("renders the correct the number of categories", async () => {
     const searchClient = createSearchClient({
       facets: {
         categories: {
-          "Arts, Culture & Identity": 54,
-          "Arts and Creative Expression": 35,
-          Education: 28,
-          "Academic Support": 24,
-          sffamilies: 18,
-          "After & Before School Care": 14,
-          "Culture & Identity": 14,
-          "Summer Programs": 12,
-          "Skills & Training": 10,
-          "Sports & Recreation": 10,
+          A: 54,
+          B: 35,
+          C: 28,
+          D: 24,
+          E: 18,
+          F: 14,
+          G: 14,
+          H: 12,
+          I: 45,
+          J: 79,
+          K: 1,
+          L: 31,
         },
       },
     });
+
+    const expected = 10;
 
     render(
       <InstantSearch
@@ -34,7 +38,7 @@ describe("BrowseRefinementList", () => {
 
     await waitFor(() => {
       expect(screen.getAllByTestId("browserefinementlist-item")).toHaveLength(
-        10
+        expected
       );
     });
   });
