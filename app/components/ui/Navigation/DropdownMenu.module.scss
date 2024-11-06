@@ -91,7 +91,6 @@
 .categoryMenuContainer {
   position: relative;
 
-
   .navigationSubMenu {
     @include r_max($break-tablet-s) {
       width: calc(100vw - $general-spacing-xs);
