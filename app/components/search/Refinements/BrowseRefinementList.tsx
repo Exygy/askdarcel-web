@@ -39,8 +39,6 @@ const BrowseRefinementList = ({ attribute, transform }: Props) => {
     setChecked(checked);
   };
 
-  // console.log(items);
-
   return (
     <ul>
       {items.map((item) => (
