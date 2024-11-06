@@ -6,7 +6,7 @@ import { createSearchClient } from "../../../../test/helpers/createSearchClient"
 import { createRandomCategories } from "../../../../test/helpers/createRandomCategories";
 
 describe("BrowseRefinementList", () => {
-  test("renders the correct the number of categories", async () => {
+  test("renders all categories returned by the search client", async () => {
     const numCategories = 25;
     const searchClient = createSearchClient({
       facets: {
