@@ -91,6 +91,9 @@ const config: Config = {
   moduleNameMapper: {
     // Ensures style imports don't break tests
     "\\.(css|scss)$": "<rootDir>/test/jest/__mocks__/styleMock.ts",
+    "react-markdown": "<rootDir>/test/jest/__mocks__/react-markdown.tsx",
+    "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$":
+      "<rootDir>/test/jest/__mocks__/fileMock.js",
   },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader

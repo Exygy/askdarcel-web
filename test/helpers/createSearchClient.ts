@@ -30,7 +30,7 @@ interface Options {
  * @param options Additional customizations of the search response
  * @returns
  */
-export function createSearchClient(options: Options) {
+export function createSearchClient(options?: Options) {
   return {
     search: (requests: any) =>
       Promise.resolve({

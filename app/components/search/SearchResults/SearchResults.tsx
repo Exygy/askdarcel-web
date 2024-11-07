@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { ReactNode, useCallback } from "react";
 import { SearchMap } from "components/search/SearchMap/SearchMap";
 import { SearchResult } from "components/search/SearchResults/SearchResult";
 import {
@@ -11,18 +11,25 @@ import {
   useSearchBox,
 } from "react-instantsearch";
 import styles from "./SearchResults.module.scss";
-import ClearSearchButton from "../Refinements/ClearSearchButton";
-import { Loader } from "components/ui";
+import { Loader } from "components/ui/Loader";
 import ResultsPagination from "components/search/Pagination/ResultsPagination";
 
 export enum SearchMapActions {
   SearchThisArea,
 }
 
+/**
+ * Renders the search results list and the map
+ *
+ * @property clearSearchButton Must be a ClearSearchButton component
+ * @returns
+ */
 const SearchResults = ({
   mobileMapIsCollapsed,
+  clearSearchButton,
 }: {
   mobileMapIsCollapsed: boolean;
+  clearSearchButton?: ReactNode;
 }) => {
   const { refine: refinePagination } = usePagination();
   const {
@@ -51,7 +58,7 @@ const SearchResults = ({
         <br /> Try a different location, filter, or search term.
       </div>
 
-      {query && <ClearSearchButton />}
+      {query && clearSearchButton}
     </div>
   );
 
@@ -59,7 +66,7 @@ const SearchResults = ({
     return (
       <div className={styles.searchResultsHeader}>
         <h2>{searchResults.nbHits} results</h2>
-        <ClearSearchButton />
+        {clearSearchButton}
       </div>
     );
   };

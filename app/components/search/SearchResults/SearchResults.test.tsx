@@ -1,0 +1,33 @@
+import React from "react";
+import { InstantSearch } from "react-instantsearch-core";
+import { render, screen, waitFor } from "@testing-library/react";
+import SearchResults from "components/search/SearchResults/SearchResults";
+import { createSearchClient } from "../../../../test/helpers/createSearchClient";
+import ClearSearchButton from "components/search/Refinements/ClearSearchButton";
+
+describe("SearchResults", () => {
+  test("renders a Clear Search button if passed as a param", async () => {
+    const searchClient = createSearchClient();
+
+    render(
+      <InstantSearch
+        searchClient={searchClient}
+        indexName="fake_test_search_index"
+        initialUiState={{
+          fake_test_search_index: {
+            query: "fake query",
+          },
+        }}
+      >
+        <SearchResults
+          mobileMapIsCollapsed={false}
+          clearSearchButton={<ClearSearchButton />}
+        />
+      </InstantSearch>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByTestId("clear-search-button")).toBeInTheDocument();
+    });
+  });
+});
