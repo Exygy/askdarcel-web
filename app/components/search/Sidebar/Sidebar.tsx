@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import type { Category } from "models/Meta";
 import {
   eligibilitiesMapping,
@@ -17,6 +17,7 @@ import {
 import useClickOutside from "../../../hooks/MenuHooks";
 import MobileMapToggleButtons from "./MobileMapToggleButtons";
 import styles from "./Sidebar.module.scss";
+import { RefinementListItem } from "instantsearch.js/es/connectors/refinement-list/connectRefinementList";
 
 const Sidebar = ({
   isSearchResultsPage,
@@ -78,6 +79,24 @@ const Sidebar = ({
     setAroundRadius(Number(evt.target.value));
   };
 
+  const transform = useCallback(
+    (items: RefinementListItem[]) =>
+      items
+        .filter(({ label }: { label: string }) =>
+          subcategoryNames.includes(label)
+        )
+        .sort(
+          sortAlgoliaSubcategoryRefinements
+            ? orderByPriorityRanking
+            : orderByLabel
+        ),
+    [
+      orderByPriorityRanking,
+      sortAlgoliaSubcategoryRefinements,
+      subcategoryNames,
+    ]
+  );
+
   // Currently, the Search Results Page uses generic categories/eligibilities while the
   // Service Results Page uses COVID-specific categories. This logic determines which
   // of these to use as based on the isSearchResultsPage value
@@ -113,17 +132,7 @@ const Sidebar = ({
           // We filter out any of these categories that are not children of the selected top level
           // category returned from the api
           // (`/api/categories/subcategories?id=${categoryID}`).
-          transform={(items) =>
-            items
-              .filter(({ label }: { label: string }) =>
-                subcategoryNames.includes(label)
-              )
-              .sort(
-                sortAlgoliaSubcategoryRefinements
-                  ? orderByPriorityRanking
-                  : orderByLabel
-              )
-          }
+          transform={transform}
         />
       );
     }
