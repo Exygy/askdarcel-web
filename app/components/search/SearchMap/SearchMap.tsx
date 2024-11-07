@@ -52,7 +52,7 @@ export const SearchMap = ({
     } else if (userLocation) {
       return { lat: userLocation?.lat, lng: userLocation?.lng };
     } else {
-      return undefined;
+      return { lat: 0, long: 0 };
     }
   };
 
