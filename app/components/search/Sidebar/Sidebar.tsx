@@ -111,7 +111,8 @@ const Sidebar = ({
 
           // Algolia returns all categories of the union of returned services.
           // We filter out any of these categories that are not children of the selected top level
-          // category returned from the api (`/api/categories/subcategories?id=${categoryID}`).
+          // category returned from the api
+          // (`/api/categories/subcategories?id=${categoryID}`).
           transform={(items) =>
             items
               .filter(({ label }: { label: string }) =>
@@ -146,6 +147,7 @@ const Sidebar = ({
           setIsMapCollapsed={setIsMapCollapsed}
         />
       </div>
+
       <div
         ref={filterMenuRef}
         className={`${styles.filtersContainer} ${
@@ -165,6 +167,7 @@ const Sidebar = ({
             </Button>
           </span>
         </div>
+
         <h2 className={styles.filterResourcesTitleDesktop}>Filter Resources</h2>
         <ClearAllFilters />
         <div className={styles.filterGroup}>

@@ -24,7 +24,6 @@ import {
 import { useInstantSearch, usePagination } from "react-instantsearch";
 import ResultsPagination from "components/search/Pagination/ResultsPagination";
 import searchResultsStyles from "components/search/SearchResults/SearchResults.module.scss";
-import { NoSearchResultsDisplay } from "components/ui/NoSearchResultsDisplay";
 import { SearchResultsHeader } from "components/ui/SearchResultsHeader";
 
 /** Wrapper component that handles state management, URL parsing, and external API requests. */
@@ -47,7 +46,6 @@ export const ServiceDiscoveryResults = () => {
     results: searchResults,
     status,
   } = useInstantSearch();
-
   const { refine: refinePagination } = usePagination();
 
   const handleFirstResultFocus = useCallback((node: HTMLDivElement | null) => {
@@ -75,9 +73,7 @@ export const ServiceDiscoveryResults = () => {
 
   const searchMapHitData = transformSearchResults(searchResults);
 
-  const hasNoResults = searchMapHitData.nbHits === 0 && status === "idle" && (
-    <Loader />
-  );
+  const hasNoResults = searchMapHitData.nbHits === 0 && status === "idle";
 
   const handleAction = (searchMapAction: SearchMapActions) => {
     switch (searchMapAction) {
@@ -133,7 +129,6 @@ export const ServiceDiscoveryResults = () => {
                 }`}
               >
                 <h2 className="sr-only">Search results</h2>
-
                 <>
                   <SearchResultsHeader>
                     <h2>{searchResults.nbHits} results</h2>
