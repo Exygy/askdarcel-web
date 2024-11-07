@@ -11,11 +11,7 @@ import {
   TransformedSearchHit,
   transformSearchResults,
 } from "models/SearchHits";
-import {
-  useInstantSearch,
-  usePagination,
-  useSearchBox,
-} from "react-instantsearch";
+import { useInstantSearch, usePagination } from "react-instantsearch";
 import searchResultsStyles from "components/search/SearchResults/SearchResults.module.scss";
 import { Loader } from "components/ui/Loader";
 import ResultsPagination from "components/search/Pagination/ResultsPagination";
@@ -32,8 +28,8 @@ export const SearchResultsPage = () => {
     // Results type is algoliasearchHelper.SearchResults<SearchHit>
     results: searchResults,
     status,
+    indexUiState: { query = null },
   } = useInstantSearch();
-  const { query } = useSearchBox();
 
   const handleFirstResultFocus = useCallback((node: HTMLDivElement | null) => {
     if (node) {

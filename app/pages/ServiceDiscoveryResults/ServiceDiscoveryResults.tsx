@@ -21,11 +21,7 @@ import {
   TransformedSearchHit,
   transformSearchResults,
 } from "models/SearchHits";
-import {
-  useInstantSearch,
-  usePagination,
-  useSearchBox,
-} from "react-instantsearch";
+import { useInstantSearch, usePagination } from "react-instantsearch";
 import ResultsPagination from "components/search/Pagination/ResultsPagination";
 import searchResultsStyles from "components/search/SearchResults/SearchResults.module.scss";
 import { NoSearchResultsDisplay } from "components/ui/NoSearchResultsDisplay";
@@ -51,7 +47,7 @@ export const ServiceDiscoveryResults = () => {
     results: searchResults,
     status,
   } = useInstantSearch();
-  const { query } = useSearchBox();
+
   const { refine: refinePagination } = usePagination();
 
   const handleFirstResultFocus = useCallback((node: HTMLDivElement | null) => {
@@ -137,33 +133,30 @@ export const ServiceDiscoveryResults = () => {
                 }`}
               >
                 <h2 className="sr-only">Search results</h2>
-                {hasNoResults ? (
-                  <NoSearchResultsDisplay query={query} />
-                ) : (
-                  <>
-                    <SearchResultsHeader>
-                      <h2>{searchResults.nbHits} results</h2>
-                    </SearchResultsHeader>
-                    {searchMapHitData.hits.map(
-                      (hit: TransformedSearchHit, index) => (
-                        <SearchResult
-                          hit={hit}
-                          key={`${hit.id} - ${hit.name}`}
-                          ref={index === 0 ? handleFirstResultFocus : null}
-                        />
-                      )
-                    )}
-                    <div
-                      className={`${searchResultsStyles.paginationContainer} ${
-                        hasNoResults ? searchResultsStyles.hidePagination : ""
-                      }`}
-                    >
-                      <div className={searchResultsStyles.resultsPagination}>
-                        <ResultsPagination noResults={hasNoResults} />
-                      </div>
+
+                <>
+                  <SearchResultsHeader>
+                    <h2>{searchResults.nbHits} results</h2>
+                  </SearchResultsHeader>
+                  {searchMapHitData.hits.map(
+                    (hit: TransformedSearchHit, index) => (
+                      <SearchResult
+                        hit={hit}
+                        key={`${hit.id} - ${hit.name}`}
+                        ref={index === 0 ? handleFirstResultFocus : null}
+                      />
+                    )
+                  )}
+                  <div
+                    className={`${searchResultsStyles.paginationContainer} ${
+                      hasNoResults ? searchResultsStyles.hidePagination : ""
+                    }`}
+                  >
+                    <div className={searchResultsStyles.resultsPagination}>
+                      <ResultsPagination />
                     </div>
-                  </>
-                )}
+                  </div>
+                </>
               </div>
               <SearchMap
                 hits={searchMapHitData.hits}
