@@ -52,34 +52,34 @@ const Sidebar = ({
   const orderByLabel = (a: { label: string }, b: { label: string }) =>
     a.label.localeCompare(b.label);
 
-  const orderByPriorityRanking = (
-    a: { label: string },
-    b: { label: string }
-  ) => {
-    if (!subcategoryNames) {
-      // noop
-      return 0;
-    }
-    // Our API has the ability to sort subcategories using the "child_priority_rank" on the
-    // CategoryRelationship table. In cases where we want to sort our sidebar categories
-    // following this order, we can use this sorting function, which sorts the categories
-    // that we receive from Algolia using the order that we get from the API.
-    const priorityA = subcategoryNames.indexOf(a.label);
-    const priorityB = subcategoryNames.indexOf(b.label);
+  const orderByPriorityRanking = useCallback(
+    (a: { label: string }, b: { label: string }) => {
+      if (!subcategoryNames) {
+        // noop
+        return 0;
+      }
+      // Our API has the ability to sort subcategories using the "child_priority_rank" on the
+      // CategoryRelationship table. In cases where we want to sort our sidebar categories
+      // following this order, we can use this sorting function, which sorts the categories
+      // that we receive from Algolia using the order that we get from the API.
+      const priorityA = subcategoryNames.indexOf(a.label);
+      const priorityB = subcategoryNames.indexOf(b.label);
 
-    // If an element in the data returned from Algolia does not exist in the API's ordered array
-    // (i.e., Algolia is out of sync with our API), move the element to the back of the list.
-    if (priorityA < 0) return 1;
-    if (priorityB < 0) return -1;
+      // If an element in the data returned from Algolia does not exist in the API's ordered array
+      // (i.e., Algolia is out of sync with our API), move the element to the back of the list.
+      if (priorityA < 0) return 1;
+      if (priorityB < 0) return -1;
 
-    return priorityA - priorityB;
-  };
+      return priorityA - priorityB;
+    },
+    [subcategoryNames]
+  );
 
   const onChangeValue = (evt: React.ChangeEvent<HTMLInputElement>) => {
     setAroundRadius(Number(evt.target.value));
   };
 
-  const transform = useCallback(
+  const refinementItemTransform = useCallback(
     (items: RefinementListItem[]) =>
       items
         .filter(({ label }: { label: string }) =>
@@ -132,7 +132,7 @@ const Sidebar = ({
           // We filter out any of these categories that are not children of the selected top level
           // category returned from the api
           // (`/api/categories/subcategories?id=${categoryID}`).
-          transform={transform}
+          transform={refinementItemTransform}
         />
       );
     }
