@@ -96,8 +96,6 @@ const config: Config = {
       "<rootDir>/test/jest/__mocks__/fileMock.js",
   },
 
-  },
-
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
   // modulePathIgnorePatterns: [],
 
