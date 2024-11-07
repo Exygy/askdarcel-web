@@ -13,23 +13,18 @@ import {
 import styles from "./SearchResults.module.scss";
 import { Loader } from "components/ui/Loader";
 import ResultsPagination from "components/search/Pagination/ResultsPagination";
+import ClearSearchButton from "components/search/Refinements/ClearSearchButton";
 
 export enum SearchMapActions {
   SearchThisArea,
 }
 
-/**
- * Renders the search results list and the map
- *
- * @property clearSearchButton Must be a ClearSearchButton component
- * @returns
- */
 const SearchResults = ({
   mobileMapIsCollapsed,
-  clearSearchButton,
+  showClearSearchButton,
 }: {
   mobileMapIsCollapsed: boolean;
-  clearSearchButton?: ReactNode;
+  showClearSearchButton?: boolean;
 }) => {
   const { refine: refinePagination } = usePagination();
   const {
@@ -58,7 +53,7 @@ const SearchResults = ({
         <br /> Try a different location, filter, or search term.
       </div>
 
-      {query && clearSearchButton}
+      {query && showClearSearchButton && <ClearSearchButton />}
     </div>
   );
 
@@ -66,7 +61,7 @@ const SearchResults = ({
     return (
       <div className={styles.searchResultsHeader}>
         <h2>{searchResults.nbHits} results</h2>
-        {clearSearchButton}
+        {showClearSearchButton && <ClearSearchButton />}
       </div>
     );
   };

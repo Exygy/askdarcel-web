@@ -31,7 +31,7 @@ export const SearchResultsPage = () => {
         <div className={styles.results}>
           <SearchResults
             mobileMapIsCollapsed={isMapCollapsed}
-            clearSearchButton={<ClearSearchButton />}
+            showClearSearchButton={true}
           />
         </div>
       </div>

@@ -6,7 +6,7 @@ import { createSearchClient } from "../../../../test/helpers/createSearchClient"
 import ClearSearchButton from "components/search/Refinements/ClearSearchButton";
 
 describe("SearchResults", () => {
-  test("renders a Clear Search button if passed as a param", async () => {
+  test("renders the Clear Search button if passed as a param", async () => {
     const searchClient = createSearchClient();
 
     render(
@@ -21,7 +21,7 @@ describe("SearchResults", () => {
       >
         <SearchResults
           mobileMapIsCollapsed={false}
-          clearSearchButton={<ClearSearchButton />}
+          showClearSearchButton={true}
         />
       </InstantSearch>
     );
