@@ -4,14 +4,16 @@ import React, { useEffect, useState } from "react";
 // https://support.google.com/analytics/answer/12938611#zippy=%2Cin-this-article
 import ReactGA_4 from "react-ga4";
 import { Helmet } from "react-helmet-async";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import {
   GeoCoordinates,
   getLocation,
   websiteConfig,
   AppProvider,
 } from "./utils";
-import { Footer, Navigation, Loader } from "./components/ui";
+import { Footer } from "components/ui/Footer/Footer";
+import { Navigation } from "components/ui/Navigation/Navigation";
+import { Loader } from "components/ui/Loader";
 
 import MetaImage from "./assets/img/Our415_OG.png";
 import styles from "./App.module.scss";
