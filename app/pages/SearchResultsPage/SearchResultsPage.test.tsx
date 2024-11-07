@@ -1,7 +1,6 @@
 import React from "react";
 import { InstantSearch } from "react-instantsearch-core";
 import { render, screen, waitFor } from "@testing-library/react";
-import SearchResults from "components/search/SearchResults/SearchResults";
 import { SearchResultsPage } from "pages/SearchResultsPage/SearchResultsPage";
 import { createSearchClient } from "../../../test/helpers/createSearchClient";
 
