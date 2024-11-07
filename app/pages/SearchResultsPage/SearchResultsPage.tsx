@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from "react";
 import { SearchMapActions } from "components/search/SearchResults/SearchResults";
 import Sidebar from "components/search/Sidebar/Sidebar";
+import styles from "./SearchResultsPage.module.scss";
 import { DEFAULT_AROUND_PRECISION, useAppContext } from "utils";
 import { Configure } from "react-instantsearch-core";
 import classNames from "classnames";
@@ -15,7 +16,6 @@ import {
   usePagination,
   useSearchBox,
 } from "react-instantsearch";
-import styles from "./SearchResultsPage.module.scss";
 import searchResultsStyles from "components/search/SearchResults/SearchResults.module.scss";
 import { Loader } from "components/ui/Loader";
 import ResultsPagination from "components/search/Pagination/ResultsPagination";
