@@ -6,7 +6,7 @@ import { createSearchClient } from "../../../../test/helpers/createSearchClient"
 import ClearSearchButton from "components/search/Refinements/ClearSearchButton";
 
 describe("SearchResults", () => {
-  test("renders the Clear Search button if passed as a param", async () => {
+  test("renders the Clear Search button", async () => {
     const searchClient = createSearchClient();
 
     render(
@@ -28,6 +28,30 @@ describe("SearchResults", () => {
 
     await waitFor(() => {
       expect(screen.getByTestId("clear-search-button")).toBeInTheDocument();
+    });
+  });
+
+  test("does not render the Clear Search button", async () => {
+    const searchClient = createSearchClient();
+
+    render(
+      <InstantSearch
+        searchClient={searchClient}
+        indexName="fake_test_search_index"
+        initialUiState={{
+          fake_test_search_index: {
+            query: "fake query",
+          },
+        }}
+      >
+        <SearchResults mobileMapIsCollapsed={false} />
+      </InstantSearch>
+    );
+
+    await waitFor(() => {
+      expect(
+        screen.queryByTestId("clear-search-button")
+      ).not.toBeInTheDocument();
     });
   });
 });
