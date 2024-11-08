@@ -5,11 +5,11 @@ import qs from "qs";
 import {
   ActionBarMobile,
   MapOfLocations,
-  ServiceAttribution,
   ServiceCard,
   ContactInfoTableRows,
 } from "components/listing";
-import { ListingInfoTable, Loader } from "components/ui";
+import { ListingInfoTable } from "components/listing/ListingInfoTable";
+import { Loader } from "components/ui/Loader";
 import { removeAsterisksAndHashes } from "utils/strings";
 import { ListingInfoSection } from "components/ui/Cards/ListingInfoSection";
 import ListingPageHeader from "components/listing/PageHeader";
@@ -209,10 +209,6 @@ export const ServiceListingPage = () => {
         <ReactMarkdown className="rendered-markdown" linkTarget="_blank">
           {formattedLongDescription || ""}
         </ReactMarkdown>
-        <ServiceAttribution
-          attribution={resource.source_attribution}
-          status={resource.status}
-        />
       </ListingInfoSection>
 
       {details.length > 0 && (
