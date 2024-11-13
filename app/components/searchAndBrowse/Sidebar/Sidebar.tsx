@@ -4,10 +4,10 @@ import {
   eligibilitiesMapping,
   categoriesMapping,
 } from "utils/refinementMappings";
-import ClearAllFilters from "components/search/Refinements/ClearAllFilters";
-import OpenNowFilter from "components/search/Refinements/OpenNowFilter";
-import BrowseRefinementList from "components/search/Refinements/BrowseRefinementList";
-import SearchRefinementList from "components/search/Refinements/SearchRefinementList";
+import ClearAllFilters from "components/searchAndBrowse/Refinements/ClearAllFilters";
+import OpenNowFilter from "components/searchAndBrowse/Refinements/OpenNowFilter";
+import BrowseRefinementList from "components/searchAndBrowse/Refinements/BrowseRefinementList";
+import SearchRefinementList from "components/searchAndBrowse/Refinements/SearchRefinementList";
 import { Button } from "components/ui/inline/Button/Button";
 import {
   DEFAULT_AROUND_PRECISION,

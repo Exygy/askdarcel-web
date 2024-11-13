@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
-import { SearchMap } from "components/search/SearchMap/SearchMap";
-import { SearchResult } from "components/search/SearchResults/SearchResult";
+import { SearchMap } from "components/searchAndBrowse/SearchMap/SearchMap";
+import { SearchResult } from "components/searchAndBrowse/SearchResults/SearchResult";
 import {
   TransformedSearchHit,
   transformSearchResults,
@@ -13,7 +13,7 @@ import {
 import styles from "./SearchResults.module.scss";
 import ClearSearchButton from "../Refinements/ClearSearchButton";
 import { Loader } from "components/ui/Loader";
-import ResultsPagination from "components/search/Pagination/ResultsPagination";
+import ResultsPagination from "components/searchAndBrowse/Pagination/ResultsPagination";
 
 export enum SearchMapActions {
   SearchThisArea,
