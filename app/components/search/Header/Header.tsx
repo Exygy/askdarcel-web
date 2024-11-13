@@ -29,9 +29,7 @@ export const Header = ({ currentCategory }: Props) => {
     <div className={styles.header}>
       <div className={styles.headerInner}>
         <div>
-          <h1 className="sr-only">
-            {title === currentCategory ?? "Search results"}
-          </h1>
+          <h1 className="sr-only">{title}</h1>
           <DropdownMenu
             id={uuid}
             title={title}
