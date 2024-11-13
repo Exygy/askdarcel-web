@@ -13,7 +13,7 @@ import {
   useSubcategoriesForCategory,
 } from "hooks/APIHooks";
 import { CATEGORIES, ServiceCategory } from "../constants";
-import styles from "./ServiceDiscoveryResults.module.scss";
+import styles from "./BrowseResultsPage.module.scss";
 import { Configure } from "react-instantsearch-core";
 import { SearchMap } from "components/search/SearchMap/SearchMap";
 import { SearchResult } from "components/search/SearchResults/SearchResult";
@@ -27,7 +27,7 @@ import searchResultsStyles from "components/search/SearchResults/SearchResults.m
 import { SearchResultsHeader } from "components/ui/SearchResultsHeader";
 
 /** Wrapper component that handles state management, URL parsing, and external API requests. */
-export const ServiceDiscoveryResults = () => {
+export const BrowseResultsPage = () => {
   const { categorySlug } = useParams();
   const category = CATEGORIES.find((c) => c.slug === categorySlug);
   if (category === undefined) {
@@ -130,6 +130,7 @@ export const ServiceDiscoveryResults = () => {
               >
                 <h2 className="sr-only">Search results</h2>
                 <>
+                  {/* This is browse not search */}
                   <SearchResultsHeader>
                     <h2>{searchResults.nbHits} results</h2>
                   </SearchResultsHeader>

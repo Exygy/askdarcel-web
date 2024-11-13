@@ -8,7 +8,7 @@ import { OrganizationListingPage } from "pages/OrganizationListingPage";
 import { PrivacyPolicyPage } from "pages/legal/PrivacyPolicy";
 import { ServiceListingPage } from "pages/ServiceListingPage/ServiceListingPage";
 import { TermsOfServicePage } from "pages/legal/TermsOfService";
-import { ServiceDiscoveryResults } from "pages/ServiceDiscoveryResults";
+import { BrowseResultsPage } from "pages/BrowseResultsPage/BrowseResultsPage";
 import { SecondaryNavigationWrapper } from "components/navigation/SecondaryNavigationWrapper";
 import { BackButton } from "components/ui/BackButton";
 import { SearchHeaderSection } from "components/search/Header/SearchHeaderSection";
@@ -61,10 +61,7 @@ export const Router = () => {
         }
       />
       <Route path="/terms-of-service" element={<TermsOfServicePage />} />
-      <Route
-        path="/:categorySlug/results"
-        element={<ServiceDiscoveryResults />}
-      />
+      <Route path="/:categorySlug/results" element={<BrowseResultsPage />} />
     </Routes>
   );
 };
