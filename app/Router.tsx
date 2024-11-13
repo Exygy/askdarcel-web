@@ -9,9 +9,9 @@ import { PrivacyPolicyPage } from "pages/legal/PrivacyPolicy";
 import { ServiceListingPage } from "pages/ServiceListingPage/ServiceListingPage";
 import { TermsOfServicePage } from "pages/legal/TermsOfService";
 import { BrowseResultsPage } from "pages/BrowseResultsPage/BrowseResultsPage";
-import { SecondaryNavigationWrapper } from "components/navigation/SecondaryNavigationWrapper";
+import { PageHeader } from "components/ui/Navigation/PageHeader";
 import { BackButton } from "components/ui/BackButton";
-import { SearchHeaderSection } from "components/search/Header/SearchHeaderSection";
+import { SearchHeaderSection } from "components/searchAndBrowse/Header/SearchHeaderSection";
 import { SearchResultsPage } from "pages/SearchResultsPage/SearchResultsPage";
 
 export const Router = () => {
@@ -27,9 +27,9 @@ export const Router = () => {
         path="/organizations/:organizationListingId"
         element={
           <>
-            <SecondaryNavigationWrapper>
+            <PageHeader>
               <BackButton defaultReturnTo="/search">Back</BackButton>
-            </SecondaryNavigationWrapper>
+            </PageHeader>
             <OrganizationListingPage />
           </>
         }
@@ -40,9 +40,9 @@ export const Router = () => {
         path="/search"
         element={
           <>
-            <SecondaryNavigationWrapper variant="secondary">
+            <PageHeader variant="secondary">
               <SearchHeaderSection descriptionText="Sign up for programs and access resources." />
-            </SecondaryNavigationWrapper>
+            </PageHeader>
             <SearchResultsPage />
           </>
         }
@@ -51,11 +51,11 @@ export const Router = () => {
         path="/services/:serviceListingId"
         element={
           <>
-            <SecondaryNavigationWrapper>
+            <PageHeader>
               <BackButton defaultReturnTo="/search">
                 Back to Services
               </BackButton>
-            </SecondaryNavigationWrapper>
+            </PageHeader>
             <ServiceListingPage />
           </>
         }

@@ -2,12 +2,12 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import * as dataService from "utils/DataService";
 import { DEFAULT_AROUND_PRECISION, useAppContext } from "utils";
-import { SearchMapActions } from "components/search/SearchResults/SearchResults";
+import { SearchMapActions } from "components/searchAndBrowse/SearchResults/SearchResults";
 import { Loader } from "components/ui/Loader";
-import Sidebar from "components/search/Sidebar/Sidebar";
-import { BrowseSubheader } from "components/search/Header/BrowseSubheader";
-import { SecondaryNavigationWrapper } from "components/navigation/SecondaryNavigationWrapper";
-import { BrowseHeaderSection } from "components/search/Header/BrowseHeaderSection";
+import Sidebar from "components/searchAndBrowse/Sidebar/Sidebar";
+import { BrowseSubheader } from "components/searchAndBrowse/Header/BrowseSubheader";
+import { PageHeader } from "components/ui/Navigation/PageHeader";
+import { BrowseHeaderSection } from "components/searchAndBrowse/Header/BrowseHeaderSection";
 import {
   useEligibilitiesForCategory,
   useSubcategoriesForCategory,
@@ -15,15 +15,15 @@ import {
 import { CATEGORIES, ServiceCategory } from "../constants";
 import styles from "./BrowseResultsPage.module.scss";
 import { Configure } from "react-instantsearch-core";
-import { SearchMap } from "components/search/SearchMap/SearchMap";
-import { SearchResult } from "components/search/SearchResults/SearchResult";
+import { SearchMap } from "components/searchAndBrowse/SearchMap/SearchMap";
+import { SearchResult } from "components/searchAndBrowse/SearchResults/SearchResult";
 import {
   TransformedSearchHit,
   transformSearchResults,
 } from "models/SearchHits";
 import { useInstantSearch, usePagination } from "react-instantsearch";
-import ResultsPagination from "components/search/Pagination/ResultsPagination";
-import searchResultsStyles from "components/search/SearchResults/SearchResults.module.scss";
+import ResultsPagination from "components/searchAndBrowse/Pagination/ResultsPagination";
+import searchResultsStyles from "components/searchAndBrowse/SearchResults/SearchResults.module.scss";
 import { SearchResultsHeader } from "components/ui/SearchResultsHeader";
 
 /** Wrapper component that handles state management, URL parsing, and external API requests. */
@@ -94,9 +94,9 @@ export const BrowseResultsPage = () => {
 
   return (
     <>
-      <SecondaryNavigationWrapper>
+      <PageHeader>
         <BrowseHeaderSection descriptionText="Sign up for programs and access resources." />
-      </SecondaryNavigationWrapper>
+      </PageHeader>
       <div className={styles.container}>
         <BrowseSubheader currentCategory={categoryName} />
         <Configure
