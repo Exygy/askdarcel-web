@@ -3,7 +3,6 @@ import { Route, Routes } from "react-router-dom";
 import { HomePage } from "pages/HomePage";
 import { AboutPage } from "pages/AboutPage";
 import { FaqPage } from "pages/FaqPage/FaqPage";
-import { ListingDebugPage } from "pages/debug/ListingDemoPage";
 import { OrganizationDetailPage } from "pages/OrganizationDetailPage";
 import { PrivacyPolicyPage } from "pages/LegalPage/PrivacyPolicy";
 import { ServiceDetailPage } from "pages/ServiceDetailPage/ServiceDetailPage";
@@ -20,7 +19,6 @@ export const Router = () => {
       <Route path="/" element={<HomePage />} />
       <Route path="/about" element={<AboutPage />} />
       <Route path="/faqs" element={<FaqPage />} />
-      <Route path="/demo/listing" element={<ListingDebugPage />} />
       {/* NB: /organizations/new must be listed before /organizations/:id or else the /new
                 step will be interpreted as an ID and will thus break the OrganizationEditPage */}
       <Route
