@@ -4,10 +4,10 @@ import { HomePage } from "pages/HomePage";
 import { AboutPage } from "pages/AboutPage";
 import { FaqPage } from "pages/FaqPage/FaqPage";
 import { ListingDebugPage } from "pages/debug/ListingDemoPage";
-import { OrganizationListingPage } from "pages/OrganizationListingPage";
-import { PrivacyPolicyPage } from "pages/legal/PrivacyPolicy";
-import { ServiceListingPage } from "pages/ServiceListingPage/ServiceListingPage";
-import { TermsOfServicePage } from "pages/legal/TermsOfService";
+import { OrganizationDetailPage } from "pages/OrganizationDetailPage";
+import { PrivacyPolicyPage } from "pages/LegalPage/PrivacyPolicy";
+import { ServiceDetailPage } from "pages/ServiceDetailPage/ServiceDetailPage";
+import { TermsOfServicePage } from "pages/LegalPage/TermsOfService";
 import { BrowseResultsPage } from "pages/BrowseResultsPage/BrowseResultsPage";
 import { PageHeader } from "components/ui/Navigation/PageHeader";
 import { BackButton } from "components/ui/BackButton";
@@ -30,7 +30,7 @@ export const Router = () => {
             <PageHeader>
               <BackButton defaultReturnTo="/search">Back</BackButton>
             </PageHeader>
-            <OrganizationListingPage />
+            <OrganizationDetailPage />
           </>
         }
       />
@@ -56,7 +56,7 @@ export const Router = () => {
                 Back to Services
               </BackButton>
             </PageHeader>
-            <ServiceListingPage />
+            <ServiceDetailPage />
           </>
         }
       />

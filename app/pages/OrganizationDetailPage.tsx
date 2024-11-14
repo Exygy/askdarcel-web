@@ -28,7 +28,7 @@ import {
 } from "../models";
 
 // Page at /organization/123
-export const OrganizationListingPage = () => {
+export const OrganizationDetailPage = () => {
   const { organizationListingId } = useParams();
   const [org, setOrg] = useState<Organization | null>(null);
   const { search } = useLocation();

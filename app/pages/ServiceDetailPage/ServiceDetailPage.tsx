@@ -25,9 +25,9 @@ import {
   OrganizationAction,
   Service,
 } from "../../models";
-import styles from "./ServiceListingPage.module.scss";
+import styles from "./ServiceDetailPage.module.scss";
 import { searchClient } from "@algolia/client-search";
-import config from "./../../config";
+import config from "../../config";
 
 const client = searchClient(
   config.ALGOLIA_APPLICATION_ID,
@@ -47,7 +47,7 @@ const INDEX_NAME = `${config.ALGOLIA_INDEX_PREFIX}_services_search`;
 // As a workaround we've decided to implement a partial view of the Service
 // information with a warning to verify the validity of the information
 // themselves.
-export const ServiceListingPage = () => {
+export const ServiceDetailPage = () => {
   const { serviceListingId } = useParams();
   const [service, setService] = useState<Service | null>(null);
   const [serviceFallback, setServiceFallback] = useState<Service | null>(null);
