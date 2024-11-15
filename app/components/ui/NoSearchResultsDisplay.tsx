@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "components/searchAndBrowse/SearchResults/SearchResults.module.scss";
+import styles from "components/SearchAndBrowse/SearchResults/SearchResults.module.scss";
 import ClearSearchButton from "components/SearchAndBrowse/Refinements/ClearSearchButton";
 
 export const NoSearchResultsDisplay = ({ query }: { query: string | null }) => (

@@ -23,7 +23,7 @@ import {
 } from "models/SearchHits";
 import { useInstantSearch, usePagination } from "react-instantsearch";
 import ResultsPagination from "components/SearchAndBrowse/Pagination/ResultsPagination";
-import searchResultsStyles from "components/searchAndBrowse/SearchResults/SearchResults.module.scss";
+import searchResultsStyles from "components/SearchAndBrowse/SearchResults/SearchResults.module.scss";
 import { SearchResultsHeader } from "components/ui/SearchResultsHeader";
 
 /** Wrapper component that handles state management, URL parsing, and external API requests. */

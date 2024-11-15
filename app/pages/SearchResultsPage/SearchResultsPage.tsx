@@ -12,7 +12,7 @@ import {
   transformSearchResults,
 } from "models/SearchHits";
 import { useInstantSearch, usePagination } from "react-instantsearch";
-import searchResultsStyles from "components/searchAndBrowse/SearchResults/SearchResults.module.scss";
+import searchResultsStyles from "components/SearchAndBrowse/SearchResults/SearchResults.module.scss";
 import { Loader } from "components/ui/Loader";
 import ResultsPagination from "components/SearchAndBrowse/Pagination/ResultsPagination";
 import { NoSearchResultsDisplay } from "components/ui/NoSearchResultsDisplay";
