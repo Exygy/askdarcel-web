@@ -10,7 +10,7 @@ import { TermsOfServicePage } from "pages/LegalPage/TermsOfService";
 import { BrowseResultsPage } from "pages/BrowseResultsPage/BrowseResultsPage";
 import { PageHeader } from "components/ui/Navigation/PageHeader";
 import { BackButton } from "components/ui/BackButton";
-import { SearchHeaderSection } from "components/SearchAndBrowse/Header/SearchHeaderSection";
+import { SearchHeaderSection } from "components/searchAndBrowse/Header/SearchHeaderSection";
 import { SearchResultsPage } from "pages/SearchResultsPage/SearchResultsPage";
 
 export const Router = () => {
