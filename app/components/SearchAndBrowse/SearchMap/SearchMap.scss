@@ -1,0 +1,50 @@
+@import "~styles/utils/_helpers.scss";
+
+.mapLoaderContainer .loader .sk-fading-circle {
+  margin: 200px auto;
+}
+
+.results-map {
+  position: sticky;
+  width: 100%;
+  min-width: 300px;
+  height: calc(100vh - $header-height);
+  top: $header-height;
+
+  @media screen and (max-width: $break-tablet-p) {
+    height: 25rem;
+  }
+
+  @media screen and (max-width: $break-tablet-s) {
+    min-height: 250px;
+  }
+}
+
+.results-map-inner {
+  width: 100%;
+}
+
+.marker {
+  transform: translateY(-50%);
+  position: absolute;
+  cursor: pointer;
+}
+
+.tippy-tooltip-content {
+  .entry-details {
+    text-align: start;
+    padding: 20px;
+  }
+}
+
+.map-wrapper {
+  height: 100%;
+}
+
+.searchAreaButton {
+  position: absolute;
+  top: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+}

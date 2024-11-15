@@ -1,0 +1,44 @@
+@import "~styles/utils/_helpers.scss";
+
+.headerInner {
+  display: flex;
+  margin: 0 auto;
+  padding: $general-spacing-md $general-spacing-lg;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid $color-grey3;
+
+  @media screen and (max-width: $break-tablet-s) {
+    padding: $general-spacing-s $general-spacing-xxs;
+  }
+}
+
+.title {
+  text-align: left;
+  font-weight: bold;
+  font-size: 26px;
+
+  @media screen and (max-width: $break-tablet-s) {
+    font-size: 21px;
+    line-height: 20px;
+  }
+}
+
+.printAllBtn,
+.qrCodeBtn {
+  display: none;
+
+  &.showBtn {
+    display: block;
+
+    @media screen and (max-width: $break-tablet-s) {
+      display: none;
+    }
+  }
+}
+
+.btnText {
+  font-weight: 600;
+  font-size: 16px;
+  margin-left: 10px;
+}
