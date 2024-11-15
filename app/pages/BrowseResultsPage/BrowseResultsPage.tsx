@@ -2,12 +2,12 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import * as dataService from "utils/DataService";
 import { DEFAULT_AROUND_PRECISION, useAppContext } from "utils";
-import { SearchMapActions } from "components/searchAndBrowse/SearchResults/SearchResults";
+import { SearchMapActions } from "components/SearchAndBrowse/SearchResults/SearchResults";
 import { Loader } from "components/ui/Loader";
-import Sidebar from "components/searchAndBrowse/Sidebar/Sidebar";
-import { BrowseSubheader } from "components/searchAndBrowse/Header/BrowseSubheader";
+import Sidebar from "components/SearchAndBrowse/Sidebar/Sidebar";
+import { BrowseSubheader } from "components/SearchAndBrowse/Header/BrowseSubheader";
 import { PageHeader } from "components/ui/Navigation/PageHeader";
-import { BrowseHeaderSection } from "components/searchAndBrowse/Header/BrowseHeaderSection";
+import { BrowseHeaderSection } from "components/SearchAndBrowse/Header/BrowseHeaderSection";
 import {
   useEligibilitiesForCategory,
   useSubcategoriesForCategory,
@@ -15,14 +15,14 @@ import {
 import { CATEGORIES, ServiceCategory } from "../constants";
 import styles from "./BrowseResultsPage.module.scss";
 import { Configure } from "react-instantsearch-core";
-import { SearchMap } from "components/searchAndBrowse/SearchMap/SearchMap";
-import { SearchResult } from "components/searchAndBrowse/SearchResults/SearchResult";
+import { SearchMap } from "components/SearchAndBrowse/SearchMap/SearchMap";
+import { SearchResult } from "components/SearchAndBrowse/SearchResults/SearchResult";
 import {
   TransformedSearchHit,
   transformSearchResults,
 } from "models/SearchHits";
 import { useInstantSearch, usePagination } from "react-instantsearch";
-import ResultsPagination from "components/searchAndBrowse/Pagination/ResultsPagination";
+import ResultsPagination from "components/SearchAndBrowse/Pagination/ResultsPagination";
 import searchResultsStyles from "components/searchAndBrowse/SearchResults/SearchResults.module.scss";
 import { SearchResultsHeader } from "components/ui/SearchResultsHeader";
 

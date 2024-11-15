@@ -7,14 +7,14 @@ import {
   MapOfLocations,
   ServiceCard,
   ContactInfoTableRows,
-} from "components/listing";
-import { ListingInfoTable } from "components/listing/ListingInfoTable";
+} from "components/DetailPage";
+import { InfoTable } from "components/DetailPage/InfoTable";
 import { Loader } from "components/ui/Loader";
 import { removeAsterisksAndHashes } from "utils/strings";
 import { ListingInfoSection } from "components/ui/Cards/ListingInfoSection";
-import ListingPageHeader from "components/listing/PageHeader";
-import DetailPageWrapper from "components/listing/DetailPageWrapper";
-import LabelTagRows from "components/listing/LabelTagRows";
+import ListingPageHeader from "components/DetailPage/PageHeader";
+import DetailPageWrapper from "components/DetailPage/DetailPageWrapper";
+import LabelTagRows from "components/DetailPage/LabelTagRows";
 import {
   fetchService,
   FetchServiceError,
@@ -132,7 +132,7 @@ export const ServiceDetailPage = () => {
           </ReactMarkdown>
         </ListingInfoSection>
         <ListingInfoSection title="Contact" data-cy="service-contact-section">
-          <ListingInfoTable
+          <InfoTable
             rows={[serviceFallback]}
             rowRenderer={(srv) => (
               <ContactInfoTableRows key={srv.id} service={srv} />
@@ -213,7 +213,7 @@ export const ServiceDetailPage = () => {
 
       {details.length > 0 && (
         <ListingInfoSection title="Details" data-cy="service-details-section">
-          <ListingInfoTable<{ title: string; value: string }>
+          <InfoTable<{ title: string; value: string }>
             rowRenderer={(detail) => (
               <tr key={detail.title}>
                 <th>{detail.title}</th>
@@ -230,7 +230,7 @@ export const ServiceDetailPage = () => {
       )}
 
       <ListingInfoSection title="Contact" data-cy="service-contact-section">
-        <ListingInfoTable
+        <InfoTable
           rows={[service]}
           rowRenderer={(srv) => (
             <ContactInfoTableRows key={srv.id} service={srv} />
@@ -273,12 +273,12 @@ export const ServiceDetailPage = () => {
           borderBottom={false}
           data-cy="service-tags-section"
         >
-          <ListingInfoTable>
+          <InfoTable>
             <LabelTagRows
               categories={service.categories}
               eligibilities={service.eligibilities}
             />
-          </ListingInfoTable>
+          </InfoTable>
         </ListingInfoSection>
       )}
     </DetailPageWrapper>

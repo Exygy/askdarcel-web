@@ -4,8 +4,8 @@ import { useParams, Navigate, useLocation } from "react-router-dom";
 import qs from "qs";
 import { ListingInfoSection } from "components/ui/Cards/ListingInfoSection";
 import { removeAsterisksAndHashes } from "utils/strings";
-import ListingPageHeader from "components/listing/PageHeader";
-import DetailPageWrapper from "components/listing/DetailPageWrapper";
+import ListingPageHeader from "components/DetailPage/PageHeader";
+import DetailPageWrapper from "components/DetailPage/DetailPageWrapper";
 import {
   ActionBarMobile,
   AddressInfoRenderer,
@@ -16,7 +16,7 @@ import {
   ResourceCategories,
   ServiceCard,
   WebsiteRenderer,
-} from "../components/listing";
+} from "../components/DetailPage";
 import { Loader } from "components/ui/Loader";
 
 import {
