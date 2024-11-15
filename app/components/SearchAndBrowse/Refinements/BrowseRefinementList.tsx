@@ -29,7 +29,6 @@ const BrowseRefinementList = ({ attribute, transform }: Props) => {
         newChecked.add(item.value);
       }
     });
-    console.log("HEY");
     setChecked(newChecked);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items]);

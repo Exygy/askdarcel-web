@@ -66,7 +66,7 @@ export const BrowseResultsPage = () => {
       .then(({ category: serviceCategory }: { category: ServiceCategory }) => {
         setParentCategory(serviceCategory);
       });
-  }, [category.id]);
+  }, [category.id, clearRefinements]);
 
   const escapeApostrophes = (str: string): string => str.replace(/'/g, "\\'");
   const algoliaCategoryName = parentCategory?.name
