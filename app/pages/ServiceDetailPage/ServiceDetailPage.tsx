@@ -11,7 +11,7 @@ import {
 import { InfoTable } from "components/DetailPage/InfoTable";
 import { Loader } from "components/ui/Loader";
 import { removeAsterisksAndHashes } from "utils/strings";
-import { ListingInfoSection } from "components/ui/Cards/ListingInfoSection";
+import { DetailInfoSection } from "components/ui/Cards/DetailInfoSection";
 import ListingPageHeader from "components/DetailPage/PageHeader";
 import DetailPageWrapper from "components/DetailPage/DetailPageWrapper";
 import LabelTagRows from "components/DetailPage/LabelTagRows";
@@ -126,19 +126,19 @@ export const ServiceDetailPage = () => {
           </div>
         </ListingPageHeader>
 
-        <ListingInfoSection title="About" data-cy="service-about-section">
+        <DetailInfoSection title="About" data-cy="service-about-section">
           <ReactMarkdown className="rendered-markdown" linkTarget="_blank">
             {formattedLongDescription || ""}
           </ReactMarkdown>
-        </ListingInfoSection>
-        <ListingInfoSection title="Contact" data-cy="service-contact-section">
+        </DetailInfoSection>
+        <DetailInfoSection title="Contact" data-cy="service-contact-section">
           <InfoTable
             rows={[serviceFallback]}
             rowRenderer={(srv) => (
               <ContactInfoTableRows key={srv.id} service={srv} />
             )}
           />
-        </ListingInfoSection>
+        </DetailInfoSection>
       </DetailPageWrapper>
     );
   }
@@ -205,14 +205,14 @@ export const ServiceDetailPage = () => {
         />
       </span>
 
-      <ListingInfoSection title="About" data-cy="service-about-section">
+      <DetailInfoSection title="About" data-cy="service-about-section">
         <ReactMarkdown className="rendered-markdown" linkTarget="_blank">
           {formattedLongDescription || ""}
         </ReactMarkdown>
-      </ListingInfoSection>
+      </DetailInfoSection>
 
       {details.length > 0 && (
-        <ListingInfoSection title="Details" data-cy="service-details-section">
+        <DetailInfoSection title="Details" data-cy="service-details-section">
           <InfoTable<{ title: string; value: string }>
             rowRenderer={(detail) => (
               <tr key={detail.title}>
@@ -226,29 +226,29 @@ export const ServiceDetailPage = () => {
             )}
             rows={details}
           />
-        </ListingInfoSection>
+        </DetailInfoSection>
       )}
 
-      <ListingInfoSection title="Contact" data-cy="service-contact-section">
+      <DetailInfoSection title="Contact" data-cy="service-contact-section">
         <InfoTable
           rows={[service]}
           rowRenderer={(srv) => (
             <ContactInfoTableRows key={srv.id} service={srv} />
           )}
         />
-      </ListingInfoSection>
+      </DetailInfoSection>
 
       {locations.length > 0 && (
-        <ListingInfoSection
+        <DetailInfoSection
           title="Location and hours"
           data-cy="service-loc-hours-section"
         >
           <MapOfLocations locations={locations} />
-        </ListingInfoSection>
+        </DetailInfoSection>
       )}
 
       {resource.services.length > 1 && (
-        <ListingInfoSection
+        <DetailInfoSection
           title="Other services at this organization"
           data-cy="service-other-section"
         >
@@ -265,10 +265,10 @@ export const ServiceDetailPage = () => {
                 key={srv.id}
               />
             ))}
-        </ListingInfoSection>
+        </DetailInfoSection>
       )}
       {(service.categories.length > 0 || service.eligibilities.length > 0) && (
-        <ListingInfoSection
+        <DetailInfoSection
           title="Tags"
           borderBottom={false}
           data-cy="service-tags-section"
@@ -279,7 +279,7 @@ export const ServiceDetailPage = () => {
               eligibilities={service.eligibilities}
             />
           </InfoTable>
-        </ListingInfoSection>
+        </DetailInfoSection>
       )}
     </DetailPageWrapper>
   );
