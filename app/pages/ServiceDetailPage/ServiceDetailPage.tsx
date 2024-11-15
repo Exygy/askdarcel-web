@@ -13,7 +13,7 @@ import { Loader } from "components/ui/Loader";
 import { removeAsterisksAndHashes } from "utils/strings";
 import { ListingInfoSection } from "components/ui/Cards/ListingInfoSection";
 import ListingPageHeader from "components/listing/PageHeader";
-import ListingPageWrapper from "components/listing/ListingPageWrapper";
+import DetailPageWrapper from "components/listing/DetailPageWrapper";
 import LabelTagRows from "components/listing/LabelTagRows";
 import {
   fetchService,
@@ -102,7 +102,7 @@ export const ServiceDetailPage = () => {
       ? removeAsterisksAndHashes(serviceFallback.long_description)
       : undefined;
     return (
-      <ListingPageWrapper
+      <DetailPageWrapper
         title="error"
         description=""
         sidebarActions={[]}
@@ -139,20 +139,20 @@ export const ServiceDetailPage = () => {
             )}
           />
         </ListingInfoSection>
-      </ListingPageWrapper>
+      </DetailPageWrapper>
     );
   }
 
   if (error) {
     return (
-      <ListingPageWrapper
+      <DetailPageWrapper
         title="error"
         description=""
         sidebarActions={[]}
         onClickAction={() => "noop"}
       >
         {error.message}
-      </ListingPageWrapper>
+      </DetailPageWrapper>
     );
   }
 
@@ -188,7 +188,7 @@ export const ServiceDetailPage = () => {
   };
 
   return (
-    <ListingPageWrapper
+    <DetailPageWrapper
       title={service.name}
       description={service.long_description || ""}
       sidebarActions={sidebarActions}
@@ -281,7 +281,7 @@ export const ServiceDetailPage = () => {
           </ListingInfoTable>
         </ListingInfoSection>
       )}
-    </ListingPageWrapper>
+    </DetailPageWrapper>
   );
 };
 

@@ -1,10 +1,10 @@
 import React from "react";
 import { Helmet } from "react-helmet-async";
 import { ActionSidebar } from "components/listing";
-import styles from "./ListingPageWrapper.module.scss";
+import styles from "./DetailPageWrapper.module.scss";
 import { OrganizationAction } from "models";
 
-type ListingPageWrapperProps = {
+type DetailPageWrapperProps = {
   title: string;
   description: string;
   children: React.ReactNode;
@@ -12,13 +12,13 @@ type ListingPageWrapperProps = {
   onClickAction: (action: OrganizationAction) => void;
 };
 
-const ListingPageWrapper = ({
+const DetailPageWrapper = ({
   title,
   description,
   children,
   sidebarActions,
   onClickAction,
-}: ListingPageWrapperProps) => (
+}: DetailPageWrapperProps) => (
   <div className={styles[`listing-wrapper`]}>
     <Helmet>
       <title>{title}</title>
@@ -38,4 +38,4 @@ const ListingPageWrapper = ({
   </div>
 );
 
-export default ListingPageWrapper;
+export default DetailPageWrapper;

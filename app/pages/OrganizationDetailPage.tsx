@@ -5,7 +5,7 @@ import qs from "qs";
 import { ListingInfoSection } from "components/ui/Cards/ListingInfoSection";
 import { removeAsterisksAndHashes } from "utils/strings";
 import ListingPageHeader from "components/listing/PageHeader";
-import ListingPageWrapper from "components/listing/ListingPageWrapper";
+import DetailPageWrapper from "components/listing/DetailPageWrapper";
 import {
   ActionBarMobile,
   AddressInfoRenderer,
@@ -68,7 +68,7 @@ export const OrganizationDetailPage = () => {
   };
 
   return (
-    <ListingPageWrapper
+    <DetailPageWrapper
       title={org.name}
       description={org.long_description || ""}
       sidebarActions={sidebarActions}
@@ -125,6 +125,6 @@ export const OrganizationDetailPage = () => {
           <NotesList notes={org.notes} />
         </ListingInfoSection>
       )}
-    </ListingPageWrapper>
+    </DetailPageWrapper>
   );
 };
