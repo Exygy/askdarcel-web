@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import ReactMarkdown from "react-markdown";
-import { useParams, Navigate, useLocation } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import qs from "qs";
 import { DetailInfoSection } from "components/ui/Cards/DetailInfoSection";
 import { removeAsterisksAndHashes } from "utils/strings";

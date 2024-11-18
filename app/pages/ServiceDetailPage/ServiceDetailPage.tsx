@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import ReactMarkdown from "react-markdown";
-import { useParams, useLocation, Navigate } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import qs from "qs";
 import {
   ActionBarMobile,
