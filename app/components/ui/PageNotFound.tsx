@@ -10,7 +10,9 @@ const PageNotFound = () => {
         We’re sorry, but the page you’re looking for can’t be found. The URL may
         be misspelled or the page you’re looking for is no longer available.
       </p>
-      <Button href="/">Go to the homepage →</Button>
+      <Button href="/" arrowVariant="after">
+        Go to the homepage
+      </Button>
     </div>
   );
 };
