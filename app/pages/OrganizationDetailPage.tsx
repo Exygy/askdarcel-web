@@ -45,10 +45,6 @@ export const OrganizationDetailPage = () => {
       try {
         const org = await fetchOrganization(organizationListingId as string);
 
-        if ("message" in org) {
-          throw new Error();
-        }
-
         setOrg(org);
         setError(null);
       } catch (err) {
