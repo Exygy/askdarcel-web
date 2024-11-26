@@ -24,7 +24,6 @@ export const AboutPage = () => {
         {pageData.two_column_content_blocks?.data?.map((content) => (
           <TwoColumnContentSection key={content.id} {...content.attributes} />
         ))}
-        <EmailSignup />
       </>
     )
   );
