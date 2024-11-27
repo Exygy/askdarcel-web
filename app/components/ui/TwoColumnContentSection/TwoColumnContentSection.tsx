@@ -9,10 +9,13 @@ import { TwoColumnContentBlock } from "models/Strapi";
 
 export const TwoColumnContentSection = (props: TwoColumnContentBlock) => {
   const { link, content, media_alignment, media, faq } = props;
-  const altText = media[0].image?.data?.attributes?.alternativeText;
+  const altText = media[0].image?.data?.attributes?.alternativeText || "";
 
   return (
-    <section className={styles.twoColumnContentSectionContainer}>
+    <section
+      className={styles.twoColumnContentSectionContainer}
+      data-testid={"two-column-content-section"}
+    >
       <div
         className={
           media_alignment === "left"

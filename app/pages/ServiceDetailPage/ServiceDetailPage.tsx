@@ -58,9 +58,7 @@ export const ServiceDetailPage = () => {
     [service]
   );
 
-  const { search, pathname } = useLocation();
-  const searchState = useMemo(() => qs.parse(search.slice(1)), [search]);
-  const { visitDeactivated } = searchState;
+  const { pathname } = useLocation();
 
   useEffect(() => window.scrollTo(0, 0), []);
 
@@ -160,7 +158,7 @@ export const ServiceDetailPage = () => {
   if (!service) {
     return <Loader />;
   }
-  if (service.status === "inactive" && !visitDeactivated) {
+  if (service.status === "inactive") {
     return <PageNotFound />;
   }
 

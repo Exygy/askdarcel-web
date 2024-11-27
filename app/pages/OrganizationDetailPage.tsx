@@ -31,9 +31,6 @@ import {
 export const OrganizationDetailPage = () => {
   const { organizationListingId } = useParams();
   const [org, setOrg] = useState<Organization | null>(null);
-  const { search } = useLocation();
-  const searchState = useMemo(() => qs.parse(search.slice(1)), [search]);
-  const { visitDeactivated } = searchState;
 
   const [error, setError] = useState<Error | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -76,7 +73,7 @@ export const OrganizationDetailPage = () => {
   }
 
   // When is org.status inactive?
-  if (org.status === "inactive" && !visitDeactivated) {
+  if (org.status === "inactive") {
     return (
       <DetailPageWrapper
         title={`Our415`}
