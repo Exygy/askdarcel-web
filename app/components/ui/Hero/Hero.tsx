@@ -5,7 +5,7 @@ import { Button } from "../inline/Button/Button";
 import { Link } from "models/Strapi";
 
 /**
- *
+ * Homepage hero section
  */
 const Hero = ({
   backgroundImage,
@@ -45,7 +45,6 @@ const Hero = ({
           </div>
         </div>
       </div>
-      {/* <HeroCard title={title} description={description} buttons={buttons} /> */}
     </div>
   );
 };
