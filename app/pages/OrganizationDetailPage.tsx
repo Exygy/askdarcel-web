@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
-import { useParams, useLocation } from "react-router-dom";
-import qs from "qs";
+import { useParams } from "react-router-dom";
 import { DetailInfoSection } from "components/ui/Cards/DetailInfoSection";
 import { removeAsterisksAndHashes } from "utils/strings";
 import ListingPageHeader from "components/DetailPage/PageHeader";
