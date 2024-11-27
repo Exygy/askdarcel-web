@@ -11,6 +11,9 @@ export interface FeaturedCategoriesData {
   backgroundColor: BackgroundColorVariant;
 }
 
+/**
+ * Displays a grid of categories on the home page
+ */
 export const CategorySection = () => (
   <HomePageSection
     title={tempCategoriesSection.header}

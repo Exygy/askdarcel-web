@@ -1,11 +1,14 @@
 /**
-  NOTE @rosschapman: Developers may be tempted to auto-generate response types as described in the strapi docs using cli
-  commands from the `@strapi/strapi` module, but I've noticed the output is funky for use in a client application in its
-  raw form. For example, string fields from the recommended module are typed as `Attribute.String` but this type isn't compatible
-  with `string` 🤦. Strapi offers this cumbersome approach to sync types, but also caveats this is not an official
-  solution: https://strapi.io/blog/improve-your-frontend-experience-with-strapi-types-and-type-script. Even so, I still
-  don't trust the generated types in view of the above example.
-*/
+ * NOTE @rosschapman: Developers may be tempted to auto-generate response types as described in the strapi docs using cli
+ * commands from the `@strapi/strapi` module, but I've noticed the output is funky for use in a client application in its
+ * raw form. For example, string fields from the recommended module are typed as `Attribute.String` but this type isn't compatible
+ * with `string` 🤦. Strapi offers this cumbersome approach to sync types, but also caveats this is not an official
+ * solution: https://strapi.io/blog/improve-your-frontend-experience-with-strapi-types-and-type-script. Even so, I still
+ * don't trust the generated types in view of the above example.
+ *
+ * For more information about fetching relational data using the `populate` and
+ * `field` selectors, see: https://docs.strapi.io/dev-docs/api/rest/populate-select
+ */
 
 import useSWR from "swr";
 import fetcher from "utils/fetcher";

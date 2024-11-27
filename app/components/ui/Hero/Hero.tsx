@@ -5,7 +5,7 @@ import { Button } from "../inline/Button/Button";
 import { Link } from "models/Strapi";
 
 /**
- * Homepage hero section
+ * Displays a hero section on the homepage
  */
 const Hero = ({
   backgroundImage,
