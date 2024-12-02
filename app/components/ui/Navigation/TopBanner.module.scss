@@ -1,0 +1,21 @@
+@import "../../../styles/utils/_helpers.scss";
+@import "../../../styles/utils/_colors.scss";
+
+.topBanner {
+  //   @include r_min($break-tablet-s) {
+  //     display: none;
+  //   }
+
+  width: 100vw;
+  background: $gray-50;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  padding: 0 $general-spacing-md;
+
+  justify-content: flex-end;
+
+  .goog-te-gadget {
+    display: flex !important;
+  }
+}

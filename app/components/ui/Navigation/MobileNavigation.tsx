@@ -167,9 +167,9 @@ export const MobileNavigation = ({ menuData }: MobileNavigationProps) => {
             );
           })}
 
-          <div className={mobileNavigationStyles.mobileNavigationMenuTranslate}>
+          {/* <div className={mobileNavigationStyles.mobileNavigationMenuTranslate}>
             <GoogleTranslate />
-          </div>
+          </div> */}
         </div>
       )}
     </>

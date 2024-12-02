@@ -15,6 +15,7 @@ import { useNavigationData } from "hooks/StrapiAPI";
 import { Router } from "../../../Router";
 import NavigationFocusReset from "./NavigationFocusReset";
 import SkipButton from "./SkipButton";
+import TopBanner from "./TopBanner";
 import { SiteSearchInput } from "components/ui/SiteSearchInput";
 import { InstantSearch } from "react-instantsearch-core";
 import { liteClient } from "algoliasearch/lite";
@@ -66,6 +67,7 @@ export const Navigation = () => {
     >
       <NavigationFocusReset />
       <SkipButton />
+      <TopBanner />
       <div>
         <nav className={styles.siteNav}>
           <div className={styles.primaryRow}>
@@ -107,9 +109,9 @@ export const Navigation = () => {
                   </Link>
                 );
               })}
-              <div className={styles.navigationMenuTranslate}>
+              {/* <div className={styles.navigationMenuTranslate}>
                 <GoogleTranslate />
-              </div>
+              </div> */}
             </div>
           </div>
         </nav>
