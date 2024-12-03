@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import styles from "components/ui/Navigation/Navigation.module.scss";
-import { GoogleTranslate } from "components/ui/GoogleTranslate";
 import desktopNavigationStyles from "components/ui/Navigation/DesktopNavigation.module.scss";
 import DropdownMenu from "components/ui/Navigation/DropdownMenu";
 import { MobileNavigation } from "components/ui/Navigation/MobileNavigation";
@@ -109,9 +108,6 @@ export const Navigation = () => {
                   </Link>
                 );
               })}
-              {/* <div className={styles.navigationMenuTranslate}>
-                <GoogleTranslate />
-              </div> */}
             </div>
           </div>
         </nav>
