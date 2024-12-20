@@ -5,13 +5,7 @@ import styles from "./EventCardSection.module.scss";
 import { Loader } from "../Loader";
 import { EventResponse } from 'hooks/StrapiAPI';
 
-interface EventCardSectionProps {
-  events?: EventResponse[];
-}
-
-export const EventCardSection = (props: EventCardSectionProps) => {
-  const { events } = props;
-
+export const EventCardSection = ({events}: {events: EventResponse[]}) => {
   if (!events) {
     return <Loader />;
   }
@@ -26,6 +20,7 @@ export const EventCardSection = (props: EventCardSectionProps) => {
         <div className={styles.cardsContainer}>
           {events?.map((eventData) => (
             <EventCard
+              key={eventData.id}
               event={eventData}
             />
           ))}

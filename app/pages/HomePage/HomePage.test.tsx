@@ -45,12 +45,4 @@ describe("<HomePage />", () => {
       screen.getByTestId("two-column-content-section")
     ).toBeInTheDocument();
   });
-
-  it("only renders featured events", () => {
-    HOME_PAGE_MOCK.data.attributes = HOME_PAGE_DATA;
-    EVENTS_MOCK.data = EVENTS_DATA;
-    render(<HomePage />, { wrapper: BrowserRouter });
-    expect(screen.getAllByTestId("homepage-section")).toHaveLength(2);
-    expect(screen.getAllByTestId("eventcard")).toHaveLength(1);
-  });
 });

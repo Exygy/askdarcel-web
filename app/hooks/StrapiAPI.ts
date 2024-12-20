@@ -78,7 +78,7 @@ export function useNavigationData() {
 }
 
 
-export function useEventsData() {
+export function useHomePageEventsData() {
   const path = "events?populate[address]=*&populate[calendar_event]=*&populate[link]=*&populate[image][populate]=*&filters[featured][$eq]=true";
 
   const dataFetcher = () =>
