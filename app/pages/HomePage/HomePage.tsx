@@ -2,16 +2,14 @@ import React from "react";
 import Hero from "components/ui/Hero/Hero";
 import { CategorySection } from "components/ui/Section/CategorySection";
 import { useEventsData, useHomepageData } from "hooks/StrapiAPI";
-import { Event, Homepage, StrapiDatum } from "models/Strapi";
+import { Homepage, StrapiDatum } from "models/Strapi";
 import { TwoColumnContentSection } from "components/ui/TwoColumnContentSection/TwoColumnContentSection";
-import { EventCard } from 'components/ui/Cards/EventCard';
 import { EventCardSection } from 'components/ui/Cards/EventCardSection';
 // import { EventCard } from 'components/ui/Cards/EventCard';
 
 export const HomePage = () => {
   const { data: homepageData, isLoading: homepageDataIsLoading } = useHomepageData();
   const { data: eventsData, isLoading: eventsAreLoading } = useEventsData();
-  console.log("🪵 ~ HomePage ~ eventsData:", eventsData);
 
   const homepageDataRes = homepageData as StrapiDatum<Homepage>;
 

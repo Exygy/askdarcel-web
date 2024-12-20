@@ -21,14 +21,8 @@ const HOME_PAGE_MOCK: {
   },
 };
 
-const EVENTS_MOCK: {
-  data: {
-    attributes: null | StrapiDatum<Homepage>["attributes"];
-  };
-} = {
-  data: {
-    attributes: null,
-  }
+const EVENTS_MOCK = {
+  data: []
 };
 
 jest.mock("hooks/StrapiAPI", () => ({
@@ -42,7 +36,7 @@ describe("<HomePage />", () => {
     render(<HomePage />, { wrapper: BrowserRouter });
     expect(screen.getByTestId("homepage-title")).toHaveTextContent("Homepage");
     expect(screen.getByTestId("hero")).toBeInTheDocument();
-    expect(screen.getByTestId("homepage-section")).toBeInTheDocument();
+    expect(screen.getAllByTestId("homepage-section")).toHaveLength(2);
     expect(
       screen.getByTestId("two-column-content-section")
     ).toBeInTheDocument();
