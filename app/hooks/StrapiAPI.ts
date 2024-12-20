@@ -96,10 +96,14 @@ export function useHomePageEventsData() {
   };
 
   return {
-    data: data?.data ? data.data.map((eventData) => ({...eventData.attributes, id: eventData.id})) : null,
+    data: data?.data ? formatHomePageEventsData(data) : null,
     error,
     isLoading,
   };
+}
+
+export function formatHomePageEventsData(data: {data: Array<StrapiDatumResponse<EventResponse>>}) {
+  return data.data.map((eventData) => ({...eventData.attributes, id: eventData.id}))
 }
 
 interface Meta {

@@ -8,7 +8,7 @@ export const EVENTS_DATA = [
     createdAt: "2024-07-23T00:07:09.242Z",
     updatedAt: "2024-12-19T22:31:45.276Z",
     publishedAt: "2024-07-23T00:07:40.042Z",
-    description: null,
+    description: 'lorem ipsum',
     location_name: null,
     age_group: null,
     Language: null,
