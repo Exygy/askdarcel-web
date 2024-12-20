@@ -11,7 +11,7 @@ import { HomePage } from "pages/HomePage/HomePage";
 import { HOME_PAGE_DATA } from "../../../test/fixtures/HomePageData";
 import { Homepage, StrapiDatum } from "models/Strapi";
 
-const mock: {
+const HOME_PAGE_MOCK: {
   data: {
     attributes: null | StrapiDatum<Homepage>["attributes"];
   };
@@ -20,13 +20,25 @@ const mock: {
     attributes: null,
   },
 };
+
+const EVENTS_MOCK: {
+  data: {
+    attributes: null | StrapiDatum<Homepage>["attributes"];
+  };
+} = {
+  data: {
+    attributes: null,
+  }
+};
+
 jest.mock("hooks/StrapiAPI", () => ({
-  useHomepageData: () => mock,
+  useHomepageData: () => HOME_PAGE_MOCK,
+  useEventsData: () => EVENTS_MOCK,
 }));
 
 describe("<HomePage />", () => {
   it("renders", () => {
-    mock.data.attributes = HOME_PAGE_DATA;
+    HOME_PAGE_MOCK.data.attributes = HOME_PAGE_DATA;
     render(<HomePage />, { wrapper: BrowserRouter });
     expect(screen.getByTestId("homepage-title")).toHaveTextContent("Homepage");
     expect(screen.getByTestId("hero")).toBeInTheDocument();

@@ -247,7 +247,6 @@ export interface CalendarEventResponse {
   enddate: string | null;
   starttime: string | null;
   endtime: string | null;
-  recurrence: "none" | "daily" | "weekly" | "monthly" | "yearly";
 }
 
 export interface HomepageResponse extends BaseDatumAttributesResponse {
@@ -309,21 +308,23 @@ export interface NavigationMenuResponse {
 export interface EventResponse extends BaseDatumAttributesResponse {
   id: number;
   title: string;
-  venue: string;
-  admissions: string;
-  description: string;
-  calendar_event: CalendarEventResponse;
-  address: AddressResponse;
+  description: string | null;
+  calendar_event: CalendarEventResponse | null;
+  address: AddressResponse | { data: null };
   image: {
-    id: number;
-    data: { attributes: ImageResponse};
+    data: { id: number; attributes: ImageResponse};
   };
-  link: LinkResponse;
-  event_categories: Array<StrapiDatumResponse<CategoryResponse>>;
+  link: LinkResponse | null;
+  event_categories?: Array<StrapiDatumResponse<CategoryResponse>>;
+  eligibility_categories?: Array<StrapiDatumResponse<EligibilityResponse>>
 }
 
 
 interface CategoryResponse extends BaseDatumAttributesResponse {
+  label: string;
+}
+
+interface EligibilityResponse extends BaseDatumAttributesResponse {
   label: string;
 }
 

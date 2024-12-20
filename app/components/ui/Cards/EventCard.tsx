@@ -17,7 +17,7 @@ export const EventCard = ({event}: {event: EventResponse}) => {
 
   return (
     <div className={styles.eventCard}>
-      <img
+      <img data-testid={"eventcard-title"}
         alt={imageAlternativeText}
         src={imageUrl}
         className={styles.cardImage}
@@ -27,10 +27,10 @@ export const EventCard = ({event}: {event: EventResponse}) => {
       <div className={styles.content}>
         <div>
           <h4 className={styles.contentTitle}>
-            <a href={linkUrl}>{title}</a>
+            <a href={linkUrl} data-testid={"eventcard-link"}>{title}</a>
           </h4>
           {calendarEvent && (
-            <div className={styles.contentTime}>
+            <div className={styles.contentTime} >
               <FormattedDate calendarEvent={calendarEvent} />
             </div>
           )}
