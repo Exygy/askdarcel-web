@@ -16,7 +16,7 @@ export const EventCard = ({event}: {event: EventResponse}) => {
   const linkUrl = link?.url;
 
   return (
-    <div className={styles.eventCard}>
+    <div className={styles.eventCard} data-testid={"eventcard"}  >
       <img data-testid={"eventcard-title"}
         alt={imageAlternativeText}
         src={imageUrl}

@@ -10,6 +10,8 @@ import { BrowserRouter } from "react-router-dom";
 import { HomePage } from "pages/HomePage/HomePage";
 import { HOME_PAGE_DATA } from "../../../test/fixtures/HomePageData";
 import { Homepage, StrapiDatum } from "models/Strapi";
+import { EVENTS_DATA } from '../../../test/fixtures/EventsData';
+import { useEventsData } from 'hooks/StrapiAPI';
 
 const HOME_PAGE_MOCK: {
   data: {
@@ -21,7 +23,9 @@ const HOME_PAGE_MOCK: {
   },
 };
 
-const EVENTS_MOCK = {
+const EVENTS_MOCK: {
+  data: ReturnType<typeof useEventsData>['data']
+} = {
   data: []
 };
 
@@ -41,4 +45,12 @@ describe("<HomePage />", () => {
       screen.getByTestId("two-column-content-section")
     ).toBeInTheDocument();
   });
+
+  it("only renders featured events", () => {
+    HOME_PAGE_MOCK.data.attributes = HOME_PAGE_DATA;
+    EVENTS_MOCK.data = EVENTS_DATA;
+    render(<HomePage />, { wrapper: BrowserRouter });
+    expect(screen.getAllByTestId("homepage-section")).toHaveLength(2);
+
+  })
 });
