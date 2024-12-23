@@ -98,6 +98,7 @@ workflows that cannot be tested through React Testing Library.
 ## Troubleshooting
 
 ### Error: spawn heroku ENOENT
+
 If the `build_and_deploy_app` github action fails with this message during the
 release step, you can manually release the docker container to heroku with the
 following command:
