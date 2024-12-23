@@ -37,7 +37,7 @@ export interface OrganizationParams
   notes?: Partial<Note>[];
 }
 
-export interface OrganizationAction {
+export interface DetailAction {
   name: string;
   icon: string;
   to?: string;
@@ -81,14 +81,14 @@ export const getOrganizationLocations = (
   }));
 };
 
-export const getOrganizationActions = (
+export const getDetailActions = (
   org: Organization
-): OrganizationAction[] => {
+): DetailAction[] => {
   const phoneNumber = org?.phones?.[0]?.number;
   const latitude = org?.addresses?.[0]?.latitude;
   const longitude = org?.addresses?.[0]?.longitude;
 
-  const actions: OrganizationAction[] = [
+  const actions: DetailAction[] = [
     // {
     //   name: 'Edit',
     //   icon: 'edit',

@@ -105,6 +105,34 @@ export function useHomePageEventsData() {
   };
 }
 
+export function useEventData(eventId: string) {
+  console.log("🪵 ~ useEventData ~ eventId:", eventId);
+  const path =
+    `events/${eventId}`;
+
+  const dataFetcher = () =>
+    fetcher<StrapiDatumResponse<EventResponse>>(
+      `${config.STRAPI_API_URL}/api/${path}`,
+      {
+        Authorization: `Bearer ${config.STRAPI_API_TOKEN}`,
+      }
+    );
+
+  const { data, error, isLoading } = useSWR(`/api/${path}`, dataFetcher) as {
+    data: StrapiDatumResponse<EventResponse>;
+    error: unknown;
+    isLoading: boolean;
+  };
+  console.log("🪵 ~ const{data,error,isLoading}=useSWR ~ data:", data);
+
+  return {
+    data: {...data?.attributes, id: data?.id},
+    error,
+    isLoading,
+  };
+}
+
+
 export function formatHomePageEventsData(data: {
   data: Array<StrapiDatumResponse<EventResponse>>;
 }) {
@@ -320,7 +348,7 @@ export interface EventResponse extends BaseDatumAttributesResponse {
   id: number;
   title: string;
   description: string | null;
-  calendar_event: CalendarEventResponse | null;
+  calendar_event: CalendarEventResponse;
   address: AddressResponse | { data: null };
   image: {
     data: { id: number; attributes: ImageResponse };
@@ -338,7 +366,7 @@ interface EligibilityResponse extends BaseDatumAttributesResponse {
   label: string;
 }
 
-interface AddressResponse {
+export interface AddressResponse {
   id: number;
   street: string;
   zipcode: string;

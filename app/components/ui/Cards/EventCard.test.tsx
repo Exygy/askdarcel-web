@@ -12,7 +12,7 @@ describe("<EventCard />", () => {
     const selectors = [
       screen.getByTestId("eventcard-title"),
       screen.getByTestId("eventcard-link"),
-      screen.getByTestId("formatted-date-single"),
+      screen.getByTestId("eventcard-formatteddate"),
       screen.getByTestId("button-visualonly"),
     ];
 

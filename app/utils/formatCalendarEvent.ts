@@ -8,7 +8,7 @@ import formatEventTime from "utils/formatEventTime";
  * Example: December 15, 2024 · 12:45 AM - 7:30 PM
  */
 export const formatCalendarEvent = (
-  calendarEvent: CalendarEvent): string => {
+  calendarEvent:CalendarEvent): string => {
   const formattedStartDate = formatEventDate(calendarEvent.startdate);
   // If the end date is unset, let's assume it's a single day event and assign the enddate to the startdate
   const formattedEndDate = formatEventDate(
