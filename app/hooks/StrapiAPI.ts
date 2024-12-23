@@ -81,7 +81,8 @@ export function useNavigationData() {
  * Fetches only featured events with embedded data for associated content types
  */
 export function useHomePageEventsData() {
-  const path = "events?populate[address]=*&populate[calendar_event]=*&populate[link]=*&populate[image][populate]=*&filters[featured][$eq]=true";
+  const path =
+    "events?populate[address]=*&populate[calendar_event]=*&populate[link]=*&populate[image][populate]=*&filters[featured][$eq]=true";
 
   const dataFetcher = () =>
     fetcher<{ data: Array<StrapiDatumResponse<EventResponse>> }>(
@@ -92,7 +93,7 @@ export function useHomePageEventsData() {
     );
 
   const { data, error, isLoading } = useSWR(`/api/${path}`, dataFetcher) as {
-    data: {data: Array<StrapiDatumResponse<EventResponse>>};
+    data: { data: Array<StrapiDatumResponse<EventResponse>> };
     error: unknown;
     isLoading: boolean;
   };
@@ -104,8 +105,13 @@ export function useHomePageEventsData() {
   };
 }
 
-export function formatHomePageEventsData(data: {data: Array<StrapiDatumResponse<EventResponse>>}) {
-  return data.data.map((eventData) => ({...eventData.attributes, id: eventData.id}))
+export function formatHomePageEventsData(data: {
+  data: Array<StrapiDatumResponse<EventResponse>>;
+}) {
+  return data.data.map((eventData) => ({
+    ...eventData.attributes,
+    id: eventData.id,
+  }));
 }
 
 interface Meta {
@@ -310,7 +316,6 @@ export interface NavigationMenuResponse {
   title: string;
 }
 
-
 export interface EventResponse extends BaseDatumAttributesResponse {
   id: number;
   title: string;
@@ -318,13 +323,12 @@ export interface EventResponse extends BaseDatumAttributesResponse {
   calendar_event: CalendarEventResponse | null;
   address: AddressResponse | { data: null };
   image: {
-    data: { id: number; attributes: ImageResponse};
+    data: { id: number; attributes: ImageResponse };
   };
   link: LinkResponse | null;
   event_categories?: Array<StrapiDatumResponse<CategoryResponse>>;
-  eligibility_categories?: Array<StrapiDatumResponse<EligibilityResponse>>
+  eligibility_categories?: Array<StrapiDatumResponse<EligibilityResponse>>;
 }
-
 
 interface CategoryResponse extends BaseDatumAttributesResponse {
   label: string;

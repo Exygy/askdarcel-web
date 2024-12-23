@@ -31,8 +31,16 @@ export const FormattedDate = ({
     const timeDisplay =
       starTimeDisplay === -1 ? "" : `· ${formattedStartTime} ${endTimeDisplay}`;
 
-    return <p data-testid={"formatted-date-single"}>{`${formattedStartDate} ${timeDisplay}`}</p>;
+    return (
+      <p
+        data-testid={"formatted-date-single"}
+      >{`${formattedStartDate} ${timeDisplay}`}</p>
+    );
   }
 
-  return <p data-testid={"formatted-date"}>{`${formattedStartDate} - ${formattedEndDate}`}</p>;
+  return (
+    <p
+      data-testid={"formatted-date"}
+    >{`${formattedStartDate} - ${formattedEndDate}`}</p>
+  );
 };

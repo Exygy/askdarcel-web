@@ -85,7 +85,7 @@ export const Button = ({
 
   if (isVisualOnly) {
     return (
-      <p data-testid={"button-visualonly"}  className={buttonClass} aria-hidden>
+      <p data-testid={"button-visualonly"} className={buttonClass} aria-hidden>
         {content}
       </p>
     );
@@ -98,7 +98,12 @@ export const Button = ({
     const linkProps = isExternal && { target: "_blank", rel: "noreferrer" };
 
     return (
-      <a data-testid={"button-href"} href={href} className={buttonClass} {...linkProps}>
+      <a
+        data-testid={"button-href"}
+        href={href}
+        className={buttonClass}
+        {...linkProps}
+      >
         {content}
       </a>
     );

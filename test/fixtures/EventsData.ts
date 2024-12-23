@@ -8,7 +8,7 @@ export const EVENTS_DATA = [
     createdAt: "2024-07-23T00:07:09.242Z",
     updatedAt: "2024-12-19T22:31:45.276Z",
     publishedAt: "2024-07-23T00:07:40.042Z",
-    description: 'lorem ipsum',
+    description: "lorem ipsum",
     location_name: null,
     age_group: null,
     Language: null,
@@ -17,11 +17,11 @@ export const EVENTS_DATA = [
       data: null,
     },
     calendar_event: {
-      "id": 100,
-      "startdate": "2024-12-20",
-      "enddate": "2024-12-20",
-      "starttime": "15:30:00",
-      "endtime": "16:30:00"
+      id: 100,
+      startdate: "2024-12-20",
+      enddate: "2024-12-20",
+      starttime: "15:30:00",
+      endtime: "16:30:00",
     },
     link: null,
     image: {
@@ -119,11 +119,11 @@ export const EVENTS_DATA = [
       data: null,
     },
     calendar_event: {
-      "id": 100,
-      "startdate": "2024-12-20",
-      "enddate": "2024-12-20",
-      "starttime": "15:30:00",
-      "endtime": "16:30:00"
+      id: 100,
+      startdate: "2024-12-20",
+      enddate: "2024-12-20",
+      starttime: "15:30:00",
+      endtime: "16:30:00",
     },
     link: null,
     image: {
