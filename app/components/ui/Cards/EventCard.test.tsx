@@ -6,7 +6,7 @@ import { EVENTS_DATA } from '../../../../test/fixtures/EventsData';
 describe("<EventCard />", () => {
   const eventData = EVENTS_DATA[0];
 
-  it("renders", () => {
+  it("displays title, link, date, and call to action", () => {
     render(<EventCard event={eventData} />);
 
     const selectors = [

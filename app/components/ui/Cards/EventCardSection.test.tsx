@@ -6,7 +6,7 @@ import { EventCardSection } from 'components/ui/Cards/EventCardSection';
 describe("<EventCardSection />", () => {
   const eventData = EVENTS_DATA;
 
-  it("renders", () => {
+  it("displays the correct number of event cards", () => {
     render(<EventCardSection events={eventData} />);
 
     expect(screen.getAllByTestId("eventcard")).toHaveLength(2);

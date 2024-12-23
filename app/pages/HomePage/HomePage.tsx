@@ -4,17 +4,18 @@ import { CategorySection } from "components/ui/Section/CategorySection";
 import { useHomePageEventsData, useHomepageData } from "hooks/StrapiAPI";
 import { Homepage, StrapiDatum } from "models/Strapi";
 import { TwoColumnContentSection } from "components/ui/TwoColumnContentSection/TwoColumnContentSection";
-import { EventCardSection } from 'components/ui/Cards/EventCardSection';
-// import { EventCard } from 'components/ui/Cards/EventCard';
+import { EventCardSection } from "components/ui/Cards/EventCardSection";
+import { HomePageSection } from "pages/HomePage/components/Section";
 
 export const HomePage = () => {
-  const { data: homepageData, isLoading: homepageDataIsLoading } = useHomepageData();
-  const { data: eventsData, isLoading: eventsAreLoading } = useHomePageEventsData();
+  const { data: homepageData, isLoading: homepageDataIsLoading } =
+    useHomepageData();
+  const { data: eventsData, isLoading: eventsAreLoading } =
+    useHomePageEventsData();
 
   const homepageDataRes = homepageData as StrapiDatum<Homepage>;
 
   const homePageDataAttrs = homepageDataRes?.attributes;
-
 
   if (homepageDataIsLoading || eventsAreLoading) {
     return null;
@@ -37,11 +38,15 @@ export const HomePage = () => {
         />
       )}
       <CategorySection />
-      {eventsData &&
-      <EventCardSection
-        events={eventsData}
-      />
-      }
+      {eventsData && (
+        <HomePageSection
+          title={"Upcoming events"}
+          description={"Description text eplaining this section"}
+          backgroundColor={"tertiary"}
+        >
+          <EventCardSection events={eventsData} />
+        </HomePageSection>
+      )}
 
       {twoColumnContentData?.map((content) => (
         <TwoColumnContentSection key={content.id} {...content.attributes} />

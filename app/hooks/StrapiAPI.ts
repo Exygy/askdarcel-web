@@ -77,7 +77,9 @@ export function useNavigationData() {
   };
 }
 
-
+/**
+ * Fetches only featured events with embedded data for associated content types
+ */
 export function useHomePageEventsData() {
   const path = "events?populate[address]=*&populate[calendar_event]=*&populate[link]=*&populate[image][populate]=*&filters[featured][$eq]=true";
 
@@ -332,7 +334,6 @@ interface EligibilityResponse extends BaseDatumAttributesResponse {
   label: string;
 }
 
-// this corresponds to the "Address" component in Strapi
 interface AddressResponse {
   id: number;
   street: string;
@@ -344,5 +345,5 @@ interface AddressResponse {
       lat: number;
       lng: number;
     };
-  } | null;
+  };
 }

@@ -1,5 +1,5 @@
 // Sample data from a real api request to our Strapi production server. This
-// data will become obsolete as the api changes so developers should feel at
+// data may have to change as the api changes so developers should feel at
 // liberty to update these fixtures as needed.
 export const EVENTS_DATA = [
   {

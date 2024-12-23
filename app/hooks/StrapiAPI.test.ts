@@ -1,7 +1,7 @@
 import { EventResponse, formatHomePageEventsData } from "hooks/StrapiAPI";
 
-describe("<HomePage />", () => {
-  it("works", () => {
+describe("formatHomePageEventsData", () => {
+  it("correctly extracts attributes and flattens the data", () => {
     const expected = [
       {
         id: 1,
