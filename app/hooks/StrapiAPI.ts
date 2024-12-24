@@ -13,6 +13,7 @@
 import useSWR from "swr";
 import fetcher from "utils/fetcher";
 import config from "../config";
+import { RootNode } from "@strapi/blocks-react-renderer/dist/BlocksRenderer";
 
 interface SWRHookResult<T> {
   data: StrapiDataResponse<T>;
@@ -106,32 +107,39 @@ export function useHomePageEventsData() {
 }
 
 export function useEventData(eventId: string) {
-  console.log("🪵 ~ useEventData ~ eventId:", eventId);
-  const path =
-    `events/${eventId}`;
+  const path = `events/${eventId}?populate[address]=*&populate[calendar_event]=*&populate[link]=*&populate[image][populate]=*&populate[event_categories][fields]=label&populate[event_eligibilities][fields]=label`;
 
   const dataFetcher = () =>
-    fetcher<StrapiDatumResponse<EventResponse>>(
+    fetcher<{ data: StrapiDatumResponse<EventResponse> }>(
       `${config.STRAPI_API_URL}/api/${path}`,
       {
         Authorization: `Bearer ${config.STRAPI_API_TOKEN}`,
       }
     );
 
-  const { data, error, isLoading } = useSWR(`/api/${path}`, dataFetcher) as {
-    data: StrapiDatumResponse<EventResponse>;
-    error: unknown;
-    isLoading: boolean;
-  };
-  console.log("🪵 ~ const{data,error,isLoading}=useSWR ~ data:", data);
+  const { data, error, isLoading } = useSWR(`/api/${path}`, dataFetcher);
 
   return {
-    data: {...data?.attributes, id: data?.id},
+    data: {
+      ...data?.data?.attributes,
+      id: data?.data?.id,
+      categories: data?.data.attributes.event_categories?.data.map(
+        (category: StrapiDatumResponse<CategoryResponse>) => ({
+          id: category.id,
+          label: category.attributes.label,
+        })
+      ),
+      eligibilities: data?.data.attributes.event_eligibilities?.data.map(
+        (eligibility: StrapiDatumResponse<EligibilityResponse>) => ({
+          id: eligibility.id,
+          label: eligibility.attributes.label,
+        })
+      ),
+    },
     error,
     isLoading,
   };
 }
-
 
 export function formatHomePageEventsData(data: {
   data: Array<StrapiDatumResponse<EventResponse>>;
@@ -347,15 +355,18 @@ export interface NavigationMenuResponse {
 export interface EventResponse extends BaseDatumAttributesResponse {
   id: number;
   title: string;
-  description: string | null;
+  description: RootNode[];
   calendar_event: CalendarEventResponse;
   address: AddressResponse | { data: null };
   image: {
     data: { id: number; attributes: ImageResponse };
   };
   link: LinkResponse | null;
-  event_categories?: Array<StrapiDatumResponse<CategoryResponse>>;
-  eligibility_categories?: Array<StrapiDatumResponse<EligibilityResponse>>;
+  event_categories?: { data: Array<StrapiDatumResponse<CategoryResponse>> };
+  event_eligibilities?: {
+    data: Array<StrapiDatumResponse<EligibilityResponse>>;
+  };
+  age_group: string;
 }
 
 interface CategoryResponse extends BaseDatumAttributesResponse {
