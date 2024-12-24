@@ -353,7 +353,6 @@ export interface NavigationMenuResponse {
 }
 
 export interface EventResponse extends BaseDatumAttributesResponse {
-  id: number;
   title: string;
   description: RootNode[];
   calendar_event: CalendarEventResponse;
@@ -369,11 +368,11 @@ export interface EventResponse extends BaseDatumAttributesResponse {
   age_group: string;
 }
 
-interface CategoryResponse extends BaseDatumAttributesResponse {
+interface CategoryResponse {
   label: string;
 }
 
-interface EligibilityResponse extends BaseDatumAttributesResponse {
+interface EligibilityResponse {
   label: string;
 }
 

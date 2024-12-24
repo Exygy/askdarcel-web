@@ -1,10 +1,10 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { EventCard } from "./EventCard";
-import { EVENTS_DATA } from "../../../../test/fixtures/EventsData";
+import { EVENTS_DATA_FORMATTED } from "../../../../test/fixtures/EventsData";
 
 describe("<EventCard />", () => {
-  const eventData = EVENTS_DATA[0];
+  const eventData = EVENTS_DATA_FORMATTED[0];
 
   it("displays title, link, date, and call to action", () => {
     render(<EventCard event={eventData} />);
