@@ -12,7 +12,7 @@ import DetailPageWrapper from "components/DetailPage/DetailPageWrapper";
 import { DetailAction } from "../../models";
 import PageNotFound from "components/ui/PageNotFound";
 import { useEventData } from "hooks/StrapiAPI";
-import { formatCalendarEvent } from "components/ui/Cards/FormattedDate";
+import { formatCalendarEventDisplay } from "components/ui/Cards/FormattedDate";
 import { CalendarEvent } from "models/Strapi";
 import LabelTagRows from "components/DetailPage/LabelTagRows";
 import { LabelTag } from "components/ui/LabelTag";
@@ -53,7 +53,7 @@ export const EventDetailPage = () => {
   const detailsRows = [
     {
       title: "Date & Time",
-      value: formatCalendarEvent(data.calendar_event as CalendarEvent),
+      value: formatCalendarEventDisplay(data.calendar_event as CalendarEvent),
     },
   ];
   const registrationRows = [
