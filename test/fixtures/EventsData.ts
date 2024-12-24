@@ -2,7 +2,7 @@
 // data may have to change as the api changes so developers should feel at
 
 import { RootNode } from "@strapi/blocks-react-renderer/dist/BlocksRenderer";
-import { formatHomePageEventsData } from "hooks/StrapiAPI";
+import { formatEventData, formatHomePageEventsData } from "hooks/StrapiAPI";
 
 // liberty to update these fixtures as needed.
 export const EVENTS_DATA = [
@@ -1386,7 +1386,7 @@ export const EVENTS_DATA = [
   },
 ];
 
-export const EVENTS_DATA_FORMATTED = formatHomePageEventsData({
+export const HOME_PAGE_EVENTS_DATA_FORMATTED = formatHomePageEventsData({
   data: [
     {
       id: EVENTS_DATA[0].data.id,

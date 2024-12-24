@@ -120,24 +120,34 @@ export function useEventData(eventId: string) {
   const { data, error, isLoading } = useSWR(`/api/${path}`, dataFetcher);
 
   return {
-    data: {
-      ...data?.data?.attributes,
-      id: data?.data?.id,
-      categories: data?.data.attributes.event_categories?.data.map(
-        (category: StrapiDatumResponse<CategoryResponse>) => ({
-          id: category.id,
-          label: category.attributes.label,
-        })
-      ),
-      eligibilities: data?.data.attributes.event_eligibilities?.data.map(
-        (eligibility: StrapiDatumResponse<EligibilityResponse>) => ({
-          id: eligibility.id,
-          label: eligibility.attributes.label,
-        })
-      ),
-    },
+    data: formatEventData(data),
     error,
     isLoading,
+  };
+}
+
+export function formatEventData(
+  data:
+    | {
+        data: StrapiDatumResponse<EventResponse>;
+      }
+    | undefined
+) {
+  return {
+    ...data?.data?.attributes,
+    id: data?.data?.id,
+    categories: data?.data.attributes.event_categories?.data.map(
+      (category: StrapiDatumResponse<CategoryResponse>) => ({
+        id: category.id,
+        label: category.attributes.label,
+      })
+    ),
+    eligibilities: data?.data.attributes.event_eligibilities?.data.map(
+      (eligibility: StrapiDatumResponse<EligibilityResponse>) => ({
+        id: eligibility.id,
+        label: eligibility.attributes.label,
+      })
+    ),
   };
 }
 

@@ -81,9 +81,7 @@ export const getOrganizationLocations = (
   }));
 };
 
-export const getDetailActions = (
-  org: Organization
-): DetailAction[] => {
+export const getDetailActions = (org: Organization): DetailAction[] => {
   const phoneNumber = org?.phones?.[0]?.number;
   const latitude = org?.addresses?.[0]?.latitude;
   const longitude = org?.addresses?.[0]?.longitude;

@@ -13,7 +13,7 @@ import { BackButton } from "components/ui/BackButton";
 import { SearchHeaderSection } from "components/SearchAndBrowse/Header/SearchHeaderSection";
 import { SearchResultsPage } from "pages/SearchResultsPage/SearchResultsPage";
 import { PageNotFoundPage } from "pages/PageNotFoundPage/PageNotFoundPage";
-import { EventDetailPage } from 'pages/EventDetailPage/EventDetailPage';
+import { EventDetailPage } from "pages/EventDetailPage/EventDetailPage";
 
 export const Router = () => {
   return (
@@ -65,9 +65,7 @@ export const Router = () => {
         element={
           <>
             <PageHeader>
-              <BackButton defaultReturnTo="/">
-                Back to Home Page
-              </BackButton>
+              <BackButton defaultReturnTo="/">Back to Home Page</BackButton>
             </PageHeader>
             <EventDetailPage />
           </>

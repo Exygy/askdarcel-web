@@ -5,7 +5,6 @@ import { BlocksRenderer } from "@strapi/blocks-react-renderer";
 import { ActionBarMobile } from "components/DetailPage";
 import { InfoTable } from "components/DetailPage/InfoTable";
 import { Loader } from "components/ui/Loader";
-import { removeAsterisksAndHashes } from "utils/strings";
 import { DetailInfoSection } from "components/ui/Cards/DetailInfoSection";
 import ListingPageHeader from "components/DetailPage/PageHeader";
 import DetailPageWrapper from "components/DetailPage/DetailPageWrapper";
@@ -14,22 +13,13 @@ import PageNotFound from "components/ui/PageNotFound";
 import { useEventData } from "hooks/StrapiAPI";
 import { formatCalendarEventDisplay } from "components/ui/Cards/FormattedDate";
 import { CalendarEvent } from "models/Strapi";
-import LabelTagRows from "components/DetailPage/LabelTagRows";
 import { LabelTag } from "components/ui/LabelTag";
 
 type TagRow = { title: string; value: ReactNode[] };
 
 export const EventDetailPage = () => {
   const { eventListingId } = useParams();
-  // const [event, setEvent] = useState<Service | null>(null);
-  // const [error, setError] = useState<FetchServiceError>();
-  // const details = useMemo(
-  //   () => (service ? generateServiceDetails(service) : []),
-  //   [service]
-  // );
-  //
   const { data, error, isLoading } = useEventData(eventListingId as string);
-  console.log("🪵 ~ EventDetailPage ~ data:", data);
 
   useEffect(() => window.scrollTo(0, 0), []);
 
@@ -102,8 +92,6 @@ export const EventDetailPage = () => {
     }
   };
 
-  const foo = tagRows;
-
   return (
     <DetailPageWrapper
       title={`Our415 - ${data.title}`}
@@ -111,24 +99,26 @@ export const EventDetailPage = () => {
       sidebarActions={[]}
       onClickAction={onClickAction}
     >
-      <ListingPageHeader title={data.title as string} dataCy="event-page-title">
-        {/* <span className={styles["event--program--details"]}>
-          A service
-          {data.program ? ` in the ${data.program.name} program` : null}
-          {" offered by "}
-          <a href={`/organizations/${organization.id}`}>{organization.name}</a>
-        </span> */}
-      </ListingPageHeader>
+      <ListingPageHeader
+        title={data.title as string}
+        dataCy="event-page-title"
+      />
 
       <span className="no-print">
         <ActionBarMobile actions={[]} onClickAction={onClickAction} />
       </span>
 
-      <DetailInfoSection title="About">
+      <DetailInfoSection
+        title="About"
+        data-testid="eventdetailpage-detailinfosection"
+      >
         <BlocksRenderer content={data.description || []} />
       </DetailInfoSection>
 
-      <DetailInfoSection title="Details" data-cy="event-details-section">
+      <DetailInfoSection
+        title="Details"
+        data-testid="eventdetailpage-detailinfosection"
+      >
         <InfoTable<{ title: string; value: string }>
           rowRenderer={(detail) => (
             <tr key={detail.title}>
@@ -144,7 +134,10 @@ export const EventDetailPage = () => {
         />
       </DetailInfoSection>
 
-      <DetailInfoSection title="Registration">
+      <DetailInfoSection
+        title="Registration"
+        data-testid="eventdetailpage-detailinfosection"
+      >
         <InfoTable<{ title: string; value: string }>
           rowRenderer={(detail) => (
             <tr key={detail.title}>
@@ -162,7 +155,7 @@ export const EventDetailPage = () => {
       <DetailInfoSection
         title="Tags"
         borderBottom={false}
-        data-cy="event-tags-section"
+        data-testid="eventdetailpage-detailinfosection"
       >
         <InfoTable<TagRow>
           rowRenderer={(row) => (
