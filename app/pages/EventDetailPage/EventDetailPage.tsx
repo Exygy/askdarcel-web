@@ -72,16 +72,6 @@ export const EventDetailPage = () => {
     },
   ].filter((row) => row.value !== undefined) as Array<TagRow>;
 
-  // Returning `undefined` instead of `null` since consuming code prefers this
-  // const formattedLongDescription = removeAsterisksAndHashes(data.description as string);
-  // const locations = getLocationsFromAddresses(data);
-  // const allActions = getDetailActions(resource);
-  // const sidebarActions = allActions.filter((a) =>
-  //   ["print", "phone", "directions"].includes(a.icon)
-  // );
-  // const mobileActions = allActions.filter((a) =>
-  //   ["phone", "directions"].includes(a.icon)
-  // );
   const onClickAction = (action: DetailAction) => {
     switch (action.icon) {
       case "print":
