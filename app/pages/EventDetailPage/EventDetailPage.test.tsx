@@ -17,6 +17,9 @@ let MOCK_EVENT: {
 };
 
 jest.mock("hooks/StrapiAPI", () => ({
+  // TODO: This shouldn't have to be mocked here but I'm not quite an expert
+  // enough yet in jest mocking to figure out how to import the fixtures without
+  // doing this.
   formatHomePageEventsData: () => null,
   useEventData: () => MOCK_EVENT,
 }));
