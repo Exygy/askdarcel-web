@@ -1,10 +1,10 @@
 // Sample data from a real api request to our Strapi production server. This
 // data may have to change as the api changes so developers should feel at
+// liberty to update these fixtures as needed.
 
 import { RootNode } from "@strapi/blocks-react-renderer/dist/BlocksRenderer";
-import { formatHomePageEventsData } from "hooks/StrapiAPI";
+import { formatHomePageEventsData, useEventData } from "hooks/StrapiAPI";
 
-// liberty to update these fixtures as needed.
 export const EVENTS_DATA = [
   {
     data: {
@@ -1386,15 +1386,25 @@ export const EVENTS_DATA = [
   },
 ];
 
-export const HOME_PAGE_EVENTS_DATA_FORMATTED = formatHomePageEventsData({
-  data: [
-    {
-      id: EVENTS_DATA[0].data.id,
-      attributes: EVENTS_DATA[0].data.attributes,
-    },
-    {
-      id: EVENTS_DATA[1].data.id,
-      attributes: EVENTS_DATA[1].data.attributes,
-    },
-  ],
+export const createFormattedHomePageEventsData = () =>
+  formatHomePageEventsData({
+    data: [
+      {
+        id: EVENTS_DATA[0].data.id,
+        attributes: EVENTS_DATA[0].data.attributes,
+      },
+      {
+        id: EVENTS_DATA[1].data.id,
+        attributes: EVENTS_DATA[1].data.attributes,
+      },
+    ],
+  });
+
+export const createFormattedEventData = (): ReturnType<
+  typeof useEventData
+>["data"] => ({
+  ...EVENTS_DATA[0].data.attributes,
+  id: 10,
+  categories: [{ id: 11111, label: "Fake Label" }],
+  eligibilities: [{ id: 11111, label: "Fake Label" }],
 });

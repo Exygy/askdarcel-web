@@ -1,9 +1,11 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { EventDetailPage } from "pages/EventDetailPage/EventDetailPage";
-import { EVENTS_DATA } from "../../../test/fixtures/EventsData";
+import {
+  createFormattedEventData,
+  EVENTS_DATA,
+} from "../../../test/fixtures/EventsData";
 import { useEventData } from "hooks/StrapiAPI";
-import { BrowserRouter } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 
 let MOCK_EVENT: {
@@ -17,10 +19,6 @@ let MOCK_EVENT: {
 };
 
 jest.mock("hooks/StrapiAPI", () => ({
-  // TODO: This shouldn't have to be mocked here but I'm not quite an expert
-  // enough yet in jest mocking to figure out how to import the fixtures without
-  // doing this.
-  formatHomePageEventsData: () => null,
   useEventData: () => MOCK_EVENT,
 }));
 
@@ -32,12 +30,7 @@ beforeEach(() => {
 
 it("displays every page section and table row", async () => {
   MOCK_EVENT = {
-    data: {
-      ...EVENTS_DATA[0].data.attributes,
-      id: 10,
-      categories: ["fakeCategory"],
-      eligibilities: ["fakeEligibility"],
-    } as unknown as ReturnType<typeof useEventData>["data"],
+    data: createFormattedEventData(),
     error: null,
     isLoading: false,
   };
