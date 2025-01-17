@@ -37,6 +37,7 @@ export const BrowseResultsPage = () => {
     null
   );
   const eligibilities = useEligibilitiesForCategory(category.id);
+  console.log("🪵 ~ BrowseResultsPage ~ eligibilities:", eligibilities);
   const subcategories = useSubcategoriesForCategory(category.id);
   const [isMapCollapsed, setIsMapCollapsed] = useState(false);
   const { userLocation } = useAppContext();
