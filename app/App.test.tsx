@@ -1,0 +1,53 @@
+import React from "react";
+import { render, screen, waitFor } from "@testing-library/react";
+import { BrowserRouter } from "react-router-dom";
+import { App } from "App";
+import { HelmetProvider } from "react-helmet-async";
+import { AppProvider } from "utils";
+
+jest.mock("instantsearch.js/es/lib/routers", () => ({}));
+jest.mock("./utils/useAppContext", () => ({
+  AppProvider: jest.fn(),
+}));
+
+describe("<App />", () => {
+  it("renders", async () => {
+    render(
+      <HelmetProvider>
+        <App />
+      </HelmetProvider>,
+      { wrapper: BrowserRouter }
+    );
+
+    await waitFor(() => {
+      expect(screen.getByTestId("app-container")).toBeInTheDocument();
+    });
+  });
+
+  // Generally we want to avoid testing prop passing directly, and instead
+  // figure out a test that reflects real user behavior to confirm the props.
+  // Let's use this for the time being until we have a better way to test these
+  // props being set on page load. It may make sense to move the data fetching
+  // and setting to a hook we can test independently.
+  it("sends the correct props to the <AppProvider />", async () => {
+    const expectedArg1 = expect.objectContaining({
+      aroundLatLng: "37.7749,-122.4194",
+      userLocation: { lat: 37.7749, lng: -122.4194 },
+      aroundUserLocationRadius: "all",
+      setAroundRadius: expect.any(Function),
+      setAroundLatLng: expect.any(Function),
+    });
+    const expectedArg2 = {};
+
+    render(
+      <HelmetProvider>
+        <App />
+      </HelmetProvider>,
+      { wrapper: BrowserRouter }
+    );
+
+    await waitFor(() => {
+      expect(AppProvider).toHaveBeenCalledWith(expectedArg1, expectedArg2);
+    });
+  });
+});

@@ -56,6 +56,8 @@ export const App = () => {
   }, [location, setAroundLatLng]);
 
   if (!userLocation) {
+    console.log("🪵 ~ App ~ userLocation:", userLocation);
+
     return <Loader />;
   }
 
@@ -66,9 +68,14 @@ export const App = () => {
     aroundUserLocationRadius,
     setAroundRadius,
   };
+  console.log("🪵 ~ App ~ props:", props);
 
   return (
-    <div id={OUTER_CONTAINER_ID} className={styles.outerContainer}>
+    <div
+      id={OUTER_CONTAINER_ID}
+      className={styles.outerContainer}
+      data-testid={"app-container"}
+    >
       <AppProvider {...props}>
         <Helmet>
           <title>{title}</title>
