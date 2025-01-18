@@ -10,7 +10,6 @@ import {
   getLocation,
   websiteConfig,
   AppProvider,
-  useAppContextUpdater,
 } from "./utils";
 import { Footer } from "components/ui/Footer/Footer";
 import { Navigation } from "components/ui/Navigation/Navigation";
