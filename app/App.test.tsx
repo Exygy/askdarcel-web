@@ -24,11 +24,9 @@ describe("<App />", () => {
     });
   });
 
-  // Generally we want to avoid testing prop passing directly, and instead
-  // figure out a test that reflects real user behavior to confirm the props.
-  // Let's use this for the time being until we have a better way to test these
-  // props being set on page load. It may make sense to move the data fetching
-  // and setting to a hook we can test independently.
+  // Until we can design a test that reflects real user behavior, lets test that
+  // the default `AppProvider` props are created and set correctly by mocking
+  // the component.
   it("sends the correct props to the <AppProvider />", async () => {
     const expectedArg1 = expect.objectContaining({
       aroundLatLng: "37.7749,-122.4194",
