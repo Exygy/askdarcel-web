@@ -28,14 +28,16 @@ describe("<App />", () => {
   // the default `AppProvider` props are created and set correctly by mocking
   // the component.
   it("sends the correct props to the <AppProvider />", async () => {
-    const expectedArg1 = expect.objectContaining({
+    const expectedProps = expect.objectContaining({
       aroundLatLng: "37.7749,-122.4194",
       userLocation: { lat: 37.7749, lng: -122.4194 },
       aroundUserLocationRadius: "all",
       setAroundRadius: expect.any(Function),
       setAroundLatLng: expect.any(Function),
     });
-    const expectedArg2 = {};
+
+    // https://stackoverflow.com/questions/56879095/what-is-the-second-parameter-for-in-a-react-functional-component
+    const legacyRefOrContextArgument = expect.anything();
 
     render(
       <HelmetProvider>
@@ -45,7 +47,10 @@ describe("<App />", () => {
     );
 
     await waitFor(() => {
-      expect(AppProvider).toHaveBeenCalledWith(expectedArg1, expectedArg2);
+      expect(AppProvider).toHaveBeenCalledWith(
+        expectedProps,
+        legacyRefOrContextArgument
+      );
     });
   });
 });
