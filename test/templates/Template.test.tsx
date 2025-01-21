@@ -12,7 +12,7 @@ import { BrowserRouter } from "react-router-dom";
 const MyFakeComponent = ({ text }: { text: string }) => <>{text}</>;
 
 // Put any module mocks outside test blocks
-jest.mock("<my-module>", () => (<'mock implementation'>));
+// jest.mock("<my-module>", () => (<'mock implementation'>));
 
 describe("<MyFakeComponent />", () => {
   const parameters = {
