@@ -44,13 +44,13 @@ export function useFooterData() {
 
 export function useHomepageData() {
   return useStrapiHook<HomepageResponse>(
-    "home-page?populate[hero][populate]=*&populate[category_section][populate]=*&populate[two_column_content_blocks][populate][link]=*&populate[two_column_content_blocks][populate][media][populate]=*"
+    "home-page?populate[hero][populate]=*&populate[two_column_content_block][populate][media][populate]=*"
   );
 }
 
-export function usePageContent(title: string) {
+export function useContentPageData(title: string) {
   return useStrapiHook<ContentPageResponse>(
-    `content-pages?filters[title][$eq]=${title}&populate[two_column_content_blocks][populate][link]=*&populate[two_column_content_blocks][populate][media][populate]=*&populate[two_column_content_blocks][populate][faq]=*`
+    `content-pages?filters[title][$eq]=${title}&populate[content_block][populate][link]=*&populate[content_block][populate][media][populate]=*`
   );
 }
 
@@ -271,32 +271,24 @@ export interface ImageResponse extends BaseDatumAttributesResponse {
   provider_metadata?: unknown;
 }
 
-// this corresponds to the "Content Block" component in Strapi
-export interface ContentBlockResponse {
-  id: number;
-  header: string;
-  subheader: string;
-  background_color: {
-    id: number;
-    color: string;
-  };
-  link: LinkResponse;
-}
-
 export interface FaqItem {
   question: string;
   answer: string;
 }
 
-export interface TwoColumnContentBlockResponse
-  extends BaseDatumAttributesResponse {
+export interface SingleColumnContentBlockResponse {
+  id: number;
+  content: RootNode[];
+  media?: DynamicMediaResponse;
+}
+
+export interface TwoColumnContentBlockResponse {
+  id: number;
   title: string;
-  media_alignment: string;
-  content: string;
-  name: string;
-  link: LinkResponse;
-  media: DynamicMediaResponse[];
-  faq?: FaqItem[];
+  media_align: string;
+  content: RootNode[];
+  link?: LinkResponse;
+  media?: DynamicMediaResponse;
 }
 
 export interface CalendarEventResponse {
@@ -315,14 +307,20 @@ export interface HomepageResponse extends BaseDatumAttributesResponse {
     background_image: StrapiObjectResponse<ImageResponse>;
     buttons: LinkResponse[];
   };
-  category_section: ContentBlockResponse;
-  two_column_content_blocks: StrapiArrayResponse<TwoColumnContentBlockResponse>;
+  two_column_content_block: TwoColumnContentBlockResponse[];
 }
 
 export interface ContentPageResponse extends BaseDatumAttributesResponse {
   title: string;
   masthead: string;
-  two_column_content_blocks: StrapiArrayResponse<TwoColumnContentBlockResponse>;
+  content_block: Array<
+    | (SingleColumnContentBlockResponse & {
+        __component: "content.single-column-content-block";
+      })
+    | (TwoColumnContentBlockResponse & {
+        __component: "content.single-column-content-block";
+      })
+  >;
 }
 
 export interface HeaderResponse extends BaseDatumAttributesResponse {

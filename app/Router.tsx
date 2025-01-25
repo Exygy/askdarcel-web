@@ -20,7 +20,7 @@ export const Router = () => {
     <Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="/about" element={<AboutPage />} />
-      <Route path="/faqs" element={<FaqPage />} />
+      <Route path="/faq" element={<FaqPage />} />
       {/* NB: /organizations/new must be listed before /organizations/:id or else the /new
                 step will be interpreted as an ID and will thus break the OrganizationEditPage */}
       <Route

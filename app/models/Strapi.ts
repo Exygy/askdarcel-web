@@ -3,7 +3,6 @@
 */
 import {
   CalendarEventResponse,
-  ContentBlockResponse,
   ContentPageResponse,
   DynamicLinkResponse,
   EventResponse,
@@ -24,7 +23,6 @@ export interface Link extends LinkResponse {}
 export interface DynamicLink extends Omit<DynamicLinkResponse, "__component"> {}
 export interface Footer extends FooterResponse {}
 export interface Homepage extends HomepageResponse {}
-export interface ContentBlock extends Omit<ContentBlockResponse, "id"> {}
 export interface TwoColumnContentBlock extends TwoColumnContentBlockResponse {}
 export interface PageContent extends ContentPageResponse {}
 export interface Header extends HeaderResponse {}
@@ -48,7 +46,7 @@ export function extractNavigationMenusFromNavigationResponse(
 export function extractLogoFromNavigationResponse(
   navigationResponse: HeaderResponse | null
 ): Logo | null {
-  return navigationResponse?.logo.data.attributes || null;
+  return navigationResponse?.logo?.data?.attributes || null;
 }
 
 export type ExtractedNavigationMenusFromNavigationResponse = Array<

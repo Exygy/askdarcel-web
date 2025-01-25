@@ -1,12 +1,16 @@
 import React from "react";
 import { Loader } from "components/ui/Loader";
-import { usePageContent } from "hooks/StrapiAPI";
+import {
+  SingleColumnContentBlockResponse,
+  useContentPageData,
+} from "hooks/StrapiAPI";
 import { Masthead } from "../../components/ui/Masthead/Masthead";
 import { TwoColumnContentSection } from "../../components/ui/TwoColumnContentSection/TwoColumnContentSection";
-import { PageContent, StrapiDatum } from "models/Strapi";
+import { PageContent, StrapiDatum, TwoColumnContentBlock } from "models/Strapi";
+import { SingleColumnContentSection } from "components/ui/TwoColumnContentSection/SingleColumnContentSection";
 
 export const AboutPage = () => {
-  const { data, isLoading } = usePageContent("About");
+  const { data, isLoading } = useContentPageData("About");
 
   const res = data as Array<StrapiDatum<PageContent>>;
 
@@ -20,9 +24,19 @@ export const AboutPage = () => {
     pageData && (
       <>
         <Masthead title={pageData.masthead} />
-        {pageData.two_column_content_blocks?.data?.map((content) => (
-          <TwoColumnContentSection key={content.id} {...content.attributes} />
-        ))}
+        {pageData.content_block?.map((contentBlock) =>
+          contentBlock.__component === "content.single-column-content-block" ? (
+            <SingleColumnContentSection
+              key={(contentBlock as SingleColumnContentBlockResponse).id}
+              {...contentBlock}
+            />
+          ) : (
+            <TwoColumnContentSection
+              key={contentBlock.id}
+              {...(contentBlock as TwoColumnContentBlock)}
+            />
+          )
+        )}
       </>
     )
   );
