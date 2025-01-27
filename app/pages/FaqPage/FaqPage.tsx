@@ -4,6 +4,7 @@ import { useFaqPageData, usePageContent } from "hooks/StrapiAPI";
 import { Masthead } from "../../components/ui/Masthead/Masthead";
 import { TwoColumnContentSection } from "../../components/ui/TwoColumnContentSection/TwoColumnContentSection";
 import { FaqPageContent, StrapiDatum } from "models/Strapi";
+import Accordion from "components/ui/Accordions/Accordion";
 
 export const FaqPage = () => {
   const { data, isLoading } = useFaqPageData();
@@ -20,9 +21,7 @@ export const FaqPage = () => {
     pageData && (
       <>
         <Masthead title={pageData.masthead} />
-        {pageData.faq?.map((content) => (
-          <TwoColumnContentSection key={content.id} {...content.attributes} />
-        ))}
+        {pageData.faq && <Accordion items={pageData.faq} />}
       </>
     )
   );
