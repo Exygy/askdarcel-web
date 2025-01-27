@@ -6,6 +6,7 @@ import {
   ContentPageResponse,
   DynamicLinkResponse,
   EventResponse,
+  FaqPageResponse,
   FooterResponse,
   HeaderResponse,
   HomepageResponse,
@@ -25,6 +26,7 @@ export interface Footer extends FooterResponse {}
 export interface Homepage extends HomepageResponse {}
 export interface TwoColumnContentBlock extends TwoColumnContentBlockResponse {}
 export interface PageContent extends ContentPageResponse {}
+export interface FaqPageContent extends FaqPageResponse {}
 export interface Header extends HeaderResponse {}
 export interface Logo
   extends Pick<LogoResponse, "width" | "height" | "alternativeText" | "url"> {}

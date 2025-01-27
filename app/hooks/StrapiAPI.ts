@@ -54,6 +54,10 @@ export function useContentPageData(title: string) {
   );
 }
 
+export function useFaqPageData() {
+  return useStrapiHook<FaqPageResponse>(`faq-page?[populate]=*`);
+}
+
 export function useNavigationData() {
   const path = "header?populate[logo]=*&populate[navigation][populate]=*";
 
@@ -279,7 +283,7 @@ export interface FaqItem {
 export interface SingleColumnContentBlockResponse {
   id: number;
   content: RootNode[];
-  media?: DynamicMediaResponse;
+  media?: StrapiObjectResponse<ImageResponse>;
 }
 
 export interface TwoColumnContentBlockResponse {
@@ -288,7 +292,7 @@ export interface TwoColumnContentBlockResponse {
   media_align: string;
   content: RootNode[];
   link?: LinkResponse;
-  media?: DynamicMediaResponse;
+  media?: StrapiObjectResponse<ImageResponse>;
 }
 
 export interface CalendarEventResponse {
@@ -308,6 +312,11 @@ export interface HomepageResponse extends BaseDatumAttributesResponse {
     buttons: LinkResponse[];
   };
   two_column_content_block: TwoColumnContentBlockResponse[];
+}
+
+export interface FaqPageResponse extends BaseDatumAttributesResponse {
+  masthead: string;
+  faq: FaqItem[];
 }
 
 export interface ContentPageResponse extends BaseDatumAttributesResponse {

@@ -12,7 +12,7 @@ import { BlocksRenderer } from "@strapi/blocks-react-renderer";
  */
 export const TwoColumnContentSection = (props: TwoColumnContentBlock) => {
   const { link, content, media_align, media } = props;
-  const altText = media?.image?.data?.attributes?.alternativeText || "";
+  const altText = media?.data?.attributes?.alternativeText || "";
 
   return (
     <section
@@ -28,7 +28,7 @@ export const TwoColumnContentSection = (props: TwoColumnContentBlock) => {
       >
         <img
           className={styles.image}
-          src={media?.image?.data?.attributes?.url ?? ""}
+          src={media?.data?.attributes?.url ?? ""}
           alt={altText}
         />
       </div>

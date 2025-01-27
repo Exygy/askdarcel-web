@@ -1,44 +1,14 @@
 @import "../../../styles/utils/_helpers.scss";
 @import "../../../styles/utils/_layoututils.scss";
 
-.twoColumnContentSectionContainer {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr;
+.singleColumnContentSectionContainer {
+  padding: 2rem;
+  max-width: 672px;
+  display: flex;
 }
 
 .contentBlock p {
   color: $text-secondary;
-}
-
-.contentContainer_left,
-.contentContainer_right {
-  padding: 2rem 0;
-}
-
-.contentContainer_left {
-  grid-column: 2;
-  grid-row: 1;
-  align-self: center;
-}
-
-.contentContainer_right {
-  display: flex;
-  justify-content: flex-end;
-  margin-right: 48px;
-  grid-column: 1;
-  grid-row: 1;
-  align-self: center;
-}
-
-.imageContainer_left {
-  grid-column: 1;
-  grid-row: 1;
-}
-
-.imageContainer_right {
-  grid-column: 2;
-  grid-row: 1;
 }
 
 .image {
@@ -54,10 +24,6 @@
 @media screen and (min-width: $min-desktop) {
   .contentBlock {
     max-width: 544px;
-  }
-
-  .contentContainer_left .innerContainer {
-    margin-left: 48px;
   }
 }
 
@@ -82,7 +48,7 @@
     margin: 0px 0px;
   }
 
-  .twoColumnContentSectionContainer {
+  .singleColumnContentSectionContainer {
     display: block;
   }
 

@@ -1,6 +1,5 @@
 import React from "react";
 import styles from "./SingleColumnContentSection.module.scss";
-import { Button } from "../inline/Button/Button";
 import { SingleColumnContentBlockResponse } from "hooks/StrapiAPI";
 import { BlocksRenderer } from "@strapi/blocks-react-renderer";
 
@@ -17,7 +16,7 @@ export const SingleColumnContentSection = (
 
   return (
     <section
-      className={styles.SingleColumnContentSectionContainer}
+      className={styles.singleColumnContentSectionContainer}
       data-testid={"single-column-content-section"}
     >
       <div>
