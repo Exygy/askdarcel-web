@@ -12,11 +12,11 @@ import { HOME_PAGE_DATA } from "../../../test/fixtures/HomePageData";
 // import { Homepage, StrapiDatum } from "models/Strapi";
 import { useHomePageEventsData } from "hooks/StrapiAPI";
 
-// const HOME_PAGE_MOCK = {
-//   data: {
-//     attributes: null,
-//   },
-// };
+const HOME_PAGE_MOCK = {
+  data: {
+    attributes: {},
+  },
+};
 
 const EVENTS_MOCK: {
   data: ReturnType<typeof useHomePageEventsData>["data"];
@@ -25,18 +25,17 @@ const EVENTS_MOCK: {
 };
 
 jest.mock("hooks/StrapiAPI", () => ({
-  useHomepageData: () => HOME_PAGE_DATA,
+  useHomepageData: () => HOME_PAGE_MOCK,
   useHomePageEventsData: () => EVENTS_MOCK,
 }));
 
 describe("<HomePage />", () => {
   it("renders", () => {
+    HOME_PAGE_MOCK.data.attributes = HOME_PAGE_DATA.data.attributes;
     render(<HomePage />, { wrapper: BrowserRouter });
     expect(screen.getByTestId("homepage-title")).toHaveTextContent("Homepage");
     expect(screen.getByTestId("hero")).toBeInTheDocument();
     expect(screen.getAllByTestId("homepage-section")).toHaveLength(2);
-    expect(
-      screen.getByTestId("two-column-content-section")
-    ).toBeInTheDocument();
+    expect(screen.getAllByTestId("two-column-content-section")).toHaveLength(2);
   });
 });

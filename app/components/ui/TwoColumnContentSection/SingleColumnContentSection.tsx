@@ -4,10 +4,8 @@ import { SingleColumnContentBlockResponse } from "hooks/StrapiAPI";
 import { BlocksRenderer } from "@strapi/blocks-react-renderer";
 
 /**
- * Displays a section with two columns, typically text next to media
- *
- * TODO: media can be a video URL, update component to handle
- * TODO: update use srcset and the different media sizes for images
+ * Renders a single column content section that primarily wraps Strapi's
+ * `BlocksRenderer` component.
  */
 export const SingleColumnContentSection = (
   props: SingleColumnContentBlockResponse

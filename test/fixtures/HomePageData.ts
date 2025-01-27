@@ -56,7 +56,7 @@ export const HOME_PAGE_DATA = {
               type: "paragraph",
               children: [
                 {
-                  text: "22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222",
+                  text: "The names openSEAL and Entessa must not be required to allow Recipient to distribute software through any other Contributor to enforce any provision of this License. Severability. (a) If for any version ever published by the Licensed Program or any part thereof, and wants to make Modifications to the Program is made available via Electronic Distribution Mechanism is maintained by a third party intellectual property claims: (a) under intellectual property rights or to use BeOpen trademarks or trade names in a commercial product offering, Product X. That Distributor is then a Commercial Contributor.",
                   type: "text",
                 },
               ],
