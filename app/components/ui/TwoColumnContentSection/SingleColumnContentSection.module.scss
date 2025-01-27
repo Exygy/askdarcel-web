@@ -8,63 +8,11 @@
 }
 
 .innerContainer {
-  width: $page-content-container-max-width;
-}
+  max-width: $page-content-container-max-width;
+  padding: $general-spacing-md;
 
-.contentBlock p {
-  color: $text-secondary;
 }
 
 .image {
   width: 100%;
-}
-
-.contentLinkButton {
-  display: inline-block;
-  margin-top: $general-spacing-xl;
-  margin-bottom: $general-spacing-md;
-}
-
-@media screen and (min-width: $min-desktop) {
-  .contentBlock {
-    max-width: 544px;
-  }
-}
-
-@media screen and (max-width: $min-desktop) {
-  .contentBlock h2 {
-    font-size: 24px;
-  }
-
-  .contentBlock p {
-    font-size: 1rem;
-  }
-
-  .innerContainer {
-    padding: $general-spacing-md;
-  }
-
-  .contentBlock {
-    width: 100%;
-    max-width: 100%;
-    margin: 0px 0px;
-  }
-
-  .contentContainer_right {
-    margin-right: 0;
-  }
-
-  .imageContainer_right {
-    grid-row: 2;
-    grid-column: 1;
-  }
-
-  .imageContainer_left {
-    grid-row: 2;
-    grid-column: none;
-  }
-
-  .contentLinkButton {
-    width: 100%;
-  }
 }
