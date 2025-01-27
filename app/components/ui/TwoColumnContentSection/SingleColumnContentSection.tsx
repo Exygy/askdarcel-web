@@ -19,10 +19,8 @@ export const SingleColumnContentSection = (
       className={styles.singleColumnContentSectionContainer}
       data-testid={"single-column-content-section"}
     >
-      <div>
-        <div className={styles.innerContainer}>
-          <BlocksRenderer content={content} />
-        </div>
+      <div className={styles.innerContainer}>
+        <BlocksRenderer content={content} />
       </div>
     </section>
   );

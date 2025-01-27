@@ -3,8 +3,12 @@
 
 .singleColumnContentSectionContainer {
   padding: 2rem;
-  max-width: 672px;
   display: flex;
+  justify-content: center;
+}
+
+.innerContainer {
+  width: $page-content-container-max-width;
 }
 
 .contentBlock p {
@@ -37,8 +41,6 @@
   }
 
   .innerContainer {
-    width: 100%;
-    max-width: 100%;
     padding: $general-spacing-md;
   }
 
@@ -46,10 +48,6 @@
     width: 100%;
     max-width: 100%;
     margin: 0px 0px;
-  }
-
-  .singleColumnContentSectionContainer {
-    display: block;
   }
 
   .contentContainer_right {

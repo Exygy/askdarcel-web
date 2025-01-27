@@ -1,8 +1,7 @@
 import React from "react";
 import { Loader } from "components/ui/Loader";
-import { useFaqPageData, usePageContent } from "hooks/StrapiAPI";
+import { useFaqPageData } from "hooks/StrapiAPI";
 import { Masthead } from "../../components/ui/Masthead/Masthead";
-import { TwoColumnContentSection } from "../../components/ui/TwoColumnContentSection/TwoColumnContentSection";
 import { FaqPageContent, StrapiDatum } from "models/Strapi";
 import Accordion from "components/ui/Accordions/Accordion";
 

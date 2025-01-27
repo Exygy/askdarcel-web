@@ -50,7 +50,7 @@ export function useHomepageData() {
 
 export function useContentPageData(title: string) {
   return useStrapiHook<ContentPageResponse>(
-    `content-pages?filters[title][$eq]=${title}&populate[content_block][populate][link]=*&populate[content_block][populate][media][populate]=*`
+    `content-pages?filters[title][$eqi]=${title}&populate[content_block][populate][link]=*&populate[content_block][populate][media][populate]=*`
   );
 }
 

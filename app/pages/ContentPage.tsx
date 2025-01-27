@@ -4,13 +4,13 @@ import {
   SingleColumnContentBlockResponse,
   useContentPageData,
 } from "hooks/StrapiAPI";
-import { Masthead } from "../../components/ui/Masthead/Masthead";
-import { TwoColumnContentSection } from "../../components/ui/TwoColumnContentSection/TwoColumnContentSection";
+import { Masthead } from "../components/ui/Masthead/Masthead";
+import { TwoColumnContentSection } from "../components/ui/TwoColumnContentSection/TwoColumnContentSection";
 import { PageContent, StrapiDatum, TwoColumnContentBlock } from "models/Strapi";
 import { SingleColumnContentSection } from "components/ui/TwoColumnContentSection/SingleColumnContentSection";
 
-export const AboutPage = () => {
-  const { data, isLoading } = useContentPageData("About");
+export const ContentPage = ({ pageName }: { pageName: string }) => {
+  const { data, isLoading } = useContentPageData(pageName);
 
   const res = data as Array<StrapiDatum<PageContent>>;
 
