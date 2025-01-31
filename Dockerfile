@@ -1,4 +1,4 @@
-# Use Node.js for building the app
+# Use Node.js for the build stage
 FROM node:18 AS builder
 
 ARG GOOGLE_API_KEY
@@ -20,37 +20,21 @@ ARG NGINX_API_URL
 ARG NGINX_PROXY_HOST_HEADER
 ARG NGINX_SERVER_NAME
 
-ENV GOOGLE_API_KEY=$GOOGLE_API_KEY
-ENV ALGOLIA_INDEX_PREFIX=$ALGOLIA_INDEX_PREFIX
-ENV ALGOLIA_APPLICATION_ID=$ALGOLIA_APPLICATION_ID
-ENV ALGOLIA_READ_ONLY_API_KEY=$ALGOLIA_READ_ONLY_API_KEY
-ENV AUTH0_AUDIENCE=$AUTH0_AUDIENCE
-ENV AUTH0_CLIENT_ID=$AUTH0_CLIENT_ID
-ENV AUTH0_DOMAIN=$AUTH0_DOMAIN
-ENV AUTH0_REDIRECT_URI=$AUTH0_REDIRECT_URI
-ENV STRAPI_API_TOKEN=$STRAPI_API_TOKEN
-ENV STRAPI_API_URL=$STRAPI_API_URL
-ENV API_URL=$API_URL
-ENV API_PROXY_SECURE=$API_PROXY_SECURE
-ENV API_PROXY_CHANGE_ORIGIN=$API_PROXY_CHANGE_ORIGIN
-ENV API_PROXY_REWRITE=$API_PROXY_REWRITE
-
 WORKDIR /app
 
-# Copy package.json and package-lock.json (if available)
+# Copy package files first (to optimize caching)
 COPY package*.json ./
 
 # Install dependencies
 RUN npm install --frozen-lockfile
 
-# Copy the entire app source code
+# Copy source files
 COPY . .
 
 # Build the app
 RUN npm run build
 
-
-# Use nginx for serving the built files
+# Use nginx for the final runtime container
 FROM nginx:stable
 
 WORKDIR /app/askdarcel
@@ -58,10 +42,41 @@ WORKDIR /app/askdarcel
 # Copy built files from the previous build stage
 COPY --from=builder /app/build /app/askdarcel
 
-# Remove default nginx config
-RUN rm /etc/nginx/conf.d/*
+# Install envsubst for runtime variable substitution
+RUN apt-get update && apt-get install -y gettext-base
 
-# Copy custom nginx config
+# Create config directory
+RUN mkdir -p /app/config
+
+# Create a template config file
+RUN echo 'GOOGLE_API_KEY: "${GOOGLE_API_KEY}"\n\
+ALGOLIA_INDEX_PREFIX: "${ALGOLIA_INDEX_PREFIX}"\n\
+ALGOLIA_APPLICATION_ID: "${ALGOLIA_APPLICATION_ID}"\n\
+ALGOLIA_READ_ONLY_API_KEY: "${ALGOLIA_READ_ONLY_API_KEY}"\n\
+AUTH0_AUDIENCE: "${AUTH0_AUDIENCE}"\n\
+AUTH0_CLIENT_ID: "${AUTH0_CLIENT_ID}"\n\
+AUTH0_DOMAIN: "${AUTH0_DOMAIN}"\n\
+AUTH0_REDIRECT_URI: "${AUTH0_REDIRECT_URI}"\n\
+STRAPI_API_TOKEN: "${STRAPI_API_TOKEN}"\n\
+STRAPI_API_URL: "${STRAPI_API_URL}"\n\
+API_URL: "${API_URL}"\n\
+API_PROXY_SECURE: "${API_PROXY_SECURE}"\n\
+API_PROXY_CHANGE_ORIGIN: "${API_PROXY_CHANGE_ORIGIN}"\n\
+API_PROXY_REWRITE: "${API_PROXY_REWRITE}"' > /app/config.yml.template
+
+# Copy nginx config
 COPY ./docker/templates/default.conf.template /etc/nginx/templates/default.conf.template
 
+# Create entrypoint script to generate config.yml dynamically
+RUN echo '#!/bin/sh\n\
+envsubst < /app/config.yml.template > /app/config.yml\n\
+exec "$@"' > /entrypoint.sh
+
+# Make entrypoint script executable
+RUN chmod +x /entrypoint.sh
+
+# Set entrypoint script to ensure config.yml is generated at runtime
+ENTRYPOINT ["/entrypoint.sh"]
+
+# Start nginx
 CMD ["nginx", "-g", "daemon off;"]
