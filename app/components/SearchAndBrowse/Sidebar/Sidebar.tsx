@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import type { Category } from "models/Meta";
 import {
   eligibilitiesMapping,
@@ -46,6 +46,16 @@ const Sidebar = ({
     () => setfilterMenuVisible(false),
     filterMenuVisible
   );
+
+  useEffect(() => {
+    if (filterMenuVisible) {
+      document.body.style.overflow = "hidden";
+      document.body.style.maxHeight = "100vh";
+    } else {
+      document.body.style.overflow = "unset";
+      document.body.style.maxHeight = "unset";
+    }
+  }, [filterMenuVisible]);
 
   let categoryRefinementJsx: React.ReactElement | null = null;
   let eligibilityRefinementJsx: React.ReactElement | null = null;
