@@ -32,7 +32,13 @@ export const CustomMarker = ({
   lat?: number;
   lng?: number;
 }) => (
-  <svg width="36" height="50" viewBox="0 0 110 85" className="marker">
+  <svg
+    width="36"
+    height="50"
+    viewBox="0 0 110 85"
+    className="marker"
+    data-testid="custom-marker"
+  >
     <g fill="none" fillRule="evenodd">
       <g transform="translate(-58, 0)" stroke="#000" id="pin">
         <path
