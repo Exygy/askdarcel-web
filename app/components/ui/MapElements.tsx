@@ -12,7 +12,7 @@ export const createMapOptions = (maps: googleMapReact.Maps) => ({
 
 // eslint-disable-next-line react/no-unused-prop-types, no-empty-pattern
 export const UserLocationMarker = ({}: { lat?: number; lng?: number }) => (
-  <svg width="20" height="20">
+  <svg width="20" height="20" data-testid="user-location-marker">
     <circle
       cx="10"
       cy="10"
