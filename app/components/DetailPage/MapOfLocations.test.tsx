@@ -1,14 +1,6 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { MapOfLocations } from "./MapOfLocations";
-// import GoogleMap from "google-map-react";
-
-// Mock the google-map-react component
-jest.mock("google-map-react", () => {
-  return function DummyMap({ children }: { children: React.ReactNode }) {
-    return <div data-testid="google-map">{children}</div>;
-  };
-});
 
 const mockLocations = [
   {

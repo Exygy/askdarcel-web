@@ -9,7 +9,7 @@
     "lint:fix": "eslint --fix --ext=.js,.jsx,.ts,.tsx .",
     "prettier": "prettier --check .",
     "prettier:fix": "prettier --write .",
-    "test": "jest",
+    "test": "jest --coverage=false",
     "test:watch": "jest --watch",
     "test:watch:all": "jest --watchAll"
   },
@@ -117,12 +117,7 @@
     "typescript-eslint": "^8.13.0",
     "webpack": "^5.94.0",
     "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^5.0.4",
-    "@testing-library/react": "^14.0.0",
-    "@testing-library/jest-dom": "^6.0.0",
-    "@testing-library/user-event": "^14.0.0",
-    "jest": "^29.0.0",
-    "jest-environment-jsdom": "^29.0.0"
+    "webpack-dev-server": "^5.0.4"
   },
   "repository": {
     "type": "git",
