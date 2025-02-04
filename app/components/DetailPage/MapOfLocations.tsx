@@ -23,7 +23,9 @@ export const MapOfLocations = ({
   if (userLocation === null) {
     return <Loader />;
   }
-  const { lat, lng } = userLocation;
+  const {lat: userLat, lng: userLng} = userLocation;
+  const [serviceLat, serviceLng]  = [Number(locations[0].address.latitude), Number(locations[0].address.longitude)];
+
 
   return (
     <div className={styles.locationsMap}>
@@ -32,11 +34,11 @@ export const MapOfLocations = ({
           bootstrapURLKeys={{
             key: config.GOOGLE_API_KEY,
           }}
-          defaultCenter={{ lat, lng }}
-          defaultZoom={15}
+          defaultCenter={{ lat: serviceLat, lng: serviceLng }}
+          defaultZoom={13}
           options={createMapOptions}
         >
-          <UserLocationMarker lat={lat} lng={lng} />
+          <UserLocationMarker lat={userLat} lng={userLng} />
           {locations.map(({ address, id }, i) => (
             <CustomMarker
               key={id}
