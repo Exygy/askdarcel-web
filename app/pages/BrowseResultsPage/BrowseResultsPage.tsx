@@ -25,6 +25,7 @@ import { useInstantSearch, usePagination } from "react-instantsearch";
 import ResultsPagination from "components/SearchAndBrowse/Pagination/ResultsPagination";
 import searchResultsStyles from "components/SearchAndBrowse/SearchResults/SearchResults.module.scss";
 import { SearchResultsHeader } from "components/ui/SearchResultsHeader";
+import { our415Subcategories } from "utils/refinementMappings";
 
 /** Wrapper component that handles state management, URL parsing, and external API requests. */
 export const BrowseResultsPage = () => {
@@ -51,7 +52,11 @@ export const BrowseResultsPage = () => {
 
   useEffect(() => window.scrollTo(0, 0), []);
 
-  const subcategoryNames = subcategories?.map((c) => c.name);
+  // const subcategoryNames = subcategories?.map((c) => c.name);
+
+  const subcategoryNames = subcategories
+    ?.map((c) => c.name)
+    .filter((name) => our415Subcategories.has(name));
   const { name: categoryName, sortAlgoliaSubcategoryRefinements } = category;
 
   // TODO: Handle failure?
