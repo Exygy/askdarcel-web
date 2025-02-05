@@ -2,7 +2,7 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import { MapOfLocations } from "./MapOfLocations";
 
-const mockLocations = [
+const FAKE_LOCATIONS = [
   {
     id: 1,
     address: {
@@ -56,11 +56,12 @@ const mockLocations = [
 ];
 
 describe("MapOfLocations", () => {
-  it("renders map with correct markers", () => {
-    render(<MapOfLocations locations={mockLocations} />);
+  it("renders the correct markers", () => {
+    render(<MapOfLocations locations={FAKE_LOCATIONS} />);
 
     expect(screen.getAllByTestId("user-location-marker").length).toEqual(1);
     expect(screen.getAllByTestId("custom-marker").length).toEqual(2);
     expect(screen.getByText("1. 123 Main St")).toBeInTheDocument();
+    expect(screen.getByText("2. 345 Fake St")).toBeInTheDocument();
   });
 });
