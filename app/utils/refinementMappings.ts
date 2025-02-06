@@ -27,7 +27,7 @@ export const categoriesMapping = {
 };
 
 // From DCYF spreadsheet (contains duplicates):
-export const our415SubcategoriesWithDuplicates = [
+const our415SubcategoriesWithDuplicates = [
   "Arts & Creative Expression",
   "Culinary Arts",
   "Culture & Identity",
@@ -171,7 +171,7 @@ export const our415EligibilitiesMapping = {
   "ESL/ELL (English Language Learner)": ["ESL/ELL (English Language Learner)"],
 };
 
-// only return eligibilities that are in the refinement map
+// TODO: write unit tests for these three helpers
 export const filterItemsUsingMapping = (
   items: RefinementListItem[],
   mapping: Record<string, string[]>
@@ -188,13 +188,12 @@ export const transformItemsUsingMapping = (
   mapping: Record<string, string[]>
 ): RefinementListItem[] => {
   return items.map((item) => {
-    // loook through each mapping key to see if the item label is one of its values
-    const mappedEligibility = Object.entries(mapping).find(
+    const matchingEligibilityMapping = Object.entries(mapping).find(
       ([, apiEligibilities]) => apiEligibilities.includes(item.label)
     );
-    if (mappedEligibility) {
-      const [mappedKey] = mappedEligibility;
-      return { ...item, label: mappedKey }; // same object but with mapped key
+    if (matchingEligibilityMapping) {
+      const [matchingEligibilityKey, _] = matchingEligibilityMapping;
+      return { ...item, label: matchingEligibilityKey };
     }
     return item;
   });
