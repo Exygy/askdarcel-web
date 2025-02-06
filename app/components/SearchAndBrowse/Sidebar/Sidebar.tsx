@@ -193,15 +193,6 @@ const Sidebar = ({
             <div className={styles.filterTitle}>Availability</div>
             <OpenNowFilter />
           </div>
-
-          <div
-            className={`${styles.filterGroup} ${
-              eligibilityRefinementJsx ? "" : styles.hideFilterGroup
-            } `}
-          >
-            <h2 className={styles.filterTitle}>Eligibilities</h2>
-            {eligibilityRefinementJsx}
-          </div>
           {!isSearchResultsPage && (
             <div
               className={`${styles.filterGroup} ${
@@ -212,6 +203,14 @@ const Sidebar = ({
               {categoryRefinementJsx}
             </div>
           )}
+          <div
+            className={`${styles.filterGroup} ${
+              eligibilityRefinementJsx ? "" : styles.hideFilterGroup
+            } `}
+          >
+            <h2 className={styles.filterTitle}>Eligibilities</h2>
+            {eligibilityRefinementJsx}
+          </div>
 
           <div className={styles.filterGroup}>
             <h2 className={styles.filterTitle}>Distance</h2>
