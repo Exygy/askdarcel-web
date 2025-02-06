@@ -171,8 +171,7 @@ export const our415EligibilitiesMapping = {
   "ESL/ELL (English Language Learner)": ["ESL/ELL (English Language Learner)"],
 };
 
-// TODO: write unit tests for these three helpers
-export const filterItemsUsingMapping = (
+export const filterByMappingValues = (
   items: RefinementListItem[],
   mapping: Record<string, string[]>
 ): RefinementListItem[] => {
@@ -183,7 +182,8 @@ export const filterItemsUsingMapping = (
   );
 };
 
-export const transformItemsUsingMapping = (
+// Items in mapping values (apiEligibilities) array become their key's name
+export const normalizeRefinementLabels = (
   items: RefinementListItem[],
   mapping: Record<string, string[]>
 ): RefinementListItem[] => {
@@ -192,7 +192,7 @@ export const transformItemsUsingMapping = (
       ([, apiEligibilities]) => apiEligibilities.includes(item.label)
     );
     if (matchingEligibilityMapping) {
-      const [matchingEligibilityKey, _] = matchingEligibilityMapping;
+      const [matchingEligibilityKey] = matchingEligibilityMapping;
       return { ...item, label: matchingEligibilityKey };
     }
     return item;

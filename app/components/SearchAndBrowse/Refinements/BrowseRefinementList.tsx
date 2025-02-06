@@ -2,8 +2,8 @@ import { RefinementListItem } from "instantsearch.js/es/connectors/refinement-li
 import React, { useEffect, useState } from "react";
 import { useRefinementList, UseRefinementListProps } from "react-instantsearch";
 import {
-  filterItemsUsingMapping,
-  transformItemsUsingMapping,
+  filterByMappingValues,
+  normalizeRefinementLabels,
   deduplicateItemsByLabel,
 } from "utils/refinementMappings";
 import styles from "./RefinementFilters.module.scss";
@@ -54,8 +54,8 @@ const BrowseRefinementList = ({ attribute, mapping, transform }: Props) => {
   // const transformedItems = transform === undefined ? items : transform(items);
   let transformedItems: RefinementListItem[] = items;
   if (mapping) {
-    transformedItems = filterItemsUsingMapping(items, mapping);
-    transformedItems = transformItemsUsingMapping(transformedItems, mapping);
+    transformedItems = filterByMappingValues(items, mapping);
+    transformedItems = normalizeRefinementLabels(transformedItems, mapping);
   } else if (transform) {
     // If no mapping is provided but a transform function is
     transformedItems = transform(items);
