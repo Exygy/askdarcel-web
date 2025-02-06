@@ -1,6 +1,11 @@
 import { RefinementListItem } from "instantsearch.js/es/connectors/refinement-list/connectRefinementList";
 import React, { useEffect, useState } from "react";
 import { useRefinementList, UseRefinementListProps } from "react-instantsearch";
+import {
+  filterItemsUsingMapping,
+  transformItemsUsingMapping,
+  deduplicateItemsByLabel,
+} from "utils/refinementMappings";
 import styles from "./RefinementFilters.module.scss";
 
 interface Props extends UseRefinementListProps {
@@ -11,51 +16,6 @@ interface Props extends UseRefinementListProps {
 
 // Arbitrary upper limit to ensure all refinements are displayed
 const MAXIMUM_ITEMS = 9999;
-
-// MOVE TO HELPERS (and run unit tests)
-
-// only return eligibilities that are in the refinement map
-const filterItemsUsingMapping = (
-  items: RefinementListItem[],
-  mapping: Record<string, string[]>
-): RefinementListItem[] => {
-  return items.filter((item) =>
-    Object.values(mapping).some((apiEligibilities) =>
-      apiEligibilities.includes(item.label)
-    )
-  );
-};
-
-const transformItemsUsingMapping = (
-  items: RefinementListItem[],
-  mapping: Record<string, string[]>
-): RefinementListItem[] => {
-  return items.map((item) => {
-    // loook through each mapping key to see if the item label is one of its values
-    const mappedEligibility = Object.entries(mapping).find(
-      ([, apiEligibilities]) => apiEligibilities.includes(item.label)
-    );
-    if (mappedEligibility) {
-      const [mappedKey] = mappedEligibility;
-      return { ...item, label: mappedKey }; // same object but with mapped key
-    }
-    return item;
-  });
-};
-
-const deduplicateItemsByLabel = (
-  items: RefinementListItem[]
-): RefinementListItem[] => {
-  const seen = new Set();
-  return items.filter((item) => {
-    if (seen.has(item.label)) {
-      return false;
-    } else {
-      seen.add(item.label);
-      return true;
-    }
-  });
-};
 
 /**
  * Facet refinement list component for browse interfaces
