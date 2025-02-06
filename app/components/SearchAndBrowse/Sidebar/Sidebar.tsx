@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import type { Category } from "models/Meta";
 import {
-  eligibilitiesMapping,
   categoriesMapping,
+  our415EligibilitiesMapping,
 } from "utils/refinementMappings";
 import ClearAllFilters from "components/SearchAndBrowse/Refinements/ClearAllFilters";
 import OpenNowFilter from "components/SearchAndBrowse/Refinements/OpenNowFilter";
@@ -119,7 +119,7 @@ const Sidebar = ({
     eligibilityRefinementJsx = (
       <SearchRefinementList
         attribute="eligibilities"
-        mapping={eligibilitiesMapping}
+        mapping={our415EligibilitiesMapping}
       />
     );
   } else {
