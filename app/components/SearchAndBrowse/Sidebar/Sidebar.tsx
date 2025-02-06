@@ -125,7 +125,10 @@ const Sidebar = ({
   } else {
     if (eligibilities?.length) {
       eligibilityRefinementJsx = (
-        <BrowseRefinementList attribute="eligibilities" />
+        <BrowseRefinementList
+          attribute="eligibilities"
+          mapping={our415EligibilitiesMapping}
+        />
       );
     }
     if (subcategories?.length) {
