@@ -230,7 +230,7 @@ export const our415EligibilitiesMapping = {
   "African American": ["African American"],
   Asian: ["Asian"],
   Latinx: ["Hispanic/Latinx", "Latinx"],
-  "Pacific Islander": ["API (Asian/Pacific Islander", "Pacific Islander"],
+  "Pacific Islander": ["API (Asian/Pacific Islander)", "Pacific Islander"],
   "Middle Eastern and North African": ["Middle Eastern and North African"],
   "Native American": ["Native American"],
   "Filipino/a": ["Filipino", "Filipino/a"],
