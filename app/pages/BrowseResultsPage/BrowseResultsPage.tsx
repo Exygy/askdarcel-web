@@ -52,7 +52,6 @@ export const BrowseResultsPage = () => {
 
   useEffect(() => window.scrollTo(0, 0), []);
 
-  // maybe i should just filter the subcategories first and then map our415SubcategoryNames
   const subcategoryNames = subcategories
     ?.map((c) => c.name)
     .filter((name) => our415SubcategoryNames.has(name));
@@ -112,7 +111,6 @@ export const BrowseResultsPage = () => {
           <Sidebar
             isSearchResultsPage={false}
             eligibilities={eligibilities || []}
-            subcategories={subcategories || []} // do i need to update these with our415Subcats?
             subcategoryNames={subcategoryNames || []}
             sortAlgoliaSubcategoryRefinements={
               sortAlgoliaSubcategoryRefinements

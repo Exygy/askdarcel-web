@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import type { Category } from "models/Meta";
 import {
   categoriesMapping,
   our415EligibilitiesMapping,
@@ -23,7 +22,6 @@ import classNames from "classnames";
 const Sidebar = ({
   isSearchResultsPage,
   eligibilities,
-  subcategories,
   subcategoryNames = [],
   sortAlgoliaSubcategoryRefinements = false,
   isMapCollapsed,
@@ -31,7 +29,6 @@ const Sidebar = ({
 }: {
   isSearchResultsPage: boolean;
   eligibilities?: object[] | null;
-  subcategories?: Category[] | null;
   subcategoryNames?: string[];
   sortAlgoliaSubcategoryRefinements?: boolean;
   isMapCollapsed: boolean;
@@ -131,7 +128,7 @@ const Sidebar = ({
         />
       );
     }
-    if (subcategories?.length) {
+    if (subcategoryNames?.length) {
       categoryRefinementJsx = (
         <BrowseRefinementList
           attribute="categories"

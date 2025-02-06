@@ -51,13 +51,11 @@ const BrowseRefinementList = ({ attribute, mapping, transform }: Props) => {
     setChecked(updatedChecked);
   };
 
-  // const transformedItems = transform === undefined ? items : transform(items);
   let transformedItems: RefinementListItem[] = items;
   if (mapping) {
     transformedItems = filterByMappingValues(items, mapping);
     transformedItems = normalizeRefinementLabels(transformedItems, mapping);
   } else if (transform) {
-    // If no mapping is provided but a transform function is
     transformedItems = transform(items);
   }
 
