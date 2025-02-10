@@ -1,8 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import {
-  categoriesMapping,
-  our415EligibilitiesMapping,
-} from "utils/refinementMappings";
+import { our415EligibilitiesMapping } from "utils/refinementMappings";
 import ClearAllFilters from "components/SearchAndBrowse/Refinements/ClearAllFilters";
 import OpenNowFilter from "components/SearchAndBrowse/Refinements/OpenNowFilter";
 import BrowseRefinementList from "components/SearchAndBrowse/Refinements/BrowseRefinementList";
@@ -103,16 +100,7 @@ const Sidebar = ({
     ]
   );
 
-  // Currently, the Search Results Page uses generic categories/eligibilities while the
-  // Service Results Page uses COVID-specific categories. This logic determines which
-  // of these to use as based on the isSearchResultsPage value
   if (isSearchResultsPage) {
-    categoryRefinementJsx = (
-      <SearchRefinementList
-        attribute="categories"
-        mapping={categoriesMapping}
-      />
-    );
     eligibilityRefinementJsx = (
       <SearchRefinementList
         attribute="eligibilities"

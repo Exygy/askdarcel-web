@@ -16,15 +16,7 @@ import { RefinementListItem } from "instantsearch.js/es/connectors/refinement-li
 ]
 */
 
-// TODO: Check why these are still being used
-export const categoriesMapping = {
-  "Basic Needs & Shelter": ["Basic Needs & Shelter"],
-  Employment: ["Employment"],
-  "Eviction Prevention": ["Eviction Prevention"],
-  "Health & Medical": ["Health & Medical"],
-  Housing: ["Housing"],
-  Legal: ["Legal"],
-};
+/* SUBCATEGORIES */
 
 // From DCYF spreadsheet (contains duplicates):
 const our415SubcategoriesWithDuplicates = [
@@ -110,6 +102,8 @@ export const our415SubcategoryNames = new Set(
   our415SubcategoriesWithDuplicates
 );
 
+/* ELIGIBILITIES */
+
 export const our415EligibilitiesMapping = {
   "African American": ["African American"],
   Asian: ["Asian"],
@@ -170,6 +164,8 @@ export const our415EligibilitiesMapping = {
   Chinese: ["Chinese"],
   "ESL/ELL (English Language Learner)": ["ESL/ELL (English Language Learner)"],
 };
+
+/* HELPERS */
 
 export const filterByMappingValues = (
   items: RefinementListItem[],
