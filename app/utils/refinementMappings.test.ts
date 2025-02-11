@@ -76,19 +76,22 @@ describe("mapSFSGApiEligibilitiesToOur415ByConfig", () => {
       },
     ];
 
-    const result = mapSFSGApiEligibilitiesToOur415ByConfig(items, mockMapping);
-
-    expect(result).toHaveLength(5);
-    const resultLabels = result.map((item) => item.label);
-
-    expect(resultLabels).toEqual(
-      expect.arrayContaining([
-        "Pacific Islander",
-        "Toddler",
-        "Uninsured",
-        "Multiple Values",
-        "Transgender and Gender Non-Conforming",
-      ])
-    );
+    const result = mapSFSGApiEligibilitiesToOur415ByConfig(
+      items,
+      mockMapping
+    ).sort((a, b) => a.label.localeCompare(b.label));
+    const expected = [
+      { count: 4, isRefined: false, label: "Multiple Values", value: "5" },
+      { count: 10, isRefined: false, label: "Pacific Islander", value: "1" },
+      { count: 7, isRefined: false, label: "Toddler", value: "3" },
+      {
+        count: 2,
+        isRefined: false,
+        label: "Transgender and Gender Non-Conforming",
+        value: "8",
+      },
+      { count: 3, isRefined: false, label: "Uninsured", value: "4" },
+    ];
+    expect(result).toStrictEqual(expected);
   });
 });
