@@ -59,7 +59,7 @@ const FAKE_LOCATIONS = [
 
 describe("MapOfLocations", () => {
   it("renders the correct markers", () => {
-    const customContextValue = {
+    const mockContextValue = {
       userLocation: {
         coords: { lat: 37.7749, lng: -122.4194 },
         inSanFrancisco: true,
@@ -69,7 +69,7 @@ describe("MapOfLocations", () => {
     };
 
     render(
-      <AppContext.Provider value={customContextValue}>
+      <AppContext.Provider value={mockContextValue}>
         <MapOfLocations locations={FAKE_LOCATIONS} />
       </AppContext.Provider>
     );
@@ -81,7 +81,7 @@ describe("MapOfLocations", () => {
   });
 
   it("does not render the user-location-marker if user is outside of San Francisco and inSanFrancisco is true,", () => {
-    const customContextValue = {
+    const mockContextValue = {
       userLocation: {
         coords: { lat: 37.7749, lng: -122.4194 },
         inSanFrancisco: false,
@@ -91,7 +91,7 @@ describe("MapOfLocations", () => {
     };
 
     render(
-      <AppContext.Provider value={customContextValue}>
+      <AppContext.Provider value={mockContextValue}>
         <MapOfLocations locations={FAKE_LOCATIONS} />
       </AppContext.Provider>
     );
