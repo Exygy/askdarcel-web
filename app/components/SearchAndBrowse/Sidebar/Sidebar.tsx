@@ -1,5 +1,8 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import { our415EligibilitiesMapping } from "utils/refinementMappings";
+import {
+  our415EligibilitiesMapping,
+  mapSFSGApiEligibilitiesToOur415ByConfig,
+} from "utils/refinementMappings";
 import ClearAllFilters from "components/SearchAndBrowse/Refinements/ClearAllFilters";
 import OpenNowFilter from "components/SearchAndBrowse/Refinements/OpenNowFilter";
 import BrowseRefinementList from "components/SearchAndBrowse/Refinements/BrowseRefinementList";
@@ -31,14 +34,14 @@ const Sidebar = ({
   isMapCollapsed: boolean;
   setIsMapCollapsed: (_isMapCollapsed: boolean) => void;
 }) => {
-  const [filterMenuVisible, setfilterMenuVisible] = useState(false);
+  const [filterMenuVisible, setFilterMenuVisible] = useState(false);
   const filterMenuRef = useRef<HTMLDivElement>(null);
   const { aroundUserLocationRadius } = useAppContext();
   const { setAroundRadius } = useAppContextUpdater();
 
   useClickOutside(
     filterMenuRef,
-    () => setfilterMenuVisible(false),
+    () => setFilterMenuVisible(false),
     filterMenuVisible
   );
 
@@ -112,7 +115,12 @@ const Sidebar = ({
       eligibilityRefinementJsx = (
         <BrowseRefinementList
           attribute="eligibilities"
-          mapping={our415EligibilitiesMapping}
+          transform={(items: RefinementListItem[]) =>
+            mapSFSGApiEligibilitiesToOur415ByConfig(
+              items,
+              our415EligibilitiesMapping
+            )
+          }
         />
       );
     }
@@ -140,7 +148,7 @@ const Sidebar = ({
       <div className={styles.filtersButtonContainer} aria-hidden>
         <Button
           variant="linkBlue"
-          onClick={() => setfilterMenuVisible(!filterMenuVisible)}
+          onClick={() => setFilterMenuVisible(!filterMenuVisible)}
           iconName="sliders"
           iconVariant="before"
           mobileFullWidth={false}
@@ -166,7 +174,7 @@ const Sidebar = ({
             <Button
               variant="linkBlue"
               mobileFullWidth={false}
-              onClick={() => setfilterMenuVisible(!filterMenuVisible)}
+              onClick={() => setFilterMenuVisible(!filterMenuVisible)}
               size="lg"
             >
               Close

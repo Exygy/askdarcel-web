@@ -1,11 +1,9 @@
 import { RefinementListItem } from "instantsearch.js/es/connectors/refinement-list/connectRefinementList";
 import React, { useEffect, useState } from "react";
 import { useRefinementList, UseRefinementListProps } from "react-instantsearch";
-import { mapSFSGApiEligibilitiesToOur415ByConfig } from "utils/refinementMappings";
 import styles from "./RefinementFilters.module.scss";
 
 interface Props extends UseRefinementListProps {
-  mapping?: Record<string, string[]>;
   attribute: string;
   transform?: (items: RefinementListItem[]) => RefinementListItem[];
 }
@@ -16,11 +14,10 @@ const MAXIMUM_ITEMS = 9999;
 /**
  * Facet refinement list component for browse interfaces
  */
-const BrowseRefinementList = ({ attribute, mapping, transform }: Props) => {
+const BrowseRefinementList = ({ attribute, transform }: Props) => {
   const [checked, setChecked] = useState<Set<string>>(new Set());
   const { items, refine } = useRefinementList({
     attribute,
-    sortBy: ["name:asc"],
     limit: MAXIMUM_ITEMS,
   });
 
@@ -47,13 +44,7 @@ const BrowseRefinementList = ({ attribute, mapping, transform }: Props) => {
     setChecked(updatedChecked);
   };
 
-  let transformedItems: RefinementListItem[] = items;
-  if (mapping) {
-    transformedItems = mapSFSGApiEligibilitiesToOur415ByConfig(items, mapping);
-  } else if (transform) {
-    transformedItems = transform(items);
-  }
-
+  const transformedItems = transform ? transform(items) : items;
   transformedItems.sort((a, b) => a.label.localeCompare(b.label));
 
   return (
