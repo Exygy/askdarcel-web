@@ -1,6 +1,8 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
+import { AppContext } from "utils";
 import { MapOfLocations } from "./MapOfLocations";
+import { AroundRadius } from "algoliasearch";
 
 const FAKE_LOCATIONS = [
   {
@@ -57,9 +59,46 @@ const FAKE_LOCATIONS = [
 
 describe("MapOfLocations", () => {
   it("renders the correct markers", () => {
-    render(<MapOfLocations locations={FAKE_LOCATIONS} />);
+    const customContextValue = {
+      userLocation: {
+        coords: { lat: 37.7749, lng: -122.4194 },
+        isDefault: false,
+      },
+      aroundUserLocationRadius: "all" as AroundRadius,
+      aroundLatLng: "37.7749,-122.4194",
+    };
+
+    render(
+      <AppContext.Provider value={customContextValue}>
+        <MapOfLocations locations={FAKE_LOCATIONS} />
+      </AppContext.Provider>
+    );
 
     expect(screen.getAllByTestId("user-location-marker").length).toEqual(1);
+    expect(screen.getAllByTestId("custom-marker").length).toEqual(2);
+    expect(screen.getByText("1. 123 Main St")).toBeInTheDocument();
+    expect(screen.getByText("2. 345 Fake St")).toBeInTheDocument();
+  });
+
+  it("does not render the user-location-marker if user is outside of San Francisco and isDefault is true,", () => {
+    const customContextValue = {
+      userLocation: {
+        coords: { lat: 37.7749, lng: -122.4194 },
+        isDefault: true, // if isDefault is true, coords are default SF value and no markers are shown on maps
+      },
+      aroundUserLocationRadius: "all" as AroundRadius,
+      aroundLatLng: "37.7749,-122.4194",
+    };
+
+    render(
+      <AppContext.Provider value={customContextValue}>
+        <MapOfLocations locations={FAKE_LOCATIONS} />
+      </AppContext.Provider>
+    );
+
+    expect(
+      screen.queryByTestId("user-location-marker")
+    ).not.toBeInTheDocument();
     expect(screen.getAllByTestId("custom-marker").length).toEqual(2);
     expect(screen.getByText("1. 123 Main St")).toBeInTheDocument();
     expect(screen.getByText("2. 345 Fake St")).toBeInTheDocument();
