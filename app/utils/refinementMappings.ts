@@ -19,7 +19,7 @@ import { RefinementListItem } from "instantsearch.js/es/connectors/refinement-li
 /* SUBCATEGORIES */
 
 // From DCYF spreadsheet (contains duplicates):
-const our415SubcategoriesWithDuplicates = [
+const OUR415_SUBCATS_WITH_DUPLICATES = [
   "Arts & Creative Expression",
   "Culinary Arts",
   "Culture & Identity",
@@ -98,9 +98,7 @@ const our415SubcategoriesWithDuplicates = [
   "Youth Leadership",
 ];
 
-export const our415SubcategoryNames = new Set(
-  our415SubcategoriesWithDuplicates
-);
+export const our415SubcategoryNames = new Set(OUR415_SUBCATS_WITH_DUPLICATES);
 
 /* ELIGIBILITIES */
 
@@ -165,46 +163,37 @@ export const our415EligibilitiesMapping = {
   "ESL/ELL (English Language Learner)": ["ESL/ELL (English Language Learner)"],
 };
 
-/* HELPERS */
-
-export const filterByMappingValues = (
-  items: RefinementListItem[],
-  mapping: Record<string, string[]>
-): RefinementListItem[] => {
-  return items.filter((item) =>
-    Object.values(mapping).some((apiEligibilities) =>
-      apiEligibilities.includes(item.label)
-    )
-  );
-};
-
-// Items in mapping values (apiEligibilities) array become their key's name
-export const normalizeRefinementLabels = (
-  items: RefinementListItem[],
-  mapping: Record<string, string[]>
-): RefinementListItem[] => {
-  return items.map((item) => {
-    const matchingEligibilityMapping = Object.entries(mapping).find(
-      ([, apiEligibilities]) => apiEligibilities.includes(item.label)
-    );
-    if (matchingEligibilityMapping) {
-      const [matchingEligibilityKey] = matchingEligibilityMapping;
-      return { ...item, label: matchingEligibilityKey };
-    }
-    return item;
-  });
-};
-
-export const deduplicateItemsByLabel = (
-  items: RefinementListItem[]
+export const mapSFSGApiEligibilitiesToOur415ByConfig = (
+  SFSGApiEligibilities: RefinementListItem[],
+  our415mapping: Record<string, string[]>
 ): RefinementListItem[] => {
   const seen = new Set();
-  return items.filter((item) => {
-    if (seen.has(item.label)) {
-      return false;
-    } else {
-      seen.add(item.label);
-      return true;
-    }
-  });
+  return SFSGApiEligibilities.filter(
+    // only return eligibilities that exist in mapping
+    (item) =>
+      Object.values(our415mapping).some((apiEligibilities) =>
+        apiEligibilities.includes(item.label)
+      )
+  )
+    .map(
+      // item label becomes mapping key's name
+      (item) => ({
+        ...item,
+        label:
+          Object.entries(our415mapping).find(([, values]) =>
+            values.includes(item.label)
+          )?.[0] ?? item.label,
+      })
+    )
+    .filter(
+      // remove duplicates by item label
+      (item) => {
+        if (seen.has(item.label)) {
+          return false;
+        } else {
+          seen.add(item.label);
+          return true;
+        }
+      }
+    );
 };

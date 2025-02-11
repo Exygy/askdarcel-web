@@ -1,11 +1,7 @@
 import { RefinementListItem } from "instantsearch.js/es/connectors/refinement-list/connectRefinementList";
 import React, { useEffect, useState } from "react";
 import { useRefinementList, UseRefinementListProps } from "react-instantsearch";
-import {
-  filterByMappingValues,
-  normalizeRefinementLabels,
-  deduplicateItemsByLabel,
-} from "utils/refinementMappings";
+import { mapSFSGApiEligibilitiesToOur415ByConfig } from "utils/refinementMappings";
 import styles from "./RefinementFilters.module.scss";
 
 interface Props extends UseRefinementListProps {
@@ -53,13 +49,11 @@ const BrowseRefinementList = ({ attribute, mapping, transform }: Props) => {
 
   let transformedItems: RefinementListItem[] = items;
   if (mapping) {
-    transformedItems = filterByMappingValues(items, mapping);
-    transformedItems = normalizeRefinementLabels(transformedItems, mapping);
+    transformedItems = mapSFSGApiEligibilitiesToOur415ByConfig(items, mapping);
   } else if (transform) {
     transformedItems = transform(items);
   }
 
-  transformedItems = deduplicateItemsByLabel(transformedItems);
   transformedItems.sort((a, b) => a.label.localeCompare(b.label));
 
   return (
