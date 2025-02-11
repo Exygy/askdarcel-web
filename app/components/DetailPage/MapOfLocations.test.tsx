@@ -62,7 +62,7 @@ describe("MapOfLocations", () => {
     const customContextValue = {
       userLocation: {
         coords: { lat: 37.7749, lng: -122.4194 },
-        isDefault: false,
+        inSanFrancisco: true,
       },
       aroundUserLocationRadius: "all" as AroundRadius,
       aroundLatLng: "37.7749,-122.4194",
@@ -80,11 +80,11 @@ describe("MapOfLocations", () => {
     expect(screen.getByText("2. 345 Fake St")).toBeInTheDocument();
   });
 
-  it("does not render the user-location-marker if user is outside of San Francisco and isDefault is true,", () => {
+  it("does not render the user-location-marker if user is outside of San Francisco and inSanFrancisco is true,", () => {
     const customContextValue = {
       userLocation: {
         coords: { lat: 37.7749, lng: -122.4194 },
-        isDefault: true, // if isDefault is true, coords are default SF value and no markers are shown on maps
+        inSanFrancisco: false,
       },
       aroundUserLocationRadius: "all" as AroundRadius,
       aroundLatLng: "37.7749,-122.4194",

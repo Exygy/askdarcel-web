@@ -22,7 +22,7 @@ export const MapOfLocations = ({
 
   const {
     coords: { lat: userLat, lng: userLng },
-    isDefault,
+    inSanFrancisco,
   } = userLocation;
   const [serviceLat, serviceLng] = [
     Number(locations[0].address.latitude),
@@ -40,7 +40,7 @@ export const MapOfLocations = ({
           defaultZoom={13}
           options={createMapOptions}
         >
-          {!isDefault && <UserLocationMarker lat={userLat} lng={userLng} />}
+          {inSanFrancisco && <UserLocationMarker lat={userLat} lng={userLng} />}
           {locations.map(({ address, id }, i) => (
             <CustomMarker
               key={id}

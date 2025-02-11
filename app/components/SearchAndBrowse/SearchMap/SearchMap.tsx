@@ -88,7 +88,7 @@ export const SearchMap = ({
           }}
           options={createMapOptions}
         >
-          {!userLocation.isDefault && (
+          {userLocation.inSanFrancisco && (
             <UserLocationMarker
               lat={userLocation?.coords.lat}
               lng={userLocation?.coords.lng}

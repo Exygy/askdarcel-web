@@ -31,7 +31,7 @@ interface AppProviderProps {
 export const AppContext = createContext<Context>({
   userLocation: {
     coords: COORDS_MID_SAN_FRANCISCO,
-    isDefault: true,
+    inSanFrancisco: false,
   },
   aroundUserLocationRadius: "all",
   aroundLatLng: "",

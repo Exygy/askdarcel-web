@@ -213,7 +213,7 @@ const Sidebar = ({
             </div>
           )}
 
-          {!userLocation.isDefault && (
+          {userLocation.inSanFrancisco && (
             <div className={styles.filterGroup}>
               <h2 className={styles.filterTitle}>Distance</h2>
               <label className={styles.checkBox}>

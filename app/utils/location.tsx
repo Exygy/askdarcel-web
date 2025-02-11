@@ -7,7 +7,7 @@ type GeoCoordinates = { lat: number; lng: number };
 
 export type UserLocation = {
   coords: GeoCoordinates;
-  isDefault: boolean;
+  inSanFrancisco: boolean;
 };
 
 export const COORDS_MID_SAN_FRANCISCO: GeoCoordinates = {
@@ -46,7 +46,7 @@ export const getLocationBrowser = () =>
             lng: round(position.coords.longitude, 4),
           };
           if (areCoordsInSanFrancisco(coords)) {
-            resolve({ coords, isDefault: false });
+            resolve({ coords, inSanFrancisco: true });
           } else {
             const msg = `User location out of bounds: ${coords.lat},${coords.lng}`;
             console.log(msg); // eslint-disable-line no-console
@@ -79,7 +79,7 @@ export const getLocationGoogle = () =>
       .then((r) => r.json())
       .then(({ location }: { location: GeoCoordinates }) => {
         if (areCoordsInSanFrancisco(location)) {
-          resolve({ coords: location, isDefault: false });
+          resolve({ coords: location, inSanFrancisco: true });
         } else {
           const msg = "User location out of bounds";
           console.log(msg); // eslint-disable-line no-console
@@ -91,7 +91,7 @@ export const getLocationGoogle = () =>
 
 export const useDefaultSanFranciscoLocation = () =>
   new Promise<UserLocation>((resolve) => {
-    resolve({ coords: COORDS_MID_SAN_FRANCISCO, isDefault: true });
+    resolve({ coords: COORDS_MID_SAN_FRANCISCO, inSanFrancisco: false });
   });
 
 /**
