@@ -1,0 +1,19 @@
+@import "../../styles/utils/_helpers.scss";
+
+.faq-page-content {
+  display: flex;
+  flex-direction: row;
+  gap: $spacing-9;
+  justify-content: space-evenly;
+
+  > :first-child {
+    padding: $spacing-9;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-8;
+  }
+
+  @include r_max($break-tablet-p) {
+    flex-wrap: wrap;
+  }
+}

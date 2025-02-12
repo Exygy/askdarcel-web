@@ -4,6 +4,7 @@ import { useFaqPageData } from "hooks/StrapiAPI";
 import { Masthead } from "../../components/ui/Masthead/Masthead";
 import { FaqPageContent, StrapiDatum } from "models/Strapi";
 import Accordion from "components/ui/Accordions/Accordion";
+import styles from "./FaqPage.module.scss";
 
 export const FaqPage = () => {
   const { data, isLoading } = useFaqPageData();
@@ -11,6 +12,10 @@ export const FaqPage = () => {
   const res = data as StrapiDatum<FaqPageContent>;
 
   const pageData = res?.attributes || null;
+  const image = {
+    url: pageData?.image?.data?.attributes?.url,
+    alternativeText: pageData?.image?.data?.attributes?.alternativeText ?? "",
+  };
 
   if (isLoading) {
     return <Loader />;
@@ -18,10 +23,24 @@ export const FaqPage = () => {
 
   return (
     pageData && (
-      <>
+      <div className="faq-page">
         <Masthead title={pageData.masthead} />
-        {pageData.faq && <Accordion items={pageData.faq} />}
-      </>
+        <div className={styles["faq-page-content"]}>
+          {pageData.faq && (
+            <div>
+              <h2>{pageData.headercontent}</h2>
+              <Accordion items={pageData.faq} />
+            </div>
+          )}
+          {pageData.image && (
+            <img
+              className={""}
+              src={`http://localhost:1337${image.url}`}
+              alt={image.alternativeText}
+            />
+          )}
+        </div>
+      </div>
     )
   );
 };
