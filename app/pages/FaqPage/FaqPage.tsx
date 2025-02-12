@@ -33,11 +33,12 @@ export const FaqPage = () => {
             </div>
           )}
           {pageData.image && (
-            <img
-              className={""}
-              src={`http://localhost:1337${image.url}`}
-              alt={image.alternativeText}
-            />
+            <div>
+              <img
+                src={`http://localhost:1337${image.url}`}
+                alt={image.alternativeText}
+              />
+            </div>
           )}
         </div>
       </div>
