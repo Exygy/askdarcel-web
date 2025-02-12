@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from "react";
+import React, { useState } from "react";
 import GoogleMap from "google-map-react";
 import { Tooltip } from "react-tippy";
 import "react-tippy/dist/tippy.css";
@@ -20,6 +20,20 @@ interface SearchMapProps {
   mobileMapIsCollapsed: boolean;
   handleSearchMapAction: (searchMapAction: SearchMapActions) => void;
 }
+
+const groupHitsByLocation = (hits: TransformedSearchHit[]) => {
+  return hits.reduce((acc, hit) => {
+    hit.locations.forEach((location) => {
+      const key = `${location.lat}-${location.long}`;
+      if (!acc[key]) {
+        acc[key] = [];
+      }
+      acc[key].push({ hit, location });
+    });
+    return acc;
+  }, {} as Record<string, { hit: TransformedSearchHit; location: { id: string; lat: string; long: string; label: string } }[]>);
+};
+
 export const SearchMap = ({
   hits,
   mobileMapIsCollapsed,
@@ -55,6 +69,49 @@ export const SearchMap = ({
       return undefined;
     }
   };
+
+  const groupedMarkers = groupHitsByLocation(hits);
+
+  const markers = Object.keys(groupedMarkers).flatMap((key) => {
+    const group = groupedMarkers[key];
+    const total = group.length;
+
+    if (total === 1) {
+      const { hit, location } = group[0];
+      return (
+        <GoogleSearchHitMarkerWorkaround
+          key={`${location.id}-single`}
+          lat={Number(location.lat)}
+          lng={Number(location.long)}
+          tag={location.label}
+          hit={hit}
+        />
+      );
+    } else {
+      const epicenterLat = Number(group[0].location.lat);
+      const epicenterLng = Number(group[0].location.long);
+      const cols = Math.ceil(Math.sqrt(total));
+      const rows = Math.ceil(total / cols);
+      const spacing = 0.00004;
+
+      const groupMarkers = group.map((item, index) => {
+        const row = Math.floor(index / cols);
+        const col = index % cols;
+        const offsetLat = epicenterLat + (row - (rows - 1) / 2) * spacing;
+        const offsetLng = epicenterLng + (col - (cols - 1) / 2) * spacing;
+        return (
+          <GoogleSearchHitMarkerWorkaround
+            key={`${item.location.id}-${index}`}
+            lat={offsetLat}
+            lng={offsetLng}
+            tag={item.location.label}
+            hit={item.hit}
+          />
+        );
+      });
+      return groupMarkers.reverse();
+    }
+  });
 
   return (
     <div className="results-map no-print">
@@ -93,21 +150,7 @@ export const SearchMap = ({
             lng={userLocation?.lng}
             key={1}
           />
-          {hits.reduce((markers, hit) => {
-            // Add a marker for each address of each hit
-            hit.locations.forEach((location) => {
-              markers.push(
-                <GoogleSearchHitMarkerWorkaround
-                  key={location.id}
-                  lat={Number(location.lat)}
-                  lng={Number(location.long)}
-                  tag={location.label}
-                  hit={hit}
-                />
-              );
-            });
-            return markers;
-          }, [] as ReactElement[])}
+          {markers}
         </GoogleMap>
       </div>
     </div>
