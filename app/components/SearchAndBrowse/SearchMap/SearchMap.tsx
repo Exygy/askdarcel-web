@@ -34,6 +34,22 @@ const groupHitsByLocation = (hits: TransformedSearchHit[]) => {
   }, {} as Record<string, { hit: TransformedSearchHit; location: { id: string; lat: string; long: string; label: string } }[]>);
 };
 
+const computeGridOffset = (
+  index: number,
+  total: number,
+  epicenterLat: number,
+  epicenterLng: number,
+  spacing: number = 0.00004
+): { offsetLat: number; offsetLng: number } => {
+  const cols = Math.ceil(Math.sqrt(total));
+  const rows = Math.ceil(total / cols);
+  const row = Math.floor(index / cols);
+  const col = index % cols;
+  const offsetLat = epicenterLat + (row - (rows - 1) / 2) * spacing;
+  const offsetLng = epicenterLng + (col - (cols - 1) / 2) * spacing;
+  return { offsetLat, offsetLng };
+};
+
 export const SearchMap = ({
   hits,
   mobileMapIsCollapsed,
@@ -90,15 +106,14 @@ export const SearchMap = ({
     } else {
       const epicenterLat = Number(group[0].location.lat);
       const epicenterLng = Number(group[0].location.long);
-      const cols = Math.ceil(Math.sqrt(total));
-      const rows = Math.ceil(total / cols);
-      const spacing = 0.00004;
 
       const groupMarkers = group.map((item, index) => {
-        const row = Math.floor(index / cols);
-        const col = index % cols;
-        const offsetLat = epicenterLat + (row - (rows - 1) / 2) * spacing;
-        const offsetLng = epicenterLng + (col - (cols - 1) / 2) * spacing;
+        const { offsetLat, offsetLng } = computeGridOffset(
+          index,
+          total,
+          epicenterLat,
+          epicenterLng
+        );
         return (
           <GoogleSearchHitMarkerWorkaround
             key={`${item.location.id}-${index}`}
