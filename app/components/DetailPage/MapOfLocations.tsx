@@ -2,13 +2,14 @@ import React from "react";
 import GoogleMap from "google-map-react";
 import config from "../../config";
 import { LocationDetails } from "../../models";
-import LocationTimesAccordion from "./LocationTimesAccordion";
+import { useAppContext } from "../../utils";
+import { computeGridOffset } from "utils/map";
 import {
   createMapOptions,
   CustomMarker,
   UserLocationMarker,
 } from "../ui/MapElements";
-import { useAppContext } from "../../utils";
+import LocationTimesAccordion from "./LocationTimesAccordion";
 import styles from "./MapOfLocations.module.scss";
 
 // TODO: Accordion needs big refactor/rebuild which is out of scope of this ticket. Will create new ticket.
