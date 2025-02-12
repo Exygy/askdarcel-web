@@ -58,10 +58,10 @@ export const SearchMap = ({
     }
   };
 
-  const groupedMarkers = groupHitsByLocation(hits);
+  const groupedHits = groupHitsByLocation(hits);
 
-  const markers = Object.keys(groupedMarkers).flatMap((key) => {
-    const group = groupedMarkers[key];
+  const markers = Object.keys(groupedHits).flatMap((key) => {
+    const group = groupedHits[key];
     const total = group.length;
 
     if (total === 1) {

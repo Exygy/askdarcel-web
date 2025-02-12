@@ -30,6 +30,50 @@ export const MapOfLocations = ({
     Number(locations[0].address.longitude),
   ];
 
+  const groupedLocations = locations.reduce((acc, location, i) => {
+    const key = `${location.address.latitude}-${location.address.longitude}`;
+    if (!acc[key]) {
+      acc[key] = [];
+    }
+    acc[key].push({ location, markerIndex: i + 1 });
+    return acc;
+  }, {} as Record<string, { location: LocationDetails; markerIndex: number }[]>);
+
+  const markers = Object.entries(groupedLocations).flatMap(([, group]) => {
+    if (group.length === 1) {
+      const { location, markerIndex } = group[0];
+      return (
+        <CustomMarker
+          key={location.id}
+          lat={Number(location.address.latitude)}
+          lng={Number(location.address.longitude)}
+          text={`${markerIndex}`}
+        />
+      );
+    } else {
+      const epicenterLat = Number(group[0].location.address.latitude);
+      const epicenterLng = Number(group[0].location.address.longitude);
+
+      const groupMarkers = group.map((item, index) => {
+        const { offsetLat, offsetLng } = computeGridOffset(
+          index,
+          group.length,
+          epicenterLat,
+          epicenterLng
+        );
+        return (
+          <CustomMarker
+            key={`${item.location.id}-${index}`}
+            lat={offsetLat}
+            lng={offsetLng}
+            text={`${item.markerIndex}`}
+          />
+        );
+      });
+      return groupMarkers.reverse();
+    }
+  });
+
   return (
     <div className={styles.locationsMap} data-testid="map-of-locations">
       <div className="map">
@@ -42,14 +86,7 @@ export const MapOfLocations = ({
           options={createMapOptions}
         >
           {inSanFrancisco && <UserLocationMarker lat={userLat} lng={userLng} />}
-          {locations.map(({ address, id }, i) => (
-            <CustomMarker
-              key={id}
-              lat={Number(address?.latitude) || 0}
-              lng={Number(address?.longitude) || 0}
-              text={`${i + 1}`}
-            />
-          ))}
+          {markers}
         </GoogleMap>
       </div>
       <LocationTimesAccordion locations={locations} />
