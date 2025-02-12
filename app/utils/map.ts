@@ -31,7 +31,7 @@ export const computeGridOffset = (
   total: number,
   epicenterLat: number,
   epicenterLng: number,
-  spacing: number = 0.00004
+  spacing = 0.00004
 ): { offsetLat: number; offsetLng: number } => {
   const cols = Math.ceil(Math.sqrt(total));
   const rows = Math.ceil(total / cols);
