@@ -14,7 +14,8 @@ export const FaqPage = () => {
   const pageData = res?.attributes || null;
   const image = {
     url: pageData?.image?.data?.attributes?.url,
-    alternativeText: pageData?.image?.data?.attributes?.alternativeText ?? "",
+    alternativeText:
+      pageData?.image?.data?.attributes?.alternativeText ?? "FAQ page image",
   };
 
   if (isLoading) {
