@@ -3,7 +3,7 @@ import GoogleMap from "google-map-react";
 import config from "../../config";
 import { LocationDetails } from "../../models";
 import { useAppContext } from "../../utils";
-import { computeGridOffset } from "utils/map";
+import { computeGridOffset, groupServiceLocations } from "utils/map";
 import {
   createMapOptions,
   CustomMarker,
@@ -30,14 +30,7 @@ export const MapOfLocations = ({
     Number(locations[0].address.longitude),
   ];
 
-  const groupedLocations = locations.reduce((acc, location, i) => {
-    const key = `${location.address.latitude}-${location.address.longitude}`;
-    if (!acc[key]) {
-      acc[key] = [];
-    }
-    acc[key].push({ location, markerIndex: i + 1 });
-    return acc;
-  }, {} as Record<string, { location: LocationDetails; markerIndex: number }[]>);
+  const groupedLocations = groupServiceLocations(locations);
 
   const markers = Object.entries(groupedLocations).flatMap(([, group]) => {
     if (group.length === 1) {
