@@ -4,6 +4,7 @@ import { Tooltip } from "react-tippy";
 import "react-tippy/dist/tippy.css";
 import SearchEntry from "components/SearchAndBrowse/SearchMap/SearchEntry";
 import { useAppContext, useAppContextUpdater } from "utils";
+import { groupHitsByLocation, computeGridOffset } from "utils/map";
 import { Button } from "components/ui/inline/Button/Button";
 import {
   createMapOptions,
@@ -20,35 +21,6 @@ interface SearchMapProps {
   mobileMapIsCollapsed: boolean;
   handleSearchMapAction: (searchMapAction: SearchMapActions) => void;
 }
-
-const groupHitsByLocation = (hits: TransformedSearchHit[]) => {
-  return hits.reduce((acc, hit) => {
-    hit.locations.forEach((location) => {
-      const key = `${location.lat}-${location.long}`;
-      if (!acc[key]) {
-        acc[key] = [];
-      }
-      acc[key].push({ hit, location });
-    });
-    return acc;
-  }, {} as Record<string, { hit: TransformedSearchHit; location: { id: string; lat: string; long: string; label: string } }[]>);
-};
-
-const computeGridOffset = (
-  index: number,
-  total: number,
-  epicenterLat: number,
-  epicenterLng: number,
-  spacing: number = 0.00004
-): { offsetLat: number; offsetLng: number } => {
-  const cols = Math.ceil(Math.sqrt(total));
-  const rows = Math.ceil(total / cols);
-  const row = Math.floor(index / cols);
-  const col = index % cols;
-  const offsetLat = epicenterLat + (row - (rows - 1) / 2) * spacing;
-  const offsetLng = epicenterLng + (col - (cols - 1) / 2) * spacing;
-  return { offsetLat, offsetLng };
-};
 
 export const SearchMap = ({
   hits,
