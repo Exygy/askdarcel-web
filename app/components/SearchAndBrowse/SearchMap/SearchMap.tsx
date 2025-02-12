@@ -80,12 +80,10 @@ export const SearchMap = ({
       const epicenterLng = Number(group[0].location.long);
 
       const groupMarkers = group.map((item, index) => {
-        const { offsetLat, offsetLng } = computeGridOffset(
-          index,
-          total,
-          epicenterLat,
-          epicenterLng
-        );
+        const { offsetLat, offsetLng } = computeGridOffset(index, total, {
+          lat: epicenterLat,
+          lng: epicenterLng,
+        });
         return (
           <GoogleSearchHitMarkerWorkaround
             key={`${item.location.id}-${index}`}

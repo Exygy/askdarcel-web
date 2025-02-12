@@ -51,8 +51,7 @@ export const MapOfLocations = ({
         const { offsetLat, offsetLng } = computeGridOffset(
           index,
           group.length,
-          epicenterLat,
-          epicenterLng
+          { lat: epicenterLat, lng: epicenterLng }
         );
         return (
           <CustomMarker

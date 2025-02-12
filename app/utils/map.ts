@@ -26,18 +26,27 @@ export const groupServiceLocations = (locations: LocationDetails[]) => {
   }, {} as Record<string, { location: LocationDetails; markerIndex: number }[]>);
 };
 
+/*
+    Input: Current index, total number of items at a location, and that location's coordinates 
+    Output: A new set of coordinates for the current item as its place on a grid. Meant to be run on multiple values. Items will be evenly spaced apart and the epicenter will be at the direct center of the grid.
+*/
 export const computeGridOffset = (
   index: number,
   total: number,
-  epicenterLat: number,
-  epicenterLng: number,
-  spacing = 0.00004
+  epicenterCoords: {
+    lat: number;
+    lng: number;
+  }
 ): { offsetLat: number; offsetLng: number } => {
+  const SPACING = 0.00004;
   const cols = Math.ceil(Math.sqrt(total));
+  // if not a perfect square, round up as an extra row for the remainder items
   const rows = Math.ceil(total / cols);
+  // determine current item's row and column by its index (it will be the only item at this grid position)
   const row = Math.floor(index / cols);
   const col = index % cols;
-  const offsetLat = epicenterLat + (row - (rows - 1) / 2) * spacing;
-  const offsetLng = epicenterLng + (col - (cols - 1) / 2) * spacing;
+  // create new coordinates based on item's row and column position
+  const offsetLat = epicenterCoords.lat + (row - (rows - 1) / 2) * SPACING;
+  const offsetLng = epicenterCoords.lng + (col - (cols - 1) / 2) * SPACING;
   return { offsetLat, offsetLng };
 };
