@@ -52,7 +52,7 @@ export const SearchMap = ({
     if (aroundLatLng) {
       return aroundLatLngToMapCenter;
     } else if (userLocation) {
-      return { lat: userLocation?.lat, lng: userLocation?.lng };
+      return { lat: userLocation?.coords.lat, lng: userLocation?.coords.lng };
     } else {
       return undefined;
     }
@@ -132,11 +132,13 @@ export const SearchMap = ({
           }}
           options={createMapOptions}
         >
-          <UserLocationMarker
-            lat={userLocation?.lat}
-            lng={userLocation?.lng}
-            key={1}
-          />
+          {userLocation.inSanFrancisco && (
+            <UserLocationMarker
+              lat={userLocation?.coords.lat}
+              lng={userLocation?.coords.lng}
+              key={1}
+            />
+          )}
           {markers}
         </GoogleMap>
       </div>
