@@ -5,6 +5,8 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr;
+  max-width: $width-content;
+  margin: 0 auto;
 }
 
 .contentBlock p {
@@ -49,6 +51,12 @@
   display: inline-block;
   margin-top: $general-spacing-xl;
   margin-bottom: $general-spacing-md;
+}
+
+.innerContainer {
+  display: flex;
+  flex-direction: column;
+  gap: $general-spacing-md;
 }
 
 @media screen and (min-width: $min-desktop) {

@@ -11,7 +11,7 @@ import { BlocksRenderer } from "@strapi/blocks-react-renderer";
  * TODO: update use srcset and the different media sizes for images
  */
 export const TwoColumnContentSection = (props: TwoColumnContentBlock) => {
-  const { link, content, media_align, media } = props;
+  const { link, content, media_align, media, title } = props;
   const altText = media?.data?.attributes?.alternativeText || "";
 
   return (
@@ -40,6 +40,7 @@ export const TwoColumnContentSection = (props: TwoColumnContentBlock) => {
         }
       >
         <div className={styles.innerContainer}>
+          {title && <h2>{title}</h2>}
           <BlocksRenderer content={content || []} />
           {link && (
             <div className={styles.contentLinkButton}>

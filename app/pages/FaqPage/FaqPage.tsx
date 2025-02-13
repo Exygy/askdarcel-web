@@ -24,23 +24,22 @@ export const FaqPage = () => {
 
   return (
     pageData && (
-      <div className="faq-page">
+      <div>
         <Masthead title={pageData.masthead} />
-        <div className={styles["faq-page-content"]}>
-          {pageData.faq && (
-            <div>
-              <h2>{pageData.headercontent}</h2>
-              <Accordion items={pageData.faq} />
-            </div>
-          )}
-          {pageData.image && (
-            <div>
-              <img
-                src={`http://localhost:1337${image.url}`}
-                alt={image.alternativeText}
-              />
-            </div>
-          )}
+        <div className={styles["faq-page-container"]}>
+          <div className={styles["faq-page-content"]}>
+            {pageData.faq && (
+              <div>
+                <h2>{pageData.headercontent}</h2>
+                <Accordion items={pageData.faq} />
+              </div>
+            )}
+            {pageData.image && (
+              <div>
+                <img src={image.url} alt={image.alternativeText} />
+              </div>
+            )}
+          </div>
         </div>
       </div>
     )
