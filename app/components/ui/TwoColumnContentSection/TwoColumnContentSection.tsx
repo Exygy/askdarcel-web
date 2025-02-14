@@ -41,7 +41,9 @@ export const TwoColumnContentSection = (props: TwoColumnContentBlock) => {
       >
         <div className={styles.innerContainer}>
           {title && <h2>{title}</h2>}
-          <BlocksRenderer content={content || []} />
+          <div className={styles.contentBlock}>
+            <BlocksRenderer content={content || []} />
+          </div>
           {link && (
             <div className={styles.contentLinkButton}>
               <Button href={link.url} arrowVariant="after">

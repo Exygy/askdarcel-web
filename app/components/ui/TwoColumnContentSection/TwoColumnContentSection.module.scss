@@ -5,8 +5,20 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr;
-  max-width: $width-content;
-  margin: 0 auto;
+}
+
+.twoColumnContentSectionContainer:has(.contentContainer_left) {
+  justify-items: start;
+}
+
+.twoColumnContentSectionContainer:has(.contentContainer_right) {
+  justify-items: end;
+
+  // Ensures the text content block is pushed over to the right and aligns with
+  // the masthead text
+  .contentContainer_right {
+    width: calc($width-content/2 - $general-spacing-xxl);
+  }
 }
 
 .contentBlock p {
@@ -22,15 +34,20 @@
   grid-column: 2;
   grid-row: 1;
   align-self: center;
+  justify-self: unset;
 }
 
 .contentContainer_right {
-  display: flex;
-  justify-content: flex-end;
   margin-right: 48px;
   grid-column: 1;
   grid-row: 1;
   align-self: center;
+}
+
+.innerContainer {
+  display: flex;
+  flex-direction: column;
+  gap: $general-spacing-md;
 }
 
 .imageContainer_left {
@@ -45,18 +62,13 @@
 
 .image {
   width: 100%;
+  height: 100%;
 }
 
 .contentLinkButton {
   display: inline-block;
   margin-top: $general-spacing-xl;
   margin-bottom: $general-spacing-md;
-}
-
-.innerContainer {
-  display: flex;
-  flex-direction: column;
-  gap: $general-spacing-md;
 }
 
 @media screen and (min-width: $min-desktop) {
@@ -96,6 +108,13 @@
 
   .contentContainer_right {
     margin-right: 0;
+  }
+
+  .twoColumnContentSectionContainer:has(.contentContainer_right) {
+    // Unsets the desktop alignment for the right content container
+    .contentContainer_right {
+      width: 100%;
+    }
   }
 
   .imageContainer_right {
