@@ -71,6 +71,7 @@
       line-height: 125%;
       font-size: 1.25rem;
       font-weight: 600;
+      margin-bottom: $general-spacing-md;
 
       @media screen and (max-width: $break-tablet-s) {
         font-size: 1.125rem;
