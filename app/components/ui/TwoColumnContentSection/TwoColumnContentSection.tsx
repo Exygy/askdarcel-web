@@ -22,19 +22,6 @@ export const TwoColumnContentSection = (props: TwoColumnContentBlock) => {
       <div
         className={
           media_align === "left"
-            ? styles.imageContainer_left
-            : styles.imageContainer_right
-        }
-      >
-        <img
-          className={styles.image}
-          src={media?.data?.attributes?.url ?? ""}
-          alt={altText}
-        />
-      </div>
-      <div
-        className={
-          media_align === "left"
             ? styles.contentContainer_left
             : styles.contentContainer_right
         }
@@ -52,6 +39,19 @@ export const TwoColumnContentSection = (props: TwoColumnContentBlock) => {
             </div>
           )}
         </div>
+      </div>
+      <div
+        className={
+          media_align === "left"
+            ? styles.imageContainer_left
+            : styles.imageContainer_right
+        }
+      >
+        <img
+          className={styles.image}
+          src={media?.data?.attributes?.url ?? ""}
+          alt={altText}
+        />
       </div>
     </section>
   );

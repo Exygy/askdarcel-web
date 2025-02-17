@@ -7,10 +7,6 @@
   grid-template-rows: 1fr;
 }
 
-.twoColumnContentSectionContainer:has(.contentContainer_left) {
-  justify-items: start;
-}
-
 .twoColumnContentSectionContainer:has(.contentContainer_right) {
   justify-items: end;
 
@@ -103,7 +99,7 @@
   }
 
   .twoColumnContentSectionContainer {
-    display: block;
+    display: inline;
   }
 
   .contentContainer_right {
