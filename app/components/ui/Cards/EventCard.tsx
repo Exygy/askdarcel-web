@@ -21,20 +21,24 @@ export const EventCard = ({ event }: { event: EventResponse }) => {
       />
 
       <div className={styles.content}>
-        <div>
-          <h4 className={styles.contentTitle}>
-            <a href={linkUrl} data-testid={"eventcard-link"}>
-              {title}
-            </a>
-          </h4>
-          {calendarEvent && (
-            <div className={styles.contentTime}>
-              <p data-testid="eventcard-formatteddate">{formattedDate}</p>
-            </div>
-          )}
-        </div>
+        <h3 className={styles.contentTitle}>
+          <a href={linkUrl} data-testid={"eventcard-link"}>
+            {title}
+          </a>
+        </h3>
+        {calendarEvent && (
+          <div className={styles.contentTime}>
+            <p data-testid="eventcard-formatteddate">{formattedDate}</p>
+          </div>
+        )}
 
-        <Button arrowVariant="after" variant="linkBlue" size="lg" isVisualOnly>
+        <Button
+          arrowVariant="after"
+          variant="linkBlue"
+          size="lg"
+          mobileFullWidth={false}
+          isVisualOnly
+        >
           View more
         </Button>
       </div>
