@@ -34,15 +34,6 @@ export const FaqPage = () => {
         <Masthead title={pageData.masthead} />
 
         <div className={styles.twoColumnContentSectionContainer}>
-          {pageData.image && (
-            <div className={styles.imageContainer_right}>
-              <img
-                className={styles.image}
-                src={image.url}
-                alt={image.alternativeText}
-              />
-            </div>
-          )}
           {pageData.faq && (
             <div className={styles.contentContainer_right}>
               <div className={styles.innerContainer}>
@@ -51,6 +42,15 @@ export const FaqPage = () => {
                   <Accordion items={pageData.faq} />
                 </div>
               </div>
+            </div>
+          )}
+          {pageData.image && (
+            <div className={styles.imageContainer_right}>
+              <img
+                className={styles.image}
+                src={image.url}
+                alt={image.alternativeText}
+              />
             </div>
           )}
         </div>
