@@ -46,14 +46,8 @@
   gap: $general-spacing-md;
 }
 
-.imageContainer_left {
-  grid-column: 1;
-  grid-row: 1;
-}
-
 .imageContainer_right {
-  grid-column: 2;
-  grid-row: 1;
+  width: 100%;
 }
 
 .image {
