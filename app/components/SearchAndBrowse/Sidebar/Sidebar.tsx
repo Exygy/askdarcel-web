@@ -1,8 +1,7 @@
-import React, { useState, useRef, useCallback } from "react";
-import type { Category } from "models/Meta";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import {
-  eligibilitiesMapping,
-  categoriesMapping,
+  our415EligibilitiesMapping,
+  mapSFSGApiEligibilitiesToOur415ByConfig,
 } from "utils/refinementMappings";
 import ClearAllFilters from "components/SearchAndBrowse/Refinements/ClearAllFilters";
 import OpenNowFilter from "components/SearchAndBrowse/Refinements/OpenNowFilter";
@@ -18,11 +17,11 @@ import useClickOutside from "../../../hooks/MenuHooks";
 import MobileMapToggleButtons from "./MobileMapToggleButtons";
 import styles from "./Sidebar.module.scss";
 import { RefinementListItem } from "instantsearch.js/es/connectors/refinement-list/connectRefinementList";
+import classNames from "classnames";
 
 const Sidebar = ({
   isSearchResultsPage,
   eligibilities,
-  subcategories,
   subcategoryNames = [],
   sortAlgoliaSubcategoryRefinements = false,
   isMapCollapsed,
@@ -30,22 +29,29 @@ const Sidebar = ({
 }: {
   isSearchResultsPage: boolean;
   eligibilities?: object[] | null;
-  subcategories?: Category[] | null;
   subcategoryNames?: string[];
   sortAlgoliaSubcategoryRefinements?: boolean;
   isMapCollapsed: boolean;
   setIsMapCollapsed: (_isMapCollapsed: boolean) => void;
 }) => {
-  const [filterMenuVisible, setfilterMenuVisible] = useState(false);
+  const [filterMenuVisible, setFilterMenuVisible] = useState(false);
   const filterMenuRef = useRef<HTMLDivElement>(null);
-  const { aroundUserLocationRadius } = useAppContext();
+  const { aroundUserLocationRadius, userLocation } = useAppContext();
   const { setAroundRadius } = useAppContextUpdater();
 
   useClickOutside(
     filterMenuRef,
-    () => setfilterMenuVisible(false),
+    () => setFilterMenuVisible(false),
     filterMenuVisible
   );
+
+  useEffect(() => {
+    if (filterMenuVisible) {
+      document.body.classList.add("lock-scroll");
+    } else {
+      document.body.classList.remove("lock-scroll");
+    }
+  }, [filterMenuVisible]);
 
   let categoryRefinementJsx: React.ReactElement | null = null;
   let eligibilityRefinementJsx: React.ReactElement | null = null;
@@ -97,29 +103,28 @@ const Sidebar = ({
     ]
   );
 
-  // Currently, the Search Results Page uses generic categories/eligibilities while the
-  // Service Results Page uses COVID-specific categories. This logic determines which
-  // of these to use as based on the isSearchResultsPage value
   if (isSearchResultsPage) {
-    categoryRefinementJsx = (
-      <SearchRefinementList
-        attribute="categories"
-        mapping={categoriesMapping}
-      />
-    );
     eligibilityRefinementJsx = (
       <SearchRefinementList
         attribute="eligibilities"
-        mapping={eligibilitiesMapping}
+        mapping={our415EligibilitiesMapping}
       />
     );
   } else {
     if (eligibilities?.length) {
       eligibilityRefinementJsx = (
-        <BrowseRefinementList attribute="eligibilities" />
+        <BrowseRefinementList
+          attribute="eligibilities"
+          transform={(items: RefinementListItem[]) =>
+            mapSFSGApiEligibilitiesToOur415ByConfig(
+              items,
+              our415EligibilitiesMapping
+            )
+          }
+        />
       );
     }
-    if (subcategories?.length) {
+    if (subcategoryNames?.length) {
       categoryRefinementJsx = (
         <BrowseRefinementList
           attribute="categories"
@@ -139,11 +144,11 @@ const Sidebar = ({
   }
 
   return (
-    <div className={styles.sidebar}>
+    <div className={classNames(styles.sidebar, "no-print")}>
       <div className={styles.filtersButtonContainer} aria-hidden>
         <Button
           variant="linkBlue"
-          onClick={() => setfilterMenuVisible(!filterMenuVisible)}
+          onClick={() => setFilterMenuVisible(!filterMenuVisible)}
           iconName="sliders"
           iconVariant="before"
           mobileFullWidth={false}
@@ -169,7 +174,7 @@ const Sidebar = ({
             <Button
               variant="linkBlue"
               mobileFullWidth={false}
-              onClick={() => setfilterMenuVisible(!filterMenuVisible)}
+              onClick={() => setFilterMenuVisible(!filterMenuVisible)}
               size="lg"
             >
               Close
@@ -179,65 +184,70 @@ const Sidebar = ({
 
         <h2 className={styles.filterResourcesTitleDesktop}>Filter Resources</h2>
         <ClearAllFilters />
-        <div className={styles.filterGroup}>
-          <div className={styles.filterTitle}>Availability</div>
-          <OpenNowFilter />
-        </div>
-
-        <div
-          className={`${styles.filterGroup} ${
-            eligibilityRefinementJsx ? "" : styles.hideFilterGroup
-          } `}
-        >
-          <h2 className={styles.filterTitle}>Eligibilities</h2>
-          {eligibilityRefinementJsx}
-        </div>
-        {!isSearchResultsPage && (
+        <div className={styles.filterGroupContainer}>
+          <div className={styles.filterGroup}>
+            <div className={styles.filterTitle}>Availability</div>
+            <OpenNowFilter />
+          </div>
+          {!isSearchResultsPage && (
+            <div
+              className={`${styles.filterGroup} ${
+                categoryRefinementJsx ? "" : styles.hideFilterGroup
+              }`}
+            >
+              <h2 className={styles.filterTitle}>Subcategories</h2>
+              {categoryRefinementJsx}
+            </div>
+          )}
           <div
             className={`${styles.filterGroup} ${
-              categoryRefinementJsx ? "" : styles.hideFilterGroup
-            }`}
+              eligibilityRefinementJsx ? "" : styles.hideFilterGroup
+            } `}
           >
-            <h2 className={styles.filterTitle}>Subcategories</h2>
-            {categoryRefinementJsx}
+            <h2 className={styles.filterTitle}>Eligibilities</h2>
+            {eligibilityRefinementJsx}
           </div>
-        )}
 
-        <div className={styles.filterGroup}>
-          <h2 className={styles.filterTitle}>Distance</h2>
-          <label className={styles.checkBox}>
-            Within 4 blocks
-            <input
-              type="radio"
-              name="searchRadius"
-              onChange={onChangeValue}
-              value="400"
-              checked={aroundUserLocationRadius === 400}
-              className={styles.refinementInput}
-            />
-          </label>
-          <label className={styles.checkBox}>
-            Walking distance (1 mi.)
-            <input
-              type="radio"
-              name="searchRadius"
-              onChange={onChangeValue}
-              value={DEFAULT_AROUND_PRECISION}
-              checked={aroundUserLocationRadius === DEFAULT_AROUND_PRECISION}
-              className={styles.refinementInput}
-            />
-          </label>
-          <label className={styles.checkBox}>
-            Biking distance (3 mi.)
-            <input
-              type="radio"
-              name="searchRadius"
-              onChange={onChangeValue}
-              value="4828"
-              checked={aroundUserLocationRadius === 4828}
-              className={styles.refinementInput}
-            />
-          </label>
+          {userLocation.inSanFrancisco && (
+            <div className={styles.filterGroup}>
+              <h2 className={styles.filterTitle}>Distance</h2>
+              <label className={styles.checkBox}>
+                Within 4 blocks
+                <input
+                  type="radio"
+                  name="searchRadius"
+                  onChange={onChangeValue}
+                  value="400"
+                  checked={aroundUserLocationRadius === 400}
+                  className={styles.refinementInput}
+                />
+              </label>
+              <label className={styles.checkBox}>
+                Walking distance (1 mi.)
+                <input
+                  type="radio"
+                  name="searchRadius"
+                  onChange={onChangeValue}
+                  value={DEFAULT_AROUND_PRECISION}
+                  checked={
+                    aroundUserLocationRadius === DEFAULT_AROUND_PRECISION
+                  }
+                  className={styles.refinementInput}
+                />
+              </label>
+              <label className={styles.checkBox}>
+                Biking distance (3 mi.)
+                <input
+                  type="radio"
+                  name="searchRadius"
+                  onChange={onChangeValue}
+                  value="4828"
+                  checked={aroundUserLocationRadius === 4828}
+                  className={styles.refinementInput}
+                />
+              </label>
+            </div>
+          )}
         </div>
       </div>
     </div>

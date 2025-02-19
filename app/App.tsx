@@ -5,17 +5,12 @@ import React, { useEffect, useState } from "react";
 import ReactGA_4 from "react-ga4";
 import { Helmet } from "react-helmet-async";
 import { useLocation } from "react-router-dom";
-import {
-  GeoCoordinates,
-  getLocation,
-  websiteConfig,
-  AppProvider,
-} from "./utils";
+import { UserLocation, getLocation, websiteConfig, AppProvider } from "./utils";
 import { Footer } from "components/ui/Footer/Footer";
 import { Navigation } from "components/ui/Navigation/Navigation";
 import { Loader } from "components/ui/Loader";
 
-import MetaImage from "./assets/img/Our415_OG.png";
+import MetaImage from "./assets/img/our415-og.png";
 import styles from "./App.module.scss";
 import config from "./config";
 import { AroundRadius } from "algoliasearch";
@@ -25,16 +20,16 @@ export const OUTER_CONTAINER_ID = "outer-container";
 
 export const App = () => {
   const location = useLocation();
-  const [userLocation, setUserLocation] = useState<GeoCoordinates | null>(null);
+  const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
   const [aroundLatLng, setAroundLatLng] = useState<string>("");
   const [aroundUserLocationRadius, setAroundRadius] = useState<AroundRadius>(
     "all" as const
   );
 
   useEffect(() => {
-    getLocation().then((loc) => {
-      setUserLocation(loc);
-      setAroundLatLng(`${loc.lat},${loc.lng}`);
+    getLocation().then((userLocation) => {
+      setUserLocation(userLocation);
+      setAroundLatLng(`${userLocation.coords.lat},${userLocation.coords.lng}`);
     });
 
     if (config.GOOGLE_ANALYTICS_GA4_ID) {
@@ -56,8 +51,6 @@ export const App = () => {
   }, [location, setAroundLatLng]);
 
   if (!userLocation) {
-    console.log("🪵 ~ App ~ userLocation:", userLocation);
-
     return <Loader />;
   }
 
@@ -68,7 +61,6 @@ export const App = () => {
     aroundUserLocationRadius,
     setAroundRadius,
   };
-  console.log("🪵 ~ App ~ props:", props);
 
   return (
     <div
@@ -83,7 +75,7 @@ export const App = () => {
           <meta property="og:title" content={title} />
           <meta
             property="og:description"
-            content="Get guided help finding food, housing, health resources and more in San Francisco"
+            content="Our 415 is your source for everything San Francisco has for young people and families."
           />
           <meta property="og:image" content={MetaImage} />
           <meta property="og:type" content="website" />

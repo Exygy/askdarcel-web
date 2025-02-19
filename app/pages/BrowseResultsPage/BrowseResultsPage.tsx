@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import * as dataService from "utils/DataService";
 import { DEFAULT_AROUND_PRECISION, useAppContext } from "utils";
@@ -25,6 +25,7 @@ import { useInstantSearch, usePagination } from "react-instantsearch";
 import ResultsPagination from "components/SearchAndBrowse/Pagination/ResultsPagination";
 import searchResultsStyles from "components/SearchAndBrowse/SearchResults/SearchResults.module.scss";
 import { SearchResultsHeader } from "components/ui/SearchResultsHeader";
+import { our415SubcategoryNames } from "utils/refinementMappings";
 
 /** Wrapper component that handles state management, URL parsing, and external API requests. */
 export const BrowseResultsPage = () => {
@@ -49,13 +50,11 @@ export const BrowseResultsPage = () => {
   const { refine: refinePagination } = usePagination();
   const { refine: clearRefinements } = useClearRefinements();
 
-  const handleFirstResultFocus = useCallback((node: HTMLDivElement | null) => {
-    if (node) {
-      node.focus();
-    }
-  }, []);
+  useEffect(() => window.scrollTo(0, 0), []);
 
-  const subcategoryNames = subcategories?.map((c) => c.name);
+  const subcategoryNames = subcategories
+    ?.map((c) => c.name)
+    .filter((name) => our415SubcategoryNames.has(name));
   const { name: categoryName, sortAlgoliaSubcategoryRefinements } = category;
 
   // TODO: Handle failure?
@@ -112,7 +111,6 @@ export const BrowseResultsPage = () => {
           <Sidebar
             isSearchResultsPage={false}
             eligibilities={eligibilities || []}
-            subcategories={subcategories || []}
             subcategoryNames={subcategoryNames || []}
             sortAlgoliaSubcategoryRefinements={
               sortAlgoliaSubcategoryRefinements
@@ -141,7 +139,7 @@ export const BrowseResultsPage = () => {
                       <SearchResult
                         hit={hit}
                         key={`${hit.id} - ${hit.name}`}
-                        ref={index === 0 ? handleFirstResultFocus : null}
+                        ref={null}
                       />
                     )
                   )}

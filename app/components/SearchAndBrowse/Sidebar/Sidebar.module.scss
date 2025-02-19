@@ -23,13 +23,13 @@
 
 .sidebar {
   flex-shrink: 0;
-  position: sticky;
   height: calc(100vh - $header-height);
   width: 290px;
   top: $header-height;
   border-right: 1px solid $border-gray;
   padding: 20px 25px 50px 30px;
   overflow-y: auto;
+  position: sticky;
 
   @media screen and (max-width: $break-desktop-s) {
     height: auto;
@@ -38,7 +38,7 @@
     align-self: flex-start;
     border-right: 0;
     background-color: #fff;
-    z-index: $z-index-filters-menu;
+    position: static;
   }
 
   @media screen and (max-width: $break-tablet-s) {
@@ -61,6 +61,8 @@
     background-color: #fff;
     animation-duration: 200ms;
     animation-name: slideRight;
+    z-index: $z-index-filters-menu;
+
     &.showFilters {
       display: block;
     }
@@ -80,6 +82,12 @@
   text-align: right;
   @media screen and (min-width: $min-desktop) {
     display: none;
+  }
+}
+
+.filterGroupContainer {
+  @media screen and (max-width: $break-desktop-s) {
+    margin-bottom: $spacing-24;
   }
 }
 

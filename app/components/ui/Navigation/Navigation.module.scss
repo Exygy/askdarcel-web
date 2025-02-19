@@ -41,11 +41,10 @@
 }
 
 .navLogo img {
-  height: 50px;
+  height: 70px;
 
   @include r_max($break-tablet-s) {
-    height: 30px;
-    width: 71px;
+    height: 45px;
   }
 }
 
@@ -74,10 +73,14 @@
     display: none;
   }
   .primaryRow {
-    height: $header-mobile-height;
-    flex-wrap: wrap;
-    padding: $spacing-4_5;
+    height: $header-height;
+    flex-wrap: nowrap;
+    padding: 0 $spacing-4_5;
     gap: $spacing-8;
+
+    :nth-child(2) {
+      flex-shrink: 1;
+    }
 
     :nth-child(3) {
       margin-left: auto;

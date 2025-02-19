@@ -1,9 +1,10 @@
-import React, { ReactElement, useState } from "react";
+import React, { useState } from "react";
 import GoogleMap from "google-map-react";
 import { Tooltip } from "react-tippy";
 import "react-tippy/dist/tippy.css";
 import SearchEntry from "components/SearchAndBrowse/SearchMap/SearchEntry";
 import { useAppContext, useAppContextUpdater } from "utils";
+import { groupHitsByLocation, computeGridOffset } from "utils/map";
 import { Button } from "components/ui/inline/Button/Button";
 import {
   createMapOptions,
@@ -20,6 +21,7 @@ interface SearchMapProps {
   mobileMapIsCollapsed: boolean;
   handleSearchMapAction: (searchMapAction: SearchMapActions) => void;
 }
+
 export const SearchMap = ({
   hits,
   mobileMapIsCollapsed,
@@ -50,14 +52,54 @@ export const SearchMap = ({
     if (aroundLatLng) {
       return aroundLatLngToMapCenter;
     } else if (userLocation) {
-      return { lat: userLocation?.lat, lng: userLocation?.lng };
+      return { lat: userLocation?.coords.lat, lng: userLocation?.coords.lng };
     } else {
       return undefined;
     }
   };
 
+  const groupedHits = groupHitsByLocation(hits);
+
+  const markers = Object.keys(groupedHits).flatMap((key) => {
+    const group = groupedHits[key];
+    const total = group.length;
+
+    if (total === 1) {
+      const { hit, location } = group[0];
+      return (
+        <GoogleSearchHitMarkerWorkaround
+          key={`${location.id}-single`}
+          lat={Number(location.lat)}
+          lng={Number(location.long)}
+          tag={location.label}
+          hit={hit}
+        />
+      );
+    } else {
+      const epicenterLat = Number(group[0].location.lat);
+      const epicenterLng = Number(group[0].location.long);
+
+      const groupMarkers = group.map((item, index) => {
+        const { offsetLat, offsetLng } = computeGridOffset(index, total, {
+          lat: epicenterLat,
+          lng: epicenterLng,
+        });
+        return (
+          <GoogleSearchHitMarkerWorkaround
+            key={`${item.location.id}-${index}`}
+            lat={offsetLat}
+            lng={offsetLng}
+            tag={item.location.label}
+            hit={item.hit}
+          />
+        );
+      });
+      return groupMarkers.reverse();
+    }
+  });
+
   return (
-    <div className="results-map">
+    <div className="results-map no-print">
       <h2 className="sr-only">Map of search results</h2>
       <div className="map-wrapper">
         {/* If map is being overlaid, hide the search area button. It is is neither clickable
@@ -88,26 +130,14 @@ export const SearchMap = ({
           }}
           options={createMapOptions}
         >
-          <UserLocationMarker
-            lat={userLocation?.lat}
-            lng={userLocation?.lng}
-            key={1}
-          />
-          {hits.reduce((markers, hit) => {
-            // Add a marker for each address of each hit
-            hit.locations.forEach((location) => {
-              markers.push(
-                <GoogleSearchHitMarkerWorkaround
-                  key={location.id}
-                  lat={Number(location.lat)}
-                  lng={Number(location.long)}
-                  tag={location.label}
-                  hit={hit}
-                />
-              );
-            });
-            return markers;
-          }, [] as ReactElement[])}
+          {userLocation.inSanFrancisco && (
+            <UserLocationMarker
+              lat={userLocation?.coords.lat}
+              lng={userLocation?.coords.lng}
+              key={1}
+            />
+          )}
+          {markers}
         </GoogleMap>
       </div>
     </div>

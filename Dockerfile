@@ -39,8 +39,8 @@ FROM nginx:stable
 
 WORKDIR /app/askdarcel
 
-# Copy built files from the previous build stage
-COPY --from=builder /app/build /app/askdarcel
+# Copy build files
+COPY ./build /app/askdarcel
 
 # Install envsubst for runtime variable substitution
 RUN apt-get update && apt-get install -y gettext-base
@@ -65,6 +65,8 @@ API_PROXY_CHANGE_ORIGIN: "${API_PROXY_CHANGE_ORIGIN}"\n\
 API_PROXY_REWRITE: "${API_PROXY_REWRITE}"' > /app/config.yml.template
 
 # Copy nginx config
+RUN rm /etc/nginx/conf.d/*
+
 COPY ./docker/templates/default.conf.template /etc/nginx/templates/default.conf.template
 
 # Create entrypoint script to generate config.yml dynamically

@@ -21,6 +21,8 @@ import { liteClient } from "algoliasearch/lite";
 import config from "./../../../config";
 import { history as historyRouter } from "instantsearch.js/es/lib/routers";
 import { Loader } from "components/ui/Loader";
+import classNames from "classnames";
+import { EmailSignup } from "components/EmailSignup/Emailsignup";
 
 const searchClient = liteClient(
   config.ALGOLIA_APPLICATION_ID,
@@ -71,12 +73,18 @@ export const Navigation = () => {
         <nav className={styles.siteNav}>
           <div className={styles.primaryRow}>
             <Link className={`${styles.navLogo}`} to="/">
-              <img src={logoData?.url} alt={logoData?.alternativeText} />
+              <img src={logoData?.url} alt="" />
+              <span className="sr-only">Homepage</span>
             </Link>
             <SiteSearchInput />
 
             <MobileNavigation menuData={menuData} />
-            <div className={styles.desktopNavigationContainer}>
+            <div
+              className={classNames(
+                styles.desktopNavigationContainer,
+                "no-print"
+              )}
+            >
               {menuData.map((menuDataItem) => {
                 if (menuItemHasLinks(menuDataItem)) {
                   const links = menuDataItem.link.map((linkItem) => ({
@@ -113,6 +121,7 @@ export const Navigation = () => {
         </nav>
         <main className="container" id="main">
           <Router />
+          <EmailSignup />
         </main>
       </div>
     </InstantSearch>
