@@ -41,9 +41,20 @@ export const EventDetailPage = () => {
   const detailsRows = [
     {
       title: "Date & Time",
-      value: formatCalendarEventDisplay(data.calendar_event as CalendarEvent),
+      value:
+        data.calendar_event?.startdate &&
+        formatCalendarEventDisplay(data.calendar_event as CalendarEvent),
     },
-  ];
+    {
+      title: "Location",
+      value: data.location_name,
+    },
+    {
+      title: "Language",
+      value: data.language,
+    },
+  ].filter((row) => !!row.value);
+
   const registrationRows = [
     {
       title: "Event Link",
@@ -113,26 +124,20 @@ export const EventDetailPage = () => {
         <BlocksRenderer content={data.description || []} />
       </DetailInfoSection>
 
-      {data.calendar_event?.startdate && (
-        <DetailInfoSection
-          title="Details"
-          data-testid="eventdetailpage-detailinfosection"
-        >
-          <InfoTable<{ title: string; value: string }>
-            rowRenderer={(detail) => (
-              <tr key={detail.title}>
-                <th>{detail.title}</th>
-                <td>
-                  <ReactMarkdown className="rendered-markdown">
-                    {detail.value}
-                  </ReactMarkdown>
-                </td>
-              </tr>
-            )}
-            rows={detailsRows}
-          />
-        </DetailInfoSection>
-      )}
+      <DetailInfoSection
+        title="Details"
+        data-testid="eventdetailpage-detailinfosection"
+      >
+        <InfoTable<{ title: string; value: ReactNode }>
+          rowRenderer={(detail) => (
+            <tr key={detail.title}>
+              <th>{detail.title}</th>
+              <td>{detail.value}</td>
+            </tr>
+          )}
+          rows={detailsRows}
+        />
+      </DetailInfoSection>
 
       <DetailInfoSection
         title="Registration"
