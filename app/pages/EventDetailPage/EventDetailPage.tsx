@@ -1,5 +1,4 @@
 import React, { ReactNode } from "react";
-import ReactMarkdown from "react-markdown";
 import { useParams } from "react-router-dom";
 import { BlocksRenderer } from "@strapi/blocks-react-renderer";
 import { CalendarEvent } from "models/Strapi";
