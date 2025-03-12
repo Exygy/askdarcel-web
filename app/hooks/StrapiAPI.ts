@@ -110,8 +110,9 @@ export function useHomePageEventsData() {
   };
 }
 
+// TODO: Language should not be capitalized in the strapi schema
 export function useEventData(eventId: string) {
-  const path = `events/${eventId}?populate[address]=*&populate[calendar_event]=*&populate[registration_link]=*&populate[image][populate]=*&populate[event_categories][fields]=label&populate[event_eligibilities][fields]=label`;
+  const path = `events/${eventId}?populate[address]=*&populate[calendar_event]=*&populate[location_name]=*&populate[Language]=*&populate[registration_link]=*&populate[image][populate]=*&populate[event_categories][fields]=label&populate[event_eligibilities][fields]=label`;
 
   const dataFetcher = () =>
     fetcher<{ data: StrapiDatumResponse<EventResponse> }>(
@@ -375,6 +376,8 @@ export interface EventResponse extends BaseDatumAttributesResponse {
   title: string;
   description: RootNode[];
   calendar_event: CalendarEventResponse;
+  location_name: string;
+  Language: string;
   address: AddressResponse | { data: null };
   image: {
     data: { id: number; attributes: ImageResponse };
