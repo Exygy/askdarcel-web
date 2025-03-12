@@ -28,5 +28,11 @@
         font-size: 16px;
       }
     }
+
+    td {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
   }
 }
