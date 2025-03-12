@@ -50,7 +50,7 @@ export const EventDetailPage = () => {
     },
     {
       title: "Language",
-      value: data.language,
+      value: data.Language,
     },
   ].filter((row) => !!row.value);
 
