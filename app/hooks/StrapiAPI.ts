@@ -111,7 +111,7 @@ export function useHomePageEventsData() {
 }
 
 export function useEventData(eventId: string) {
-  const path = `events/${eventId}?populate[address]=*&populate[calendar_event]=*&populate[registration_link]=*&populate[image][populate]=*&populate[event_categories][fields]=label&populate[event_eligibilities][fields]=label`;
+  const path = `events/${eventId}?populate[address]=*&populate[calendar_event]=*&populate[location_name]=*&populate[language]=*&populate[registration_link]=*&populate[image][populate]=*&populate[event_categories][fields]=label&populate[event_eligibilities][fields]=label`;
 
   const dataFetcher = () =>
     fetcher<{ data: StrapiDatumResponse<EventResponse> }>(
@@ -375,6 +375,8 @@ export interface EventResponse extends BaseDatumAttributesResponse {
   title: string;
   description: RootNode[];
   calendar_event: CalendarEventResponse;
+  location_name: string;
+  language: string;
   address: AddressResponse | { data: null };
   image: {
     data: { id: number; attributes: ImageResponse };
