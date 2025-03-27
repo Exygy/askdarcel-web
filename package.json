@@ -5,6 +5,7 @@
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack",
     "dev": "cross-env NODE_ENV=development webpack serve --mode=development",
+    "start": "serve -s build",
     "lint": "eslint --ext=.js,.jsx,.ts,.tsx .",
     "lint:fix": "eslint --fix --ext=.js,.jsx,.ts,.tsx .",
     "prettier": "prettier --check .",
@@ -47,6 +48,7 @@
     "react-modal": "^3.12.1",
     "react-router-dom": "^6.27.0",
     "react-tippy": "^1.4.0",
+    "serve": "^14.2.4",
     "swr": "^2.2.5"
   },
   "devDependencies": {

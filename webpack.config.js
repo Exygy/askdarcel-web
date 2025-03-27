@@ -55,7 +55,7 @@ module.exports = {
   context: __dirname,
   entry: ["@babel/polyfill", path.resolve(appRoot, "init.tsx")],
   output: {
-    path: buildDir,
+    path: path.resolve(__dirname, "build", "dist"),
     publicPath: "/dist/",
     filename: "bundle.js",
     clean: true,
