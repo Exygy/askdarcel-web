@@ -6,8 +6,8 @@ import ReactGA_4 from "react-ga4";
 import { Helmet } from "react-helmet-async";
 import { useLocation } from "react-router-dom";
 import { UserLocation, getLocation, websiteConfig, AppProvider } from "./utils";
-import { Footer } from "components/ui/Footer/Footer";
 import { Navigation } from "components/ui/Navigation/Navigation";
+import { Footer } from "components/ui/Footer/Footer";
 import { Loader } from "components/ui/Loader";
 
 import MetaImage from "./assets/img/our415-og.png";
