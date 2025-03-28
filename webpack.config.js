@@ -12,7 +12,7 @@ const CompressionPlugin = require("compression-webpack-plugin");
 let userConfig = {};
 
 if (
-  process.env.NODE_ENV !== "development" &&
+  process.env.NODE_ENV !== "staging" &&
   (existsSync("config.yml") || process.env.CONFIG_YAML)
 ) {
   const CONFIG_YAML = process.env.CONFIG_YAML || "config.yml";
