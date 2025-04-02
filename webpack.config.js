@@ -11,14 +11,14 @@ const CompressionPlugin = require("compression-webpack-plugin");
 
 let userConfig = {};
 
-if (existsSync("config.yml") || process.env.CONFIG_YAML) {
+if (
+  process.env.NODE_ENV !== "staging" &&
+  (existsSync("config.yml") || process.env.CONFIG_YAML)
+) {
   const CONFIG_YAML = process.env.CONFIG_YAML || "config.yml";
   userConfig = yaml.safeLoad(readFileSync(CONFIG_YAML, "utf8"));
 } else {
-  // eslint-disable-next-line
-  console.warn(
-    "No configuration file detected, defaulting to environment variables."
-  );
+  console.warn("Using environment variables for config");
 }
 
 // Take the user config from the file, and override keys with environment variables if they exist
@@ -56,7 +56,7 @@ module.exports = {
   entry: ["@babel/polyfill", path.resolve(appRoot, "init.tsx")],
   output: {
     path: buildDir,
-    publicPath: "/dist/",
+    publicPath: "/",
     filename: "bundle.js",
     clean: true,
   },
