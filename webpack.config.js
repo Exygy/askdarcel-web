@@ -59,7 +59,7 @@ module.exports = {
   entry: ["@babel/polyfill", path.resolve(appRoot, "init.tsx")],
   output: {
     path: buildDir,
-    publicPath: "/dist/",
+    publicPath: "/",
     filename: "bundle.js",
     clean: true,
   },
@@ -190,7 +190,7 @@ module.exports = {
     proxy: [
       {
         context: ["/api-docs"],
-        target: config.API_UR || "http://localhost:3000",
+        target: config.API_URL || "http://localhost:3000",
         secure: config.API_PROXY_SECURE || false,
         changeOrigin: config.API_PROXY_CHANGE_ORIGIN || false,
       },

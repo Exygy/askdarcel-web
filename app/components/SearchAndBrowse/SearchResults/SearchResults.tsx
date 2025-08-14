@@ -17,6 +17,7 @@ import ResultsPagination from "components/SearchAndBrowse/Pagination/ResultsPagi
 
 export enum SearchMapActions {
   SearchThisArea,
+  MapInitialized,
 }
 
 const SearchResults = ({

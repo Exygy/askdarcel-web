@@ -40,7 +40,7 @@ const Sidebar = ({
   const { setAroundRadius } = useAppContextUpdater();
 
   useClickOutside(
-    filterMenuRef,
+    filterMenuRef as React.RefObject<HTMLElement>,
     () => setFilterMenuVisible(false),
     filterMenuVisible
   );

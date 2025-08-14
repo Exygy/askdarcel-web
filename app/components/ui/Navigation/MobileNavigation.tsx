@@ -36,7 +36,7 @@ export const MobileNavigation = ({ menuData }: MobileNavigationProps) => {
   const mobileNavTextDisplay = mobileNavigationIsOpen ? "Close" : "Menu";
 
   useClickOutside(
-    filterMenuRef,
+    filterMenuRef as React.RefObject<HTMLElement>,
     (event: MouseEvent) => {
       // Prevents collison between handling the outside click and clicking on the
       // "Close" button

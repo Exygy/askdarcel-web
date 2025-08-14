@@ -10,6 +10,47 @@ export const EventCard = ({ event }: { event: EventResponse }) => {
   const imageAlternativeText = image?.data?.attributes.alternativeText || "";
   const linkUrl = page_link?.url;
 
+  const isEventExpired = React.useMemo(() => {
+    if (!calendarEvent) return false;
+
+    const now = new Date();
+
+    // If there's an end date, check if it's in the past
+    if (calendarEvent.enddate) {
+      const endDate = new Date(calendarEvent.enddate);
+      // If end time exists, add it to the end date
+      if (calendarEvent.endtime) {
+        const [hours, minutes] = calendarEvent.endtime.split(":").map(Number);
+        endDate.setHours(hours, minutes);
+      } else {
+        // If no end time specified, assume end of day (23:59:59)
+        endDate.setHours(23, 59, 59);
+      }
+      return now > endDate;
+    }
+
+    // If no end date but there's a start date, check if start date is in the past
+    if (calendarEvent.startdate) {
+      const startDate = new Date(calendarEvent.startdate);
+      // If start time exists, add it to the start date
+      if (calendarEvent.starttime) {
+        const [hours, minutes] = calendarEvent.starttime.split(":").map(Number);
+        startDate.setHours(hours, minutes);
+      } else {
+        // If no start time specified, assume end of day (23:59:59)
+        startDate.setHours(23, 59, 59);
+      }
+      return now > startDate;
+    }
+
+    return false;
+  }, [calendarEvent]);
+
+  // Return null if the event has already passed
+  if (isEventExpired) {
+    return null;
+  }
+
   const formattedDate = calendarEvent?.startdate
     ? formatCalendarEventDisplay(calendarEvent)
     : null;

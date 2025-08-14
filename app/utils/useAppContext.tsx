@@ -12,11 +12,13 @@ interface Context {
   userLocation: UserLocation;
   aroundUserLocationRadius?: AroundRadius;
   aroundLatLng: string;
+  boundingBox?: string;
 }
 
 interface ContextUpdater {
   setAroundRadius: Dispatch<SetStateAction<"all" | number>>;
   setAroundLatLng: Dispatch<SetStateAction<string>>;
+  setBoundingBox: Dispatch<SetStateAction<string | undefined>>;
 }
 
 interface AppProviderProps {
@@ -26,6 +28,8 @@ interface AppProviderProps {
   setAroundLatLng: Dispatch<SetStateAction<string>>;
   aroundUserLocationRadius: AroundRadius;
   setAroundRadius: Dispatch<SetStateAction<"all" | number>>;
+  boundingBox?: string;
+  setBoundingBox: Dispatch<SetStateAction<string | undefined>>;
 }
 
 export const AppContext = createContext<Context>({
@@ -33,13 +37,15 @@ export const AppContext = createContext<Context>({
     coords: COORDS_MID_SAN_FRANCISCO,
     inSanFrancisco: false,
   },
-  aroundUserLocationRadius: "all",
+  aroundUserLocationRadius: 1600,
   aroundLatLng: "",
+  boundingBox: undefined,
 });
 
 export const AppContextUpdater = createContext<ContextUpdater>({
-  setAroundRadius: () => "all",
+  setAroundRadius: () => 1600,
   setAroundLatLng: () => "",
+  setBoundingBox: () => undefined,
 });
 
 export const useAppContext = () => useContext(AppContext);
@@ -52,6 +58,8 @@ export const AppProvider = ({
   setAroundLatLng,
   aroundUserLocationRadius,
   setAroundRadius,
+  boundingBox,
+  setBoundingBox,
 }: AppProviderProps) => {
   // We have to use useMemo here to manage the contextValue to ensure that the user's authState
   // propagates downward after authentication. I couldn't find a way to get this to work with
@@ -62,12 +70,15 @@ export const AppProvider = ({
       userLocation,
       aroundUserLocationRadius,
       aroundLatLng,
+      boundingBox,
     };
-  }, [userLocation, aroundUserLocationRadius, aroundLatLng]);
+  }, [userLocation, aroundUserLocationRadius, aroundLatLng, boundingBox]);
 
   return (
     <AppContext.Provider value={contextValue}>
-      <AppContextUpdater.Provider value={{ setAroundRadius, setAroundLatLng }}>
+      <AppContextUpdater.Provider
+        value={{ setAroundRadius, setAroundLatLng, setBoundingBox }}
+      >
         {children}
       </AppContextUpdater.Provider>
     </AppContext.Provider>
