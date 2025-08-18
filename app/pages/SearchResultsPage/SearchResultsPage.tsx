@@ -19,13 +19,16 @@ import { NoSearchResultsDisplay } from "components/ui/NoSearchResultsDisplay";
 import { SearchResultsHeader } from "components/ui/SearchResultsHeader";
 import ClearSearchButton from "components/SearchAndBrowse/Refinements/ClearSearchButton";
 
+export const HITS_PER_PAGE = 40;
+
 // NOTE: The .searchResultsPage is added plain so that it can be targeted by print-specific css
 export const SearchResultsPage = () => {
   const [isMapCollapsed, setIsMapCollapsed] = useState(false);
   const [isMapInitialized, setIsMapInitialized] = useState(false);
   const { aroundUserLocationRadius, aroundLatLng, boundingBox } =
     useAppContext();
-  const { refine: refinePagination } = usePagination();
+  const { refine: refinePagination, currentRefinement: currentPage } =
+    usePagination();
   const {
     // Results type is algoliasearchHelper.SearchResults<SearchHit>
     results: searchResults,
@@ -73,7 +76,7 @@ export const SearchResultsPage = () => {
               ? {
                   // Convert bounding box string to array of numbers that Algolia expects
                   insideBoundingBox: [boundingBox.split(",").map(Number)],
-                  hitsPerPage: 40,
+                  hitsPerPage: HITS_PER_PAGE,
                 }
               : {
                   aroundLatLng: aroundLatLng,
@@ -110,10 +113,10 @@ export const SearchResultsPage = () => {
                   <NoSearchResultsDisplay query={query} />
                 ) : (
                   <>
-                    <SearchResultsHeader>
-                      <h2>{searchResults.nbHits} results</h2>
-                      <ClearSearchButton />
-                    </SearchResultsHeader>
+                    <SearchResultsHeader
+                      currentPage={currentPage}
+                      totalResults={searchResults.nbHits}
+                    />
                     {searchMapHitData.hits.map(
                       (hit: TransformedSearchHit, index) => (
                         <SearchResult

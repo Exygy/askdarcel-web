@@ -47,7 +47,8 @@ export const BrowseResultsPage = () => {
     results: searchResults,
     status,
   } = useInstantSearch();
-  const { refine: refinePagination } = usePagination();
+  const { refine: refinePagination, currentRefinement: currentPage } =
+    usePagination();
   const { refine: clearRefinements } = useClearRefinements();
 
   useEffect(() => window.scrollTo(0, 0), []);
@@ -131,9 +132,10 @@ export const BrowseResultsPage = () => {
                 <h2 className="sr-only">Search results</h2>
                 <>
                   {/* This is browse not search */}
-                  <SearchResultsHeader>
-                    <h2>{searchResults.nbHits} results</h2>
-                  </SearchResultsHeader>
+                  <SearchResultsHeader
+                    currentPage={currentPage}
+                    totalResults={searchResults.nbHits}
+                  />
                   {searchMapHitData.hits.map(
                     (hit: TransformedSearchHit, index) => (
                       <SearchResult

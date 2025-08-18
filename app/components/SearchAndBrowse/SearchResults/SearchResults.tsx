@@ -14,6 +14,7 @@ import styles from "./SearchResults.module.scss";
 import ClearSearchButton from "../Refinements/ClearSearchButton";
 import { Loader } from "components/ui/Loader";
 import ResultsPagination from "components/SearchAndBrowse/Pagination/ResultsPagination";
+import { SearchResultsHeader } from "components/ui/SearchResultsHeader";
 
 export enum SearchMapActions {
   SearchThisArea,
@@ -25,7 +26,8 @@ const SearchResults = ({
 }: {
   mobileMapIsCollapsed: boolean;
 }) => {
-  const { refine: refinePagination } = usePagination();
+  const { refine: refinePagination, currentRefinement: currentPage } =
+    usePagination();
   const {
     // Results type is algoliasearchHelper.SearchResults<SearchHit>
     results: searchResults,
@@ -56,15 +58,6 @@ const SearchResults = ({
     </div>
   );
 
-  const searchResultsHeader = () => {
-    return (
-      <div className={styles.searchResultsHeader}>
-        <h2>{searchResults.nbHits} results</h2>
-        <ClearSearchButton />
-      </div>
-    );
-  };
-
   const handleAction = (searchMapAction: SearchMapActions) => {
     switch (searchMapAction) {
       case SearchMapActions.SearchThisArea:
@@ -84,7 +77,10 @@ const SearchResults = ({
           <NoResultsDisplay />
         ) : (
           <>
-            {searchResultsHeader()}
+            <SearchResultsHeader
+              currentPage={currentPage}
+              totalResults={searchResults.nbHits}
+            />
             {searchMapHitData.hits.map((hit: TransformedSearchHit, index) => (
               <SearchResult
                 hit={hit}
