@@ -17,7 +17,6 @@ import { Loader } from "components/ui/Loader";
 import ResultsPagination from "components/SearchAndBrowse/Pagination/ResultsPagination";
 import { NoSearchResultsDisplay } from "components/ui/NoSearchResultsDisplay";
 import { SearchResultsHeader } from "components/ui/SearchResultsHeader";
-import ClearSearchButton from "components/SearchAndBrowse/Refinements/ClearSearchButton";
 
 export const HITS_PER_PAGE = 40;
 
@@ -35,6 +34,20 @@ export const SearchResultsPage = () => {
     status,
     indexUiState: { query = null },
   } = useInstantSearch();
+
+  const excludedEligibilities: string[] = ["I am a Senior"];
+
+  // Create a filter to exclude resources that have ONLY "I am a Senior" as their eligibility
+  // This uses a combination of filters: NOT (has ONLY this eligibility)
+  const excludedEligibilitiesFilter =
+    excludedEligibilities.length > 0
+      ? excludedEligibilities
+          .map(
+            (eligibility) =>
+              `NOT (eligibilities:"${eligibility}" AND eligibilities_count:1)`
+          )
+          .join(" AND ")
+      : "";
 
   useEffect(() => window.scrollTo(0, 0), []);
 
@@ -77,12 +90,14 @@ export const SearchResultsPage = () => {
                   // Convert bounding box string to array of numbers that Algolia expects
                   insideBoundingBox: [boundingBox.split(",").map(Number)],
                   hitsPerPage: HITS_PER_PAGE,
+                  filters: excludedEligibilitiesFilter,
                 }
               : {
                   aroundLatLng: aroundLatLng,
                   aroundRadius: aroundUserLocationRadius,
                   aroundPrecision: DEFAULT_AROUND_PRECISION,
                   minimumAroundRadius: 100, // Prevent the radius from being too small (100m minimum)
+                  filters: excludedEligibilitiesFilter,
                 })}
           />
         )}
