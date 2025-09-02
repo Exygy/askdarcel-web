@@ -173,23 +173,6 @@ export const SearchMap = ({
                 handleSearchMapAction(SearchMapActions.MapInitialized);
               }
             });
-
-            // Add listener for zoom changes - only updates when search area is large
-            map.addListener("zoom_changed", () => {
-              const zoom = map.getZoom();
-              if (zoom !== undefined) {
-                // Only auto-update radius when the zoom level is high enough that
-                // we're likely to have an overly restrictive search
-                if (zoom >= 18) {
-                  const currentCenter = map.getCenter();
-                  if (currentCenter) {
-                    // Update both center and radius (commented out - users need to click "Search this area")
-                    // setAroundLatLng(`${currentCenter.lat()}, ${currentCenter.lng()}`);
-                    // setAroundRadius(getRadiusForZoomLevel(zoom));
-                  }
-                }
-              }
-            });
           }}
           options={createMapOptions}
         >
