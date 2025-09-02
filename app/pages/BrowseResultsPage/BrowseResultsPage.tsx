@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import * as dataService from "utils/DataService";
 import { DEFAULT_AROUND_PRECISION, useAppContext } from "utils";
@@ -27,6 +27,8 @@ import searchResultsStyles from "components/SearchAndBrowse/SearchResults/Search
 import { SearchResultsHeader } from "components/ui/SearchResultsHeader";
 import { our415SubcategoryNames } from "utils/refinementMappings";
 
+export const HITS_PER_PAGE = 40;
+
 /** Wrapper component that handles state management, URL parsing, and external API requests. */
 export const BrowseResultsPage = () => {
   const { categorySlug } = useParams();
@@ -37,11 +39,13 @@ export const BrowseResultsPage = () => {
   const [parentCategory, setParentCategory] = useState<ServiceCategory | null>(
     null
   );
+  const [isMapCollapsed, setIsMapCollapsed] = useState(false);
+  const [isMapInitialized, setIsMapInitialized] = useState(false);
   const eligibilities = useEligibilitiesForCategory(category.id);
   const subcategories = useSubcategoriesForCategory(category.id);
-  const [isMapCollapsed, setIsMapCollapsed] = useState(false);
   const { userLocation } = useAppContext();
-  const { aroundUserLocationRadius, aroundLatLng } = useAppContext();
+  const { aroundUserLocationRadius, aroundLatLng, boundingBox } =
+    useAppContext();
   const {
     // Results type is algoliasearchHelper.SearchResults<SearchHit>
     results: searchResults,
@@ -52,6 +56,12 @@ export const BrowseResultsPage = () => {
   const { refine: clearRefinements } = useClearRefinements();
 
   useEffect(() => window.scrollTo(0, 0), []);
+
+  const handleFirstResultFocus = useCallback((node: HTMLDivElement | null) => {
+    if (node) {
+      node.focus();
+    }
+  }, []);
 
   const subcategoryNames = subcategories
     ?.map((c) => c.name)
@@ -80,7 +90,13 @@ export const BrowseResultsPage = () => {
   const handleAction = (searchMapAction: SearchMapActions) => {
     switch (searchMapAction) {
       case SearchMapActions.SearchThisArea:
+        // Center and radius are already updated in the SearchMap component
+        // Just reset pagination to show the first page of results
         return refinePagination(0);
+      case SearchMapActions.MapInitialized:
+        // Map has initialized and bounding box is now available
+        setIsMapInitialized(true);
+        return;
     }
   };
 
@@ -101,12 +117,26 @@ export const BrowseResultsPage = () => {
       </PageHeader>
       <div className={styles.container}>
         <BrowseSubheader currentCategory={categoryName} />
-        <Configure
-          filters={`categories:'${algoliaCategoryName}'`}
-          aroundLatLng={aroundLatLng}
-          aroundRadius={aroundUserLocationRadius}
-          aroundPrecision={DEFAULT_AROUND_PRECISION}
-        />
+
+        {/* Only render the Configure component (which triggers the search) when the map is initialized */}
+        {isMapInitialized && (
+          <Configure
+            filters={`categories:'${algoliaCategoryName}'`}
+            // Use the bounding box if available, otherwise fall back to radius-based search
+            {...(boundingBox
+              ? {
+                  // Convert bounding box string to array of numbers that Algolia expects
+                  insideBoundingBox: [boundingBox.split(",").map(Number)],
+                  hitsPerPage: HITS_PER_PAGE,
+                }
+              : {
+                  aroundLatLng: aroundLatLng,
+                  aroundRadius: aroundUserLocationRadius,
+                  aroundPrecision: DEFAULT_AROUND_PRECISION,
+                  minimumAroundRadius: 100, // Prevent the radius from being too small (100m minimum)
+                })}
+          />
+        )}
 
         <div className={styles.flexContainer}>
           <Sidebar
@@ -130,31 +160,38 @@ export const BrowseResultsPage = () => {
                 }`}
               >
                 <h2 className="sr-only">Search results</h2>
-                <>
-                  {/* This is browse not search */}
-                  <SearchResultsHeader
-                    currentPage={currentPage}
-                    totalResults={searchResults.nbHits}
-                  />
-                  {searchMapHitData.hits.map(
-                    (hit: TransformedSearchHit, index) => (
-                      <SearchResult
-                        hit={hit}
-                        key={`${hit.id} - ${hit.name}`}
-                        ref={null}
-                      />
-                    )
-                  )}
-                  <div
-                    className={`${searchResultsStyles.paginationContainer} ${
-                      hasNoResults ? searchResultsStyles.hidePagination : ""
-                    }`}
-                  >
-                    <div className={searchResultsStyles.resultsPagination}>
-                      <ResultsPagination />
-                    </div>
+                {!isMapInitialized ? (
+                  <div className={styles.loadingContainer}>
+                    <Loader />
+                    <p>Initializing map and loading results...</p>
                   </div>
-                </>
+                ) : (
+                  <>
+                    {/* This is browse not search */}
+                    <SearchResultsHeader
+                      currentPage={currentPage}
+                      totalResults={searchResults.nbHits}
+                    />
+                    {searchMapHitData.hits.map(
+                      (hit: TransformedSearchHit, index) => (
+                        <SearchResult
+                          hit={hit}
+                          key={`${hit.id} - ${hit.name}`}
+                          ref={index === 0 ? handleFirstResultFocus : null}
+                        />
+                      )
+                    )}
+                    <div
+                      className={`${searchResultsStyles.paginationContainer} ${
+                        hasNoResults ? searchResultsStyles.hidePagination : ""
+                      }`}
+                    >
+                      <div className={searchResultsStyles.resultsPagination}>
+                        <ResultsPagination />
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
               <SearchMap
                 hits={searchMapHitData.hits}
