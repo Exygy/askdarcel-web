@@ -37,13 +37,11 @@ export const HITS_PER_PAGE = 40;
 /** Wrapper component that handles state management, URL parsing, and external API requests. */
 export const BrowseResultsPage = () => {
   const { categorySlug } = useParams();
-  console.log("🔄 BrowseResultsPage render - categorySlug:", categorySlug);
 
   const category = CATEGORIES.find((c) => c.slug === categorySlug);
   if (category === undefined) {
     throw new Error(`Unknown category slug ${categorySlug}`);
   }
-  console.log("📂 Category found:", category.name, "ID:", category.id);
   const [parentCategory, setParentCategory] = useState<ServiceCategory | null>(
     null
   );
@@ -54,12 +52,6 @@ export const BrowseResultsPage = () => {
   const { userLocation } = useAppContext();
   const { aroundUserLocationRadius, aroundLatLng, boundingBox } =
     useAppContext();
-  console.log("🗺️ App context values:", {
-    userLocation: userLocation?.coords,
-    aroundUserLocationRadius,
-    aroundLatLng,
-    boundingBox,
-  });
 
   const { setBoundingBox, setAroundLatLng, setAroundRadius } =
     useAppContextUpdater();
@@ -77,16 +69,6 @@ export const BrowseResultsPage = () => {
   // Reset map state when category changes
   useEffect(
     () => {
-      console.log(
-        "🔄 Category change detected - resetting map state for category:",
-        category.id
-      );
-      console.log("🔄 Before reset:", {
-        boundingBox,
-        aroundLatLng,
-        aroundUserLocationRadius,
-      });
-
       // Reset bounding box and location parameters to original user location
       // so the new category search starts fresh
       setBoundingBox(undefined);
@@ -94,12 +76,6 @@ export const BrowseResultsPage = () => {
         `${userLocation?.coords.lat},${userLocation?.coords.lng}`
       );
       setAroundRadius(1600); // Reset to default radius
-
-      // Instead of setting to false, we can allow the search to proceed immediately
-      // since the map is already initialized, just with new parameters
-      // setIsMapInitialized(false); // Don't reset this - let search continue
-
-      console.log("🔄 After reset - map will reinitialize");
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [
@@ -140,24 +116,14 @@ export const BrowseResultsPage = () => {
   const searchMapHitData = transformSearchResults(searchResults);
 
   const hasNoResults = searchMapHitData.nbHits === 0 && status === "idle";
-  console.log("📊 Search state:", {
-    nbHits: searchMapHitData.nbHits,
-    status,
-    hasNoResults,
-    isMapInitialized,
-    algoliaCategoryName,
-  });
 
   const handleAction = (searchMapAction: SearchMapActions) => {
-    console.log("🗺️ Map action received:", searchMapAction);
     switch (searchMapAction) {
       case SearchMapActions.SearchThisArea:
-        console.log("🔍 Handling SearchThisArea - resetting pagination");
         // Center and radius are already updated in the SearchMap component
         // Just reset pagination to show the first page of results
         return refinePagination(0);
       case SearchMapActions.MapInitialized:
-        console.log("🗺️ Map initialized - enabling search");
         // Map has initialized and bounding box is now available
         setIsMapInitialized(true);
         return;
@@ -183,40 +149,22 @@ export const BrowseResultsPage = () => {
         <BrowseSubheader currentCategory={categoryName} />
 
         {/* Only render the Configure component (which triggers the search) when the map is initialized */}
-        {isMapInitialized
-          ? (() => {
-              console.log("⚙️ Configure component rendered with:", {
-                algoliaCategoryName,
-                boundingBox,
-                aroundLatLng,
-                aroundUserLocationRadius,
-                searchType: boundingBox ? "boundingBox" : "radius",
-              });
-              return (
-                <Configure
-                  filters={`categories:'${algoliaCategoryName}'`}
-                  // Use the bounding box if available, otherwise fall back to radius-based search
-                  {...(boundingBox
-                    ? {
-                        // Convert bounding box string to array of numbers that Algolia expects
-                        insideBoundingBox: [boundingBox.split(",").map(Number)],
-                        hitsPerPage: HITS_PER_PAGE,
-                      }
-                    : {
-                        aroundLatLng: aroundLatLng,
-                        aroundRadius: aroundUserLocationRadius,
-                        aroundPrecision: DEFAULT_AROUND_PRECISION,
-                        minimumAroundRadius: 100, // Prevent the radius from being too small (100m minimum)
-                      })}
-                />
-              );
-            })()
-          : (() => {
-              console.log(
-                "⏳ Configure component NOT rendered - waiting for map initialization"
-              );
-              return null;
-            })()}
+        {isMapInitialized && (
+          <Configure
+            filters={`categories:'${algoliaCategoryName}'`}
+            {...(boundingBox
+              ? {
+                  insideBoundingBox: [boundingBox.split(",").map(Number)],
+                  hitsPerPage: HITS_PER_PAGE,
+                }
+              : {
+                  aroundLatLng,
+                  aroundRadius: aroundUserLocationRadius,
+                  aroundPrecision: DEFAULT_AROUND_PRECISION,
+                  minimumAroundRadius: 100,
+                })}
+          />
+        )}
 
         <div className={styles.flexContainer}>
           <Sidebar
