@@ -88,14 +88,6 @@ export const BrowseResultsPage = () => {
 
   const hasNoResults = searchMapHitData.nbHits === 0 && status === "idle";
 
-  console.log({
-    searchMapHitData,
-    status,
-    currentPage,
-    subcategories,
-    hasNoResults,
-  });
-
   const handleAction = (searchMapAction: SearchMapActions) => {
     switch (searchMapAction) {
       case SearchMapActions.SearchThisArea:
