@@ -33,6 +33,7 @@ export interface SFGovEvent {
   supervisor_district: string;
   data_as_of: string;
   data_loaded_at: string;
+  days_of_week?: string; // Optional field for specifying which days of the week the event occurs
 }
 
 interface SFGovEventsHookResult {
