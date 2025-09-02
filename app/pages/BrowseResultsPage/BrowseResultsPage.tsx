@@ -94,7 +94,10 @@ export const BrowseResultsPage = () => {
         `${userLocation?.coords.lat},${userLocation?.coords.lng}`
       );
       setAroundRadius(1600); // Reset to default radius
-      setIsMapInitialized(false); // Force map to reinitialize
+
+      // Instead of setting to false, we can allow the search to proceed immediately
+      // since the map is already initialized, just with new parameters
+      // setIsMapInitialized(false); // Don't reset this - let search continue
 
       console.log("🔄 After reset - map will reinitialize");
     },
