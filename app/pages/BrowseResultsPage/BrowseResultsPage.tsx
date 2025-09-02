@@ -25,6 +25,7 @@ import { useInstantSearch, usePagination } from "react-instantsearch";
 import ResultsPagination from "components/SearchAndBrowse/Pagination/ResultsPagination";
 import searchResultsStyles from "components/SearchAndBrowse/SearchResults/SearchResults.module.scss";
 import { SearchResultsHeader } from "components/ui/SearchResultsHeader";
+import { NoSearchResultsDisplay } from "components/ui/NoSearchResultsDisplay";
 import { our415SubcategoryNames } from "utils/refinementMappings";
 
 export const HITS_PER_PAGE = 40;
@@ -86,6 +87,14 @@ export const BrowseResultsPage = () => {
   const searchMapHitData = transformSearchResults(searchResults);
 
   const hasNoResults = searchMapHitData.nbHits === 0 && status === "idle";
+
+  console.log({
+    searchMapHitData,
+    status,
+    currentPage,
+    subcategories,
+    hasNoResults,
+  });
 
   const handleAction = (searchMapAction: SearchMapActions) => {
     switch (searchMapAction) {
@@ -165,6 +174,8 @@ export const BrowseResultsPage = () => {
                     <Loader />
                     <p>Initializing map and loading results...</p>
                   </div>
+                ) : hasNoResults ? (
+                  <NoSearchResultsDisplay query={null} />
                 ) : (
                   <>
                     {/* This is browse not search */}
