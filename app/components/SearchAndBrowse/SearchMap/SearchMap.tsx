@@ -31,14 +31,43 @@ export const SearchMap = ({
     null
   );
   const { userLocation, aroundLatLng } = useAppContext();
-  const { setAroundLatLng } = useAppContextUpdater();
+  const { setAroundLatLng, setAroundRadius, setBoundingBox } =
+    useAppContextUpdater();
+
+  // Dynamically calculate search radius based on zoom level
 
   function handleSearchThisAreaClick() {
-    const center = googleMapObject?.getCenter();
-    if (center?.lat() && center?.lng()) {
-      setAroundLatLng(`${center.lat()}, ${center.lng()}`);
+    const map = googleMapObject;
+    if (map) {
+      // Get the visible bounds of the map
+      const bounds = map.getBounds();
+      if (bounds) {
+        const ne = bounds.getNorthEast();
+        const sw = bounds.getSouthWest();
+
+        // Format as Algolia expects: "lat1,lng1,lat2,lng2"
+        // Where (lat1, lng1) is the top-left (NW) corner and (lat2, lng2) is the bottom-right (SE) corner
+        const boundingBoxString = `${ne.lat()},${sw.lng()},${sw.lat()},${ne.lng()}`;
+
+        // Update the bounding box for search
+        setBoundingBox(boundingBoxString);
+
+        // Set aroundRadius to "all" to disable radius-based filtering
+        setAroundRadius("all");
+
+        // Keep center point updated for reference (used for map centering)
+        const center = map.getCenter();
+        if (center) {
+          const centerStr = `${center.lat()}, ${center.lng()}`;
+          setAroundLatLng(centerStr);
+        }
+
+        // Notify SearchResultsPage component to reset pagination
+        handleSearchMapAction(SearchMapActions.SearchThisArea);
+      }
+    } else {
+      handleSearchMapAction(SearchMapActions.SearchThisArea);
     }
-    handleSearchMapAction(SearchMapActions.SearchThisArea);
   }
 
   const aroundLatLngToMapCenter = {
@@ -127,6 +156,23 @@ export const SearchMap = ({
             // SetMapObject shares the Google Map object across parent/sibling components
             // so that they can adjustments to markers, coordinates, layout, etc.,
             setMapObject(map);
+
+            // Set initial bounding box when map is first loaded
+            const idleListener = map.addListener("idle", () => {
+              // Remove the listener so it only fires once
+              google.maps.event.removeListener(idleListener);
+
+              const bounds = map.getBounds();
+              if (bounds) {
+                const ne = bounds.getNorthEast();
+                const sw = bounds.getSouthWest();
+                const boundingBoxString = `${ne.lat()},${sw.lng()},${sw.lat()},${ne.lng()}`;
+                setBoundingBox(boundingBoxString);
+
+                // Notify that map is initialized
+                handleSearchMapAction(SearchMapActions.MapInitialized);
+              }
+            });
           }}
           options={createMapOptions}
         >

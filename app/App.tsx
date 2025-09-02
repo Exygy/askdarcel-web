@@ -22,9 +22,9 @@ export const App = () => {
   const location = useLocation();
   const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
   const [aroundLatLng, setAroundLatLng] = useState<string>("");
-  const [aroundUserLocationRadius, setAroundRadius] = useState<AroundRadius>(
-    "all" as const
-  );
+  const [aroundUserLocationRadius, setAroundRadius] =
+    useState<AroundRadius>(1600);
+  const [boundingBox, setBoundingBox] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     getLocation().then((userLocation) => {
@@ -60,6 +60,8 @@ export const App = () => {
     setAroundLatLng,
     aroundUserLocationRadius,
     setAroundRadius,
+    boundingBox,
+    setBoundingBox,
   };
 
   return (
