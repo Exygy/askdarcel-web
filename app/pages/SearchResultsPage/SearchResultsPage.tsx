@@ -17,7 +17,6 @@ import { Loader } from "components/ui/Loader";
 import ResultsPagination from "components/SearchAndBrowse/Pagination/ResultsPagination";
 import { NoSearchResultsDisplay } from "components/ui/NoSearchResultsDisplay";
 import { SearchResultsHeader } from "components/ui/SearchResultsHeader";
-import ClearSearchButton from "components/SearchAndBrowse/Refinements/ClearSearchButton";
 
 export const HITS_PER_PAGE = 40;
 
