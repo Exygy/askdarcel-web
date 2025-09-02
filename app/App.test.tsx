@@ -34,7 +34,7 @@ describe("<App />", () => {
         coords: { lat: 37.7749, lng: -122.4194 },
         inSanFrancisco: false,
       },
-      aroundUserLocationRadius: "all",
+      aroundUserLocationRadius: 1600,
       setAroundRadius: expect.any(Function),
       setAroundLatLng: expect.any(Function),
     });
