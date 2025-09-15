@@ -16,12 +16,20 @@ const HOME_PAGE_MOCK = {
   data: {
     attributes: {},
   },
+  isLoading: false,
 };
 
 const EVENTS_MOCK: {
   data: ReturnType<typeof useHomePageEventsData>["data"];
+  isLoading: boolean;
 } = {
   data: [],
+  isLoading: false,
+};
+
+const SF_GOV_EVENTS_MOCK = {
+  data: [],
+  isLoading: false,
 };
 
 jest.mock("hooks/StrapiAPI", () => ({
@@ -29,13 +37,22 @@ jest.mock("hooks/StrapiAPI", () => ({
   useHomePageEventsData: () => EVENTS_MOCK,
 }));
 
+jest.mock("hooks/SFGovAPI", () => ({
+  useAllSFGovEvents: () => SF_GOV_EVENTS_MOCK,
+}));
+
 describe("<HomePage />", () => {
   it("renders", () => {
     HOME_PAGE_MOCK.data.attributes = HOME_PAGE_DATA.data.attributes;
+    HOME_PAGE_MOCK.isLoading = false;
+    EVENTS_MOCK.isLoading = false;
+    SF_GOV_EVENTS_MOCK.isLoading = false;
+
     render(<HomePage />, { wrapper: BrowserRouter });
+
     expect(screen.getByTestId("homepage-title")).toHaveTextContent("Homepage");
     expect(screen.getByTestId("hero")).toBeInTheDocument();
-    expect(screen.getAllByTestId("homepage-section")).toHaveLength(2);
+    expect(screen.getAllByTestId("homepage-section")).toHaveLength(3);
     expect(screen.getAllByTestId("two-column-content-section")).toHaveLength(2);
   });
 });
