@@ -24,6 +24,10 @@
     border: none;
   }
 
+  :global(.rbc-row-content) {
+    z-index: 0;
+  }
+
   :global(.rbc-day-bg) {
     border-right: 1px solid #f8f9fa;
     border-bottom: 1px solid #f8f9fa;
@@ -370,6 +374,9 @@
   transition: all 0.2s ease;
   box-shadow: 0 2px 4px rgba(0, 123, 255, 0.1);
   user-select: none;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 
   &:hover {
     background: #007bff;
@@ -449,6 +456,10 @@
   text-align: center;
   flex: 1;
   letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
 }
 
 // Mobile Agenda Styles
@@ -771,6 +782,16 @@
   &:hover {
     background: rgba(108, 117, 125, 0.1);
     color: #495057;
+    border-radius: 50%;
+  }
+
+  &:focus {
+    outline: none;
+    border-radius: 50%;
+  }
+  &:active {
+    border-radius: 50%;
+    transform: scale(0.95);
   }
 }
 
@@ -977,7 +998,7 @@
   display: inline-block;
   padding: 0.25rem 0.75rem;
   border-radius: 12px;
-  color: white;
+  color: black;
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;

@@ -6,6 +6,11 @@ import { SFGovEvent } from "hooks/SFGovAPI";
 import { Loader } from "../Loader";
 import styles from "./EventCalendar.module.scss";
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  XMarkIcon,
+} from "@heroicons/react/16/solid";
 
 // Setup the localizer
 const localizer = momentLocalizer(moment);
@@ -528,7 +533,7 @@ export const EventCalendar: React.FC<EventCalendarProps> = ({
               className={styles.toolbarButton}
               onClick={() => onNavigate("PREV")}
             >
-              ‹ Back
+              <ChevronLeftIcon width={16} height={16} /> Back
             </button>
           </div>
           <div className={styles.toolbarCenter}>
@@ -545,7 +550,7 @@ export const EventCalendar: React.FC<EventCalendarProps> = ({
               className={styles.toolbarButton}
               onClick={() => onNavigate("NEXT")}
             >
-              Next ›
+              Next <ChevronRightIcon width={16} height={16} />
             </button>
           </div>
         </div>
@@ -633,7 +638,7 @@ export const EventCalendar: React.FC<EventCalendarProps> = ({
             onClick={navigateToPreviousDay}
             aria-label="Previous day"
           >
-            ‹
+            <ChevronLeftIcon width={24} height={24} />
           </button>
           <h2 className={styles.dateHeaderTitle}>
             {formatMobileDateHeader(currentMobileDate)}
@@ -643,7 +648,7 @@ export const EventCalendar: React.FC<EventCalendarProps> = ({
             onClick={navigateToNextDay}
             aria-label="Next day"
           >
-            ›
+            <ChevronRightIcon width={24} height={24} />
           </button>
         </div>
       )}
@@ -768,7 +773,7 @@ export const EventCalendar: React.FC<EventCalendarProps> = ({
                 onClick={closeSlideout}
                 aria-label="Close event details"
               >
-                ×
+                <XMarkIcon width={16} height={16} />
               </button>
             </div>
 
@@ -885,7 +890,7 @@ export const EventCalendar: React.FC<EventCalendarProps> = ({
                     this day
                   </p>
 
-                  {dayEvents.map((event, index) => (
+                  {dayEvents.map((event) => (
                     <div key={event.id} className={styles.eventCard}>
                       <div className={styles.eventCardHeader}>
                         <div
