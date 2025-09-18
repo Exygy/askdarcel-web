@@ -51,18 +51,18 @@ export const HomePage = () => {
       {eventsData && (
         <span id="featured-events">
           <HomePageSection
-            title={"Featured Events"}
-            description={""}
-            backgroundColor={"tertiary"}
-          >
-            <EventCardSection events={featuredEventsData ?? []} />
-          </HomePageSection>
-          <HomePageSection
-            title={"Events Calendar"}
+            title={"Events calendar"}
             description={""}
             backgroundColor={"tertiary"}
           >
             <EventCalendar events={eventsData} />
+          </HomePageSection>
+          <HomePageSection
+            title={"Featured resources"}
+            description={""}
+            backgroundColor={"tertiary"}
+          >
+            <EventCardSection events={featuredEventsData ?? []} />
           </HomePageSection>
         </span>
       )}
