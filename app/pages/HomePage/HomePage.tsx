@@ -1,23 +1,31 @@
 import React from "react";
 import Hero from "components/ui/Hero/Hero";
 import { CategorySection } from "components/ui/Section/CategorySection";
-import { useHomePageEventsData, useHomepageData } from "hooks/StrapiAPI";
+import { useHomepageData, useHomePageEventsData } from "hooks/StrapiAPI";
+import { useAllSFGovEvents } from "hooks/SFGovAPI";
 import { Homepage, StrapiDatum } from "models/Strapi";
-import { EventCardSection } from "components/ui/Cards/EventCardSection";
+import { EventCalendar } from "components/ui/Calendar/EventCalendar";
 import { HomePageSection } from "pages/HomePage/components/Section";
 import { TwoColumnContentSection } from "components/ui/TwoColumnContentSection/TwoColumnContentSection";
+import { EventCardSection } from "components/ui/Cards/EventCardSection";
 
 export const HomePage = () => {
   const { data: homepageData, isLoading: homepageDataIsLoading } =
     useHomepageData();
-  const { data: eventsData, isLoading: eventsAreLoading } =
+  const { data: eventsData, isLoading: eventsAreLoading } = useAllSFGovEvents();
+
+  const { data: featuredEventsData, isLoading: featuredEventsAreLoading } =
     useHomePageEventsData();
 
   const homepageDataRes = homepageData as StrapiDatum<Homepage>;
 
   const homePageDataAttrs = homepageDataRes?.attributes;
 
-  if (homepageDataIsLoading || eventsAreLoading) {
+  if (
+    homepageDataIsLoading ||
+    eventsAreLoading ||
+    (featuredEventsAreLoading && featuredEventsData)
+  ) {
     return null;
   }
 
@@ -43,11 +51,18 @@ export const HomePage = () => {
       {eventsData && (
         <span id="featured-events">
           <HomePageSection
+            title={"Events calendar"}
+            description={""}
+            backgroundColor={"primary"}
+          >
+            <EventCalendar events={eventsData} />
+          </HomePageSection>
+          <HomePageSection
             title={"Featured resources"}
             description={""}
             backgroundColor={"tertiary"}
           >
-            <EventCardSection events={eventsData} />
+            <EventCardSection events={featuredEventsData ?? []} />
           </HomePageSection>
         </span>
       )}
