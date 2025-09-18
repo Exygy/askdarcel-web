@@ -53,7 +53,7 @@ export const HomePage = () => {
           <HomePageSection
             title={"Events calendar"}
             description={""}
-            backgroundColor={"tertiary"}
+            backgroundColor={"primary"}
           >
             <EventCalendar events={eventsData} />
           </HomePageSection>
