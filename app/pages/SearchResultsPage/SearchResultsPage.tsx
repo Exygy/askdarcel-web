@@ -90,14 +90,12 @@ export const SearchResultsPage = () => {
                   // Convert bounding box string to array of numbers that Algolia expects
                   insideBoundingBox: [boundingBox.split(",").map(Number)],
                   hitsPerPage: HITS_PER_PAGE,
-                  // filters: excludedEligibilitiesFilter,
                 }
               : {
                   aroundLatLng: aroundLatLng,
                   aroundRadius: aroundUserLocationRadius,
                   aroundPrecision: DEFAULT_AROUND_PRECISION,
                   minimumAroundRadius: 100, // Prevent the radius from being too small (100m minimum)
-                  // filters: excludedEligibilitiesFilter,
                 })}
           />
         )}
