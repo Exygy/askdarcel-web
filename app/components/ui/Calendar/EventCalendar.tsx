@@ -109,23 +109,53 @@ const ensureHttpsProtocol = (url: string): string => {
 
   const trimmedUrl = url.trim();
 
-  // If it already has a protocol, return as is
+  // Security: Block potentially dangerous protocols
+  const dangerousProtocols = ["javascript", "data", "vbscript", "file", "ftp"];
+  const lowerUrl = trimmedUrl.toLowerCase();
+  if (
+    dangerousProtocols.some((protocol) => lowerUrl.startsWith(`${protocol}:`))
+  ) {
+    return ""; // Return empty string for dangerous protocols
+  }
+
+  // If it already has a safe protocol, return as is
   if (trimmedUrl.startsWith("http://") || trimmedUrl.startsWith("https://")) {
     return trimmedUrl;
   }
 
-  // If it starts with www. or looks like a domain, add https://
+  // If it's a relative path, return as-is
   if (
-    trimmedUrl.startsWith("www.") ||
-    /^[a-zA-Z0-9][a-zA-Z0-9-]*\.[a-zA-Z]{2,}/.test(trimmedUrl)
+    trimmedUrl.startsWith("/") ||
+    trimmedUrl.startsWith("./") ||
+    trimmedUrl.startsWith("../")
   ) {
-    return `https://${trimmedUrl}`;
+    return trimmedUrl;
   }
 
-  // For other cases (like relative paths), assume https://
-  return `https://${trimmedUrl}`;
-};
+  // Try to parse as a valid URL; if it fails, prepend https:// and try again
+  try {
+    // Try parsing as is (may throw if missing protocol)
+    new URL(trimmedUrl);
+    // If no error, but no protocol, add https://
+    return `https://${trimmedUrl}`;
+  } catch {
+    try {
+      // Try parsing with https:// prepended
+      const testUrl = new URL(`https://${trimmedUrl}`);
 
+      // Additional security: Ensure the URL has a valid hostname
+      if (testUrl.hostname && testUrl.hostname !== "localhost") {
+        return `https://${trimmedUrl}`;
+      }
+
+      // If hostname is suspicious, return original
+      return trimmedUrl;
+    } catch {
+      // If still invalid, return original
+      return trimmedUrl;
+    }
+  }
+};
 interface CalendarEvent extends Event {
   id: string;
   pageLink: string;
