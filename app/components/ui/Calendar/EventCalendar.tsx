@@ -103,6 +103,59 @@ const shouldEventOccurOnDay = (
   return days.some((day) => dayMap[day] === dayOfWeek);
 };
 
+// Helper function to ensure URLs have proper protocol
+const ensureHttpsProtocol = (url: string): string => {
+  if (!url || url.trim() === "") return url;
+
+  const trimmedUrl = url.trim();
+
+  // Security: Block potentially dangerous protocols
+  const dangerousProtocols = ["javascript", "data", "vbscript", "file", "ftp"];
+  const lowerUrl = trimmedUrl.toLowerCase();
+  if (
+    dangerousProtocols.some((protocol) => lowerUrl.startsWith(`${protocol}:`))
+  ) {
+    return ""; // Return empty string for dangerous protocols
+  }
+
+  // If it already has a safe protocol, return as is
+  if (trimmedUrl.startsWith("http://") || trimmedUrl.startsWith("https://")) {
+    return trimmedUrl;
+  }
+
+  // If it's a relative path, return as-is
+  if (
+    trimmedUrl.startsWith("/") ||
+    trimmedUrl.startsWith("./") ||
+    trimmedUrl.startsWith("../")
+  ) {
+    return trimmedUrl;
+  }
+
+  // Try to parse as a valid URL; if it fails, prepend https:// and try again
+  try {
+    // Try parsing as is (may throw if missing protocol)
+    new URL(trimmedUrl);
+    // If no error, but no protocol, add https://
+    return `https://${trimmedUrl}`;
+  } catch {
+    try {
+      // Try parsing with https:// prepended
+      const testUrl = new URL(`https://${trimmedUrl}`);
+
+      // Additional security: Ensure the URL has a valid hostname
+      if (testUrl.hostname && testUrl.hostname !== "localhost") {
+        return `https://${trimmedUrl}`;
+      }
+
+      // If hostname is suspicious, return original
+      return trimmedUrl;
+    } catch {
+      // If still invalid, return original
+      return trimmedUrl;
+    }
+  }
+};
 interface CalendarEvent extends Event {
   id: string;
   pageLink: string;
@@ -318,7 +371,7 @@ export const EventCalendar: React.FC<EventCalendarProps> = ({
                 title: event.event_name,
                 start: dayStartDate,
                 end: dayEndDate,
-                pageLink: event.more_info || "",
+                pageLink: ensureHttpsProtocol(event.more_info || ""),
                 description: event.event_description || "",
                 location: event.site_location_name || "",
                 allDay: false, // These are timed events
@@ -374,7 +427,7 @@ export const EventCalendar: React.FC<EventCalendarProps> = ({
             title: event.event_name,
             start: startDate,
             end: endDate,
-            pageLink: event.more_info || "",
+            pageLink: ensureHttpsProtocol(event.more_info || ""),
             description: event.event_description || "",
             location: event.site_location_name || "",
             allDay: isAllDayEvent,
