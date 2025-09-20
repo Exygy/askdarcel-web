@@ -103,6 +103,29 @@ const shouldEventOccurOnDay = (
   return days.some((day) => dayMap[day] === dayOfWeek);
 };
 
+// Helper function to ensure URLs have proper protocol
+const ensureHttpsProtocol = (url: string): string => {
+  if (!url || url.trim() === "") return url;
+
+  const trimmedUrl = url.trim();
+
+  // If it already has a protocol, return as is
+  if (trimmedUrl.startsWith("http://") || trimmedUrl.startsWith("https://")) {
+    return trimmedUrl;
+  }
+
+  // If it starts with www. or looks like a domain, add https://
+  if (
+    trimmedUrl.startsWith("www.") ||
+    /^[a-zA-Z0-9][a-zA-Z0-9-]*\.[a-zA-Z]{2,}/.test(trimmedUrl)
+  ) {
+    return `https://${trimmedUrl}`;
+  }
+
+  // For other cases (like relative paths), assume https://
+  return `https://${trimmedUrl}`;
+};
+
 interface CalendarEvent extends Event {
   id: string;
   pageLink: string;
@@ -318,7 +341,7 @@ export const EventCalendar: React.FC<EventCalendarProps> = ({
                 title: event.event_name,
                 start: dayStartDate,
                 end: dayEndDate,
-                pageLink: event.more_info || "",
+                pageLink: ensureHttpsProtocol(event.more_info || ""),
                 description: event.event_description || "",
                 location: event.site_location_name || "",
                 allDay: false, // These are timed events
@@ -374,7 +397,7 @@ export const EventCalendar: React.FC<EventCalendarProps> = ({
             title: event.event_name,
             start: startDate,
             end: endDate,
-            pageLink: event.more_info || "",
+            pageLink: ensureHttpsProtocol(event.more_info || ""),
             description: event.event_description || "",
             location: event.site_location_name || "",
             allDay: isAllDayEvent,
