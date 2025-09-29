@@ -7,6 +7,7 @@ import { EventCalendar } from "components/ui/Calendar";
 import { HomePageSection } from "pages/HomePage/components/Section";
 import { TwoColumnContentSection } from "components/ui/TwoColumnContentSection/TwoColumnContentSection";
 import { EventCardSection } from "components/ui/Cards/EventCardSection";
+import { ErrorBoundary } from "components/ui/ErrorBoundary";
 
 export const HomePage = () => {
   const { data: homepageData, isLoading: homepageDataIsLoading } =
@@ -43,22 +44,26 @@ export const HomePage = () => {
       </span>
 
       <span id="featured-events">
-        <HomePageSection
-          title={"Events calendar"}
-          description={""}
-          backgroundColor={"primary"}
-        >
-          <EventCalendar />
-        </HomePageSection>
+        <ErrorBoundary sectionName="Events calendar">
+          <HomePageSection
+            title={"Events calendar"}
+            description={""}
+            backgroundColor={"primary"}
+          >
+            <EventCalendar />
+          </HomePageSection>
+        </ErrorBoundary>
       </span>
       {!featuredEventsAreLoading && (
-        <HomePageSection
-          title={"Featured resources"}
-          description={""}
-          backgroundColor={"tertiary"}
-        >
-          <EventCardSection events={featuredEventsData ?? []} />
-        </HomePageSection>
+        <ErrorBoundary sectionName="Featured resources">
+          <HomePageSection
+            title={"Featured resources"}
+            description={""}
+            backgroundColor={"tertiary"}
+          >
+            <EventCardSection events={featuredEventsData ?? []} />
+          </HomePageSection>
+        </ErrorBoundary>
       )}
 
       {two_column_content_block?.map((content) => (

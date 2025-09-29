@@ -33,7 +33,6 @@ jobs:
           ALGOLIA_READ_ONLY_API_KEY: ${{ secrets.ALGOLIA_READ_ONLY_API_KEY }}
           STRAPI_API_TOKEN: ${{ secrets.STRAPI_API_TOKEN }}
           STRAPI_API_URL: ${{ secrets.STRAPI_API_URL }}
-          GOOGLE_ANALYTICS_GA4_ID: ${{ secrets.GOOGLE_ANALYTICS_GA4_ID }}
       - name: Install Heroku CLI
         run: |
           curl https://cli-assets.heroku.com/install.sh | sh
