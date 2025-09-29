@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useLayoutEffect, useRef } from "react";
 import { XMarkIcon } from "@heroicons/react/16/solid";
 import { EventSlideoutProps } from "../types";
 import { sanitizeHtml } from "../utils";
@@ -13,6 +13,8 @@ export const EventSlideout: React.FC<EventSlideoutProps> = ({
   categoryColorMap,
   onEventSelect,
 }) => {
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
   // Handle escape key to close slideout
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -25,14 +27,6 @@ export const EventSlideout: React.FC<EventSlideoutProps> = ({
       document.addEventListener("keydown", handleEscape);
       // Prevent body scroll when slideout is open
       document.body.style.overflow = "hidden";
-
-      // Focus management - focus the close button when slideout opens
-      setTimeout(() => {
-        const closeBtn = document.querySelector(
-          ".close-slideout-btn"
-        ) as HTMLElement;
-        closeBtn?.focus();
-      }, 100);
     }
 
     return () => {
@@ -40,6 +34,13 @@ export const EventSlideout: React.FC<EventSlideoutProps> = ({
       document.body.style.overflow = "unset";
     };
   }, [isOpen, onClose]);
+
+  // Focus management - focus the close button when slideout opens
+  useLayoutEffect(() => {
+    if (isOpen && closeButtonRef.current) {
+      closeButtonRef.current.focus();
+    }
+  }, [isOpen]);
 
   if (!isOpen || (!selectedEvent && dayEvents.length === 0)) {
     return null;
@@ -68,7 +69,8 @@ export const EventSlideout: React.FC<EventSlideoutProps> = ({
               : "Event Details"}
           </h2>
           <button
-            className={`${styles.closeButton} close-slideout-btn`}
+            ref={closeButtonRef}
+            className={styles.closeButton}
             onClick={onClose}
             aria-label="Close event details"
           >

@@ -64,11 +64,9 @@ interface PageNotFoundProps {
 
 const PageNotFound: React.FC<PageNotFoundProps> = ({
   type = NotFoundType.PAGE_NOT_FOUND,
-  isInactive,
 }) => {
   // Handle legacy isInactive prop for backward compatibility
-  const notFoundType = isInactive ? NotFoundType.SERVICE_INACTIVE : type;
-  const config = notFoundConfig[notFoundType];
+  const config = notFoundConfig[type];
 
   return (
     <div>
