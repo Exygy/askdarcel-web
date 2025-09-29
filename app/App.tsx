@@ -18,8 +18,6 @@ import { AroundRadius } from "algoliasearch";
 const { siteUrl, title } = websiteConfig;
 export const OUTER_CONTAINER_ID = "outer-container";
 
-// Debug: Log the GA4 ID to see if it's being passed through
-
 TagManager.initialize({ gtmId: config.GOOGLE_ANALYTICS_GA4_ID });
 
 export const App = () => {

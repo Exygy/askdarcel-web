@@ -10,7 +10,7 @@ import { Loader } from "components/ui/Loader";
 import DetailPageWrapper from "components/DetailPage/DetailPageWrapper";
 import ListingPageHeader from "components/DetailPage/PageHeader";
 import { ActionBarMobile } from "components/DetailPage";
-import PageNotFound from "components/ui/PageNotFound";
+import PageNotFound, { NotFoundType } from "components/ui/PageNotFound";
 import { useEventData } from "hooks/StrapiAPI";
 import { LabelTag } from "components/ui/LabelTag";
 
@@ -28,7 +28,7 @@ export const EventDetailPage = () => {
         sidebarActions={[]}
         onClickAction={() => "noop"}
       >
-        <PageNotFound />
+        <PageNotFound type={NotFoundType.EVENT_NOT_FOUND} />
       </DetailPageWrapper>
     );
   }
@@ -50,7 +50,7 @@ export const EventDetailPage = () => {
         sidebarActions={[]}
         onClickAction={() => "noop"}
       >
-        <PageNotFound />
+        <PageNotFound type={NotFoundType.EVENT_NOT_FOUND} />
       </DetailPageWrapper>
     );
   }
