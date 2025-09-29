@@ -43,28 +43,29 @@ export const HomePage = () => {
         <CategorySection />
       </span>
 
-      <span id="featured-events">
-        <ErrorBoundary sectionName="Events calendar">
-          <HomePageSection
-            title={"Events calendar"}
-            description={""}
-            backgroundColor={"primary"}
-          >
-            <EventCalendar />
-          </HomePageSection>
-        </ErrorBoundary>
-      </span>
       {!featuredEventsAreLoading && (
-        <ErrorBoundary sectionName="Featured resources">
-          <HomePageSection
-            title={"Featured resources"}
-            description={""}
-            backgroundColor={"tertiary"}
-          >
-            <EventCardSection events={featuredEventsData ?? []} />
-          </HomePageSection>
-        </ErrorBoundary>
+        <span id="featured-events">
+          <ErrorBoundary sectionName="Featured resources">
+            <HomePageSection
+              title={"Featured resources"}
+              description={""}
+              backgroundColor={"tertiary"}
+            >
+              <EventCardSection events={featuredEventsData ?? []} />
+            </HomePageSection>
+          </ErrorBoundary>
+        </span>
       )}
+
+      <ErrorBoundary sectionName="Events calendar">
+        <HomePageSection
+          title={"Events calendar"}
+          description={""}
+          backgroundColor={"primary"}
+        >
+          <EventCalendar />
+        </HomePageSection>
+      </ErrorBoundary>
 
       {two_column_content_block?.map((content) => (
         <TwoColumnContentSection key={content.id} {...content} />
