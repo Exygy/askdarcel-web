@@ -23,7 +23,7 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    // Log error to monitoring service in production
+    // TODO: Implement logging service
     // console.error(`ErrorBoundary caught an error in ${this.props.sectionName}:`, error, errorInfo);
   }
 
