@@ -16,7 +16,7 @@ import {
   ServiceCard,
   WebsiteRenderer,
 } from "../components/DetailPage";
-import PageNotFound from "components/ui/PageNotFound";
+import PageNotFound, { NotFoundType } from "components/ui/PageNotFound";
 import { Loader } from "components/ui/Loader";
 import {
   fetchOrganization,
@@ -65,7 +65,7 @@ export const OrganizationDetailPage = () => {
         sidebarActions={[]}
         onClickAction={() => "noop"}
       >
-        <PageNotFound />
+        <PageNotFound type={NotFoundType.ORGANIZATION_NOT_FOUND} />
       </DetailPageWrapper>
     );
   }
@@ -79,7 +79,7 @@ export const OrganizationDetailPage = () => {
         sidebarActions={[]}
         onClickAction={() => "noop"}
       >
-        <PageNotFound />
+        <PageNotFound type={NotFoundType.ORGANIZATION_INACTIVE} />
       </DetailPageWrapper>
     );
   }

@@ -2,17 +2,16 @@ import React from "react";
 import Hero from "components/ui/Hero/Hero";
 import { CategorySection } from "components/ui/Section/CategorySection";
 import { useHomepageData, useHomePageEventsData } from "hooks/StrapiAPI";
-import { useAllSFGovEvents } from "hooks/SFGovAPI";
 import { Homepage, StrapiDatum } from "models/Strapi";
-import { EventCalendar } from "components/ui/Calendar/EventCalendar";
+import { EventCalendar } from "components/ui/Calendar";
 import { HomePageSection } from "pages/HomePage/components/Section";
 import { TwoColumnContentSection } from "components/ui/TwoColumnContentSection/TwoColumnContentSection";
 import { EventCardSection } from "components/ui/Cards/EventCardSection";
+import { ErrorBoundary } from "components/ui/ErrorBoundary";
 
 export const HomePage = () => {
   const { data: homepageData, isLoading: homepageDataIsLoading } =
     useHomepageData();
-  const { data: eventsData, isLoading: eventsAreLoading } = useAllSFGovEvents();
 
   const { data: featuredEventsData, isLoading: featuredEventsAreLoading } =
     useHomePageEventsData();
@@ -21,11 +20,7 @@ export const HomePage = () => {
 
   const homePageDataAttrs = homepageDataRes?.attributes;
 
-  if (
-    homepageDataIsLoading ||
-    eventsAreLoading ||
-    (featuredEventsAreLoading && featuredEventsData)
-  ) {
+  if (homepageDataIsLoading) {
     return null;
   }
 
@@ -48,24 +43,29 @@ export const HomePage = () => {
         <CategorySection />
       </span>
 
-      {eventsData && (
+      {!featuredEventsAreLoading && (
         <span id="featured-events">
-          <HomePageSection
-            title={"Events calendar"}
-            description={""}
-            backgroundColor={"primary"}
-          >
-            <EventCalendar events={eventsData} />
-          </HomePageSection>
-          <HomePageSection
-            title={"Featured resources"}
-            description={""}
-            backgroundColor={"tertiary"}
-          >
-            <EventCardSection events={featuredEventsData ?? []} />
-          </HomePageSection>
+          <ErrorBoundary sectionName="Featured resources">
+            <HomePageSection
+              title={"Featured resources"}
+              description={""}
+              backgroundColor={"tertiary"}
+            >
+              <EventCardSection events={featuredEventsData ?? []} />
+            </HomePageSection>
+          </ErrorBoundary>
         </span>
       )}
+
+      <ErrorBoundary sectionName="Events calendar">
+        <HomePageSection
+          title={"Events calendar"}
+          description={""}
+          backgroundColor={"primary"}
+        >
+          <EventCalendar />
+        </HomePageSection>
+      </ErrorBoundary>
 
       {two_column_content_block?.map((content) => (
         <TwoColumnContentSection key={content.id} {...content} />

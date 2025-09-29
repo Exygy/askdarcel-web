@@ -27,7 +27,7 @@ import {
 import styles from "./ServiceDetailPage.module.scss";
 import { searchClient } from "@algolia/client-search";
 import config from "../../config";
-import PageNotFound from "components/ui/PageNotFound";
+import PageNotFound, { NotFoundType } from "components/ui/PageNotFound";
 
 const client = searchClient(
   config.ALGOLIA_APPLICATION_ID,
@@ -147,7 +147,7 @@ export const ServiceDetailPage = () => {
         sidebarActions={[]}
         onClickAction={() => "noop"}
       >
-        <PageNotFound />
+        <PageNotFound type={NotFoundType.SERVICE_NOT_FOUND} />
       </DetailPageWrapper>
     );
   }
@@ -156,7 +156,16 @@ export const ServiceDetailPage = () => {
     return <Loader />;
   }
   if (service.status === "inactive") {
-    return <PageNotFound />;
+    return (
+      <DetailPageWrapper
+        title="Our415 - Page Error"
+        description=""
+        sidebarActions={[]}
+        onClickAction={() => "noop"}
+      >
+        <PageNotFound type={NotFoundType.SERVICE_INACTIVE} />
+      </DetailPageWrapper>
+    );
   }
 
   const { resource, recurringSchedule } = service;

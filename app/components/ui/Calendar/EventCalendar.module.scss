@@ -401,9 +401,7 @@
   justify-content: space-between;
   padding: 1rem 0.5rem;
   margin-bottom: 1rem;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  border-radius: 12px;
-  border: 1px solid #dee2e6;
+  border-bottom: 1px solid #dee2e6;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 
   @media (min-width: 769px) {
@@ -415,8 +413,8 @@
   background: white;
   border: 2px solid #007bff;
   border-radius: 50%;
-  width: 44px;
-  height: 44px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -786,7 +784,8 @@
   }
 
   &:focus {
-    outline: none;
+    outline: 2px solid rgba(0, 123, 255, 0.3);
+    outline-offset: 4px;
     border-radius: 50%;
   }
   &:active {
@@ -1051,4 +1050,10 @@
     background: #007bff;
     color: white;
   }
+}
+
+.categoryInstructions {
+  margin-top: 8px;
+  margin-bottom: 24px;
+  text-align: center;
 }
