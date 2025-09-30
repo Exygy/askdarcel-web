@@ -74,7 +74,7 @@ export const EventDetailPage = () => {
 
   const registrationRows = [
     {
-      title: "Event Link",
+      title: "View Details",
       value: data.registration_link?.url ? (
         <a
           href={data.registration_link.url}
@@ -83,9 +83,7 @@ export const EventDetailPage = () => {
         >
           {data.registration_link.url}
         </a>
-      ) : (
-        "No registration link available"
-      ),
+      ) : null,
     },
   ];
 
@@ -156,20 +154,22 @@ export const EventDetailPage = () => {
         />
       </DetailInfoSection>
 
-      <DetailInfoSection
-        title="Registration"
-        data-testid="eventdetailpage-detailinfosection"
-      >
-        <InfoTable<{ title: string; value: ReactNode }>
-          rowRenderer={(detail) => (
-            <tr key={detail.title}>
-              <th>{detail.title}</th>
-              <td>{detail.value}</td>
-            </tr>
-          )}
-          rows={registrationRows}
-        />
-      </DetailInfoSection>
+      {data.registration_link?.url && (
+        <DetailInfoSection
+          title="Additional Information"
+          data-testid="eventdetailpage-detailinfosection"
+        >
+          <InfoTable<{ title: string; value: ReactNode }>
+            rowRenderer={(detail) => (
+              <tr key={detail.title}>
+                <th>{detail.title}</th>
+                <td>{detail.value}</td>
+              </tr>
+            )}
+            rows={registrationRows}
+          />
+        </DetailInfoSection>
+      )}
       <DetailInfoSection
         title="Tags"
         borderBottom={false}
