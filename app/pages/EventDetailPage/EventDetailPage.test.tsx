@@ -44,7 +44,7 @@ it("displays every page section and table row", async () => {
   [
     "About",
     "Details",
-    "Registration",
+    "Additional Information",
     "Tags",
     "Date & Time",
     "View Details",
