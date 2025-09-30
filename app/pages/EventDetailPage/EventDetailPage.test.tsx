@@ -47,7 +47,7 @@ it("displays every page section and table row", async () => {
     "Registration",
     "Tags",
     "Date & Time",
-    "Event Link",
+    "View Details",
     "Categories",
     "Eligibilities",
     "Age Group",
