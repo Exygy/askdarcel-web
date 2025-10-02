@@ -78,10 +78,18 @@ export const createExclusionFilters = (): string => {
   // Rule 3: Exclude records with "married with no children" eligibility
   filters.push('NOT eligibilities:"married with no children"');
 
-  // Rule 4: Exclude records with "men" eligibility
+  // Rule 4: Exclude records with "men" eligibility (always)
   filters.push('NOT eligibilities:"men"');
 
-  // Rule 5: Exclude records with Alzheimers or "people who use drugs" eligibilities
+  // Rule 5: Exclude records with "TAY (18-24)" ONLY if they also have "men"
+  // Keep: records with only "TAY (18-24)" (without "men")
+  // Exclude: records with both "TAY (18-24)" AND "men"
+  // Using: (NOT TAY) OR (TAY AND NOT men) which simplifies to: (NOT TAY OR NOT men)
+  filters.push(
+    '(NOT eligibilities:"Transitional Aged Youth (TAY)" OR NOT eligibilities:"men")'
+  );
+
+  // Rule 6: Exclude records with Alzheimers or "people who use drugs" eligibilities
   filters.push('NOT eligibilities:"Alzheimers"');
   filters.push('NOT eligibilities:"people who use drugs"');
 
