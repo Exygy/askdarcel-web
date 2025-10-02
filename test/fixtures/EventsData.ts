@@ -9,6 +9,9 @@ export const EVENTS_DATA = [
   {
     data: {
       id: 67,
+      registration_link: {
+        url: "https://www.our415.org",
+      },
       attributes: {
         title: "Back to School Conference",
         createdAt: "2024-07-22T23:54:56.662Z",
@@ -1404,6 +1407,11 @@ export const createFormattedEventData = (): ReturnType<
   typeof useEventData
 >["data"] => ({
   ...EVENTS_DATA[0].data.attributes,
+  registration_link: {
+    id: EVENTS_DATA[0].data.id,
+    text: "Register",
+    url: EVENTS_DATA[0].data.registration_link?.url || "",
+  },
   id: 10,
   categories: [{ id: 11111, label: "Fake Label" }],
   eligibilities: [{ id: 11111, label: "Fake Label" }],
