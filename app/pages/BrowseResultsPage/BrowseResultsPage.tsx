@@ -116,8 +116,13 @@ export const BrowseResultsPage = () => {
 
   // Apply Our415 category filtering rules
   const exclusionFilters = createExclusionFilters();
-  const categoryFilter = `categories:'${algoliaCategoryName}'`;
-  const combinedFilters = `${categoryFilter} AND ${exclusionFilters}`;
+
+  // Build filters conditionally to avoid invalid syntax
+  let combinedFilters = exclusionFilters;
+  if (algoliaCategoryName) {
+    const categoryFilter = `categories:'${algoliaCategoryName}'`;
+    combinedFilters = `${categoryFilter} AND ${exclusionFilters}`;
+  }
 
   const searchMapHitData = transformSearchResults(searchResults);
 
