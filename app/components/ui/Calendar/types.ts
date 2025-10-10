@@ -30,6 +30,7 @@ export interface MobileAgendaProps {
   groupedEvents: { [timeKey: string]: CalendarEvent[] };
   onNavigatePrevious: () => void;
   onNavigateNext: () => void;
+  onGoToToday: () => void;
   onEventSelect: (event: CalendarEvent) => void;
   formatDateHeader: (date: Date) => string;
 }
@@ -40,6 +41,5 @@ export interface EventSlideoutProps {
   selectedEvent: CalendarEvent | null;
   dayEvents: CalendarEvent[];
   selectedDate: Date | null;
-  categoryColorMap: Map<string, string>;
   onEventSelect: (event: CalendarEvent) => void;
 }

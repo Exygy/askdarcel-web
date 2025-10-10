@@ -21,16 +21,40 @@ export const useEventProcessing = (events: SFGovEvent[] | null) => {
 
   // Use useLayoutEffect to set category filters before paint to prevent flashing
   useLayoutEffect(() => {
-    if (availableCategories.length > 0) {
+    if (availableCategories.length > 0 && events) {
+      // Count events per category
+      const categoryCounts = new Map<string, number>();
+
+      events.forEach((event) => {
+        if (event.events_category) {
+          categoryCounts.set(
+            event.events_category,
+            (categoryCounts.get(event.events_category) || 0) + 1
+          );
+        }
+      });
+
+      // Find category with most events
+      let maxCount = 0;
+      let categoryWithMostEvents = availableCategories[0];
+
+      availableCategories.forEach((category) => {
+        const count = categoryCounts.get(category) || 0;
+        if (count > maxCount) {
+          maxCount = count;
+          categoryWithMostEvents = category;
+        }
+      });
+
       setCategoryFilters(
         availableCategories.map((category, index) => ({
           category,
-          enabled: true,
+          enabled: category === categoryWithMostEvents, // Only category with most events is enabled by default
           color: getCategoryColor(index),
         }))
       );
     }
-  }, [availableCategories]);
+  }, [availableCategories, events]);
 
   // Update category filters when available categories change
   useEffect(() => {
@@ -78,14 +102,13 @@ export const useEventProcessing = (events: SFGovEvent[] | null) => {
     return createCategoryColorMap(events);
   }, [categoryFilters, events]);
 
-  // Toggle category filter
+  // Toggle category filter - only one can be selected at a time (radio button behavior)
   const toggleCategory = (category: string) => {
     setCategoryFilters((prev) =>
-      prev.map((filter) =>
-        filter.category === category
-          ? { ...filter, enabled: !filter.enabled }
-          : filter
-      )
+      prev.map((filter) => ({
+        ...filter,
+        enabled: filter.category === category,
+      }))
     );
   };
 
@@ -117,7 +140,7 @@ export const useEventTransformation = (
         // Filter by category if category filters are active
         if (
           categoryFilters.length > 0 &&
-          !enabledCategories.has(event.category)
+          !enabledCategories.has(event.events_category)
         ) {
           return false;
         }
@@ -230,16 +253,11 @@ export const useEventTransformation = (
         }
       });
 
-    // Filter events for mobile agenda view to show only current day
-    const isMobile = typeof window !== "undefined" && window.innerWidth <= 768;
-    if (isMobile) {
-      const currentDateStr = currentMobileDate.toDateString();
-      return transformedEvents.filter((event) => {
-        return event.start && event.start.toDateString() === currentDateStr;
-      });
-    }
-
-    return transformedEvents;
+    // Filter events to show only the current selected day (for agenda view)
+    const currentDateStr = currentMobileDate.toDateString();
+    return transformedEvents.filter((event) => {
+      return event.start && event.start.toDateString() === currentDateStr;
+    });
   }, [events, categoryFilters.length, enabledCategories, currentMobileDate]);
 
   return calendarEvents;

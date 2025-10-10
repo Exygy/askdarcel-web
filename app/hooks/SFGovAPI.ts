@@ -17,8 +17,7 @@ export interface SFGovEvent {
   event_photo?: {
     url: string;
   };
-  category: string;
-  subcategory: string;
+  events_category: string;
   age_group_eligibility_tags: string;
   site_address: string;
   site_phone: string;

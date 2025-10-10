@@ -10,7 +10,6 @@ export const EventSlideout: React.FC<EventSlideoutProps> = ({
   selectedEvent,
   dayEvents,
   selectedDate,
-  categoryColorMap,
   onEventSelect,
 }) => {
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -62,11 +61,17 @@ export const EventSlideout: React.FC<EventSlideoutProps> = ({
       <div className={styles.slideoutPanel}>
         <div className={styles.slideoutHeader}>
           <h2 className={styles.slideoutTitle}>
-            {selectedEvent
-              ? selectedEvent.title
-              : selectedDate
-              ? `Events for ${selectedDate.toLocaleDateString()}`
-              : "Event Details"}
+            {selectedEvent ? (
+              <span
+                dangerouslySetInnerHTML={{
+                  __html: sanitizeHtml(String(selectedEvent.title || "")),
+                }}
+              />
+            ) : selectedDate ? (
+              `Events for ${selectedDate.toLocaleDateString()}`
+            ) : (
+              "Event Details"
+            )}
           </h2>
           <button
             ref={closeButtonRef}
@@ -86,13 +91,11 @@ export const EventSlideout: React.FC<EventSlideoutProps> = ({
                 <div
                   className={styles.categoryBadge}
                   style={{
-                    backgroundColor:
-                      categoryColorMap.get(
-                        selectedEvent.originalEvent.category
-                      ) || "#007bff",
+                    backgroundColor: "#000000",
+                    color: "#ffffff",
                   }}
                 >
-                  {selectedEvent.originalEvent.category}
+                  {selectedEvent.originalEvent.events_category}
                 </div>
               </div>
 
@@ -197,12 +200,15 @@ export const EventSlideout: React.FC<EventSlideoutProps> = ({
                     <div
                       className={styles.eventCategoryDot}
                       style={{
-                        backgroundColor:
-                          categoryColorMap.get(event.originalEvent.category) ||
-                          "#007bff",
+                        backgroundColor: "#000000",
                       }}
                     />
-                    <h4 className={styles.eventCardTitle}>{event.title}</h4>
+                    <h4
+                      className={styles.eventCardTitle}
+                      dangerouslySetInnerHTML={{
+                        __html: sanitizeHtml(String(event.title || "")),
+                      }}
+                    />
                   </div>
 
                   <div className={styles.eventCardContent}>
@@ -227,13 +233,11 @@ export const EventSlideout: React.FC<EventSlideoutProps> = ({
                       <span
                         className={styles.categoryTag}
                         style={{
-                          backgroundColor:
-                            categoryColorMap.get(
-                              event.originalEvent.category
-                            ) || "#007bff",
+                          backgroundColor: "#000000",
+                          color: "#ffffff",
                         }}
                       >
-                        {event.originalEvent.category}
+                        {event.originalEvent.events_category}
                       </span>
                     </div>
 

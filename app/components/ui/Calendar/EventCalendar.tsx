@@ -1,25 +1,13 @@
 import React, { useMemo, useState } from "react";
-import { Calendar, momentLocalizer, Views } from "react-big-calendar";
-import moment from "moment";
 import { useAllSFGovEvents } from "hooks/SFGovAPI";
 import { Loader } from "../Loader";
 import { CategoryFilters } from "./components/CategoryFilters";
 import { MobileAgenda } from "./components/MobileAgenda";
 import { EventSlideout } from "./components/EventSlideout";
-import { CustomToolbar } from "./components/CustomToolbar";
 import { EventCalendarProps, CalendarEvent } from "./types";
 import { useEventProcessing, useEventTransformation } from "./hooks";
-import {
-  getDarkerColor,
-  getCategoryColor,
-  formatMobileDateHeader,
-} from "./utils";
-import { CATEGORY_COLORS } from "./constants";
+import { formatMobileDateHeader } from "./utils";
 import styles from "./EventCalendar.module.scss";
-import "react-big-calendar/lib/css/react-big-calendar.css";
-
-// Setup the localizer
-const localizer = momentLocalizer(moment);
 
 export const EventCalendar: React.FC<EventCalendarProps> = ({
   onEventSelect,
@@ -41,7 +29,6 @@ export const EventCalendar: React.FC<EventCalendarProps> = ({
     availableCategories,
     categoryFilters,
     enabledCategories,
-    categoryColorMap,
     toggleCategory,
   } = useEventProcessing(events);
 
@@ -70,34 +57,12 @@ export const EventCalendar: React.FC<EventCalendarProps> = ({
     });
   };
 
-  // Responsive views and default view for mobile
-  const calendarViews = useMemo(() => {
-    if (typeof window !== "undefined" && window.innerWidth <= 768) {
-      return [Views.AGENDA];
-    }
-    return [Views.MONTH];
-  }, []);
+  const goToToday = () => {
+    setCurrentMobileDate(new Date());
+  };
 
-  const defaultView = useMemo(() => {
-    if (typeof window !== "undefined" && window.innerWidth <= 768) {
-      return Views.AGENDA;
-    }
-    return Views.MONTH;
-  }, []);
-
-  // Responsive calendar height
-  const calendarHeight = useMemo(() => {
-    if (typeof window !== "undefined") {
-      return window.innerWidth <= 768 ? 600 : 800;
-    }
-    return 800;
-  }, []);
-
-  // Group events by start time for mobile agenda view
+  // Group events by start time for agenda view (used for both mobile and desktop)
   const groupedEventsByTime = useMemo(() => {
-    const isMobile = typeof window !== "undefined" && window.innerWidth <= 768;
-    if (!isMobile) return {};
-
     const groups: { [timeKey: string]: CalendarEvent[] } = {};
 
     calendarEvents.forEach((event) => {
@@ -150,14 +115,6 @@ export const EventCalendar: React.FC<EventCalendarProps> = ({
     }
   };
 
-  const handleShowMore = (events: CalendarEvent[], date: Date) => {
-    // Open slideout with multiple events for the day
-    setDayEvents(events);
-    setSelectedDate(date);
-    setSelectedEvent(null);
-    setSlideoutOpen(true);
-  };
-
   const closeSlideout = () => {
     setSlideoutOpen(false);
     setSelectedEvent(null);
@@ -170,41 +127,6 @@ export const EventCalendar: React.FC<EventCalendarProps> = ({
     setSelectedEvent(event);
     setDayEvents([]);
     setSelectedDate(null);
-  };
-
-  const eventStyleGetter = (event: CalendarEvent) => {
-    // Get category color with improved fallback
-    let categoryColor = categoryColorMap.get(event.originalEvent.category);
-
-    // If color not found in map, calculate it directly to prevent blue flash
-    if (!categoryColor && event.originalEvent.category) {
-      const categories = Array.from(
-        new Set(events?.map((e) => e.category).filter(Boolean) || [])
-      ).sort();
-      const categoryIndex = categories.indexOf(event.originalEvent.category);
-      categoryColor =
-        categoryIndex >= 0
-          ? getCategoryColor(categoryIndex)
-          : CATEGORY_COLORS[0];
-    } else if (!categoryColor) {
-      // Final fallback - use first color from palette instead of blue
-      categoryColor = CATEGORY_COLORS[0];
-    }
-
-    const darkerColor = getDarkerColor(categoryColor);
-
-    return {
-      style: {
-        backgroundColor: categoryColor,
-        borderRadius: "6px",
-        opacity: 0.9,
-        color: "#000000",
-        border: `2px solid ${darkerColor}`,
-        display: "block",
-        cursor: "pointer",
-        fontWeight: "500",
-      },
-    };
   };
 
   // Loading states
@@ -221,8 +143,6 @@ export const EventCalendar: React.FC<EventCalendarProps> = ({
     return <Loader />;
   }
 
-  const isMobile = typeof window !== "undefined" && window.innerWidth <= 768;
-
   return (
     <div className={styles.calendarContainer}>
       <CategoryFilters
@@ -231,39 +151,15 @@ export const EventCalendar: React.FC<EventCalendarProps> = ({
         onToggleCategory={toggleCategory}
       />
 
-      {isMobile ? (
-        <MobileAgenda
-          currentDate={currentMobileDate}
-          groupedEvents={groupedEventsByTime}
-          onNavigatePrevious={navigateToPreviousDay}
-          onNavigateNext={navigateToNextDay}
-          onEventSelect={handleSelectEvent}
-          formatDateHeader={formatMobileDateHeader}
-        />
-      ) : (
-        <Calendar
-          localizer={localizer}
-          events={calendarEvents}
-          startAccessor="start"
-          endAccessor="end"
-          titleAccessor="title"
-          style={{
-            height: calendarHeight,
-            minHeight: calendarHeight - 100,
-          }}
-          onSelectEvent={handleSelectEvent}
-          onShowMore={handleShowMore}
-          eventPropGetter={eventStyleGetter}
-          views={calendarViews}
-          defaultView={defaultView}
-          components={{
-            toolbar: CustomToolbar,
-          }}
-          tooltipAccessor={(event: CalendarEvent) =>
-            `${event.title} - ${event.originalEvent.category}`
-          }
-        />
-      )}
+      <MobileAgenda
+        currentDate={currentMobileDate}
+        groupedEvents={groupedEventsByTime}
+        onNavigatePrevious={navigateToPreviousDay}
+        onNavigateNext={navigateToNextDay}
+        onGoToToday={goToToday}
+        onEventSelect={handleSelectEvent}
+        formatDateHeader={formatMobileDateHeader}
+      />
 
       {/* Event Details Slideout */}
       <EventSlideout
@@ -272,7 +168,6 @@ export const EventCalendar: React.FC<EventCalendarProps> = ({
         selectedEvent={selectedEvent}
         dayEvents={dayEvents}
         selectedDate={selectedDate}
-        categoryColorMap={categoryColorMap}
         onEventSelect={handleSlideoutEventSelect}
       />
     </div>
