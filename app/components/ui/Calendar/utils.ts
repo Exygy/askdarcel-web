@@ -42,7 +42,7 @@ export const createCategoryColorMap = (
   if (!events) return colorMap;
 
   const uniqueCategories = Array.from(
-    new Set(events.map((event) => event.category).filter(Boolean))
+    new Set(events.map((event) => event.events_category).filter(Boolean))
   ).sort();
 
   uniqueCategories.forEach((category, index) => {
@@ -113,7 +113,7 @@ export const extractUniqueCategories = (
   if (!events) return [];
 
   const uniqueCategories = Array.from(
-    new Set(events.map((event) => event.category).filter(Boolean))
+    new Set(events.map((event) => event.events_category).filter(Boolean))
   ).sort();
 
   return uniqueCategories;
