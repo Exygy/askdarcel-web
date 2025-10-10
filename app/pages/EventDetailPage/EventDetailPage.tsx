@@ -139,20 +139,22 @@ export const EventDetailPage = () => {
         <BlocksRenderer content={data.description || []} />
       </DetailInfoSection>
 
-      <DetailInfoSection
-        title="Details"
-        data-testid="eventdetailpage-detailinfosection"
-      >
-        <InfoTable<{ title: string; value: ReactNode }>
-          rowRenderer={(detail) => (
-            <tr key={detail.title}>
-              <th>{detail.title}</th>
-              <td>{detail.value}</td>
-            </tr>
-          )}
-          rows={detailsRows}
-        />
-      </DetailInfoSection>
+      {detailsRows.length > 0 && (
+        <DetailInfoSection
+          title="Details"
+          data-testid="eventdetailpage-detailinfosection"
+        >
+          <InfoTable<{ title: string; value: ReactNode }>
+            rowRenderer={(detail) => (
+              <tr key={detail.title}>
+                <th>{detail.title}</th>
+                <td>{detail.value}</td>
+              </tr>
+            )}
+            rows={detailsRows}
+          />
+        </DetailInfoSection>
+      )}
 
       {data.registration_link?.url && (
         <DetailInfoSection
