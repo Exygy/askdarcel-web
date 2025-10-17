@@ -32,7 +32,9 @@ export const MobileAgenda: React.FC<MobileAgendaProps> = ({
         <div className={styles.dateHeaderTitle}>
           <h2>{formatDateHeader(currentDate)}</h2>
           {new Date().toDateString() !== currentDate.toDateString() && (
-            <button onClick={onGoToToday}>Go to today</button>
+            <button type="button" onClick={onGoToToday}>
+              Go to today
+            </button>
           )}
         </div>
         <button
@@ -96,7 +98,7 @@ const AgendaEventChip: React.FC<AgendaEventChipProps> = ({
       <div
         className={styles.agendaChipTitle}
         dangerouslySetInnerHTML={{
-          __html: sanitizeHtml(String(event.title || "")),
+          __html: sanitizeHtml(event.title || ""),
         }}
       />
       {event.location && (

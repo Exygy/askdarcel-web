@@ -1,9 +1,8 @@
 import { SFGovEvent } from "hooks/SFGovAPI";
-import { ReactNode } from "react";
 
 // Base event interface (replacing react-big-calendar's Event type)
 export interface BaseEvent {
-  title?: ReactNode;
+  title?: string;
   start?: Date;
   end?: Date;
   allDay?: boolean;
@@ -25,7 +24,6 @@ export interface EventCalendarProps {
 export interface CategoryFilter {
   category: string;
   enabled: boolean;
-  color: string;
 }
 
 export interface CategoryFiltersProps {

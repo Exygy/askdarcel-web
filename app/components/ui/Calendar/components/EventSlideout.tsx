@@ -64,7 +64,7 @@ export const EventSlideout: React.FC<EventSlideoutProps> = ({
             {selectedEvent ? (
               <span
                 dangerouslySetInnerHTML={{
-                  __html: sanitizeHtml(String(selectedEvent.title || "")),
+                  __html: sanitizeHtml(selectedEvent.title || ""),
                 }}
               />
             ) : selectedDate ? (
@@ -206,7 +206,7 @@ export const EventSlideout: React.FC<EventSlideoutProps> = ({
                     <h4
                       className={styles.eventCardTitle}
                       dangerouslySetInnerHTML={{
-                        __html: sanitizeHtml(String(event.title || "")),
+                        __html: sanitizeHtml(event.title || ""),
                       }}
                     />
                   </div>

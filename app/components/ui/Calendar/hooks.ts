@@ -3,8 +3,6 @@ import { SFGovEvent } from "hooks/SFGovAPI";
 import { CalendarEvent, CategoryFilter } from "./types";
 import {
   extractUniqueCategories,
-  createCategoryColorMap,
-  getCategoryColor,
   shouldEventOccurOnDay,
   ensureHttpsProtocol,
 } from "./utils";
@@ -47,10 +45,9 @@ export const useEventProcessing = (events: SFGovEvent[] | null) => {
       });
 
       setCategoryFilters(
-        availableCategories.map((category, index) => ({
+        availableCategories.map((category) => ({
           category,
           enabled: category === categoryWithMostEvents, // Only category with most events is enabled by default
-          color: getCategoryColor(index),
         }))
       );
     }
@@ -62,13 +59,12 @@ export const useEventProcessing = (events: SFGovEvent[] | null) => {
       const existingCategories = new Set(prev.map((f) => f.category));
       const newFilters = [...prev];
 
-      // Add new categories that weren't present before
-      availableCategories.forEach((category, index) => {
+      // Add new categories that weren't present before (default to disabled)
+      availableCategories.forEach((category) => {
         if (!existingCategories.has(category)) {
           newFilters.push({
             category,
-            enabled: true,
-            color: getCategoryColor(availableCategories.indexOf(category)),
+            enabled: false, // New categories default to disabled to maintain single-select
           });
         }
       });
@@ -87,21 +83,6 @@ export const useEventProcessing = (events: SFGovEvent[] | null) => {
     [categoryFilters]
   );
 
-  // Get category color mapping - use pre-calculated mapping to prevent flashing
-  const categoryColorMap = useMemo(() => {
-    // First try to get from categoryFilters if available
-    if (categoryFilters.length > 0) {
-      const map = new Map<string, string>();
-      categoryFilters.forEach((filter) => {
-        map.set(filter.category, filter.color);
-      });
-      return map;
-    }
-
-    // Fallback to direct calculation to prevent blue flash
-    return createCategoryColorMap(events);
-  }, [categoryFilters, events]);
-
   // Toggle category filter - only one can be selected at a time (radio button behavior)
   const toggleCategory = (category: string) => {
     setCategoryFilters((prev) =>
@@ -116,7 +97,6 @@ export const useEventProcessing = (events: SFGovEvent[] | null) => {
     availableCategories,
     categoryFilters,
     enabledCategories,
-    categoryColorMap,
     toggleCategory,
   };
 };

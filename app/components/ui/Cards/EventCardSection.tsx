@@ -21,7 +21,7 @@ export const EventCardSection = ({
   return (
     <>
       {events && (
-        <div className={styles.cardsContainer}>
+        <div className={styles.cardsContainer} id="event-cards-container">
           {displayedEvents?.map((eventData) => (
             <EventCard key={eventData.id} event={eventData} />
           ))}
@@ -31,6 +31,8 @@ export const EventCardSection = ({
         <button
           className={styles.showMoreButton}
           onClick={() => setShowAll(true)}
+          aria-expanded="false"
+          aria-controls="event-cards-container"
         >
           Show More
         </button>
@@ -39,6 +41,8 @@ export const EventCardSection = ({
         <button
           className={styles.showMoreButton}
           onClick={() => setShowAll(false)}
+          aria-expanded="true"
+          aria-controls="event-cards-container"
         >
           Show Less
         </button>
