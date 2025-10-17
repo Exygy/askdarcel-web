@@ -405,7 +405,6 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   background: white;
   position: relative;
-  z-index: 10;
   flex-shrink: 0;
 }
 
@@ -427,7 +426,6 @@
   box-shadow: 0 2px 4px rgba(0, 123, 255, 0.1);
   pointer-events: auto;
   position: relative;
-  z-index: 11;
 
   @media (max-width: 768px) {
     width: 36px;
