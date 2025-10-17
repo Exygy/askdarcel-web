@@ -10,7 +10,7 @@ import { BrowserRouter } from "react-router-dom";
 import { HomePage } from "pages/HomePage/HomePage";
 import { HOME_PAGE_DATA } from "../../../test/fixtures/HomePageData";
 // import { Homepage, StrapiDatum } from "models/Strapi";
-import { useHomePageEventsData } from "hooks/StrapiAPI";
+import { useHomePageFeaturedResourcesData } from "hooks/StrapiAPI";
 
 const HOME_PAGE_MOCK = {
   data: {
@@ -20,7 +20,7 @@ const HOME_PAGE_MOCK = {
 };
 
 const EVENTS_MOCK: {
-  data: ReturnType<typeof useHomePageEventsData>["data"];
+  data: ReturnType<typeof useHomePageFeaturedResourcesData>["data"];
   isLoading: boolean;
 } = {
   data: [],
@@ -34,7 +34,7 @@ const SF_GOV_EVENTS_MOCK = {
 
 jest.mock("hooks/StrapiAPI", () => ({
   useHomepageData: () => HOME_PAGE_MOCK,
-  useHomePageEventsData: () => EVENTS_MOCK,
+  useHomePageFeaturedResourcesData: () => EVENTS_MOCK,
 }));
 
 jest.mock("hooks/SFGovAPI", () => ({

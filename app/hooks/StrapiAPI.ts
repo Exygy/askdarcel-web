@@ -80,7 +80,7 @@ export function useNavigationData() {
 /**
  * Fetches only featured events with embedded data for associated content types
  */
-export function useHomePageEventsData() {
+export function useHomePageFeaturedResourcesData() {
   const path =
     "events?populate[address]=*&populate[calendar_event]=*&populate[page_link]=*&populate[image][populate]=*&filters[featured][$eq]=true";
 

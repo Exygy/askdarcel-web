@@ -400,34 +400,40 @@
   align-items: center;
   justify-content: space-between;
   padding: 1rem 0.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0;
   border-bottom: 1px solid #dee2e6;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-
-  @media (min-width: 769px) {
-    display: none;
-  }
+  background: white;
+  position: relative;
+  flex-shrink: 0;
 }
 
 .dateNavButton {
   background: white;
-  border: 2px solid #007bff;
+  border: 2px solid #cd4a23;
   border-radius: 50%;
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.5rem;
   font-weight: 700;
-  color: #007bff;
+  color: #cd4a23;
   cursor: pointer;
   transition: all 0.2s ease;
   user-select: none;
   box-shadow: 0 2px 4px rgba(0, 123, 255, 0.1);
+  pointer-events: auto;
+  position: relative;
+
+  @media (max-width: 768px) {
+    width: 36px;
+    height: 36px;
+  }
 
   &:hover {
-    background: #007bff;
+    background: #cd4a23;
     color: white;
     transform: scale(1.05);
     box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
@@ -447,17 +453,33 @@
 }
 
 .dateHeaderTitle {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #2c3e50;
-  margin: 0;
-  text-align: center;
-  flex: 1;
-  letter-spacing: 0.5px;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
+  flex-direction: column;
+
+  button {
+    color: #1a56db;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  h2 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0;
+    text-align: center;
+    flex: 1;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+
+    @media (max-width: 768px) {
+      font-size: 1rem;
+    }
+  }
 }
 
 // Mobile Agenda Styles
@@ -467,6 +489,63 @@
   overflow: hidden;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
   border: 1px solid #e9ecef;
+  display: flex;
+  flex-direction: column;
+  max-height: 600px;
+
+  // On larger screens, allow more height
+  @media (min-width: 1200px) {
+    max-height: 700px;
+  }
+
+  // On mobile, adjust height for smaller screens
+  @media (max-width: 768px) {
+    max-height: 500px;
+  }
+}
+
+.agendaContent {
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex: 1;
+
+  // Custom scrollbar styling
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+
+    &:hover {
+      background: #a8a8a8;
+    }
+  }
+}
+
+.agendaDateDisplay {
+  padding: 1.25rem 1.5rem;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-bottom: 2px solid #dee2e6;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #2c3e50;
+  text-align: center;
+  letter-spacing: 0.5px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+
+  @media (max-width: 768px) {
+    padding: 1rem 1.25rem;
+    font-size: 1rem;
+  }
 }
 
 .noEventsMessage {
@@ -480,6 +559,7 @@
   display: flex;
   border-bottom: 1px solid #f0f0f0;
   min-height: 60px;
+  align-items: stretch;
 
   &:last-child {
     border-bottom: none;
@@ -487,7 +567,7 @@
 }
 
 .agendaTimeColumn {
-  width: 33.333%;
+  width: 20%;
   padding: 16px 12px;
   background: #f8f9fa;
   border-right: 2px solid #e9ecef;
@@ -495,6 +575,11 @@
   align-items: flex-start;
   justify-content: center;
   position: relative;
+
+  // On mobile and smaller tablets, use wider time column
+  @media (max-width: 768px) {
+    width: 30%;
+  }
 }
 
 .agendaTime {
@@ -505,24 +590,37 @@
 }
 
 .agendaEventsColumn {
-  width: 66.667%;
+  width: 80%;
   padding: 12px 16px;
   display: flex;
   flex-direction: column;
   gap: 8px;
+
+  // On mobile, use slightly different widths
+  @media (max-width: 768px) {
+    width: 70%;
+  }
 }
 
 .agendaEventChip {
   background: white;
-  border: none;
-  border-left: 4px solid var(--category-color, #007bff);
   border-radius: 8px;
-  padding: 12px 16px;
+  padding: 18px 24px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   transition: all 0.2s ease;
   cursor: pointer;
   text-align: left;
   width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+
+  // On mobile, use slightly less padding
+  @media (max-width: 768px) {
+    padding: 14px 18px;
+    gap: 12px;
+  }
 
   &:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -543,11 +641,7 @@
   font-size: 0.75rem;
   font-weight: 600;
   color: #000000;
-  margin-bottom: 6px;
-}
-
-.agendaChipContent {
-  width: 100%;
+  flex-shrink: 0;
 }
 
 .agendaChipTitle {
@@ -555,17 +649,29 @@
   font-weight: 600;
   color: #2c3e50;
   line-height: 1.4;
-  margin: 0 0 4px 0;
+  margin: 0;
+  flex: 1;
+  min-width: 200px;
+
+  // On mobile, allow smaller min-width
+  @media (max-width: 768px) {
+    min-width: 150px;
+  }
 }
 
 .agendaChipLocation {
   font-size: 0.85rem;
   color: #6c757d;
-  margin-top: 4px;
   display: flex;
   align-items: center;
   gap: 4px;
-  font-style: italic;
+  white-space: nowrap;
+  flex-shrink: 0;
+
+  // On mobile, allow wrapping
+  @media (max-width: 768px) {
+    white-space: normal;
+  }
 }
 
 // Responsive adjustments for mobile agenda
@@ -628,8 +734,9 @@
   gap: 0.5rem;
   padding: 0.75rem 1.25rem;
   border-radius: 25px;
-  border: 2px solid transparent;
+  border: 2px solid #000000;
   background: white;
+  color: #000000;
   cursor: pointer;
   transition: all 0.2s ease;
   font-weight: 600;
@@ -637,35 +744,26 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   position: relative;
   overflow: hidden;
+  transition: all 0.2s ease;
 
   &.enabled {
-    background: var(--category-color);
-    color: #2c3e50;
-    border-color: var(--category-dark-color);
+    background: #000000;
+    color: #ffffff;
+    border-color: #000000;
     border-radius: 25px;
     transform: translateY(-1px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-
-    .chipIndicator {
-      background: #2c3e50;
-      box-shadow: 0 0 0 2px var(--category-dark-color);
-    }
   }
 
   &.disabled {
-    background: #f8f9fa;
-    color: #6c757d;
-    border-color: #dee2e6;
+    background: #ffffff;
+    color: #000000;
+    border-color: #000000;
     border-radius: 25px;
 
-    .chipIndicator {
-      background: var(--category-color);
-      opacity: 0.4;
-    }
-
     &:hover {
-      background: #e9ecef;
-      color: #495057;
+      background: #f8f9fa;
+      color: #000000;
     }
   }
 
@@ -856,7 +954,7 @@
 .primaryButton {
   flex: 1;
   padding: 0.75rem 1.5rem;
-  background: #007bff;
+  background: #cd4a23;
   color: white;
   border: none;
   border-radius: 6px;
@@ -865,9 +963,9 @@
   transition: all 0.2s ease;
 
   &:hover {
-    background: #0056b3;
+    background: #a63b1b;
     transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+    box-shadow: 0 4px 8px rgba(205, 74, 35, 0.3);
   }
 
   &:active {

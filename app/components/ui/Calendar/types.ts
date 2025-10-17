@@ -1,7 +1,15 @@
-import { Event } from "react-big-calendar";
 import { SFGovEvent } from "hooks/SFGovAPI";
 
-export interface CalendarEvent extends Event {
+// Base event interface (replacing react-big-calendar's Event type)
+export interface BaseEvent {
+  title?: string;
+  start?: Date;
+  end?: Date;
+  allDay?: boolean;
+  resource?: unknown;
+}
+
+export interface CalendarEvent extends BaseEvent {
   id: string;
   pageLink: string;
   description: string;
@@ -16,7 +24,6 @@ export interface EventCalendarProps {
 export interface CategoryFilter {
   category: string;
   enabled: boolean;
-  color: string;
 }
 
 export interface CategoryFiltersProps {
@@ -30,6 +37,7 @@ export interface MobileAgendaProps {
   groupedEvents: { [timeKey: string]: CalendarEvent[] };
   onNavigatePrevious: () => void;
   onNavigateNext: () => void;
+  onGoToToday: () => void;
   onEventSelect: (event: CalendarEvent) => void;
   formatDateHeader: (date: Date) => string;
 }
@@ -40,6 +48,5 @@ export interface EventSlideoutProps {
   selectedEvent: CalendarEvent | null;
   dayEvents: CalendarEvent[];
   selectedDate: Date | null;
-  categoryColorMap: Map<string, string>;
   onEventSelect: (event: CalendarEvent) => void;
 }

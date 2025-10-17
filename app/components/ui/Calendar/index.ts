@@ -5,7 +5,6 @@ export { EventCalendar } from "./EventCalendar";
 export { CategoryFilters } from "./components/CategoryFilters";
 export { MobileAgenda } from "./components/MobileAgenda";
 export { EventSlideout } from "./components/EventSlideout";
-export { CustomToolbar } from "./components/CustomToolbar";
 
 // Types
 export type {

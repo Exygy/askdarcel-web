@@ -6,6 +6,7 @@ import {
   useAppContext,
   useAppContextUpdater,
 } from "utils";
+import { createExclusionFilters } from "utils/exclusionFilters";
 import { SearchMapActions } from "components/SearchAndBrowse/SearchResults/SearchResults";
 import { Loader } from "components/ui/Loader";
 import Sidebar from "components/SearchAndBrowse/Sidebar/Sidebar";
@@ -113,6 +114,11 @@ export const BrowseResultsPage = () => {
     ? escapeApostrophes(parentCategory.name)
     : null;
 
+  // Apply Our415 category filtering rules
+  const exclusionFilters = createExclusionFilters();
+  const categoryFilter = `categories:'${algoliaCategoryName}'`;
+  const combinedFilters = `${categoryFilter} AND ${exclusionFilters}`;
+
   const searchMapHitData = transformSearchResults(searchResults);
 
   const hasNoResults = searchMapHitData.nbHits === 0 && status === "idle";
@@ -130,7 +136,7 @@ export const BrowseResultsPage = () => {
     }
   };
 
-  // TS compiler requires explict null type checks
+  // TS compiler requires explicit null type checks
   if (
     eligibilities === null ||
     subcategories === null ||
@@ -151,7 +157,7 @@ export const BrowseResultsPage = () => {
         {/* Only render the Configure component (which triggers the search) when the map is initialized */}
         {isMapInitialized && (
           <Configure
-            filters={`categories:'${algoliaCategoryName}'`}
+            filters={combinedFilters}
             {...(boundingBox
               ? {
                   insideBoundingBox: [boundingBox.split(",").map(Number)],
