@@ -1,7 +1,16 @@
-import { Event } from "react-big-calendar";
 import { SFGovEvent } from "hooks/SFGovAPI";
+import { ReactNode } from "react";
 
-export interface CalendarEvent extends Event {
+// Base event interface (replacing react-big-calendar's Event type)
+export interface BaseEvent {
+  title?: ReactNode;
+  start?: Date;
+  end?: Date;
+  allDay?: boolean;
+  resource?: unknown;
+}
+
+export interface CalendarEvent extends BaseEvent {
   id: string;
   pageLink: string;
   description: string;
