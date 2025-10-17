@@ -34,7 +34,7 @@ const SF_GOV_EVENTS_MOCK = {
 
 jest.mock("hooks/StrapiAPI", () => ({
   useHomepageData: () => HOME_PAGE_MOCK,
-  useHomePageEventsData: () => EVENTS_MOCK,
+  useHomePageFeaturedResourcesData: () => EVENTS_MOCK,
 }));
 
 jest.mock("hooks/SFGovAPI", () => ({
