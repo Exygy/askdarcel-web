@@ -113,8 +113,6 @@ export const BrowseResultsPage = () => {
     ? escapeApostrophes(parentCategory.name)
     : null;
 
-  // Apply Our415 category filtering rules
-
   const searchMapHitData = transformSearchResults(searchResults);
 
   const hasNoResults = searchMapHitData.nbHits === 0 && status === "idle";

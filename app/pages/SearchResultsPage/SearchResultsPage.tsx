@@ -35,8 +35,6 @@ export const SearchResultsPage = () => {
     indexUiState: { query = null },
   } = useInstantSearch();
 
-  // Apply Our415 category filtering rules
-
   useEffect(() => window.scrollTo(0, 0), []);
 
   const handleFirstResultFocus = useCallback((node: HTMLDivElement | null) => {
