@@ -17,7 +17,6 @@ import { Loader } from "components/ui/Loader";
 import ResultsPagination from "components/SearchAndBrowse/Pagination/ResultsPagination";
 import { NoSearchResultsDisplay } from "components/ui/NoSearchResultsDisplay";
 import { SearchResultsHeader } from "components/ui/SearchResultsHeader";
-import { createExclusionFilters } from "utils/exclusionFilters";
 
 export const HITS_PER_PAGE = 40;
 
@@ -37,7 +36,6 @@ export const SearchResultsPage = () => {
   } = useInstantSearch();
 
   // Apply Our415 category filtering rules
-  const exclusionFilters = createExclusionFilters();
 
   useEffect(() => window.scrollTo(0, 0), []);
 
@@ -80,14 +78,12 @@ export const SearchResultsPage = () => {
                   // Convert bounding box string to array of numbers that Algolia expects
                   insideBoundingBox: [boundingBox.split(",").map(Number)],
                   hitsPerPage: HITS_PER_PAGE,
-                  filters: exclusionFilters,
                 }
               : {
                   aroundLatLng: aroundLatLng,
                   aroundRadius: aroundUserLocationRadius,
                   aroundPrecision: DEFAULT_AROUND_PRECISION,
                   minimumAroundRadius: 100, // Prevent the radius from being too small (100m minimum)
-                  filters: exclusionFilters,
                 })}
           />
         )}
