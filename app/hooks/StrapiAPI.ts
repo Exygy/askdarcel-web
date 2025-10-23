@@ -82,7 +82,7 @@ export function useNavigationData() {
  */
 export function useHomePageFeaturedResourcesData() {
   const path =
-    "events?populate[address]=*&populate[calendar_event]=*&populate[page_link]=*&populate[image][populate]=*&filters[featured][$eq]=true";
+    "events?populate[address]=*&populate[calendar_event]=*&populate[page_link]=*&populate[image][populate]=*";
 
   const dataFetcher = () =>
     fetcher<{ data: Array<StrapiDatumResponse<EventResponse>> }>(
@@ -370,6 +370,7 @@ export interface EventResponse extends BaseDatumAttributesResponse {
   image: {
     data: { id: number; attributes: ImageResponse };
   };
+  featured: boolean;
   page_link: LinkResponse;
   registration_link?: LinkResponse | null;
   event_categories?: { data: Array<StrapiDatumResponse<CategoryResponse>> };
