@@ -18,7 +18,7 @@ import {
 } from "hooks/APIHooks";
 import { CATEGORIES, ServiceCategory } from "../constants";
 import styles from "./BrowseResultsPage.module.scss";
-import { Configure, useClearRefinements } from "react-instantsearch-core";
+import { useClearRefinements } from "react-instantsearch-core";
 import { SearchMap } from "components/SearchAndBrowse/SearchMap/SearchMap";
 import { SearchResult } from "components/SearchAndBrowse/SearchResults/SearchResult";
 import {
@@ -31,12 +31,20 @@ import searchResultsStyles from "components/SearchAndBrowse/SearchResults/Search
 import { SearchResultsHeader } from "components/ui/SearchResultsHeader";
 import { NoSearchResultsDisplay } from "components/ui/NoSearchResultsDisplay";
 import { our415SubcategoryNames } from "utils/refinementMappings";
+import {
+  SearchConfigProvider,
+  useSearchConfig,
+} from "utils/SearchConfigContext";
 
 export const HITS_PER_PAGE = 40;
 
-/** Wrapper component that handles state management, URL parsing, and external API requests. */
-export const BrowseResultsPage = () => {
+/**
+ * BrowseResultsPageContent - The main content component that uses search config
+ * This is separated so it can access the SearchConfigProvider context
+ */
+const BrowseResultsPageContent = () => {
   const { categorySlug } = useParams();
+  const { updateConfig } = useSearchConfig();
 
   const category = CATEGORIES.find((c) => c.slug === categorySlug);
   if (category === undefined) {
@@ -113,6 +121,36 @@ export const BrowseResultsPage = () => {
     ? escapeApostrophes(parentCategory.name)
     : null;
 
+  // Update search config when map is initialized and we have category name
+  useEffect(() => {
+    if (isMapInitialized && algoliaCategoryName) {
+      const config = {
+        filters: `categories:'${algoliaCategoryName}'`,
+        hitsPerPage: HITS_PER_PAGE,
+        facets: ["eligibilities", "open_times"],
+        maxValuesPerFacet: 9999,
+        ...(boundingBox
+          ? {
+              insideBoundingBox: [boundingBox.split(",").map(Number)],
+            }
+          : {
+              aroundLatLng,
+              aroundRadius: aroundUserLocationRadius,
+              aroundPrecision: DEFAULT_AROUND_PRECISION,
+              minimumAroundRadius: 100,
+            }),
+      };
+      updateConfig(config);
+    }
+  }, [
+    isMapInitialized,
+    algoliaCategoryName,
+    boundingBox,
+    aroundLatLng,
+    aroundUserLocationRadius,
+    updateConfig,
+  ]);
+
   const searchMapHitData = transformSearchResults(searchResults);
 
   const hasNoResults = searchMapHitData.nbHits === 0 && status === "idle";
@@ -148,35 +186,20 @@ export const BrowseResultsPage = () => {
       <div className={styles.container}>
         <BrowseSubheader currentCategory={categoryName} />
 
-        {/* Only render the Configure component (which triggers the search) when the map is initialized */}
-        {isMapInitialized && (
-          <Configure
-            filters={`categories:'${algoliaCategoryName}'`}
-            {...(boundingBox
-              ? {
-                  insideBoundingBox: [boundingBox.split(",").map(Number)],
-                  hitsPerPage: HITS_PER_PAGE,
-                }
-              : {
-                  aroundLatLng,
-                  aroundRadius: aroundUserLocationRadius,
-                  aroundPrecision: DEFAULT_AROUND_PRECISION,
-                  minimumAroundRadius: 100,
-                })}
-          />
-        )}
-
         <div className={styles.flexContainer}>
-          <Sidebar
-            isSearchResultsPage={false}
-            eligibilities={eligibilities || []}
-            subcategoryNames={subcategoryNames || []}
-            sortAlgoliaSubcategoryRefinements={
-              sortAlgoliaSubcategoryRefinements
-            }
-            isMapCollapsed={isMapCollapsed}
-            setIsMapCollapsed={setIsMapCollapsed}
-          />
+          {/* Only render Sidebar after map is initialized to prevent premature Algolia search */}
+          {isMapInitialized && (
+            <Sidebar
+              isSearchResultsPage={false}
+              eligibilities={eligibilities || []}
+              subcategoryNames={subcategoryNames || []}
+              sortAlgoliaSubcategoryRefinements={
+                sortAlgoliaSubcategoryRefinements
+              }
+              isMapCollapsed={isMapCollapsed}
+              setIsMapCollapsed={setIsMapCollapsed}
+            />
+          )}
 
           <div className={styles.results}>
             <div className={searchResultsStyles.searchResultsAndMapContainer}>
@@ -233,5 +256,24 @@ export const BrowseResultsPage = () => {
         </div>
       </div>
     </>
+  );
+};
+
+/**
+ * BrowseResultsPage - Wrapper that provides SearchConfigProvider
+ * This handles state management, URL parsing, and external API requests.
+ */
+export const BrowseResultsPage = () => {
+  const { categorySlug } = useParams();
+  const category = CATEGORIES.find((c) => c.slug === categorySlug);
+
+  if (category === undefined) {
+    throw new Error(`Unknown category slug ${categorySlug}`);
+  }
+
+  return (
+    <SearchConfigProvider>
+      <BrowseResultsPageContent />
+    </SearchConfigProvider>
   );
 };
