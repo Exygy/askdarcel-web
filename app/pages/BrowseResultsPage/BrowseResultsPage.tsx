@@ -18,14 +18,17 @@ import {
 } from "hooks/APIHooks";
 import { CATEGORIES, ServiceCategory } from "../constants";
 import styles from "./BrowseResultsPage.module.scss";
-import { useClearRefinements } from "react-instantsearch-core";
+import {
+  useSearchResults,
+  useSearchPagination,
+  useClearRefinements,
+} from "../../search/hooks";
 import { SearchMap } from "components/SearchAndBrowse/SearchMap/SearchMap";
 import { SearchResult } from "components/SearchAndBrowse/SearchResults/SearchResult";
 import {
   TransformedSearchHit,
   transformSearchResults,
 } from "models/SearchHits";
-import { useInstantSearch, usePagination } from "react-instantsearch";
 import ResultsPagination from "components/SearchAndBrowse/Pagination/ResultsPagination";
 import searchResultsStyles from "components/SearchAndBrowse/SearchResults/SearchResults.module.scss";
 import { SearchResultsHeader } from "components/ui/SearchResultsHeader";
@@ -63,14 +66,9 @@ const BrowseResultsPageContent = () => {
 
   const { setBoundingBox, setAroundLatLng, setAroundRadius } =
     useAppContextUpdater();
-  const {
-    // Results type is algoliasearchHelper.SearchResults<SearchHit>
-    results: searchResults,
-    status,
-  } = useInstantSearch();
-  const { refine: refinePagination, currentRefinement: currentPage } =
-    usePagination();
-  const { refine: clearRefinements } = useClearRefinements();
+  const { results: searchResults, isIdle } = useSearchResults();
+  const { goToPage, currentPage } = useSearchPagination();
+  const { clearAll: clearRefinements } = useClearRefinements();
 
   useEffect(() => window.scrollTo(0, 0), []);
 
@@ -156,16 +154,21 @@ const BrowseResultsPageContent = () => {
     updateConfig,
   ]);
 
-  const searchMapHitData = transformSearchResults(searchResults);
+  // Transform search results for display
+  // TODO: Update transformSearchResults to work with provider-agnostic types
+  const searchMapHitData = searchResults
+    ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      transformSearchResults(searchResults as any)
+    : { hits: [], nbHits: 0 };
 
-  const hasNoResults = searchMapHitData.nbHits === 0 && status === "idle";
+  const hasNoResults = searchMapHitData.nbHits === 0 && isIdle;
 
   const handleAction = (searchMapAction: SearchMapActions) => {
     switch (searchMapAction) {
       case SearchMapActions.SearchThisArea:
         // Center and radius are already updated in the SearchMap component
         // Just reset pagination to show the first page of results
-        return refinePagination(0);
+        return goToPage(0);
       case SearchMapActions.MapInitialized:
         // Map has initialized and bounding box is now available
         setIsMapInitialized(true);
@@ -228,7 +231,7 @@ const BrowseResultsPageContent = () => {
                     {/* This is browse not search */}
                     <SearchResultsHeader
                       currentPage={currentPage}
-                      totalResults={searchResults.nbHits}
+                      totalResults={searchResults?.nbHits || 0}
                     />
                     {searchMapHitData.hits.map(
                       (hit: TransformedSearchHit, index) => (
