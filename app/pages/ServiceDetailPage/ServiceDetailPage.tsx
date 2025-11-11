@@ -25,19 +25,19 @@ import {
   Service,
 } from "../../models";
 import styles from "./ServiceDetailPage.module.scss";
-import { searchClient } from "@algolia/client-search";
-import config from "../../config";
+import { getSearchProvider } from "../../search";
 import PageNotFound, { NotFoundType } from "components/ui/PageNotFound";
 
-const client = searchClient(
-  config.ALGOLIA_APPLICATION_ID,
-  config.ALGOLIA_READ_ONLY_API_KEY
-);
-
-const INDEX_NAME = `${config.ALGOLIA_INDEX_PREFIX}_services_search`;
+// Get the search provider instance
+const searchProvider = getSearchProvider();
+// Access Algolia-specific methods for direct API calls
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const algoliaProvider = searchProvider as any;
+const algoliaClient = algoliaProvider.getFullClient();
+const indexName = algoliaProvider.getIndexName();
 
 // NOTE: `serviceFallback` and `setServiceFallback` is a hack to fetch data from
-// Algolia rather than the Shelter Tech API. It's nott known why some data is
+// Algolia rather than the Shelter Tech API. It's not known why some data is
 // not in sync between ST's API and their Algolia instance.
 //
 // DECISION: Manage the fetched service or fallback service result separately.
@@ -71,8 +71,8 @@ export const ServiceDetailPage = () => {
           try {
             // CAVEAT: Hopefully this does not change!
             const serviceObjectID = `service_${pathname.split("/")[2]}`;
-            const service = (await client.getObject({
-              indexName: INDEX_NAME,
+            const service = (await algoliaClient.getObject({
+              indexName,
               objectID: serviceObjectID,
             })) as unknown as Service;
 

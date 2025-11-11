@@ -11,7 +11,7 @@ import {
   TransformedSearchHit,
   transformSearchResults,
 } from "models/SearchHits";
-import { useInstantSearch, usePagination } from "react-instantsearch";
+import { useSearchResults, useSearchPagination } from "../../search/hooks";
 import searchResultsStyles from "components/SearchAndBrowse/SearchResults/SearchResults.module.scss";
 import { Loader } from "components/ui/Loader";
 import ResultsPagination from "components/SearchAndBrowse/Pagination/ResultsPagination";
@@ -34,14 +34,8 @@ const SearchResultsPageContent = () => {
   const { boundingBox, aroundLatLng, aroundUserLocationRadius } =
     useAppContext();
   const { updateConfig } = useSearchConfig();
-  const { refine: refinePagination, currentRefinement: currentPage } =
-    usePagination();
-  const {
-    // Results type is algoliasearchHelper.SearchResults<SearchHit>
-    results: searchResults,
-    status,
-    indexUiState: { query = null },
-  } = useInstantSearch();
+  const { goToPage, currentPage } = useSearchPagination();
+  const { results: searchResults, isIdle, query } = useSearchResults();
 
   useEffect(() => window.scrollTo(0, 0), []);
 
@@ -82,18 +76,21 @@ const SearchResultsPageContent = () => {
     }
   }, []);
 
-  const searchMapHitData = transformSearchResults(searchResults);
+  // Transform search results for display
+  // TODO: Update transformSearchResults to work with provider-agnostic types
+  const searchMapHitData = searchResults
+    ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      transformSearchResults(searchResults as any)
+    : { hits: [], nbHits: 0 };
 
-  const hasNoResults = searchMapHitData.nbHits === 0 && status === "idle" && (
-    <Loader />
-  );
+  const hasNoResults = searchMapHitData.nbHits === 0 && isIdle;
 
   const handleAction = (searchMapAction: SearchMapActions) => {
     switch (searchMapAction) {
       case SearchMapActions.SearchThisArea:
         // Center and radius are already updated in the SearchMap component
         // Just reset pagination to show the first page of results
-        return refinePagination(0);
+        return goToPage(0);
       case SearchMapActions.MapInitialized:
         // Map has initialized and bounding box is now available
         setIsMapInitialized(true);
@@ -135,7 +132,7 @@ const SearchResultsPageContent = () => {
                   <>
                     <SearchResultsHeader
                       currentPage={currentPage}
-                      totalResults={searchResults.nbHits}
+                      totalResults={searchResults?.nbHits || 0}
                     />
                     {searchMapHitData.hits.map(
                       (hit: TransformedSearchHit, index) => (
