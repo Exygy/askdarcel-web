@@ -123,25 +123,30 @@ const BrowseResultsPageContent = () => {
 
   // Update search config when map is initialized and we have category name
   useEffect(() => {
-    if (isMapInitialized && algoliaCategoryName) {
-      const config = {
-        filters: `categories:'${algoliaCategoryName}'`,
-        hitsPerPage: HITS_PER_PAGE,
-        facets: ["eligibilities", "open_times"],
-        maxValuesPerFacet: 9999,
-        ...(boundingBox
-          ? {
-              insideBoundingBox: [boundingBox.split(",").map(Number)],
-            }
-          : {
-              aroundLatLng,
-              aroundRadius: aroundUserLocationRadius,
-              aroundPrecision: DEFAULT_AROUND_PRECISION,
-              minimumAroundRadius: 100,
-            }),
-      };
-      updateConfig(config);
-    }
+    // Wait until map is initialized
+    if (!isMapInitialized) return;
+
+    // Wait until we have category name
+    if (!algoliaCategoryName) return;
+
+    // Wait until we have geographic data (boundingBox OR aroundLatLng)
+    if (!boundingBox && !aroundLatLng) return;
+
+    const config = {
+      filters: `categories:'${algoliaCategoryName}'`,
+      hitsPerPage: HITS_PER_PAGE,
+      ...(boundingBox
+        ? {
+            insideBoundingBox: [boundingBox.split(",").map(Number)],
+          }
+        : {
+            aroundLatLng,
+            aroundRadius: aroundUserLocationRadius,
+            aroundPrecision: DEFAULT_AROUND_PRECISION,
+            minimumAroundRadius: 100,
+          }),
+    };
+    updateConfig(config);
   }, [
     isMapInitialized,
     algoliaCategoryName,
@@ -271,8 +276,34 @@ export const BrowseResultsPage = () => {
     throw new Error(`Unknown category slug ${categorySlug}`);
   }
 
+  const { boundingBox, aroundLatLng, aroundUserLocationRadius } =
+    useAppContext();
+
+  // Calculate initial config synchronously BEFORE rendering
+  // For browse pages, we don't have the category filter yet (loaded async)
+  // But we can set the geographic config to prevent searches without it
+  const initialConfig = React.useMemo(() => {
+    // Wait until we have geographic data before providing initial config
+    if (!boundingBox && !aroundLatLng) {
+      return {};
+    }
+
+    return boundingBox
+      ? {
+          insideBoundingBox: [boundingBox.split(",").map(Number)],
+          hitsPerPage: HITS_PER_PAGE,
+        }
+      : {
+          aroundLatLng,
+          aroundRadius: aroundUserLocationRadius,
+          aroundPrecision: DEFAULT_AROUND_PRECISION,
+          minimumAroundRadius: 100,
+          hitsPerPage: HITS_PER_PAGE,
+        };
+  }, [boundingBox, aroundLatLng, aroundUserLocationRadius]);
+
   return (
-    <SearchConfigProvider>
+    <SearchConfigProvider initialConfig={initialConfig}>
       <BrowseResultsPageContent />
     </SearchConfigProvider>
   );

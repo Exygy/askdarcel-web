@@ -142,7 +142,7 @@ export const SearchConfigProvider: React.FC<SearchConfigProviderProps> = ({
   return (
     <SearchConfigContext.Provider value={contextValue}>
       {/* This is the SINGLE Configure component that receives merged config from all sources */}
-      <Configure {...config} />
+      <Configure maxValuesPerFacet={9999} {...config} />
       {children}
     </SearchConfigContext.Provider>
   );

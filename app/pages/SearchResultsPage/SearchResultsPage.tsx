@@ -45,16 +45,15 @@ const SearchResultsPageContent = () => {
 
   useEffect(() => window.scrollTo(0, 0), []);
 
-  // Update search config when geo parameters change
+  // Update search config when geo parameters change (e.g., user pans the map)
   useEffect(() => {
+    // Don't update on initial mount - initialConfig already handles that
     if (!isMapInitialized) return;
 
     const config = boundingBox
       ? {
           insideBoundingBox: [boundingBox.split(",").map(Number)],
           hitsPerPage: HITS_PER_PAGE,
-          facets: ["eligibilities", "open_times"],
-          maxValuesPerFacet: 9999,
           aroundLatLng: undefined,
           aroundRadius: undefined,
           aroundPrecision: undefined,
@@ -66,8 +65,6 @@ const SearchResultsPageContent = () => {
           aroundPrecision: DEFAULT_AROUND_PRECISION,
           minimumAroundRadius: 100,
           hitsPerPage: HITS_PER_PAGE,
-          facets: ["eligibilities", "open_times"],
-          maxValuesPerFacet: 9999,
           insideBoundingBox: undefined,
         };
     updateConfig(config);
@@ -179,8 +176,33 @@ const SearchResultsPageContent = () => {
  * NOTE: The .searchResultsPage is added plain so that it can be targeted by print-specific css
  */
 export const SearchResultsPage = () => {
+  const { boundingBox, aroundLatLng, aroundUserLocationRadius } =
+    useAppContext();
+
+  // Calculate initial config synchronously BEFORE rendering
+  // This prevents InstantSearch from making searches without the bounding box
+  const initialConfig = React.useMemo(() => {
+    // Wait until we have geographic data before providing initial config
+    if (!boundingBox && !aroundLatLng) {
+      return {};
+    }
+
+    return boundingBox
+      ? {
+          insideBoundingBox: [boundingBox.split(",").map(Number)],
+          hitsPerPage: HITS_PER_PAGE,
+        }
+      : {
+          aroundLatLng,
+          aroundRadius: aroundUserLocationRadius,
+          aroundPrecision: DEFAULT_AROUND_PRECISION,
+          minimumAroundRadius: 100,
+          hitsPerPage: HITS_PER_PAGE,
+        };
+  }, [boundingBox, aroundLatLng, aroundUserLocationRadius]);
+
   return (
-    <SearchConfigProvider>
+    <SearchConfigProvider initialConfig={initialConfig}>
       <SearchResultsPageContent />
     </SearchConfigProvider>
   );
