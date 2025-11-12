@@ -1,5 +1,5 @@
 import React, { FormEvent, useEffect, useState } from "react";
-import { useClearRefinements, useSearchBox } from "react-instantsearch";
+import { useClearRefinements, useSearchQuery } from "../../search/hooks";
 import classNames from "classnames";
 import { useNavigate } from "react-router-dom";
 import styles from "./SiteSearchInput.module.scss";
@@ -11,8 +11,8 @@ import styles from "./SiteSearchInput.module.scss";
  * return a fresh set of results for the new query.
  */
 export const SiteSearchInput = () => {
-  const { query, refine } = useSearchBox();
-  const { refine: clearRefine } = useClearRefinements();
+  const { query, setQuery: refine } = useSearchQuery();
+  const { clearAll: clearRefine } = useClearRefinements();
   const [inputValue, setInputValue] = useState(query);
   const navigate = useNavigate();
 

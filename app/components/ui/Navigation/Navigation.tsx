@@ -16,20 +16,10 @@ import NavigationFocusReset from "./NavigationFocusReset";
 import SkipButton from "./SkipButton";
 import TopBanner from "./TopBanner";
 import { SiteSearchInput } from "components/ui/SiteSearchInput";
-import { InstantSearch } from "react-instantsearch-core";
-import { liteClient } from "algoliasearch/lite";
-import config from "./../../../config";
-import { history as historyRouter } from "instantsearch.js/es/lib/routers";
+import { SearchProvider } from "../../../search";
 import { Loader } from "components/ui/Loader";
 import classNames from "classnames";
 import { EmailSignup } from "components/EmailSignup/Emailsignup";
-
-const searchClient = liteClient(
-  config.ALGOLIA_APPLICATION_ID,
-  config.ALGOLIA_READ_ONLY_API_KEY
-);
-
-const INDEX_NAME = `${config.ALGOLIA_INDEX_PREFIX}_services_search`;
 
 export const Navigation = () => {
   const { data: navigationResponse } = useNavigationData();
@@ -49,23 +39,7 @@ export const Navigation = () => {
   }
 
   return (
-    <InstantSearch
-      searchClient={searchClient}
-      indexName={INDEX_NAME}
-      routing={{
-        router: historyRouter({
-          windowTitle(routeState) {
-            const query = routeState[INDEX_NAME]?.query;
-
-            const queryTitle = query
-              ? `Our415 - Search results for "${query}" in San Francisco`
-              : "Our415 - Services in San Francisco";
-
-            return queryTitle;
-          },
-        }),
-      }}
-    >
+    <SearchProvider>
       <NavigationFocusReset />
       <SkipButton />
       <TopBanner />
@@ -123,7 +97,7 @@ export const Navigation = () => {
           <EmailSignup />
         </main>
       </div>
-    </InstantSearch>
+    </SearchProvider>
   );
 };
 
