@@ -50,7 +50,17 @@ const RefinementList: React.FC<Props> = ({
           newChecked.add(item.value);
         }
       });
-      setChecked(newChecked);
+
+      // Only update if the checked state has actually changed
+      setChecked((prev) => {
+        const prevSet = prev as Set<string>;
+        if (prevSet.size !== newChecked.size) return newChecked;
+
+        for (const value of newChecked) {
+          if (!prevSet.has(value)) return newChecked;
+        }
+        return prev;
+      });
     }
   }, [items, isBrowseMode]);
 
@@ -72,9 +82,20 @@ const RefinementList: React.FC<Props> = ({
       mappingLabels.forEach((key) => {
         updatedChecked[key] = keyHasAtLeastOneRefined(key);
       });
-      setChecked(updatedChecked);
+
+      // Only update if the checked state has actually changed
+      setChecked((prev) => {
+        const prevRecord = prev as Record<string, boolean>;
+        const hasChanged = mappingLabels.some(
+          (key) => prevRecord[key] !== updatedChecked[key]
+        );
+        return hasChanged ? updatedChecked : prev;
+      });
     }
-  }, [items, isSearchMode, mapping]);
+    // Deliberately exclude 'mapping' from deps to avoid infinite loop
+    // mapping is a prop that doesn't change per component instance
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [items, isSearchMode]);
 
   // Browse mode render
   if (isBrowseMode) {
