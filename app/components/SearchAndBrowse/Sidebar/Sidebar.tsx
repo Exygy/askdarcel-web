@@ -17,6 +17,7 @@ import MobileMapToggleButtons from "./MobileMapToggleButtons";
 import styles from "./Sidebar.module.scss";
 import type { RefinementItem } from "../../../search/types";
 import classNames from "classnames";
+import { useSearchCapabilities } from "../../../search/hooks";
 
 const Sidebar = ({
   isSearchResultsPage,
@@ -37,6 +38,11 @@ const Sidebar = ({
   const filterMenuRef = useRef<HTMLDivElement>(null);
   const { aroundUserLocationRadius, userLocation } = useAppContext();
   const { setAroundRadius } = useAppContextUpdater();
+  const { facetableFields } = useSearchCapabilities();
+
+  // Check if the current provider supports these facets
+  const canShowEligibilities = facetableFields.includes("eligibilities");
+  const canShowCategories = facetableFields.includes("categories");
 
   useClickOutside(
     filterMenuRef as React.RefObject<HTMLElement>,
@@ -105,15 +111,18 @@ const Sidebar = ({
   );
 
   if (isSearchResultsPage) {
-    eligibilityRefinementJsx = (
-      <RefinementList
-        attribute="eligibilities"
-        mapping={our415EligibilitiesMapping}
-        mode="search"
-      />
-    );
+    // Only show eligibilities refinement if provider supports it
+    if (canShowEligibilities) {
+      eligibilityRefinementJsx = (
+        <RefinementList
+          attribute="eligibilities"
+          mapping={our415EligibilitiesMapping}
+          mode="search"
+        />
+      );
+    }
   } else {
-    if (eligibilities?.length) {
+    if (eligibilities?.length && canShowEligibilities) {
       eligibilityRefinementJsx = (
         <RefinementList
           attribute="eligibilities"
@@ -127,7 +136,7 @@ const Sidebar = ({
         />
       );
     }
-    if (subcategoryNames?.length) {
+    if (subcategoryNames?.length && canShowCategories) {
       categoryRefinementJsx = (
         <RefinementList
           attribute="categories"

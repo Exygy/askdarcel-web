@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useSearchRefinements } from "../../../search/hooks";
 import type { RefinementItem } from "../../../search/types";
 import styles from "./RefinementFilters.module.scss";
@@ -41,6 +41,12 @@ const RefinementList: React.FC<Props> = ({
   const isBrowseMode = mode === "browse";
   const isSearchMode = mode === "search" && mapping;
 
+  // Memoize the mapping keys to avoid recreating the dependency
+  const mappingKeys = useMemo(
+    () => (mapping ? Object.keys(mapping) : []),
+    [mapping]
+  );
+
   // Browse mode effect
   useEffect(() => {
     if (isBrowseMode) {
@@ -50,14 +56,23 @@ const RefinementList: React.FC<Props> = ({
           newChecked.add(item.value);
         }
       });
-      setChecked(newChecked);
+
+      // Only update state if the set contents changed
+      setChecked((prevChecked) => {
+        const prev = prevChecked as Set<string>;
+        if (prev.size !== newChecked.size) return newChecked;
+
+        for (const value of newChecked) {
+          if (!prev.has(value)) return newChecked;
+        }
+        return prev;
+      });
     }
   }, [items, isBrowseMode]);
 
   // Search mode effect
   useEffect(() => {
     if (isSearchMode && mapping) {
-      const mappingLabels = Object.keys(mapping);
       const updatedChecked: Record<string, boolean> = {};
 
       const keyHasAtLeastOneRefined = (key: string): boolean => {
@@ -69,12 +84,21 @@ const RefinementList: React.FC<Props> = ({
         return anyCommon.length > 0;
       };
 
-      mappingLabels.forEach((key) => {
+      mappingKeys.forEach((key) => {
         updatedChecked[key] = keyHasAtLeastOneRefined(key);
       });
-      setChecked(updatedChecked);
+
+      // Only update state if something actually changed
+      setChecked((prevChecked) => {
+        const prev = prevChecked as Record<string, boolean>;
+        const hasChanges = mappingKeys.some(
+          (key) => prev[key] !== updatedChecked[key]
+        );
+        return hasChanges ? updatedChecked : prev;
+      });
     }
-  }, [items, isSearchMode, mapping]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [items, isSearchMode, mappingKeys]);
 
   // Browse mode render
   if (isBrowseMode) {

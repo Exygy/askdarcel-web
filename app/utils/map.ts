@@ -1,10 +1,12 @@
-import { LocationDetails, TransformedSearchHit } from "models";
+import { LocationDetails } from "models";
+
+import { SearchHit } from "search";
 
 //  TODO: Refactor SearchMap so that both maps create markers from a list of locations, not from hits
 
-export const groupHitsByLocation = (hits: TransformedSearchHit[]) => {
+export const groupHitsByLocation = (hits: SearchHit[]) => {
   return hits.reduce((acc, hit) => {
-    hit.locations.forEach((location) => {
+    hit.locations?.forEach((location) => {
       const key = `${location.lat}-${location.long}`;
       if (!acc[key]) {
         acc[key] = [];
@@ -12,7 +14,7 @@ export const groupHitsByLocation = (hits: TransformedSearchHit[]) => {
       acc[key].push({ hit, location });
     });
     return acc;
-  }, {} as Record<string, { hit: TransformedSearchHit; location: { id: string; lat: string; long: string; label: string } }[]>);
+  }, {} as Record<string, { hit: SearchHit; location: { id: string; lat: string; long: string; label: string } }[]>);
 };
 
 export const groupServiceLocations = (locations: LocationDetails[]) => {

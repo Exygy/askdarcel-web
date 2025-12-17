@@ -1,5 +1,5 @@
 import React, { forwardRef } from "react";
-import { TransformedSearchHit } from "models";
+import type { SearchHit } from "../../../search/types";
 import { Link } from "react-router-dom";
 import { LabelTag } from "components/ui/LabelTag";
 import { formatPhoneNumber, renderAddressMetadata } from "utils";
@@ -8,13 +8,15 @@ import ReactMarkdown from "react-markdown";
 import styles from "./SearchResults.module.scss";
 
 interface SearchResultProps {
-  hit: TransformedSearchHit;
+  hit: SearchHit;
+  index: number;
 }
 
 export const SearchResult = forwardRef<HTMLDivElement, SearchResultProps>(
   (props, ref) => {
-    const { hit } = props;
+    const { hit, index } = props;
 
+    console.log(hit);
     return (
       // ref is for focusing on the first search hit when user paginates and scrolls to top
       <div className={styles.searchResult} ref={ref} tabIndex={-1}>
@@ -23,9 +25,14 @@ export const SearchResult = forwardRef<HTMLDivElement, SearchResultProps>(
             <div className={styles.titleContainer}>
               <div>
                 <h2 className={styles.title}>
-                  {hit.resultListIndexDisplay}.{" "}
+                  {index + 1}.{" "}
                   <Link
-                    to={{ pathname: hit.path }}
+                    to={{
+                      pathname:
+                        hit.type === "service"
+                          ? `/services/${hit.service_id}`
+                          : `/organizations/${hit.organization_id}`,
+                    }}
                     className={`notranslate ${styles.titleLink}`}
                   >
                     {hit.name}
@@ -34,10 +41,10 @@ export const SearchResult = forwardRef<HTMLDivElement, SearchResultProps>(
                 {hit.type === "service" && (
                   <div className={styles.serviceOf}>
                     <Link
-                      to={`/organizations/${hit.resource_id}`}
+                      to={`/organizations/${hit.organization_id}`}
                       className={`notranslate ${styles.serviceOfLink}`}
                     >
-                      {hit.service_of}
+                      {hit.organization_name}
                     </Link>
                   </div>
                 )}
@@ -58,15 +65,16 @@ export const SearchResult = forwardRef<HTMLDivElement, SearchResultProps>(
           <div className={styles.searchResultContent}>
             <div className={styles.searchText}>
               <div className={`notranslate ${styles.address}`}>
-                {renderAddressMetadata(hit)}
+                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                {renderAddressMetadata(hit as any)}
               </div>
               {/* Once we can update all dependencies, we can add remarkBreaks as remarkPlugin here */}
               <ReactMarkdown
                 className={`rendered-markdown ${styles.description}`}
                 linkTarget="_blank"
               >
-                {hit.longDescription
-                  ? removeAsterisksAndHashes(hit.longDescription)
+                {hit.description
+                  ? removeAsterisksAndHashes(hit.description)
                   : ""}
               </ReactMarkdown>
             </div>
@@ -84,11 +92,11 @@ export const SearchResult = forwardRef<HTMLDivElement, SearchResultProps>(
               </span>
             </a>
           )}
-          {hit.websiteUrl && (
+          {hit.organization_website && (
             <a
               target="_blank"
               rel="noopener noreferrer"
-              href={hit.websiteUrl}
+              href={hit.organization_website}
               className={`${styles.icon} ${styles["icon-popout"]}`}
               title="Go to website"
             >

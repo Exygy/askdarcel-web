@@ -1,0 +1,636 @@
+{
+  "resource": {
+    "updated_at": "2025-02-21T20:14:10.593Z",
+    "alternate_name": "LSS",
+    "certified": true,
+    "email": "http://www.lssnorcal.org/contact-us.html",
+    "id": 374,
+    "legal_status": null,
+    "long_description": "In San Francisco, LSS provides two primary services:  supportive housing programs and money management services for chronically homeless adults.\n\n\n\n",
+    "name": "Lutheran Social Services of Northern California",
+    "short_description": null,
+    "status": "approved",
+    "verified_at": "2019-04-10T02:39:44.067Z",
+    "website": "http://www.lssnorcal.org/",
+    "certified_at": null,
+    "featured": false,
+    "source_attribution": "ask_darcel",
+    "internal_note": "12/13/24- JR",
+    "services": [
+      {
+        "updated_at": "2023-11-13T20:16:14.291Z",
+        "alternate_name": null,
+        "application_process": "",
+        "certified": false,
+        "eligibility": null,
+        "email": "http://www.lssnorcal.org/contact-us.html",
+        "fee": null,
+        "id": 1368,
+        "interpretation_services": null,
+        "long_description": "LSS's Money Management programs have two main goals: to guarantee rent payment and to prevent suspension of income. Case workers help individuals maintain their income, ensure timely rent payments, develop and maintain budgets, and act as a bill-pay service for utilities that are crucial to their health, like power and phone service.\n\n",
+        "name": "Money Management Programs",
+        "required_documents": "\n\n",
+        "short_description": null,
+        "url": "https://www.lssnorcal.org/what_we_do/san-francisco-programs/money-management/introduction.html",
+        "verified_at": null,
+        "wait_time": null,
+        "certified_at": null,
+        "featured": false,
+        "source_attribution": "ask_darcel",
+        "status": "approved",
+        "internal_note": null,
+        "schedule": { "id": 1858, "schedule_days": [], "hours_known": true },
+        "notes": [],
+        "categories": [
+          {
+            "name": "Payee Services",
+            "id": 211,
+            "top_level": false,
+            "featured": false
+          },
+          {
+            "name": "sfsg-finance",
+            "id": 1000003,
+            "top_level": false,
+            "featured": false
+          },
+          {
+            "name": "Support Services",
+            "id": 296,
+            "top_level": false,
+            "featured": false
+          },
+          {
+            "name": "Financial assistance for living expenses",
+            "id": 1100008,
+            "top_level": false,
+            "featured": false
+          },
+          {
+            "name": "Financial Education",
+            "id": 94,
+            "top_level": false,
+            "featured": false
+          },
+          {
+            "name": "Family Support",
+            "id": 359,
+            "top_level": true,
+            "featured": false
+          }
+        ],
+        "addresses": [],
+        "eligibilities": [
+          { "name": "Adults", "id": 1003, "feature_rank": null },
+          {
+            "name": "I am someone with disabilities",
+            "id": 1020,
+            "feature_rank": null
+          },
+          { "name": "HIV/AIDS", "id": 1042, "feature_rank": null },
+          { "name": "I am a Senior", "id": 1008, "feature_rank": 1 }
+        ],
+        "instructions": [],
+        "documents": []
+      },
+      {
+        "updated_at": "2023-11-13T20:16:14.206Z",
+        "alternate_name": null,
+        "application_process": "These services are for individuals who live in the following buildings: 88 Broadway/735 Davis, Folsom-Dore Apartments, La Fenix, and Polk Street Housing. Residents should ask property management for a referral. ",
+        "certified": false,
+        "eligibility": null,
+        "email": "http://www.lssnorcal.org/contact-us.html",
+        "fee": null,
+        "id": 870,
+        "interpretation_services": null,
+        "long_description": "LSS provides on-site supportive housing services to hundreds of formerly homeless adults, the majority of them aged 55 years or older. \n\n",
+        "name": "Supportive Housing Programs",
+        "required_documents": null,
+        "short_description": null,
+        "url": "https://www.lssnorcal.org/what_we_do/san-francisco-programs/supportive-housing-for-adults/",
+        "verified_at": null,
+        "wait_time": null,
+        "certified_at": null,
+        "featured": false,
+        "source_attribution": "ask_darcel",
+        "status": "approved",
+        "internal_note": null,
+        "schedule": { "id": 1351, "schedule_days": [], "hours_known": true },
+        "notes": [],
+        "categories": [
+          {
+            "name": "Housing \u0026 Rental Assistance",
+            "id": 1,
+            "top_level": true,
+            "featured": true
+          },
+          {
+            "name": "Case Manager",
+            "id": 209,
+            "top_level": false,
+            "featured": false
+          },
+          {
+            "name": "sfsg-longtermhousing",
+            "id": 1000011,
+            "top_level": true,
+            "featured": false
+          },
+          {
+            "name": "MOHCD Funded",
+            "id": 202,
+            "top_level": true,
+            "featured": false
+          },
+          {
+            "name": "Family Support",
+            "id": 359,
+            "top_level": true,
+            "featured": false
+          }
+        ],
+        "addresses": [],
+        "eligibilities": [
+          {
+            "name": "San Francisco Residents",
+            "id": 1072,
+            "feature_rank": null
+          },
+          {
+            "name": "Experiencing Homelessness",
+            "id": 1054,
+            "feature_rank": 8
+          },
+          {
+            "name": "Young Adults (20-30 years old)",
+            "id": 1004,
+            "feature_rank": null
+          },
+          { "name": "Adoption", "id": 1, "feature_rank": null },
+          { "name": "I am a Senior", "id": 1008, "feature_rank": 1 },
+          { "name": "Disabled", "id": 1017, "feature_rank": null },
+          { "name": "Low-Income", "id": 1058, "feature_rank": null }
+        ],
+        "instructions": [],
+        "documents": []
+      },
+      {
+        "updated_at": "2023-11-13T20:16:14.292Z",
+        "alternate_name": null,
+        "application_process": "Clients are required to be receiving outside case management services in order to be referred to the Stabilization Program. Call mainline for more information on how to refer a client. ",
+        "certified": false,
+        "eligibility": null,
+        "email": "http://www.lssnorcal.org/contact-us.html",
+        "fee": null,
+        "id": 2506,
+        "interpretation_services": null,
+        "long_description": "This program provides stabilization rooms, client-centered on-site services, and case coordination to medically stable homeless individuals who are HIV positive. \n\n",
+        "name": "Stabilization Housing Program",
+        "required_documents": null,
+        "short_description": null,
+        "url": "https://www.lssnorcal.org/what_we_do/san-francisco-programs/supportive-housing-for-adults/transitional-and-short-term-housing-for-adults.html",
+        "verified_at": null,
+        "wait_time": null,
+        "certified_at": null,
+        "featured": false,
+        "source_attribution": "ask_darcel",
+        "status": "approved",
+        "internal_note": null,
+        "schedule": { "id": 3085, "schedule_days": [], "hours_known": true },
+        "notes": [],
+        "categories": [
+          {
+            "name": "Case Manager",
+            "id": 209,
+            "top_level": false,
+            "featured": false
+          },
+          {
+            "name": "HIV Treatment",
+            "id": 73,
+            "top_level": false,
+            "featured": false
+          },
+          {
+            "name": "Housing \u0026 Rental Assistance",
+            "id": 1,
+            "top_level": true,
+            "featured": true
+          },
+          {
+            "name": "sfsg-longtermhousing",
+            "id": 1000011,
+            "top_level": true,
+            "featured": false
+          },
+          {
+            "name": "I am not currently experiencing homelessness, but I am looking for a long-term affordable housing unit.",
+            "id": 1100047,
+            "top_level": false,
+            "featured": false
+          },
+          {
+            "name": "Family Support",
+            "id": 359,
+            "top_level": true,
+            "featured": false
+          },
+          {
+            "name": "LGBTQ+ Support",
+            "id": 201,
+            "top_level": false,
+            "featured": false
+          }
+        ],
+        "addresses": [],
+        "eligibilities": [
+          {
+            "name": "Experiencing Homelessness",
+            "id": 1054,
+            "feature_rank": 8
+          },
+          { "name": "HIV/AIDS", "id": 1042, "feature_rank": null }
+        ],
+        "instructions": [],
+        "documents": []
+      },
+      {
+        "updated_at": "2023-11-13T20:16:14.205Z",
+        "alternate_name": null,
+        "application_process": "Referrals can be made by any city program or agency. Clients can also self-refer.  Please call mainline for more information. ",
+        "certified": false,
+        "eligibility": null,
+        "email": "http://www.lssnorcal.org/contact-us.html",
+        "fee": null,
+        "id": 2507,
+        "interpretation_services": null,
+        "long_description": "This program provides people living with HIV/AIDS in San Francisco who are homeless or marginally housed with money management and representative payee services. \n\n",
+        "name": "AIDS Financial Services",
+        "required_documents": "Must provide a letter of diagnosis, proof of low income (\u003c 400% of the Federal Poverty Level), and proof of San Francisco residency.",
+        "short_description": null,
+        "url": "https://www.lssnorcal.org/what_we_do/san-francisco-programs/money-management/aids-financial-services.html",
+        "verified_at": null,
+        "wait_time": null,
+        "certified_at": null,
+        "featured": false,
+        "source_attribution": "ask_darcel",
+        "status": "approved",
+        "internal_note": null,
+        "schedule": { "id": 3086, "schedule_days": [], "hours_known": true },
+        "notes": [],
+        "categories": [
+          {
+            "name": "Financial Education",
+            "id": 94,
+            "top_level": false,
+            "featured": false
+          },
+          {
+            "name": "Payee Services",
+            "id": 211,
+            "top_level": false,
+            "featured": false
+          },
+          {
+            "name": "sfsg-finance",
+            "id": 1000003,
+            "top_level": false,
+            "featured": false
+          },
+          {
+            "name": "sfsg-lgbtqa",
+            "id": 1000008,
+            "top_level": false,
+            "featured": false
+          },
+          {
+            "name": "LGBTQ+ Support",
+            "id": 201,
+            "top_level": false,
+            "featured": false
+          },
+          {
+            "name": "Family Support",
+            "id": 359,
+            "top_level": true,
+            "featured": false
+          }
+        ],
+        "addresses": [],
+        "eligibilities": [
+          {
+            "name": "San Francisco Residents",
+            "id": 1072,
+            "feature_rank": null
+          },
+          { "name": "Low-Income", "id": 1058, "feature_rank": null },
+          { "name": "HIV/AIDS", "id": 1042, "feature_rank": null }
+        ],
+        "instructions": [],
+        "documents": []
+      },
+      {
+        "updated_at": "2023-11-13T20:16:14.205Z",
+        "alternate_name": null,
+        "application_process": "Referrals are made by case management only. Please call mainline for more information regarding referral process. ",
+        "certified": false,
+        "eligibility": null,
+        "email": "http://www.lssnorcal.org/contact-us.html",
+        "fee": null,
+        "id": 2508,
+        "interpretation_services": null,
+        "long_description": "This program provides representative payee and money management services to formerly homeless persons living at Canon Kip, Rose, Cambridge, Hamlin, Apollo, Altamont, and South Park residences. In order to qualify you must meet the following requirements , Have very low income (\u003e 400% of the Federal Poverty Level). \nBe formerly homeless, as defined by Housing and Urban Development (HUD), and a resident of one of the buildings where LSS provides these services.\nBe over 18 years of age. \n\n\n",
+        "name": "Integrated Services Network",
+        "required_documents": "",
+        "short_description": null,
+        "url": "https://www.lssnorcal.org/what_we_do/san-francisco-programs/money-management/integrated-services.html",
+        "verified_at": null,
+        "wait_time": null,
+        "certified_at": null,
+        "featured": false,
+        "source_attribution": "ask_darcel",
+        "status": "approved",
+        "internal_note": null,
+        "schedule": { "id": 3087, "schedule_days": [], "hours_known": true },
+        "notes": [],
+        "categories": [
+          {
+            "name": "Payee Services",
+            "id": 211,
+            "top_level": false,
+            "featured": false
+          },
+          {
+            "name": "Financial Education",
+            "id": 94,
+            "top_level": false,
+            "featured": false
+          },
+          {
+            "name": "sfsg-finance",
+            "id": 1000003,
+            "top_level": false,
+            "featured": false
+          },
+          {
+            "name": "Support Services",
+            "id": 296,
+            "top_level": false,
+            "featured": false
+          },
+          {
+            "name": "Case Manager",
+            "id": 209,
+            "top_level": false,
+            "featured": false
+          }
+        ],
+        "addresses": [],
+        "eligibilities": [
+          { "name": "Disabled", "id": 1017, "feature_rank": null },
+          { "name": "I am a Senior", "id": 1008, "feature_rank": 1 },
+          {
+            "name": "Young Adults (20-30 years old)",
+            "id": 1004,
+            "feature_rank": null
+          },
+          { "name": "Adults", "id": 1003, "feature_rank": null },
+          { "name": "Low-Income", "id": 1058, "feature_rank": null }
+        ],
+        "instructions": [],
+        "documents": []
+      },
+      {
+        "updated_at": "2023-11-13T20:16:14.196Z",
+        "alternate_name": null,
+        "application_process": "Call (415) 581-0891 for information on referring a client. ",
+        "certified": false,
+        "eligibility": null,
+        "email": "http://www.lssnorcal.org/contact-us.html",
+        "fee": null,
+        "id": 3259,
+        "interpretation_services": null,
+        "long_description": "The Forensic Housing Program serves 55 formerly incarcerated women and men living with HIV/AIDS in the County of San Francisco. Residents receive up to 18 months of transitional supportive housing and coordinated case management to stabilize their lives with the long-term goal of achieving safe, clean and affordable permanent housing.\n\n",
+        "name": "Forensic Housing Service",
+        "required_documents": null,
+        "short_description": null,
+        "url": "https://www.lssnorcal.org/what_we_do/san-francisco-programs/supportive-housing-for-adults/transitional-and-short-term-housing-for-adults.html",
+        "verified_at": null,
+        "wait_time": null,
+        "certified_at": null,
+        "featured": null,
+        "source_attribution": "ask_darcel",
+        "status": "approved",
+        "internal_note": null,
+        "schedule": { "id": 4214, "schedule_days": [], "hours_known": true },
+        "notes": [],
+        "categories": [
+          {
+            "name": "Housing \u0026 Rental Assistance",
+            "id": 1,
+            "top_level": true,
+            "featured": true
+          },
+          {
+            "name": "Short-Term Housing",
+            "id": 28,
+            "top_level": false,
+            "featured": false
+          },
+          {
+            "name": "I am experiencing homelessness (on the street, couchsurfing, or other) and I need long-term housing assistance.",
+            "id": 1100046,
+            "top_level": false,
+            "featured": false
+          },
+          {
+            "name": "sfsg-longtermhousing",
+            "id": 1000011,
+            "top_level": true,
+            "featured": false
+          },
+          {
+            "name": "I am HIV/AIDS Positive and I Need Financial Assistance to Prevent Eviction",
+            "id": 1100031,
+            "top_level": false,
+            "featured": false
+          }
+        ],
+        "addresses": [],
+        "eligibilities": [
+          { "name": "Re-Entry", "id": 1015, "feature_rank": 4 },
+          { "name": "HIV/AIDS", "id": 1042, "feature_rank": null },
+          { "name": "Adults", "id": 1003, "feature_rank": null }
+        ],
+        "instructions": [],
+        "documents": []
+      }
+    ],
+    "schedule": {
+      "id": 788,
+      "schedule_days": [
+        {
+          "id": 6468,
+          "day": "Thursday",
+          "opens_at": 930,
+          "closes_at": 1230,
+          "open_time": null,
+          "open_day": null,
+          "close_time": null,
+          "close_day": null
+        },
+        {
+          "id": 6469,
+          "day": "Wednesday",
+          "opens_at": 930,
+          "closes_at": 1230,
+          "open_time": null,
+          "open_day": null,
+          "close_time": null,
+          "close_day": null
+        },
+        {
+          "id": 6466,
+          "day": "Friday",
+          "opens_at": 930,
+          "closes_at": 1230,
+          "open_time": null,
+          "open_day": null,
+          "close_time": null,
+          "close_day": null
+        },
+        {
+          "id": 6465,
+          "day": "Tuesday",
+          "opens_at": 930,
+          "closes_at": 1230,
+          "open_time": null,
+          "open_day": null,
+          "close_time": null,
+          "close_day": null
+        },
+        {
+          "id": 6467,
+          "day": "Monday",
+          "opens_at": 930,
+          "closes_at": 1230,
+          "open_time": null,
+          "open_day": null,
+          "close_time": null,
+          "close_day": null
+        },
+        {
+          "id": 4849,
+          "day": "Wednesday",
+          "opens_at": 1330,
+          "closes_at": 1630,
+          "open_time": null,
+          "open_day": null,
+          "close_time": null,
+          "close_day": null
+        },
+        {
+          "id": 4847,
+          "day": "Friday",
+          "opens_at": 1330,
+          "closes_at": 1630,
+          "open_time": null,
+          "open_day": null,
+          "close_time": null,
+          "close_day": null
+        },
+        {
+          "id": 4846,
+          "day": "Thursday",
+          "opens_at": 1330,
+          "closes_at": 1630,
+          "open_time": null,
+          "open_day": null,
+          "close_time": null,
+          "close_day": null
+        },
+        {
+          "id": 4850,
+          "day": "Tuesday",
+          "opens_at": 1330,
+          "closes_at": 1630,
+          "open_time": null,
+          "open_day": null,
+          "close_time": null,
+          "close_day": null
+        },
+        {
+          "id": 4848,
+          "day": "Monday",
+          "opens_at": 1330,
+          "closes_at": 1630,
+          "open_time": null,
+          "open_day": null,
+          "close_time": null,
+          "close_day": null
+        }
+      ],
+      "hours_known": true
+    },
+    "phones": [
+      {
+        "id": 635,
+        "number": "(415) 581-0891",
+        "extension": null,
+        "service_type": "Phone",
+        "country_code": "US"
+      },
+      {
+        "id": 636,
+        "number": "(415) 581-0899",
+        "extension": null,
+        "service_type": "Fax",
+        "country_code": "US"
+      },
+      {
+        "id": 3001,
+        "number": "(925) 825-1060",
+        "extension": null,
+        "service_type": "Admin Office",
+        "country_code": "US"
+      }
+    ],
+    "addresses": [
+      {
+        "id": 1907,
+        "attention": null,
+        "name": "Administrative Office",
+        "address_1": "1465 Civic Court",
+        "address_2": "Building D, Ste 810",
+        "address_3": null,
+        "address_4": null,
+        "city": "Concord",
+        "state_province": "Ca",
+        "postal_code": "94520",
+        "latitude": "37.9721576",
+        "longitude": "-122.0497542"
+      },
+      {
+        "id": 332,
+        "attention": null,
+        "name": null,
+        "address_1": "191 Golden Gate Ave",
+        "address_2": null,
+        "address_3": null,
+        "address_4": null,
+        "city": "San Francisco",
+        "state_province": "CA",
+        "postal_code": "94102",
+        "latitude": "37.7817298",
+        "longitude": "-122.4136666"
+      }
+    ],
+    "notes": [
+      {
+        "id": 1217,
+        "note": "Main Admin Office:\n\n- 1465 Civic Court, Building D, Ste 810, Concord, CA 94520\n- Phone: 925.825.1060\n- Fax:     925.825.1061"
+      }
+    ],
+    "categories": []
+  }
+}

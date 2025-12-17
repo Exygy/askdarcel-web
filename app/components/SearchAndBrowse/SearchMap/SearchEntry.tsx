@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import websiteConfig from "utils/websiteConfig";
 import { RelativeOpeningTime } from "components/DetailPage/RelativeOpeningTime";
-import type { TransformedSearchHit } from "models/SearchHits";
+import type { SearchHit } from "../../../search/types";
 import "./SearchEntry.scss";
 
 const {
@@ -11,20 +11,24 @@ const {
 } = websiteConfig;
 
 interface Props {
-  hit: TransformedSearchHit;
+  hit: SearchHit;
+  lat: number;
+  lng: number;
 }
 
 export default class SearchEntry extends Component<Props> {
   render() {
-    const { hit } = this.props;
+    const { hit, lat, lng } = this.props;
     const { recurringSchedule, type } = hit;
+
+    console.log("SearchEntry", hit);
 
     return (
       <Link to={{ pathname: hit.path }}>
         <div className={`results-table-entry ${type}-entry`}>
           <div className="entry-details">
             <div className="entry-header">
-              <h4 className="entry-headline">{hit.headline}</h4>
+              <h4 className="entry-headline">{hit.name}</h4>
               {hit.is_mohcd_funded && (
                 <div className="mohcd-funded">
                   <img src={mohcdSeal} alt="MOHCD seal" />
@@ -34,22 +38,26 @@ export default class SearchEntry extends Component<Props> {
             </div>
             {type === "service" && (
               <p className="entry-meta">
-                <Link to={`/organizations/${hit.resource_id}`}>
-                  {hit.service_of}
+                <Link to={`/organizations/${hit.organization_id}`}>
+                  {hit.organization_name}
                 </Link>
               </p>
             )}
             <p className="entry-meta">
               {hit.addressDisplay}
-              {recurringSchedule && (
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+              {(recurringSchedule as any) && (
                 <span className="entry-schedule">
-                  <RelativeOpeningTime recurringSchedule={recurringSchedule} />
+                  {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                  <RelativeOpeningTime
+                    recurringSchedule={recurringSchedule as any}
+                  />
                 </span>
               )}
             </p>
             <div className="entry-body">
               <ReactMarkdown className="rendered-markdown search-entry-body">
-                {hit.longDescription}
+                {hit.description || ""}
               </ReactMarkdown>
             </div>
           </div>
@@ -57,7 +65,7 @@ export default class SearchEntry extends Component<Props> {
             {hit._geoloc && (
               <li className="action-button">
                 <a
-                  href={`http://google.com/maps/dir/?api=1&destination=${hit._geoloc.lat},${hit._geoloc.lng}`}
+                  href={`http://google.com/maps/dir/?api=1&destination=${lat},${lng}`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >

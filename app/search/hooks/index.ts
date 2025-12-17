@@ -9,3 +9,4 @@ export { useSearchRefinements } from "./useSearchRefinements";
 export { useSearchQuery } from "./useSearchQuery";
 export { useClearRefinements } from "./useClearRefinements";
 export { useSearchConfigure } from "./useSearchConfigure";
+export { useSearchCapabilities } from "./useSearchCapabilities";

@@ -26,15 +26,11 @@ import {
 } from "../../models";
 import styles from "./ServiceDetailPage.module.scss";
 import { getSearchProvider } from "../../search";
+import config from "../../config";
 import PageNotFound, { NotFoundType } from "components/ui/PageNotFound";
 
 // Get the search provider instance
 const searchProvider = getSearchProvider();
-// Access Algolia-specific methods for direct API calls
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const algoliaProvider = searchProvider as any;
-const algoliaClient = algoliaProvider.getFullClient();
-const indexName = algoliaProvider.getIndexName();
 
 // NOTE: `serviceFallback` and `setServiceFallback` is a hack to fetch data from
 // Algolia rather than the Shelter Tech API. It's not known why some data is
@@ -62,6 +58,27 @@ export const ServiceDetailPage = () => {
   useEffect(() => {
     const fetchServiceOrFallback = async () => {
       try {
+        // First try the Data SF Open Data Portal
+        console.log(serviceListingId);
+        const dataSFUrl = `https://data.sfgov.org/resource/ga45-xynq.json?id=${serviceListingId}`;
+        const dataSFResponse = await fetch(dataSFUrl, {
+          headers: {
+            "X-App-Token": config.DATASF_APP_TOKEN,
+          },
+        });
+
+        console.log("Data SF response:", dataSFResponse);
+
+        if (dataSFResponse.ok) {
+          const dataSFData = await dataSFResponse.json();
+          if (dataSFData && dataSFData.length > 0) {
+            // Transform Data SF response to Service format
+            setService(dataSFData[0] as Service);
+            return;
+          }
+        }
+
+        // Fallback to original fetchService API
         const response = await fetchService(serviceListingId as string);
 
         // We need to check the contents of the response since `fetchService`
@@ -71,13 +88,15 @@ export const ServiceDetailPage = () => {
           try {
             // CAVEAT: Hopefully this does not change!
             const serviceObjectID = `service_${pathname.split("/")[2]}`;
-            const service = (await algoliaClient.getObject({
-              indexName,
-              objectID: serviceObjectID,
-            })) as unknown as Service;
+            const document = await searchProvider.getDocument(serviceObjectID);
 
-            setServiceFallback(service);
-            setService(null);
+            if (document) {
+              setServiceFallback(document as unknown as Service);
+              setService(null);
+            } else {
+              setService(null);
+              setError(response);
+            }
           } catch (error) {
             setService(null);
             setError(response);

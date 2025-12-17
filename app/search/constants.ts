@@ -32,4 +32,4 @@ export type SearchProviderType = "algolia" | "typesense";
  * Feature flag for search provider selection
  * TODO: Move to environment config when Typesense is ready
  */
-export const ACTIVE_SEARCH_PROVIDER: SearchProviderType = "algolia";
+export const ACTIVE_SEARCH_PROVIDER: SearchProviderType = "typesense";

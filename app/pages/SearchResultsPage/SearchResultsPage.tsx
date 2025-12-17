@@ -7,10 +7,6 @@ import { DEFAULT_AROUND_PRECISION } from "utils/location";
 import classNames from "classnames";
 import { SearchMap } from "components/SearchAndBrowse/SearchMap/SearchMap";
 import { SearchResult } from "components/SearchAndBrowse/SearchResults/SearchResult";
-import {
-  TransformedSearchHit,
-  transformSearchResults,
-} from "models/SearchHits";
 import { useSearchResults, useSearchPagination } from "../../search/hooks";
 import searchResultsStyles from "components/SearchAndBrowse/SearchResults/SearchResults.module.scss";
 import { Loader } from "components/ui/Loader";
@@ -76,12 +72,11 @@ const SearchResultsPageContent = () => {
     }
   }, []);
 
-  // Transform search results for display
-  // TODO: Update transformSearchResults to work with provider-agnostic types
-  const searchMapHitData = searchResults
-    ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      transformSearchResults(searchResults as any)
-    : { hits: [], nbHits: 0 };
+  console.log("SearchResultsPageContent searchResults:", searchResults);
+
+  // Search results are already transformed by the provider
+  // No need for additional transformation
+  const searchMapHitData = searchResults || { hits: [], nbHits: 0 };
 
   const hasNoResults = searchMapHitData.nbHits === 0 && isIdle;
 
@@ -134,15 +129,14 @@ const SearchResultsPageContent = () => {
                       currentPage={currentPage}
                       totalResults={searchResults?.nbHits || 0}
                     />
-                    {searchMapHitData.hits.map(
-                      (hit: TransformedSearchHit, index) => (
-                        <SearchResult
-                          hit={hit}
-                          key={`${hit.id} - ${hit.name}`}
-                          ref={index === 0 ? handleFirstResultFocus : null}
-                        />
-                      )
-                    )}
+                    {searchMapHitData.hits.map((hit, index) => (
+                      <SearchResult
+                        hit={hit}
+                        index={index}
+                        key={`${hit.id} - ${hit.name}`}
+                        ref={index === 0 ? handleFirstResultFocus : null}
+                      />
+                    ))}
                     <div
                       className={`${searchResultsStyles.paginationContainer} ${
                         hasNoResults ? searchResultsStyles.hidePagination : ""

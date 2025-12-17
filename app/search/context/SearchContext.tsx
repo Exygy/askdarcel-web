@@ -1,7 +1,7 @@
 import React, { createContext, useContext, ReactNode, useMemo } from "react";
 import { InstantSearch } from "react-instantsearch-core";
 import { history as historyRouter } from "instantsearch.js/es/lib/routers";
-import { getAlgoliaProvider } from "../providers/algolia";
+import { getSearchProvider } from "../providers";
 import type { ISearchProvider } from "../types";
 
 interface SearchContextValue {
@@ -22,9 +22,9 @@ interface SearchProviderProps {
  * When migrating to Typesense, only this file needs to change.
  */
 export const SearchProvider: React.FC<SearchProviderProps> = ({ children }) => {
-  const provider = useMemo(() => getAlgoliaProvider(), []);
-  const searchClient = provider.getLiteClient();
-  const indexName = provider.getIndexName();
+  const provider = useMemo(() => getSearchProvider(), []);
+  const searchClient = useMemo(() => provider.getLiteClient(), [provider]);
+  const indexName = useMemo(() => provider.getIndexName(), [provider]);
 
   const contextValue = useMemo<SearchContextValue>(
     () => ({

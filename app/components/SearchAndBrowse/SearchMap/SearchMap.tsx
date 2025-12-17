@@ -12,12 +12,12 @@ import {
   CustomMarker,
 } from "components/ui/MapElements";
 import "./SearchMap.scss";
-import { TransformedSearchHit } from "../../../models";
+import type { SearchHit } from "../../../search/types";
 import config from "../../../config";
 import { SearchMapActions } from "components/SearchAndBrowse/SearchResults/SearchResults";
 
 interface SearchMapProps {
-  hits: TransformedSearchHit[];
+  hits: SearchHit[];
   mobileMapIsCollapsed: boolean;
   handleSearchMapAction: (searchMapAction: SearchMapActions) => void;
 }
@@ -87,6 +87,7 @@ export const SearchMap = ({
     }
   };
 
+  // Cast to any since groupHitsByLocation expects old TransformedSearchHit type
   const groupedHits = groupHitsByLocation(hits);
 
   const markers = Object.keys(groupedHits).flatMap((key) => {
@@ -213,10 +214,12 @@ export const SearchMap = ({
 const GoogleSearchHitMarkerWorkaround = ({
   hit,
   tag,
+  lat,
+  lng,
 }: {
   lat: number;
   lng: number;
-  hit: TransformedSearchHit;
+  hit: SearchHit;
   tag: string;
 }) => (
   // TODO: Figure out why TS complaining after pckg update
@@ -224,7 +227,7 @@ const GoogleSearchHitMarkerWorkaround = ({
   // @ts-ignore
   <Tooltip
     arrow
-    html={<SearchEntry hit={hit} />}
+    html={<SearchEntry hit={hit} lat={lat} lng={lng} />}
     interactive
     position="bottom"
     theme="light"

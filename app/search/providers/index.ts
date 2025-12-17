@@ -1,6 +1,7 @@
 import type { ISearchProvider } from "../types";
 import { ACTIVE_SEARCH_PROVIDER } from "../constants";
 import { getAlgoliaProvider } from "./algolia";
+import { getTypesenseProvider } from "./typesense";
 
 /**
  * Provider factory
@@ -13,11 +14,11 @@ export function getSearchProvider(): ISearchProvider {
     case "algolia":
       return getAlgoliaProvider();
     case "typesense":
-      // Will be implemented in Phase 13
-      throw new Error("Typesense provider not yet implemented");
+      return getTypesenseProvider();
     default:
       throw new Error(`Unknown search provider: ${ACTIVE_SEARCH_PROVIDER}`);
   }
 }
 
 export * from "./algolia";
+export * from "./typesense";
