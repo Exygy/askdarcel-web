@@ -28,3 +28,6 @@ public/sitemap.xml.gz
 
 # jest
 coverage
+
+# docs
+docs/**/*
