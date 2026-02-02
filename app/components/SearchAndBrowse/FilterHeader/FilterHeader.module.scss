@@ -1,0 +1,328 @@
+@import "app/styles/utils/_helpers.scss";
+
+.filterHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  background-color: #fff;
+  border-bottom: 1px solid #e0e0e0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  gap: 16px;
+
+  @include r_max($break-tablet-s) {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 12px 16px;
+    gap: 12px;
+  }
+}
+
+.resultsSummary {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  @include r_max($break-tablet-s) {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+.resultsCount {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+
+  @include r_max($break-tablet-s) {
+    font-size: 14px;
+  }
+}
+
+.filterButtons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+
+  @include r_max($break-tablet-s) {
+    width: 100%;
+    gap: 8px;
+  }
+}
+
+.filterButtonWrapper {
+  position: relative;
+
+  button {
+    white-space: nowrap;
+
+    @include r_max($break-tablet-s) {
+      font-size: 14px;
+      padding: 8px 12px;
+    }
+  }
+}
+
+.filterDropdown {
+  min-width: 280px;
+  max-width: 400px;
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.filterDropdownMobileOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 10000;
+  display: flex;
+  align-items: flex-end;
+}
+
+.filterDropdownMobile {
+  width: 100%;
+  max-height: 90vh;
+  background-color: #fff;
+  border-radius: 16px 16px 0 0;
+  overflow-y: auto;
+}
+
+.filterDropdownHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e0e0e0;
+  position: sticky;
+  top: 0;
+  background-color: #fff;
+  z-index: 1;
+
+  @include r_max($break-tablet-s) {
+    padding: 12px 16px;
+  }
+}
+
+.filterDropdownTitle {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+
+  @include r_max($break-tablet-s) {
+    font-size: 16px;
+  }
+}
+
+.filterDropdownContent {
+  padding: 20px;
+
+  @include r_max($break-tablet-s) {
+    padding: 16px;
+  }
+}
+
+.clearFiltersSection {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.filterGroup {
+  margin-bottom: 24px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.filterGroupTitle {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.radioOption {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+
+  &:hover {
+    background-color: #f5f5f5;
+  }
+
+  span {
+    flex: 1;
+  }
+}
+
+.radioInput {
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+// Hours toggle group
+.toggleGroup {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.toggleButton,
+.toggleButtonActive,
+.toggleButtonDisabled {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid #e0e0e0;
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+
+.toggleButton {
+  background-color: #fff;
+  color: #333;
+
+  &:hover {
+    background-color: #f5f5f5;
+  }
+}
+
+.toggleButtonActive {
+  background-color: #276ce5;
+  color: #fff;
+  border-color: #276ce5;
+}
+
+.toggleButtonDisabled {
+  background-color: #f5f5f5;
+  color: #999;
+  border-color: #e0e0e0;
+  cursor: not-allowed;
+}
+
+// Distance location search
+.locationSearchWrapper {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.locationSearchInput {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+
+  &:focus {
+    border-color: #276ce5;
+  }
+}
+
+.locationSearchButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  background-color: #fff;
+  color: #666;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #f5f5f5;
+  }
+}
+
+.locationLabel {
+  font-size: 13px;
+  color: #666;
+  margin: 0 0 12px 0;
+}
+
+// Distance radio grid
+.radioGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 16px;
+}
+
+// Eligibility checkbox grid
+.checkboxGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 16px;
+}
+
+.checkboxOption {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+
+  &:hover {
+    background-color: #f5f5f5;
+  }
+
+  span {
+    flex: 1;
+  }
+}
+
+.checkboxInput {
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+// Filter dropdown footer (sticky Apply/Clear)
+.filterDropdownFooter {
+  position: sticky;
+  bottom: 0;
+  background-color: #fff;
+  border-top: 1px solid #e0e0e0;
+  z-index: 1;
+}
+
+.filterFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  gap: 12px;
+
+  @include r_max($break-tablet-s) {
+    padding: 12px 16px;
+  }
+}

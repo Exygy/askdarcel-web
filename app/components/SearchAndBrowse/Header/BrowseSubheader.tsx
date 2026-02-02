@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 import { Button } from "components/ui/inline/Button/Button";
 import websiteConfig from "utils/websiteConfig";
-import { CATEGORIES } from "pages/constants";
+import { useTypesenseFacets } from "hooks/TypesenseHooks";
+import { categoryToSlug } from "utils/categoryIcons";
 import DropdownMenu from "components/ui/Navigation/DropdownMenu";
 import classNames from "classnames";
 
@@ -14,15 +15,20 @@ interface Props {
   currentCategory: string;
 }
 
-// TODO: This should be the same as the dropdown links in the Navigation dropdown (which comes from Strapi)
-const DROPDOWN_LINKS = CATEGORIES.map((category) => ({
-  id: category.slug,
-  url: `/${category.slug}/results`,
-  text: category.name,
-}));
-
 export const BrowseSubheader = ({ currentCategory }: Props) => {
   const title = currentCategory;
+  const facets = useTypesenseFacets();
+
+  // TODO: This should be the same as the dropdown links in the Navigation dropdown (which comes from Strapi)
+  const DROPDOWN_LINKS = useMemo(() => {
+    if (!facets) return [];
+
+    return facets.categories.map((category) => ({
+      id: categoryToSlug(category.value),
+      url: `/${categoryToSlug(category.value)}/results`,
+      text: category.value,
+    }));
+  }, [facets]);
 
   const uuid = crypto.randomUUID();
 

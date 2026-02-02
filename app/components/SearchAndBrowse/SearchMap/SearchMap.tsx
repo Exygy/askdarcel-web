@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import GoogleMap from "google-map-react";
 import { Tooltip } from "react-tippy";
 import "react-tippy/dist/tippy.css";
@@ -34,7 +34,34 @@ export const SearchMap = ({
   const { setAroundLatLng, setAroundRadius, setBoundingBox } =
     useAppContextUpdater();
 
-  // Dynamically calculate search radius based on zoom level
+  // Track whether this is the initial aroundLatLng value so we don't
+  // pan on first render (the center prop handles that).
+  const initialLatLngRef = useRef(aroundLatLng);
+
+  // Pan the map when aroundLatLng changes (e.g. from distance filter apply)
+  useEffect(() => {
+    if (!googleMapObject) return;
+    // Skip the initial value — the map center prop handles that
+    if (aroundLatLng === initialLatLngRef.current) return;
+
+    const [lat, lng] = aroundLatLng.split(",").map(Number);
+    if (Number.isNaN(lat) || Number.isNaN(lng)) return;
+
+    googleMapObject.panTo({ lat, lng });
+
+    // After the map finishes panning, capture the new bounds
+    const idleListener = googleMapObject.addListener("idle", () => {
+      google.maps.event.removeListener(idleListener);
+      const bounds = googleMapObject.getBounds();
+      if (bounds) {
+        const ne = bounds.getNorthEast();
+        const sw = bounds.getSouthWest();
+        setBoundingBox(
+          `${ne.lat()},${sw.lng()},${sw.lat()},${ne.lng()}`
+        );
+      }
+    });
+  }, [aroundLatLng, googleMapObject, setBoundingBox]);
 
   function handleSearchThisAreaClick() {
     const map = googleMapObject;

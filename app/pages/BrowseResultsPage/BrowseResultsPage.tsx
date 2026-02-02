@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useParams } from "react-router-dom";
-import * as dataService from "utils/DataService";
 import {
   DEFAULT_AROUND_PRECISION,
   useAppContext,
@@ -8,15 +7,12 @@ import {
 } from "utils";
 import { SearchMapActions } from "components/SearchAndBrowse/SearchResults/SearchResults";
 import { Loader } from "components/ui/Loader";
-import Sidebar from "components/SearchAndBrowse/Sidebar/Sidebar";
+import FilterHeader from "components/SearchAndBrowse/FilterHeader/FilterHeader";
 import { BrowseSubheader } from "components/SearchAndBrowse/Header/BrowseSubheader";
 import { PageHeader } from "components/ui/Navigation/PageHeader";
 import { BrowseHeaderSection } from "components/SearchAndBrowse/Header/BrowseHeaderSection";
-import {
-  useEligibilitiesForCategory,
-  useSubcategoriesForCategory,
-} from "hooks/APIHooks";
-import { CATEGORIES, ServiceCategory } from "../constants";
+import { useTypesenseFacets } from "hooks/TypesenseHooks";
+import { categoryToSlug } from "utils/categoryIcons";
 import styles from "./BrowseResultsPage.module.scss";
 import {
   useSearchResults,
@@ -29,7 +25,6 @@ import ResultsPagination from "components/SearchAndBrowse/Pagination/ResultsPagi
 import searchResultsStyles from "components/SearchAndBrowse/SearchResults/SearchResults.module.scss";
 import { SearchResultsHeader } from "components/ui/SearchResultsHeader";
 import { NoSearchResultsDisplay } from "components/ui/NoSearchResultsDisplay";
-import { our415SubcategoryNames } from "utils/refinementMappings";
 import {
   SearchConfigProvider,
   useSearchConfig,
@@ -44,18 +39,39 @@ export const HITS_PER_PAGE = 40;
 const BrowseResultsPageContent = () => {
   const { categorySlug } = useParams();
   const { updateConfig } = useSearchConfig();
+  const facets = useTypesenseFacets();
 
-  const category = CATEGORIES.find((c) => c.slug === categorySlug);
-  if (category === undefined) {
-    throw new Error(`Unknown category slug ${categorySlug}`);
-  }
-  const [parentCategory, setParentCategory] = useState<ServiceCategory | null>(
-    null
-  );
+  // Find the category from dynamic data
+  const category = useMemo(() => {
+    if (!facets) return null;
+
+    const matchedCategory = facets.categories.find(
+      (cat) => categoryToSlug(cat.value) === categorySlug
+    );
+
+    if (!matchedCategory) return null;
+
+    // Create a ServiceCategory-like object with the dynamic data
+    // For now, we'll use placeholder values for fields that come from the old system
+    return {
+      name: matchedCategory.value,
+      slug: categorySlug || "",
+      algoliaCategoryName: matchedCategory.value, // Keep for legacy compatibility
+      typesenseCategoryName: matchedCategory.value,
+      id: "", // Will be populated from API call
+      steps: ["subcategories", "results"] as const,
+      subcategorySubheading:
+        "What are you currently looking for? Select all that apply.",
+      sortAlgoliaSubcategoryRefinements: false,
+      icon: {
+        name: "fa-circle-question",
+        provider: "fa",
+      },
+    };
+  }, [facets, categorySlug]);
+
   const [isMapCollapsed, setIsMapCollapsed] = useState(false);
   const [isMapInitialized, setIsMapInitialized] = useState(false);
-  const eligibilities = useEligibilitiesForCategory(category.id);
-  const subcategories = useSubcategoriesForCategory(category.id);
   const { userLocation } = useAppContext();
   const { aroundUserLocationRadius, aroundLatLng, boundingBox } =
     useAppContext();
@@ -68,9 +84,16 @@ const BrowseResultsPageContent = () => {
 
   useEffect(() => window.scrollTo(0, 0), []);
 
+  useEffect(() => {
+    if (!category) return;
+    clearRefinements();
+  }, [category, clearRefinements]);
+
   // Reset map state when category changes
   useEffect(
     () => {
+      if (!category) return;
+
       // Reset bounding box and location parameters to original user location
       // so the new category search starts fresh
       setBoundingBox(undefined);
@@ -81,7 +104,7 @@ const BrowseResultsPageContent = () => {
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [
-      category.id,
+      category?.name,
       setBoundingBox,
       setAroundLatLng,
       setAroundRadius,
@@ -95,55 +118,51 @@ const BrowseResultsPageContent = () => {
     }
   }, []);
 
-  const subcategoryNames = subcategories
-    ?.map((c) => c.name)
-    .filter((name) => our415SubcategoryNames.has(name));
-  const { name: categoryName, sortAlgoliaSubcategoryRefinements } = category;
-
-  // TODO: Handle failure?
-  useEffect(() => {
-    clearRefinements();
-    dataService
-      .get(`/api/categories/${category.id}`)
-      .then(({ category: serviceCategory }: { category: ServiceCategory }) => {
-        setParentCategory(serviceCategory);
-      });
-  }, [category.id, clearRefinements]);
+  const categoryName = category?.name || "";
 
   const escapeApostrophes = (str: string): string => str.replace(/'/g, "\\'");
-  const algoliaCategoryName = parentCategory?.name
-    ? escapeApostrophes(parentCategory.name)
+  const typesenseCategoryName = category?.typesenseCategoryName
+    ? escapeApostrophes(category.typesenseCategoryName)
     : null;
 
-  // Update search config when map is initialized and we have category name
+  // Set the category filter once when category is known and map is ready.
+  // This is separate from geo params so that FilterHeader can append
+  // eligibility filters without this effect overwriting them on every
+  // geo change.
   useEffect(() => {
-    // Wait until map is initialized
     if (!isMapInitialized) return;
+    if (!typesenseCategoryName) return;
 
-    // Wait until we have category name
-    if (!algoliaCategoryName) return;
+    updateConfig({
+      filters: `categories:'${typesenseCategoryName}'`,
+      hitsPerPage: HITS_PER_PAGE,
+    });
+  }, [isMapInitialized, typesenseCategoryName, updateConfig]);
 
-    // Wait until we have geographic data (boundingBox OR aroundLatLng)
+  // Update geo params when map bounds or location settings change.
+  // Does NOT touch `filters` so eligibility selections are preserved.
+  useEffect(() => {
+    if (!isMapInitialized) return;
     if (!boundingBox && !aroundLatLng) return;
 
-    const config = {
-      filters: `categories:'${algoliaCategoryName}'`,
-      hitsPerPage: HITS_PER_PAGE,
-      ...(boundingBox
-        ? {
-            insideBoundingBox: [boundingBox.split(",").map(Number)],
-          }
-        : {
-            aroundLatLng,
-            aroundRadius: aroundUserLocationRadius,
-            aroundPrecision: DEFAULT_AROUND_PRECISION,
-            minimumAroundRadius: 100,
-          }),
-    };
-    updateConfig(config);
+    const geoConfig = boundingBox
+      ? {
+          insideBoundingBox: [boundingBox.split(",").map(Number)],
+          aroundLatLng: undefined,
+          aroundRadius: undefined,
+          aroundPrecision: undefined,
+          minimumAroundRadius: undefined,
+        }
+      : {
+          aroundLatLng,
+          aroundRadius: aroundUserLocationRadius,
+          aroundPrecision: DEFAULT_AROUND_PRECISION,
+          minimumAroundRadius: 100,
+          insideBoundingBox: undefined,
+        };
+    updateConfig(geoConfig);
   }, [
     isMapInitialized,
-    algoliaCategoryName,
     boundingBox,
     aroundLatLng,
     aroundUserLocationRadius,
@@ -171,9 +190,9 @@ const BrowseResultsPageContent = () => {
 
   // TS compiler requires explicit null type checks
   if (
-    eligibilities === null ||
-    subcategories === null ||
-    algoliaCategoryName === null ||
+    !category ||
+    !facets ||
+    typesenseCategoryName === null ||
     userLocation === null
   ) {
     return <Loader />;
@@ -187,21 +206,22 @@ const BrowseResultsPageContent = () => {
       <div className={styles.container}>
         <BrowseSubheader currentCategory={categoryName} />
 
-        <div className={styles.flexContainer}>
-          {/* Only render Sidebar after map is initialized to prevent premature Algolia search */}
-          {isMapInitialized && (
-            <Sidebar
-              isSearchResultsPage={false}
-              eligibilities={eligibilities || []}
-              subcategoryNames={subcategoryNames || []}
-              sortAlgoliaSubcategoryRefinements={
-                sortAlgoliaSubcategoryRefinements
-              }
-              isMapCollapsed={isMapCollapsed}
-              setIsMapCollapsed={setIsMapCollapsed}
-            />
-          )}
+        {/* Only render FilterHeader after map is initialized to prevent premature search */}
+        {isMapInitialized && (
+          <FilterHeader
+            isSearchResultsPage={false}
+            pageFilter={
+              typesenseCategoryName
+                ? `categories:'${typesenseCategoryName}'`
+                : undefined
+            }
+            totalResults={searchResults?.nbHits || 0}
+            isMapCollapsed={isMapCollapsed}
+            setIsMapCollapsed={setIsMapCollapsed}
+          />
+        )}
 
+        <div className={styles.flexContainer}>
           <div className={styles.results}>
             <div className={searchResultsStyles.searchResultsAndMapContainer}>
               <div
@@ -264,12 +284,9 @@ const BrowseResultsPageContent = () => {
  * This handles state management, URL parsing, and external API requests.
  */
 export const BrowseResultsPage = () => {
-  const { categorySlug } = useParams();
-  const category = CATEGORIES.find((c) => c.slug === categorySlug);
-
-  if (category === undefined) {
-    throw new Error(`Unknown category slug ${categorySlug}`);
-  }
+  // We don't validate the category here anymore since it's dynamic
+  // If the category doesn't exist, the content component will show a loader
+  // and the user will see "no results"
 
   const { boundingBox, aroundLatLng, aroundUserLocationRadius } =
     useAppContext();

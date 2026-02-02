@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
 import styles from "components/ui/Navigation/Navigation.module.scss";
 import desktopNavigationStyles from "components/ui/Navigation/DesktopNavigation.module.scss";
@@ -11,6 +11,8 @@ import {
   NavigationMenu,
 } from "models/Strapi";
 import { useNavigationData } from "hooks/StrapiAPI";
+import { useTypesenseFacets } from "hooks/TypesenseHooks";
+import { categoryToSlug } from "utils/categoryIcons";
 import { Router } from "../../../Router";
 import NavigationFocusReset from "./NavigationFocusReset";
 import SkipButton from "./SkipButton";
@@ -23,10 +25,26 @@ import { EmailSignup } from "components/EmailSignup/Emailsignup";
 
 export const Navigation = () => {
   const { data: navigationResponse } = useNavigationData();
+  const facets = useTypesenseFacets();
 
   const logoData = extractLogoFromNavigationResponse(navigationResponse);
   const menuData =
     extractNavigationMenusFromNavigationResponse(navigationResponse);
+
+  // Create dynamic services menu from Typesense categories
+  const servicesMenu = useMemo(() => {
+    if (!facets) return null;
+
+    return {
+      id: 999, // Use a unique ID that won't conflict
+      title: "Services",
+      link: facets.categories.map((category, index) => ({
+        id: index,
+        url: `/${categoryToSlug(category.value)}/results`,
+        text: category.value,
+      })),
+    };
+  }, [facets]);
 
   function menuItemHasLinks(
     menuItem: ExtractedNavigationMenusFromNavigationResponse[number]
@@ -34,9 +52,19 @@ export const Navigation = () => {
     return "link" in menuItem;
   }
 
-  if (!menuData) {
+  if (!menuData || !facets) {
     return <Loader />;
   }
+
+  // Filter out any "Services" menu from Strapi and replace with dynamic one
+  const filteredMenuData = menuData.filter(
+    (item) => !("title" in item && item.title === "Services")
+  );
+
+  // Combine filtered Strapi menus with dynamic services menu
+  const combinedMenuData = servicesMenu
+    ? [servicesMenu, ...filteredMenuData]
+    : filteredMenuData;
 
   return (
     <SearchProvider>
@@ -51,14 +79,14 @@ export const Navigation = () => {
             </Link>
             <SiteSearchInput />
 
-            <MobileNavigation menuData={menuData} />
+            <MobileNavigation menuData={combinedMenuData} />
             <div
               className={classNames(
                 styles.desktopNavigationContainer,
                 "no-print"
               )}
             >
-              {menuData.map((menuDataItem) => {
+              {combinedMenuData.map((menuDataItem) => {
                 if (menuItemHasLinks(menuDataItem)) {
                   const links = menuDataItem.link.map((linkItem) => ({
                     id: linkItem.id,

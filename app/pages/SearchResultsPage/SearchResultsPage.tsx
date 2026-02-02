@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useEffect } from "react";
 import { SearchMapActions } from "components/SearchAndBrowse/SearchResults/SearchResults";
-import Sidebar from "components/SearchAndBrowse/Sidebar/Sidebar";
+import FilterHeader from "components/SearchAndBrowse/FilterHeader/FilterHeader";
 import styles from "./SearchResultsPage.module.scss";
 import { useAppContext } from "utils";
 import { DEFAULT_AROUND_PRECISION } from "utils/location";
@@ -72,8 +72,6 @@ const SearchResultsPageContent = () => {
     }
   }, []);
 
-  console.log("SearchResultsPageContent searchResults:", searchResults);
-
   // Search results are already transformed by the provider
   // No need for additional transformation
   const searchMapHitData = searchResults || { hits: [], nbHits: 0 };
@@ -96,16 +94,17 @@ const SearchResultsPageContent = () => {
   return (
     <div className={styles.results}>
       <div className={classNames(styles.container, "searchResultsPage")}>
-        <div className={styles.flexContainer}>
-          {/* Only render Sidebar after map is initialized to prevent premature Algolia search */}
-          {isMapInitialized && (
-            <Sidebar
-              isSearchResultsPage
-              isMapCollapsed={isMapCollapsed}
-              setIsMapCollapsed={setIsMapCollapsed}
-            />
-          )}
+        {/* Only render FilterHeader after map is initialized to prevent premature search */}
+        {isMapInitialized && (
+          <FilterHeader
+            isSearchResultsPage
+            totalResults={searchResults?.nbHits || 0}
+            isMapCollapsed={isMapCollapsed}
+            setIsMapCollapsed={setIsMapCollapsed}
+          />
+        )}
 
+        <div className={styles.flexContainer}>
           <div className={styles.results}>
             <div className={searchResultsStyles.searchResultsAndMapContainer}>
               <div

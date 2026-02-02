@@ -159,7 +159,7 @@ export class TypesenseProvider implements ISearchProvider {
    */
   getCapabilities() {
     return {
-      facetableFields: [] as string[],
+      facetableFields: ["eligibilities"],
       sortableFields: ["name"],
       supportsGeoSearch: true,
       supportsHighlighting: true,
