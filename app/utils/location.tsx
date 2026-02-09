@@ -1,5 +1,5 @@
 import React from "react";
-import { SearchHit } from "models";
+import { SearchHit } from "../search/types";
 import { round } from "./numbers";
 import config from "../config";
 
@@ -120,7 +120,7 @@ export const renderAddressMetadata = (hit_: SearchHit): JSX.Element => {
     return <span>No address found</span>;
   }
   if (hit_.addresses.length > 1) {
-    return <span>Multiple locations</span>;
+    return <span>This service has multiple locations</span>;
   }
   if (hit_.addresses[0].address_1) {
     return <span>{hit_.addresses[0].address_1}</span>;

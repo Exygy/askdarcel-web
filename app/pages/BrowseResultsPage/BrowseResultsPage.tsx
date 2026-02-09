@@ -11,7 +11,7 @@ import FilterHeader from "components/SearchAndBrowse/FilterHeader/FilterHeader";
 import { BrowseSubheader } from "components/SearchAndBrowse/Header/BrowseSubheader";
 import { PageHeader } from "components/ui/Navigation/PageHeader";
 import { BrowseHeaderSection } from "components/SearchAndBrowse/Header/BrowseHeaderSection";
-import { useTypesenseFacets } from "hooks/TypesenseHooks";
+import { useTopLevelCategories } from "hooks/TypesenseHooks";
 import { categoryToSlug } from "utils/categoryIcons";
 import styles from "./BrowseResultsPage.module.scss";
 import {
@@ -32,6 +32,13 @@ import {
 
 export const HITS_PER_PAGE = 40;
 
+// Map radius values to appropriate zoom levels
+const RADIUS_TO_ZOOM: Record<number, number> = {
+  1609: 15, // 1 mile
+  3219: 14, // 2 miles
+  4828: 13, // 3 miles
+};
+
 /**
  * BrowseResultsPageContent - The main content component that uses search config
  * This is separated so it can access the SearchConfigProvider context
@@ -39,13 +46,13 @@ export const HITS_PER_PAGE = 40;
 const BrowseResultsPageContent = () => {
   const { categorySlug } = useParams();
   const { updateConfig } = useSearchConfig();
-  const facets = useTypesenseFacets();
+  const { categories, isLoading: categoriesLoading } = useTopLevelCategories();
 
   // Find the category from dynamic data
   const category = useMemo(() => {
-    if (!facets) return null;
+    if (categories.length === 0) return null;
 
-    const matchedCategory = facets.categories.find(
+    const matchedCategory = categories.find(
       (cat) => categoryToSlug(cat.value) === categorySlug
     );
 
@@ -68,10 +75,16 @@ const BrowseResultsPageContent = () => {
         provider: "fa",
       },
     };
-  }, [facets, categorySlug]);
+  }, [categories, categorySlug]);
 
   const [isMapCollapsed, setIsMapCollapsed] = useState(false);
   const [isMapInitialized, setIsMapInitialized] = useState(false);
+  const [customMapCenter, setCustomMapCenter] = useState<{
+    lat: number;
+    lng: number;
+  } | null>(null);
+  const [customMapZoom, setCustomMapZoom] = useState<number | null>(null);
+  const [hoveredHitId, setHoveredHitId] = useState<string | null>(null);
   const { userLocation } = useAppContext();
   const { aroundUserLocationRadius, aroundLatLng, boundingBox } =
     useAppContext();
@@ -112,6 +125,20 @@ const BrowseResultsPageContent = () => {
     ]
   );
 
+  const handleLocationSelect = useCallback(
+    (lat: number, lng: number, radius: number | "all") => {
+      setCustomMapCenter({ lat, lng });
+      // Set zoom level based on radius, or null for "all" (uses bounding box)
+      if (radius === "all") {
+        setCustomMapZoom(null);
+      } else {
+        setCustomMapZoom(RADIUS_TO_ZOOM[radius] || 14);
+      }
+      goToPage(0);
+    },
+    [goToPage]
+  );
+
   const handleFirstResultFocus = useCallback((node: HTMLDivElement | null) => {
     if (node) {
       node.focus();
@@ -120,9 +147,9 @@ const BrowseResultsPageContent = () => {
 
   const categoryName = category?.name || "";
 
-  const escapeApostrophes = (str: string): string => str.replace(/'/g, "\\'");
+  const escapeBackticks = (str: string): string => str.replace(/`/g, "\\`");
   const typesenseCategoryName = category?.typesenseCategoryName
-    ? escapeApostrophes(category.typesenseCategoryName)
+    ? escapeBackticks(category.typesenseCategoryName)
     : null;
 
   // Set the category filter once when category is known and map is ready.
@@ -134,7 +161,7 @@ const BrowseResultsPageContent = () => {
     if (!typesenseCategoryName) return;
 
     updateConfig({
-      filters: `categories:'${typesenseCategoryName}'`,
+      filters: `categories:\`${typesenseCategoryName}\``,
       hitsPerPage: HITS_PER_PAGE,
     });
   }, [isMapInitialized, typesenseCategoryName, updateConfig]);
@@ -191,7 +218,7 @@ const BrowseResultsPageContent = () => {
   // TS compiler requires explicit null type checks
   if (
     !category ||
-    !facets ||
+    categoriesLoading ||
     typesenseCategoryName === null ||
     userLocation === null
   ) {
@@ -212,12 +239,12 @@ const BrowseResultsPageContent = () => {
             isSearchResultsPage={false}
             pageFilter={
               typesenseCategoryName
-                ? `categories:'${typesenseCategoryName}'`
+                ? `categories:\`${typesenseCategoryName}\``
                 : undefined
             }
-            totalResults={searchResults?.nbHits || 0}
             isMapCollapsed={isMapCollapsed}
             setIsMapCollapsed={setIsMapCollapsed}
+            onLocationSelect={handleLocationSelect}
           />
         )}
 
@@ -252,6 +279,9 @@ const BrowseResultsPageContent = () => {
                         index={index}
                         key={`${hit.id} - ${hit.name}`}
                         ref={index === 0 ? handleFirstResultFocus : null}
+                        isHighlighted={hoveredHitId === hit.id}
+                        onMouseEnter={() => setHoveredHitId(hit.id)}
+                        onMouseLeave={() => setHoveredHitId(null)}
                       />
                     ))}
                     <div
@@ -270,6 +300,9 @@ const BrowseResultsPageContent = () => {
                 hits={searchMapHitData.hits}
                 mobileMapIsCollapsed={isMapCollapsed}
                 handleSearchMapAction={handleAction}
+                customCenter={customMapCenter}
+                customZoom={customMapZoom}
+                highlightedHitId={hoveredHitId}
               />
             </div>
           </div>

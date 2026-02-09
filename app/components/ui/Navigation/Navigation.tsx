@@ -11,7 +11,7 @@ import {
   NavigationMenu,
 } from "models/Strapi";
 import { useNavigationData } from "hooks/StrapiAPI";
-import { useTypesenseFacets } from "hooks/TypesenseHooks";
+import { useTopLevelCategories } from "hooks/TypesenseHooks";
 import { categoryToSlug } from "utils/categoryIcons";
 import { Router } from "../../../Router";
 import NavigationFocusReset from "./NavigationFocusReset";
@@ -25,7 +25,7 @@ import { EmailSignup } from "components/EmailSignup/Emailsignup";
 
 export const Navigation = () => {
   const { data: navigationResponse } = useNavigationData();
-  const facets = useTypesenseFacets();
+  const { categories, isLoading: categoriesLoading } = useTopLevelCategories();
 
   const logoData = extractLogoFromNavigationResponse(navigationResponse);
   const menuData =
@@ -33,18 +33,18 @@ export const Navigation = () => {
 
   // Create dynamic services menu from Typesense categories
   const servicesMenu = useMemo(() => {
-    if (!facets) return null;
+    if (categories.length === 0) return null;
 
     return {
       id: 999, // Use a unique ID that won't conflict
       title: "Services",
-      link: facets.categories.map((category, index) => ({
+      link: categories.map((category, index) => ({
         id: index,
         url: `/${categoryToSlug(category.value)}/results`,
         text: category.value,
       })),
     };
-  }, [facets]);
+  }, [categories]);
 
   function menuItemHasLinks(
     menuItem: ExtractedNavigationMenusFromNavigationResponse[number]
@@ -52,7 +52,7 @@ export const Navigation = () => {
     return "link" in menuItem;
   }
 
-  if (!menuData || !facets) {
+  if (!menuData || categoriesLoading) {
     return <Loader />;
   }
 

@@ -1,7 +1,7 @@
 import { HomePageSection } from "pages/HomePage/components/Section";
 import React from "react";
 import { BackgroundColorVariant } from "models";
-import { useTypesenseFacets } from "hooks/TypesenseHooks";
+import { useTopLevelCategories } from "hooks/TypesenseHooks";
 import { getCategoryIcon, categoryToSlug } from "utils/categoryIcons";
 import { CategoryCard } from "../Cards/CategoryCard";
 import { Loader } from "components/ui/Loader";
@@ -18,10 +18,10 @@ export interface FeaturedCategoriesData {
  * Categories are loaded dynamically from Typesense
  */
 export const CategorySection = () => {
-  const facets = useTypesenseFacets();
+  const { categories, isLoading } = useTopLevelCategories();
 
   // Show loader while fetching categories
-  if (!facets) {
+  if (isLoading) {
     return (
       <HomePageSection
         title={tempCategoriesSection.header}
@@ -43,7 +43,7 @@ export const CategorySection = () => {
     >
       <div className={styles.categorySection}>
         <div className={styles.categoryCards}>
-          {facets.categories.map((category) => {
+          {categories.map((category) => {
             const slug = categoryToSlug(category.value);
             const icon = getCategoryIcon(category.value);
 

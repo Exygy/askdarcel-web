@@ -5,6 +5,7 @@ import type {
   ISearchProvider,
   SearchHit,
   SearchCoordinates,
+  Address,
 } from "../../types";
 
 /**
@@ -110,17 +111,18 @@ export class TypesenseProvider implements ISearchProvider {
         const normalizedResults = responses.results.map((result: any) => {
           // Transform hits to add locations field from _geoloc
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          console.log("Raw Typesense hit:", result.hits);
           const transformedHits = (result.hits || []).map(
             (hit: any, index: number) => {
-              // Compute locations from _geoloc
+              // Compute locations from _geoloc, linking addresses
               const locations = this.extractLocationsFromGeoloc(
                 hit.locations,
-                index + 1
+                index + 1,
+                hit.addresses
               );
               return {
                 ...hit,
                 locations,
+                addressDisplay: this.computeAddressDisplay(hit),
               };
             }
           );
@@ -192,7 +194,8 @@ export class TypesenseProvider implements ISearchProvider {
       return {
         ...doc,
         _geoloc: geoloc,
-        locations: this.extractLocationsFromGeoloc(doc._geoloc, 1),
+        locations: this.extractLocationsFromGeoloc(doc._geoloc, 1, doc.addresses),
+        addressDisplay: this.computeAddressDisplay(doc),
       } as SearchHit;
     } catch {
       // Document not found or other error
@@ -201,11 +204,27 @@ export class TypesenseProvider implements ISearchProvider {
   }
 
   /**
-   * Extract locations from Typesense _geoloc field
-   * Typesense stores geopoints as array of coordinate pairs: [[lat, lng], [lat, lng], ...]
+   * Compute a display string for the address based on the addresses array.
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private extractLocationsFromGeoloc(locationsField: any, resultIndex: number) {
+  private computeAddressDisplay(hit: any): string {
+    const addresses: Address[] | undefined = hit.addresses;
+    if (!addresses || addresses.length === 0) {
+      return "No address found";
+    }
+    if (addresses.length > 1) {
+      return "This service has multiple locations";
+    }
+    return addresses[0].address_1 || "No address found";
+  }
+
+  /**
+   * Extract locations from Typesense _geoloc field
+   * Typesense stores geopoints as array of coordinate pairs: [[lat, lng], [lat, lng], ...]
+   * Optionally attaches the corresponding address to each location (index-aligned).
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private extractLocationsFromGeoloc(locationsField: any, resultIndex: number, addresses?: Address[]) {
     if (!Array.isArray(locationsField) || locationsField.length === 0) {
       return [];
     }
@@ -222,6 +241,7 @@ export class TypesenseProvider implements ISearchProvider {
           lat: lat.toString(),
           long: lng.toString(),
           label: i === 0 ? resultIndex.toString() : `${resultIndex}.${i + 1}`,
+          address: addresses?.[i] || undefined,
         });
       }
     }

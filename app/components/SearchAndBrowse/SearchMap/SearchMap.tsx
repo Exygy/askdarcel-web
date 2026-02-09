@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import GoogleMap from "google-map-react";
 import { Tooltip } from "react-tippy";
 import "react-tippy/dist/tippy.css";
@@ -10,9 +10,10 @@ import {
   createMapOptions,
   UserLocationMarker,
   CustomMarker,
+  SearchLocationMarker,
 } from "components/ui/MapElements";
 import "./SearchMap.scss";
-import type { SearchHit } from "../../../search/types";
+import type { SearchHit, Location } from "../../../search/types";
 import config from "../../../config";
 import { SearchMapActions } from "components/SearchAndBrowse/SearchResults/SearchResults";
 
@@ -20,48 +21,56 @@ interface SearchMapProps {
   hits: SearchHit[];
   mobileMapIsCollapsed: boolean;
   handleSearchMapAction: (searchMapAction: SearchMapActions) => void;
+  customCenter?: { lat: number; lng: number } | null;
+  customZoom?: number | null;
+  highlightedHitId?: string | null;
 }
 
 export const SearchMap = ({
   hits,
   mobileMapIsCollapsed,
   handleSearchMapAction,
+  customCenter,
+  customZoom,
+  highlightedHitId,
 }: SearchMapProps) => {
   const [googleMapObject, setMapObject] = useState<google.maps.Map | null>(
     null
   );
+  const [clickedHitId, setClickedHitId] = useState<string | null>(null);
   const { userLocation, aroundLatLng, boundingBox } = useAppContext();
   const { setAroundLatLng, setAroundRadius, setBoundingBox } =
     useAppContextUpdater();
 
-  // Track whether this is the initial aroundLatLng value so we don't
-  // pan on first render (the center prop handles that).
-  const initialLatLngRef = useRef(aroundLatLng);
+  // Pan to custom center and zoom when they change (e.g. from distance filter)
+  React.useEffect(() => {
+    if (googleMapObject && customCenter) {
+      googleMapObject.panTo({ lat: customCenter.lat, lng: customCenter.lng });
 
-  // Pan the map when aroundLatLng changes (e.g. from distance filter apply)
-  useEffect(() => {
-    if (!googleMapObject) return;
-    // Skip the initial value — the map center prop handles that
-    if (aroundLatLng === initialLatLngRef.current) return;
-
-    const [lat, lng] = aroundLatLng.split(",").map(Number);
-    if (Number.isNaN(lat) || Number.isNaN(lng)) return;
-
-    googleMapObject.panTo({ lat, lng });
-
-    // After the map finishes panning, capture the new bounds
-    const idleListener = googleMapObject.addListener("idle", () => {
-      google.maps.event.removeListener(idleListener);
-      const bounds = googleMapObject.getBounds();
-      if (bounds) {
-        const ne = bounds.getNorthEast();
-        const sw = bounds.getSouthWest();
-        setBoundingBox(
-          `${ne.lat()},${sw.lng()},${sw.lat()},${ne.lng()}`
-        );
+      // Use custom zoom if provided, otherwise zoom in by 3 levels
+      if (customZoom) {
+        googleMapObject.setZoom(customZoom);
+      } else {
+        const currentZoom = googleMapObject.getZoom() || 14;
+        const newZoom = Math.min(currentZoom + 3, 18);
+        googleMapObject.setZoom(newZoom);
       }
-    });
-  }, [aroundLatLng, googleMapObject, setBoundingBox]);
+
+      // After pan/zoom animation completes, capture the new bounds
+      const idleListener = googleMapObject.addListener("idle", () => {
+        google.maps.event.removeListener(idleListener);
+
+        const bounds = googleMapObject.getBounds();
+        if (bounds) {
+          const ne = bounds.getNorthEast();
+          const sw = bounds.getSouthWest();
+          const boundingBoxString = `${ne.lat()},${sw.lng()},${sw.lat()},${ne.lng()}`;
+          setBoundingBox(boundingBoxString);
+          setAroundRadius("all");
+        }
+      });
+    }
+  }, [googleMapObject, customCenter, customZoom, setBoundingBox, setAroundRadius]);
 
   function handleSearchThisAreaClick() {
     const map = googleMapObject;
@@ -114,7 +123,6 @@ export const SearchMap = ({
     }
   };
 
-  // Cast to any since groupHitsByLocation expects old TransformedSearchHit type
   const groupedHits = groupHitsByLocation(hits);
 
   const markers = Object.keys(groupedHits).flatMap((key) => {
@@ -128,8 +136,11 @@ export const SearchMap = ({
           key={`${location.id}-single`}
           lat={Number(location.lat)}
           lng={Number(location.long)}
-          tag={location.label}
           hit={hit}
+          location={location}
+          isHighlighted={highlightedHitId === hit.id || clickedHitId === hit.id}
+          onTooltipShow={() => setClickedHitId(hit.id)}
+          onTooltipHide={() => setClickedHitId(null)}
         />
       );
     } else {
@@ -146,8 +157,11 @@ export const SearchMap = ({
             key={`${item.location.id}-${index}`}
             lat={offsetLat}
             lng={offsetLng}
-            tag={item.location.label}
             hit={item.hit}
+            location={item.location}
+            isHighlighted={highlightedHitId === item.hit.id || clickedHitId === item.hit.id}
+            onTooltipShow={() => setClickedHitId(item.hit.id)}
+            onTooltipHide={() => setClickedHitId(null)}
           />
         );
       });
@@ -177,6 +191,7 @@ export const SearchMap = ({
         <GoogleMap
           bootstrapURLKeys={{
             key: config.GOOGLE_API_KEY,
+            libraries: ["places"],
           }}
           center={googleMapsCenter()}
           defaultZoom={14}
@@ -224,7 +239,14 @@ export const SearchMap = ({
             <UserLocationMarker
               lat={userLocation?.coords.lat}
               lng={userLocation?.coords.lng}
-              key={1}
+              key="user-location"
+            />
+          )}
+          {customCenter && (
+            <SearchLocationMarker
+              lat={customCenter.lat}
+              lng={customCenter.lng}
+              key="search-location"
             />
           )}
           {markers}
@@ -240,28 +262,67 @@ export const SearchMap = ({
 /* eslint-disable react/no-unused-prop-types */
 const GoogleSearchHitMarkerWorkaround = ({
   hit,
-  tag,
   lat,
   lng,
+  location,
+  isHighlighted,
+  onTooltipShow,
+  onTooltipHide,
 }: {
   lat: number;
   lng: number;
   hit: SearchHit;
-  tag: string;
-}) => (
-  // TODO: Figure out why TS complaining after pckg update
-  /* eslint-disable @typescript-eslint/ban-ts-comment */
-  // @ts-ignore
-  <Tooltip
-    arrow
-    html={<SearchEntry hit={hit} lat={lat} lng={lng} />}
-    interactive
-    position="bottom"
-    theme="light"
-    trigger="click"
-    useContext
-  >
-    <CustomMarker text={tag} />
-  </Tooltip>
-);
+  location: Location;
+  isHighlighted?: boolean;
+  onTooltipShow?: () => void;
+  onTooltipHide?: () => void;
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleOpen = () => {
+    setIsOpen(true);
+    onTooltipShow?.();
+  };
+
+  const handleClose = () => {
+    setIsOpen(false);
+    onTooltipHide?.();
+  };
+
+  return (
+    // TODO: Figure out why TS complaining after pckg update
+    /* eslint-disable @typescript-eslint/ban-ts-comment */
+    // @ts-ignore
+    <Tooltip
+      arrow
+      html={
+        <SearchEntry
+          hit={hit}
+          lat={lat}
+          lng={lng}
+          location={location}
+          onClose={handleClose}
+        />
+      }
+      interactive
+      open={isOpen}
+      onRequestClose={handleClose}
+      position="bottom"
+      theme="light"
+      trigger="click"
+      useContext
+      onShow={handleOpen}
+      onHide={handleClose}
+      style={{ display: "inline-block", transform: "translate(-50%, -100%)" }}
+      popperOptions={{
+        modifiers: {
+          flip: { enabled: false },
+          preventOverflow: { boundariesElement: "viewport" },
+        },
+      }}
+    >
+      <CustomMarker isHighlighted={isHighlighted} />
+    </Tooltip>
+  );
+};
 /* eslint-enable react/no-unused-prop-types */

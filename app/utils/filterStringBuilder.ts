@@ -1,11 +1,13 @@
 /**
- * Builds an Algolia-compatible filter string for use with <Configure filters={...}>.
- * The Typesense InstantSearch adapter translates Algolia filter syntax to Typesense's
- * filter_by format, so we must use Algolia syntax here (not Typesense-native syntax).
+ * Builds a Typesense filter_by string for use with <Configure filters={...}>.
+ * The Typesense InstantSearch adapter passes `filters` directly through to Typesense
+ * without translation, so we must use Typesense's native filter_by syntax here.
+ *
+ * Typesense uses && for AND and || for OR.
  */
 
 function escapeFilterValue(value: string): string {
-  return value.replace(/'/g, "\\'");
+  return value.replace(/`/g, "\\`");
 }
 
 interface BuildFilterStringOptions {
@@ -28,17 +30,15 @@ export function buildFilterString({
     : [];
 
   if (eligibilityValues.length > 0) {
-    // Algolia syntax: each value is a separate facet filter joined with OR
     const facetFilters = eligibilityValues.map(
-      (v) => `eligibilities:'${escapeFilterValue(v)}'`
+      (v) => `eligibilities:\`${escapeFilterValue(v)}\``
     );
-    // Wrap in parens when multiple values so OR binds correctly with AND
     if (facetFilters.length === 1) {
       parts.push(facetFilters[0]);
     } else {
-      parts.push(`(${facetFilters.join(" OR ")})`);
+      parts.push(`(${facetFilters.join(" || ")})`);
     }
   }
 
-  return parts.join(" AND ");
+  return parts.join(" && ");
 }

@@ -24,9 +24,22 @@ export const HITS_PER_PAGE = 40;
  * SearchResultsPageContent - The main content component that uses search config
  * This is separated so it can access the SearchConfigProvider context
  */
+// Map radius values to appropriate zoom levels
+const RADIUS_TO_ZOOM: Record<number, number> = {
+  1609: 15, // 1 mile
+  3219: 14, // 2 miles
+  4828: 13, // 3 miles
+};
+
 const SearchResultsPageContent = () => {
   const [isMapCollapsed, setIsMapCollapsed] = useState(false);
   const [isMapInitialized, setIsMapInitialized] = useState(false);
+  const [customMapCenter, setCustomMapCenter] = useState<{
+    lat: number;
+    lng: number;
+  } | null>(null);
+  const [customMapZoom, setCustomMapZoom] = useState<number | null>(null);
+  const [hoveredHitId, setHoveredHitId] = useState<string | null>(null);
   const { boundingBox, aroundLatLng, aroundUserLocationRadius } =
     useAppContext();
   const { updateConfig } = useSearchConfig();
@@ -66,6 +79,20 @@ const SearchResultsPageContent = () => {
     updateConfig,
   ]);
 
+  const handleLocationSelect = useCallback(
+    (lat: number, lng: number, radius: number | "all") => {
+      setCustomMapCenter({ lat, lng });
+      // Set zoom level based on radius, or null for "all" (uses bounding box)
+      if (radius === "all") {
+        setCustomMapZoom(null);
+      } else {
+        setCustomMapZoom(RADIUS_TO_ZOOM[radius] || 14);
+      }
+      goToPage(0);
+    },
+    [goToPage]
+  );
+
   const handleFirstResultFocus = useCallback((node: HTMLDivElement | null) => {
     if (node) {
       node.focus();
@@ -98,9 +125,9 @@ const SearchResultsPageContent = () => {
         {isMapInitialized && (
           <FilterHeader
             isSearchResultsPage
-            totalResults={searchResults?.nbHits || 0}
             isMapCollapsed={isMapCollapsed}
             setIsMapCollapsed={setIsMapCollapsed}
+            onLocationSelect={handleLocationSelect}
           />
         )}
 
@@ -134,6 +161,9 @@ const SearchResultsPageContent = () => {
                         index={index}
                         key={`${hit.id} - ${hit.name}`}
                         ref={index === 0 ? handleFirstResultFocus : null}
+                        isHighlighted={hoveredHitId === hit.id}
+                        onMouseEnter={() => setHoveredHitId(hit.id)}
+                        onMouseLeave={() => setHoveredHitId(null)}
                       />
                     ))}
                     <div
@@ -152,6 +182,9 @@ const SearchResultsPageContent = () => {
                 hits={searchMapHitData.hits}
                 mobileMapIsCollapsed={isMapCollapsed}
                 handleSearchMapAction={handleAction}
+                customCenter={customMapCenter}
+                customZoom={customMapZoom}
+                highlightedHitId={hoveredHitId}
               />
             </div>
           </div>

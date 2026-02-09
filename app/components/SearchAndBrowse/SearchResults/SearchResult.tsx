@@ -10,22 +10,31 @@ import styles from "./SearchResults.module.scss";
 interface SearchResultProps {
   hit: SearchHit;
   index: number;
+  isHighlighted?: boolean;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
 }
 
 export const SearchResult = forwardRef<HTMLDivElement, SearchResultProps>(
   (props, ref) => {
-    const { hit, index } = props;
+    const { hit, index, isHighlighted, onMouseEnter, onMouseLeave } = props;
 
-    console.log(hit);
     return (
       // ref is for focusing on the first search hit when user paginates and scrolls to top
-      <div className={styles.searchResult} ref={ref} tabIndex={-1}>
+      <div
+        className={`${styles.searchResult} ${
+          isHighlighted ? styles.searchResultHighlighted : ""
+        }`}
+        ref={ref}
+        tabIndex={-1}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+      >
         <div className={styles.searchResultContentContainer}>
           <div>
             <div className={styles.titleContainer}>
               <div>
                 <h2 className={styles.title}>
-                  {index + 1}.{" "}
                   <Link
                     to={{
                       pathname:
@@ -65,8 +74,7 @@ export const SearchResult = forwardRef<HTMLDivElement, SearchResultProps>(
           <div className={styles.searchResultContent}>
             <div className={styles.searchText}>
               <div className={`notranslate ${styles.address}`}>
-                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                {renderAddressMetadata(hit as any)}
+                {renderAddressMetadata(hit)}
               </div>
               {/* Once we can update all dependencies, we can add remarkBreaks as remarkPlugin here */}
               <ReactMarkdown

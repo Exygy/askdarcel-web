@@ -36,6 +36,7 @@ export interface Location {
   lat: string;
   long: string;
   label: string;
+  address?: Address;
 }
 
 /**

@@ -15,28 +15,35 @@ import { buildFilterString } from "utils/filterStringBuilder";
 import styles from "./FilterHeader.module.scss";
 import classNames from "classnames";
 
+// Feature flag to enable/disable hours filter
+// Set to false to hide the hours filter from both the standalone button and "All Filters" dropdown
+const ENABLE_HOURS_FILTER = false;
+
 interface FilterHeaderProps {
   isSearchResultsPage: boolean;
   pageFilter?: string;
-  totalResults?: number;
   isMapCollapsed?: boolean;
   setIsMapCollapsed?: (_isMapCollapsed: boolean) => void;
+  onLocationSelect?: (
+    lat: number,
+    lng: number,
+    radius: number | "all"
+  ) => void;
 }
 
 const FilterHeader = ({
   isSearchResultsPage,
   pageFilter,
-  totalResults = 0,
   isMapCollapsed = false,
   setIsMapCollapsed,
+  onLocationSelect,
 }: FilterHeaderProps) => {
   const [activeFilterMenu, setActiveFilterMenu] = useState<string | null>(null);
   const distanceButtonRef = useRef<HTMLDivElement>(null);
   const hoursButtonRef = useRef<HTMLDivElement>(null);
   const allFiltersButtonRef = useRef<HTMLDivElement>(null);
 
-  const { setAroundRadius, setAroundLatLng, setBoundingBox } =
-    useAppContextUpdater();
+  const { setAroundRadius } = useAppContextUpdater();
   const { facetableFields } = useSearchCapabilities();
   const { updateConfig } = useSearchConfig();
   const facets = useTypesenseFacets();
@@ -53,17 +60,13 @@ const FilterHeader = ({
     setActiveFilterMenu(activeFilterMenu === menuName ? null : menuName);
   };
 
-  // When the user clicks the location search icon, immediately pan the map
-  // to the resolved location AND store it in pending state for display.
+  // When the user selects a location, store it in pending state.
+  // The map will pan when Apply is clicked.
   const handleLocationChange = useCallback(
     (text: string, coords: { lat: number; lng: number } | null) => {
       filterState.setPendingLocation(text, coords);
-      if (coords) {
-        setBoundingBox(undefined);
-        setAroundLatLng(`${coords.lat},${coords.lng}`);
-      }
     },
-    [filterState, setBoundingBox, setAroundLatLng]
+    [filterState]
   );
 
   const handleApply = useCallback(() => {
@@ -81,16 +84,25 @@ const FilterHeader = ({
     }
 
     // Apply distance radius
-    if (filterState.pending.distanceRadius !== "all") {
-      setAroundRadius(filterState.pending.distanceRadius);
-    } else {
-      setAroundRadius("all");
+    setAroundRadius(filterState.pending.distanceRadius);
+
+    // Update map center and zoom based on location and radius
+    if (filterState.pending.locationCoords && onLocationSelect) {
+      onLocationSelect(
+        filterState.pending.locationCoords.lat,
+        filterState.pending.locationCoords.lng,
+        filterState.pending.distanceRadius
+      );
     }
+
+    closeMenu();
   }, [
     filterState,
     pageFilter,
     updateConfig,
     setAroundRadius,
+    onLocationSelect,
+    closeMenu,
   ]);
 
   const handleClear = useCallback(() => {
@@ -113,17 +125,14 @@ const FilterHeader = ({
 
   return (
     <div className={classNames(styles.filterHeader, "no-print")}>
-      <div className={styles.resultsSummary}>
-        <span className={styles.resultsCount}>
-          {totalResults} result{totalResults !== 1 ? "s" : ""}
-        </span>
-        {setIsMapCollapsed && (
+      {setIsMapCollapsed && (
+        <div className={styles.mobileToggleContainer}>
           <MobileMapToggleButtons
             isMapCollapsed={isMapCollapsed}
             setIsMapCollapsed={setIsMapCollapsed}
           />
-        )}
-      </div>
+        </div>
+      )}
 
       <div className={styles.filterButtons}>
         {/* Distance Filter */}
@@ -156,29 +165,31 @@ const FilterHeader = ({
         </div>
 
         {/* Hours Filter */}
-        <div className={styles.filterButtonWrapper} ref={hoursButtonRef}>
-          <Button
-            variant={activeFilterMenu === "hours" ? "primary" : "secondary"}
-            onClick={() => toggleFilterMenu("hours")}
-            iconName="chevron-down"
-            iconVariant="after"
-            size="base"
-          >
-            Hours
-          </Button>
-          <FilterDropdown
-            isOpen={activeFilterMenu === "hours"}
-            onClose={closeMenu}
-            title="Availability"
-            triggerRef={hoursButtonRef}
-            footer={makeFooter()}
-          >
-            <HoursFilterContent
-              selected={filterState.pending.hoursSelection}
-              onChange={filterState.setPendingHours}
-            />
-          </FilterDropdown>
-        </div>
+        {ENABLE_HOURS_FILTER && (
+          <div className={styles.filterButtonWrapper} ref={hoursButtonRef}>
+            <Button
+              variant={activeFilterMenu === "hours" ? "primary" : "secondary"}
+              onClick={() => toggleFilterMenu("hours")}
+              iconName="chevron-down"
+              iconVariant="after"
+              size="base"
+            >
+              Hours
+            </Button>
+            <FilterDropdown
+              isOpen={activeFilterMenu === "hours"}
+              onClose={closeMenu}
+              title="Availability"
+              triggerRef={hoursButtonRef}
+              footer={makeFooter()}
+            >
+              <HoursFilterContent
+                selected={filterState.pending.hoursSelection}
+                onChange={filterState.setPendingHours}
+              />
+            </FilterDropdown>
+          </div>
+        )}
 
         {/* All Filters */}
         <div className={styles.filterButtonWrapper} ref={allFiltersButtonRef}>
@@ -198,13 +209,15 @@ const FilterHeader = ({
             triggerRef={allFiltersButtonRef}
             footer={makeFooter()}
           >
-            <div className={styles.filterGroup}>
-              <h4 className={styles.filterGroupTitle}>Availability</h4>
-              <HoursFilterContent
-                selected={filterState.pending.hoursSelection}
-                onChange={filterState.setPendingHours}
-              />
-            </div>
+            {ENABLE_HOURS_FILTER && (
+              <div className={styles.filterGroup}>
+                <h4 className={styles.filterGroupTitle}>Availability</h4>
+                <HoursFilterContent
+                  selected={filterState.pending.hoursSelection}
+                  onChange={filterState.setPendingHours}
+                />
+              </div>
+            )}
 
             <div className={styles.filterGroup}>
               <h4 className={styles.filterGroupTitle}>Distance</h4>

@@ -1,9 +1,23 @@
-@import "../../styles/utils/_helpers.scss";
+@import "../styles/utils/_helpers.scss";
 
-.servicePage {
+.organizationPage {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 24px 48px;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-orange, #f58220);
+  text-decoration: none;
+  font-weight: 500;
+  margin-bottom: 16px;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 .header {
@@ -32,15 +46,6 @@
   color: var(--color-grey-600, #666);
   font-size: 1rem;
   margin: 0;
-
-  a {
-    color: var(--color-blue, #0066cc);
-    text-decoration: none;
-
-    &:hover {
-      text-decoration: underline;
-    }
-  }
 }
 
 .headerActions {
@@ -73,45 +78,6 @@
   color: var(--color-grey-700, #444);
   line-height: 1.6;
   margin-bottom: 24px;
-}
-
-.detailsSection {
-  margin-bottom: 24px;
-
-  h2 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin: 0 0 16px;
-    color: var(--color-grey-800, #1a1a1a);
-  }
-}
-
-.detailsList {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.detailItem {
-  display: flex;
-  gap: 16px;
-
-  @media (max-width: 600px) {
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .label {
-    font-weight: 500;
-    color: var(--color-grey-600, #666);
-    min-width: 140px;
-    flex-shrink: 0;
-  }
-
-  .value {
-    color: var(--color-grey-700, #444);
-    line-height: 1.5;
-  }
 }
 
 .contactList {
@@ -188,7 +154,7 @@
   }
 }
 
-.otherServicesSection {
+.servicesSection {
   margin-bottom: 48px;
 
   h2 {
@@ -278,44 +244,27 @@
   margin-top: 4px;
 }
 
-.tagsSection {
-  margin-bottom: 48px;
-
+.notesSection {
   h2 {
     font-size: 1.25rem;
     font-weight: 600;
     margin: 0 0 16px;
     color: var(--color-grey-800, #1a1a1a);
   }
-}
 
-.tagsList {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.tag {
-  display: inline-block;
-  padding: 6px 12px;
-  background: var(--color-grey-100, #f5f5f5);
-  border-radius: 16px;
-  font-size: 0.875rem;
-  color: var(--color-grey-700, #444);
-}
-
-.tagCategory {
-  background: var(--color-orange-light, #fff3e6);
-  color: var(--color-orange-dark, #c55a00);
-}
-
-.tagEligibility {
-  background: var(--color-blue-light, #e6f2ff);
-  color: var(--color-blue-dark, #004d99);
+  p {
+    color: var(--color-grey-700, #444);
+    line-height: 1.6;
+  }
 }
 
 .loadingIndicator {
   padding: 16px;
+  color: var(--color-grey-500, #888);
+  font-style: italic;
+}
+
+.noServices {
   color: var(--color-grey-500, #888);
   font-style: italic;
 }

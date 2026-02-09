@@ -1,5 +1,6 @@
 import googleMapReact from "google-map-react";
 import React from "react";
+import { MapPinIcon } from "@heroicons/react/16/solid";
 
 export const createMapOptions = (maps: googleMapReact.Maps) => ({
   zoomControlOptions: {
@@ -8,6 +9,7 @@ export const createMapOptions = (maps: googleMapReact.Maps) => ({
   fullscreenControlOptions: {
     position: maps.ControlPosition.LEFT_TOP,
   },
+  clickableIcons: false,
 });
 
 // eslint-disable-next-line react/no-unused-prop-types, no-empty-pattern
@@ -26,11 +28,12 @@ export const UserLocationMarker = ({}: { lat?: number; lng?: number }) => (
 
 /* eslint-disable react/no-unused-prop-types */
 export const CustomMarker = ({
-  text,
+  isHighlighted,
 }: {
-  text: string;
   lat?: number;
   lng?: number;
+  text?: string;
+  isHighlighted?: boolean;
 }) => (
   <svg
     width="36"
@@ -40,25 +43,25 @@ export const CustomMarker = ({
     data-testid="custom-marker"
   >
     <g fill="none" fillRule="evenodd">
-      <g transform="translate(-58, 0)" stroke="#000" id="pin">
+      <g transform="translate(-58, 0)" id="pin">
         <path
           d="M160.39 34.315c0 18.546-36.825 83.958-36.825 83.958S86.74 52.86 86.74 34.315C86.74 15.768 104.885.73 123.565.73c18.68 0 36.825 15.038 36.825 33.585z"
           strokeWidth="3"
-          fill="#fff"
+          style={{
+            fill: isHighlighted ? "#007ac7" : "#F15A29",
+            stroke: isHighlighted ? "#005f9e" : "#CD4A23",
+            transition: "fill 0.3s ease, stroke 0.3s ease",
+          }}
         />
       </g>
-      <text
-        fontSize="28px"
-        fontWeight="bold"
-        x="65"
-        y="55"
-        fill="#000"
-        textAnchor="middle"
-      >
-        {text}
-      </text>
     </g>
   </svg>
+);
+
+export const SearchLocationMarker = ({}: { lat?: number; lng?: number }) => (
+  <div style={{ transform: "translate(-16px, -32px)" }}>
+    <MapPinIcon width={32} height={32} color="#FBB040" />
+  </div>
 );
 
 /* eslint-enable react/no-unused-prop-types */
