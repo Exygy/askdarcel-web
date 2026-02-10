@@ -3,7 +3,11 @@ import classNames from "classnames";
 import styles from "./Hero.module.scss";
 import { Button } from "../inline/Button/Button";
 import { Link } from "models/Strapi";
-import { ArrowRightIcon, XMarkIcon } from "@heroicons/react/16/solid";
+import {
+  ArrowRightIcon,
+  // ExclamationCircleIcon,
+  XMarkIcon,
+} from "@heroicons/react/16/solid";
 import childcareImage from "../../../assets/img/HomePage/temp_childcare.jpg";
 
 /**
@@ -25,7 +29,10 @@ const Hero = ({
   return (
     <div data-testid={"hero"}>
       <div className={styles.banner}>
-        <p>Get connected with resources during the teacher strike</p>
+        <div className={styles.bannerTitle}>
+          {/* <ExclamationCircleIcon width={24} height={24} color="white" /> */}
+          <p>Get connected with resources during the teacher strike</p>
+        </div>
         <div className={styles.linkContent}>
           <a
             href="https://www.sf.gov/departments--children-youth-and-their-families/free-youth-meals-sfusd-school-strike"
