@@ -63,23 +63,19 @@ const Hero = ({
       {isModalOpen && (
         <div
           className={styles.modalOverlay}
-          onClick={() => setIsModalOpen(false)}
-          onKeyDown={(e) => {
-            if (e.key === "Escape" || e.key === "Enter") {
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
               setIsModalOpen(false);
             }
           }}
-          role="button"
-          tabIndex={0}
-          aria-label="Close modal"
+          onKeyDown={(e) => {
+            if (e.key === "Escape") {
+              setIsModalOpen(false);
+            }
+          }}
+          role="presentation"
         >
-          <div
-            className={styles.modal}
-            onClick={(e) => e.stopPropagation()}
-            onKeyDown={(e) => e.stopPropagation()}
-            role="dialog"
-            aria-modal="true"
-          >
+          <div className={styles.modal} role="dialog" aria-modal="true">
             <button
               type="button"
               className={styles.modalClose}
