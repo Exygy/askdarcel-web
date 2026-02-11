@@ -41,6 +41,10 @@ const environmentConfig = [
   "AUTH0_REDIRECT_URI",
   "STRAPI_API_TOKEN",
   "STRAPI_API_URL",
+  "TYPESENSE_HOST",
+  "TYPESENSE_PORT",
+  "TYPESENSE_PROTOCOL",
+  "TYPESENSE_API_KEY",
 ];
 
 const config = environmentConfig.reduce((acc, key) => {

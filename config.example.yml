@@ -14,9 +14,11 @@ ALGOLIA_APPLICATION_ID: "<ENTER_YOUR_ALGOLIA_APPLICATION_ID_HERE>"
 ALGOLIA_READ_ONLY_API_KEY: "<ENTER_YOUR_ALGOLIA_READ_ONLY_API_KEY_HERE>"
 
 # Typesense configuration (optional, only needed if using Typesense search)
-TYPESENSE_HOST: "localhost"
-TYPESENSE_PORT: "8108"
-TYPESENSE_PROTOCOL: "http"
+# For local development: host=localhost, port=8108, protocol=http
+# For Typesense Cloud: host=xxx.a1.typesense.net, port=443, protocol=https
+TYPESENSE_HOST: "<ENTER_YOUR_TYPESENSE_HOST_HERE>"
+TYPESENSE_PORT: "443"
+TYPESENSE_PROTOCOL: "https"
 TYPESENSE_API_KEY: "<ENTER_YOUR_TYPESENSE_API_KEY_HERE>"
 
 STRAPI_API_TOKEN: ""
