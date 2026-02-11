@@ -32,7 +32,8 @@ const config: Config = {
   DATASF_APP_TOKEN: CONFIG.DATASF_APP_TOKEN || "",
   GOOGLE_ANALYTICS_GA4_ID:
     process.env.NODE_ENV === "production" ? CONFIG.GOOGLE_ANALYTICS_GA4_ID : "",
-  GOOGLE_API_KEY: CONFIG.GOOGLE_API_KEY,
+  // Use V2 key if available, otherwise fall back to original (for rollback support)
+  GOOGLE_API_KEY: CONFIG.GOOGLE_API_KEY_V2 || CONFIG.GOOGLE_API_KEY,
   STRAPI_API_TOKEN: CONFIG.STRAPI_API_TOKEN,
   STRAPI_API_URL: CONFIG.STRAPI_API_URL,
   TYPESENSE_HOST: CONFIG.TYPESENSE_HOST || "localhost",

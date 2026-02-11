@@ -28,6 +28,41 @@ jest.mock("components/SearchAndBrowse/SearchMap/SearchMap", () => {
   };
 });
 
+// Mock search provider for tests
+const mockSearchProvider = {
+  getLiteClient: () => createSearchClient(),
+  getIndexName: () => "fake_test_search_index",
+  getInstantSearchAdapter: () => ({}),
+  search: jest.fn(),
+  searchForFacetValues: jest.fn(),
+  getCapabilities: () => ({
+    facetableFields: ["categories", "eligibilities"],
+    sortableFields: [],
+    supportsGeoSearch: true,
+    supportsHighlighting: true,
+  }),
+};
+
+// Mock the search providers to avoid Typesense/Algolia initialization
+jest.mock("search/providers", () => ({
+  getSearchProvider: () => mockSearchProvider,
+}));
+
+// Create a test context provider that supplies the search context
+const SearchContext = React.createContext<{ provider: typeof mockSearchProvider } | null>(null);
+
+const SearchContextTestProvider = ({ children }: { children: React.ReactNode }) => (
+  <SearchContext.Provider value={{ provider: mockSearchProvider }}>
+    {children}
+  </SearchContext.Provider>
+);
+
+// Mock the useSearchContext hook
+jest.mock("search/context/SearchContext", () => ({
+  ...jest.requireActual("search/context/SearchContext"),
+  useSearchContext: () => ({ provider: mockSearchProvider }),
+}));
+
 // Test wrapper with AppProvider
 const TestWrapper = ({ children }: { children: React.ReactNode }) => {
   const [aroundLatLng, setAroundLatLng] = React.useState("");
@@ -67,7 +102,10 @@ describe("SearchResultsPage", () => {
             },
           }}
         >
-          <SearchResultsPage />
+          {/* Provide a minimal SearchContext for components that need it */}
+          <SearchContextTestProvider>
+            <SearchResultsPage />
+          </SearchContextTestProvider>
         </InstantSearch>
       </TestWrapper>
     );
