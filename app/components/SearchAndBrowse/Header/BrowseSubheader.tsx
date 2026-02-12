@@ -28,15 +28,13 @@ export const BrowseSubheader = ({ currentCategory }: Props) => {
     }));
   }, [categories]);
 
-  const uuid = crypto.randomUUID();
-
   return (
     <div className={classNames(styles.header, "no-print")}>
       <div className={styles.headerInner}>
         <div>
           <h1 className="sr-only">{title}</h1>
           <DropdownMenu
-            id={uuid}
+            id="browse-category-dropdown"
             title={title}
             links={DROPDOWN_LINKS}
             variant="category"

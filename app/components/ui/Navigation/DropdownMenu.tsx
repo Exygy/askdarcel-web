@@ -94,16 +94,20 @@ const DropdownMenu = ({
               className={styles.navigationSubMenu}
               {...getFloatingProps()}
             >
-              {links.map((linkItem) => {
-                const uuid = crypto.randomUUID();
-                return (
-                  <span key={uuid} className={styles.navigationSubMenuItem}>
-                    <Link to={linkItem.url} className={styles.menuLink}>
-                      {linkItem.text}
-                    </Link>
-                  </span>
-                );
-              })}
+              {links.map((linkItem) => (
+                <span
+                  key={linkItem.id}
+                  className={styles.navigationSubMenuItem}
+                >
+                  <Link
+                    to={linkItem.url}
+                    className={styles.menuLink}
+                    onClick={() => handleMenuToggle(id)}
+                  >
+                    {linkItem.text}
+                  </Link>
+                </span>
+              ))}
             </div>
           </FloatingFocusManager>
         </FloatingPortal>

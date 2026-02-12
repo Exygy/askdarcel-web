@@ -44,8 +44,8 @@
 
   .menuLink {
     &:focus {
-      border-radius: 0;
-      margin: 3px;
+      outline: 2px solid $color-brand-dark;
+      outline-offset: -2px;
     }
   }
 }

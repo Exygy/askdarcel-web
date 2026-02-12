@@ -94,22 +94,22 @@ export const Navigation = () => {
                     text: linkItem.text,
                   }));
 
-                  const uniqueKey = crypto.randomUUID();
+                  const menuId = `nav-menu-${menuDataItem.id}`;
 
                   return (
                     <DropdownMenu
-                      key={uniqueKey}
-                      id={uniqueKey}
+                      key={menuId}
+                      id={menuId}
                       title={menuDataItem.title}
                       links={links}
                     />
                   );
                 }
 
-                const uniqueKey = crypto.randomUUID();
+                const linkId = `nav-link-${menuDataItem.id}`;
                 return (
                   <Link
-                    key={uniqueKey}
+                    key={linkId}
                     to={menuDataItem.url}
                     className={desktopNavigationStyles.navigationMenuLink}
                   >
