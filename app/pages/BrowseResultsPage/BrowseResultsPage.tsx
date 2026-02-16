@@ -11,7 +11,7 @@ import FilterHeader from "components/SearchAndBrowse/FilterHeader/FilterHeader";
 import { BrowseSubheader } from "components/SearchAndBrowse/Header/BrowseSubheader";
 import { PageHeader } from "components/ui/Navigation/PageHeader";
 import { BrowseHeaderSection } from "components/SearchAndBrowse/Header/BrowseHeaderSection";
-import { useTopLevelCategories } from "hooks/TypesenseHooks";
+import { useTypesenseFacets } from "hooks/TypesenseHooks";
 import { categoryToSlug } from "utils/categoryIcons";
 import styles from "./BrowseResultsPage.module.scss";
 import {
@@ -46,36 +46,23 @@ const RADIUS_TO_ZOOM: Record<number, number> = {
 const BrowseResultsPageContent = () => {
   const { categorySlug } = useParams();
   const { updateConfig } = useSearchConfig();
-  const { categories, isLoading: categoriesLoading } = useTopLevelCategories();
+  const facets = useTypesenseFacets();
 
-  // Find the category from dynamic data
+  // Find the category from Typesense facets
   const category = useMemo(() => {
-    if (categories.length === 0) return null;
+    if (!facets) return null;
 
-    const matchedCategory = categories.find(
+    const matchedCategory = facets.categories.find(
       (cat) => categoryToSlug(cat.value) === categorySlug
     );
 
     if (!matchedCategory) return null;
 
-    // Create a ServiceCategory-like object with the dynamic data
-    // For now, we'll use placeholder values for fields that come from the old system
     return {
       name: matchedCategory.value,
       slug: categorySlug || "",
-      algoliaCategoryName: matchedCategory.value, // Keep for legacy compatibility
-      typesenseCategoryName: matchedCategory.value,
-      id: "", // Will be populated from API call
-      steps: ["subcategories", "results"] as const,
-      subcategorySubheading:
-        "What are you currently looking for? Select all that apply.",
-      sortAlgoliaSubcategoryRefinements: false,
-      icon: {
-        name: "fa-circle-question",
-        provider: "fa",
-      },
     };
-  }, [categories, categorySlug]);
+  }, [facets, categorySlug]);
 
   const [isMapCollapsed, setIsMapCollapsed] = useState(false);
   const [isMapInitialized, setIsMapInitialized] = useState(false);
@@ -97,6 +84,7 @@ const BrowseResultsPageContent = () => {
 
   useEffect(() => window.scrollTo(0, 0), []);
 
+  // Clear refinements when category changes
   useEffect(() => {
     if (!category) return;
     clearRefinements();
@@ -125,6 +113,12 @@ const BrowseResultsPageContent = () => {
     ]
   );
 
+  const handleFirstResultFocus = useCallback((node: HTMLDivElement | null) => {
+    if (node) {
+      node.focus();
+    }
+  }, []);
+
   const handleLocationSelect = useCallback(
     (lat: number, lng: number, radius: number | "all") => {
       setCustomMapCenter({ lat, lng });
@@ -139,57 +133,42 @@ const BrowseResultsPageContent = () => {
     [goToPage]
   );
 
-  const handleFirstResultFocus = useCallback((node: HTMLDivElement | null) => {
-    if (node) {
-      node.focus();
-    }
-  }, []);
-
   const categoryName = category?.name || "";
 
-  const escapeBackticks = (str: string): string => str.replace(/`/g, "\\`");
-  const typesenseCategoryName = category?.typesenseCategoryName
-    ? escapeBackticks(category.typesenseCategoryName)
+  // Escape apostrophes for Typesense filter syntax
+  const typesenseCategoryName = categoryName
+    ? categoryName.replace(/'/g, "\\'")
     : null;
 
-  // Set the category filter once when category is known and map is ready.
-  // This is separate from geo params so that FilterHeader can append
-  // eligibility filters without this effect overwriting them on every
-  // geo change.
+  // Update Typesense search config when map is initialized and we have category name
   useEffect(() => {
+    // Wait until map is initialized
     if (!isMapInitialized) return;
+
+    // Wait until we have category name
     if (!typesenseCategoryName) return;
 
-    updateConfig({
-      filters: `categories:\`${typesenseCategoryName}\``,
-      hitsPerPage: HITS_PER_PAGE,
-    });
-  }, [isMapInitialized, typesenseCategoryName, updateConfig]);
-
-  // Update geo params when map bounds or location settings change.
-  // Does NOT touch `filters` so eligibility selections are preserved.
-  useEffect(() => {
-    if (!isMapInitialized) return;
+    // Wait until we have geographic data (boundingBox OR aroundLatLng)
     if (!boundingBox && !aroundLatLng) return;
 
-    const geoConfig = boundingBox
-      ? {
-          insideBoundingBox: [boundingBox.split(",").map(Number)],
-          aroundLatLng: undefined,
-          aroundRadius: undefined,
-          aroundPrecision: undefined,
-          minimumAroundRadius: undefined,
-        }
-      : {
-          aroundLatLng,
-          aroundRadius: aroundUserLocationRadius,
-          aroundPrecision: DEFAULT_AROUND_PRECISION,
-          minimumAroundRadius: 100,
-          insideBoundingBox: undefined,
-        };
-    updateConfig(geoConfig);
+    const config = {
+      filters: `categories:'${typesenseCategoryName}'`,
+      hitsPerPage: HITS_PER_PAGE,
+      ...(boundingBox
+        ? {
+            insideBoundingBox: [boundingBox.split(",").map(Number)],
+          }
+        : {
+            aroundLatLng,
+            aroundRadius: aroundUserLocationRadius,
+            aroundPrecision: DEFAULT_AROUND_PRECISION,
+            minimumAroundRadius: 100,
+          }),
+    };
+    updateConfig(config);
   }, [
     isMapInitialized,
+    typesenseCategoryName,
     boundingBox,
     aroundLatLng,
     aroundUserLocationRadius,
@@ -218,7 +197,7 @@ const BrowseResultsPageContent = () => {
   // TS compiler requires explicit null type checks
   if (
     !category ||
-    categoriesLoading ||
+    !facets ||
     typesenseCategoryName === null ||
     userLocation === null
   ) {
@@ -239,7 +218,7 @@ const BrowseResultsPageContent = () => {
             isSearchResultsPage={false}
             pageFilter={
               typesenseCategoryName
-                ? `categories:\`${typesenseCategoryName}\``
+                ? `categories:'${typesenseCategoryName}'`
                 : undefined
             }
             isMapCollapsed={isMapCollapsed}
@@ -314,42 +293,9 @@ const BrowseResultsPageContent = () => {
 
 /**
  * BrowseResultsPage - Wrapper that provides SearchConfigProvider
- * This handles state management, URL parsing, and external API requests.
  */
-export const BrowseResultsPage = () => {
-  // We don't validate the category here anymore since it's dynamic
-  // If the category doesn't exist, the content component will show a loader
-  // and the user will see "no results"
-
-  const { boundingBox, aroundLatLng, aroundUserLocationRadius } =
-    useAppContext();
-
-  // Calculate initial config synchronously BEFORE rendering
-  // For browse pages, we don't have the category filter yet (loaded async)
-  // But we can set the geographic config to prevent searches without it
-  const initialConfig = React.useMemo(() => {
-    // Wait until we have geographic data before providing initial config
-    if (!boundingBox && !aroundLatLng) {
-      return {};
-    }
-
-    return boundingBox
-      ? {
-          insideBoundingBox: [boundingBox.split(",").map(Number)],
-          hitsPerPage: HITS_PER_PAGE,
-        }
-      : {
-          aroundLatLng,
-          aroundRadius: aroundUserLocationRadius,
-          aroundPrecision: DEFAULT_AROUND_PRECISION,
-          minimumAroundRadius: 100,
-          hitsPerPage: HITS_PER_PAGE,
-        };
-  }, [boundingBox, aroundLatLng, aroundUserLocationRadius]);
-
-  return (
-    <SearchConfigProvider initialConfig={initialConfig}>
-      <BrowseResultsPageContent />
-    </SearchConfigProvider>
-  );
-};
+export const BrowseResultsPage = () => (
+  <SearchConfigProvider>
+    <BrowseResultsPageContent />
+  </SearchConfigProvider>
+);

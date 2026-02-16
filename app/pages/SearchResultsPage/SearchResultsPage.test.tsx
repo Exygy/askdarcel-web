@@ -1,5 +1,6 @@
 import React from "react";
 import { InstantSearch } from "react-instantsearch-core";
+import { MemoryRouter } from "react-router-dom";
 import { render, screen, waitFor } from "@testing-library/react";
 import { SearchResultsPage } from "pages/SearchResultsPage/SearchResultsPage";
 import { createSearchClient } from "../../../test/helpers/createSearchClient";
@@ -14,9 +15,15 @@ jest.mock("components/SearchAndBrowse/SearchMap/SearchMap", () => {
 
   return {
     SearchMap: ({ handleSearchMapAction }: any) => {
+      // Use a ref to ensure we only call handleSearchMapAction once
+      const hasInitialized = mockReact.useRef(false);
+
       // Simulate map initialization - MapInitialized = 1
       mockReact.useEffect(() => {
-        handleSearchMapAction(1);
+        if (!hasInitialized.current) {
+          hasInitialized.current = true;
+          handleSearchMapAction(1);
+        }
       }, [handleSearchMapAction]);
 
       return mockReact.createElement(
@@ -92,22 +99,24 @@ describe("SearchResultsPage", () => {
     const searchClient = createSearchClient();
 
     render(
-      <TestWrapper>
-        <InstantSearch
-          searchClient={searchClient}
-          indexName="fake_test_search_index"
-          initialUiState={{
-            fake_test_search_index: {
-              query: "fake query",
-            },
-          }}
-        >
-          {/* Provide a minimal SearchContext for components that need it */}
-          <SearchContextTestProvider>
-            <SearchResultsPage />
-          </SearchContextTestProvider>
-        </InstantSearch>
-      </TestWrapper>
+      <MemoryRouter>
+        <TestWrapper>
+          <InstantSearch
+            searchClient={searchClient}
+            indexName="fake_test_search_index"
+            initialUiState={{
+              fake_test_search_index: {
+                query: "fake query",
+              },
+            }}
+          >
+            {/* Provide a minimal SearchContext for components that need it */}
+            <SearchContextTestProvider>
+              <SearchResultsPage />
+            </SearchContextTestProvider>
+          </InstantSearch>
+        </TestWrapper>
+      </MemoryRouter>
     );
 
     await waitFor(() => {

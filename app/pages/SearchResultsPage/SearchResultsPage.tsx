@@ -1,4 +1,5 @@
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useCallback, useState, useEffect, useRef } from "react";
+import { useLocation } from "react-router-dom";
 import { SearchMapActions } from "components/SearchAndBrowse/SearchResults/SearchResults";
 import FilterHeader from "components/SearchAndBrowse/FilterHeader/FilterHeader";
 import styles from "./SearchResultsPage.module.scss";
@@ -7,7 +8,11 @@ import { DEFAULT_AROUND_PRECISION } from "utils/location";
 import classNames from "classnames";
 import { SearchMap } from "components/SearchAndBrowse/SearchMap/SearchMap";
 import { SearchResult } from "components/SearchAndBrowse/SearchResults/SearchResult";
-import { useSearchResults, useSearchPagination } from "../../search/hooks";
+import {
+  useSearchResults,
+  useSearchPagination,
+  useSearchQuery,
+} from "../../search/hooks";
 import searchResultsStyles from "components/SearchAndBrowse/SearchResults/SearchResults.module.scss";
 import { Loader } from "components/ui/Loader";
 import ResultsPagination from "components/SearchAndBrowse/Pagination/ResultsPagination";
@@ -44,19 +49,28 @@ const SearchResultsPageContent = () => {
     useAppContext();
   const { updateConfig } = useSearchConfig();
   const { goToPage, currentPage } = useSearchPagination();
-  const { results: searchResults, isIdle, query } = useSearchResults();
+  const {
+    results: searchResults,
+    isIdle,
+    isSearching,
+    query,
+  } = useSearchResults();
+  const { setQuery } = useSearchQuery();
+  const location = useLocation();
+  const hasSetQueryRef = useRef(false);
 
   useEffect(() => window.scrollTo(0, 0), []);
 
-  // Update search config when geo parameters change (e.g., user pans the map)
+  // Update search config when map initializes or geo parameters change
   useEffect(() => {
-    // Don't update on initial mount - initialConfig already handles that
     if (!isMapInitialized) return;
+    if (!boundingBox && !aroundLatLng) return;
 
     const config = boundingBox
       ? {
           insideBoundingBox: [boundingBox.split(",").map(Number)],
           hitsPerPage: HITS_PER_PAGE,
+          filters: "",
           aroundLatLng: undefined,
           aroundRadius: undefined,
           aroundPrecision: undefined,
@@ -68,15 +82,27 @@ const SearchResultsPageContent = () => {
           aroundPrecision: DEFAULT_AROUND_PRECISION,
           minimumAroundRadius: 100,
           hitsPerPage: HITS_PER_PAGE,
+          filters: "",
           insideBoundingBox: undefined,
         };
     updateConfig(config);
+
+    // After config is updated, check if we have a search query from navigation
+    // This ensures the search happens AFTER filters are cleared
+    const searchQuery = (location.state as { searchQuery?: string })
+      ?.searchQuery;
+    if (searchQuery && !hasSetQueryRef.current) {
+      hasSetQueryRef.current = true;
+      setQuery(searchQuery);
+    }
   }, [
     isMapInitialized,
     boundingBox,
     aroundLatLng,
     aroundUserLocationRadius,
     updateConfig,
+    location.state,
+    setQuery,
   ]);
 
   const handleLocationSelect = useCallback(
@@ -103,7 +129,11 @@ const SearchResultsPageContent = () => {
   // No need for additional transformation
   const searchMapHitData = searchResults || { hits: [], nbHits: 0 };
 
-  const hasNoResults = searchMapHitData.nbHits === 0 && isIdle;
+  // Show loading state while map initializes or search is in progress
+  const isLoading = !isMapInitialized || isSearching;
+
+  // Only show "no results" when search is complete (idle) and we have 0 hits
+  const hasNoResults = !isLoading && searchMapHitData.nbHits === 0 && isIdle;
 
   const handleAction = (searchMapAction: SearchMapActions) => {
     switch (searchMapAction) {
@@ -142,10 +172,10 @@ const SearchResultsPageContent = () => {
                 }`}
               >
                 <h2 className="sr-only">Search results</h2>
-                {!isMapInitialized ? (
+                {isLoading ? (
                   <div className={styles.loadingContainer}>
                     <Loader />
-                    <p>Initializing map and loading results...</p>
+                    <p>Loading results...</p>
                   </div>
                 ) : hasNoResults ? (
                   <NoSearchResultsDisplay query={query} />
@@ -196,24 +226,21 @@ const SearchResultsPageContent = () => {
 
 /**
  * SearchResultsPage - Wrapper that provides SearchConfigProvider
- * NOTE: The .searchResultsPage is added plain so that it can be targeted by print-specific css
  */
 export const SearchResultsPage = () => {
   const { boundingBox, aroundLatLng, aroundUserLocationRadius } =
     useAppContext();
 
-  // Calculate initial config synchronously BEFORE rendering
-  // This prevents InstantSearch from making searches without the bounding box
+  // Calculate initial config synchronously so Configure renders immediately
+  // This prevents searches from being blocked while waiting for map init
   const initialConfig = React.useMemo(() => {
-    // Wait until we have geographic data before providing initial config
-    if (!boundingBox && !aroundLatLng) {
-      return {};
-    }
+    if (!boundingBox && !aroundLatLng) return {};
 
     return boundingBox
       ? {
           insideBoundingBox: [boundingBox.split(",").map(Number)],
           hitsPerPage: HITS_PER_PAGE,
+          filters: "",
         }
       : {
           aroundLatLng,
@@ -221,6 +248,7 @@ export const SearchResultsPage = () => {
           aroundPrecision: DEFAULT_AROUND_PRECISION,
           minimumAroundRadius: 100,
           hitsPerPage: HITS_PER_PAGE,
+          filters: "",
         };
   }, [boundingBox, aroundLatLng, aroundUserLocationRadius]);
 

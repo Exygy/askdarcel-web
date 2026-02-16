@@ -1,4 +1,10 @@
-import React, { createContext, useContext, ReactNode, useMemo } from "react";
+import React, {
+  createContext,
+  useContext,
+  ReactNode,
+  useMemo,
+  useCallback,
+} from "react";
 import { InstantSearch } from "react-instantsearch-core";
 import { history as historyRouter } from "instantsearch.js/es/lib/routers";
 import { getSearchProvider } from "../providers";
@@ -26,6 +32,18 @@ export const SearchProvider: React.FC<SearchProviderProps> = ({ children }) => {
   const searchClient = useMemo(() => provider.getLiteClient(), [provider]);
   const indexName = useMemo(() => provider.getIndexName(), [provider]);
 
+  // Search function that prevents searches without Configure component
+  // Configure sets maxValuesPerFacet, so we use that as an indicator
+  // Unconfigured searches are simply skipped - Configure will trigger a proper search when ready
+  const searchFunction = useCallback((helper: any) => {
+    const hasConfig = helper.state.maxValuesPerFacet !== undefined;
+
+    if (hasConfig) {
+      helper.search();
+    }
+    // If no config, don't search - wait for Configure to render and trigger a proper search
+  }, []);
+
   const contextValue = useMemo<SearchContextValue>(
     () => ({
       provider,
@@ -38,8 +56,12 @@ export const SearchProvider: React.FC<SearchProviderProps> = ({ children }) => {
       <InstantSearch
         searchClient={searchClient}
         indexName={indexName}
+        searchFunction={searchFunction}
         routing={{
           router: historyRouter({
+            // Prevent InstantSearch from clearing URL state when components unmount
+            // This preserves the query when navigating between pages
+            cleanUrlOnDispose: false,
             windowTitle(routeState) {
               const query = routeState[indexName]?.query;
               const queryTitle = query

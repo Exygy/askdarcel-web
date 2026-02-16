@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 // https://support.google.com/analytics/answer/12938611#zippy=%2Cin-this-article
 import TagManager from "react-gtm-module";
 import { Helmet } from "react-helmet-async";
-import { useLocation } from "react-router-dom";
 import { UserLocation, getLocation, websiteConfig, AppProvider } from "./utils";
 import { Footer } from "components/ui/Footer/Footer";
 import { Navigation } from "components/ui/Navigation/Navigation";
@@ -21,18 +20,18 @@ export const OUTER_CONTAINER_ID = "outer-container";
 TagManager.initialize({ gtmId: config.GOOGLE_ANALYTICS_GA4_ID });
 
 export const App = () => {
-  const location = useLocation();
   const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
   const [aroundLatLng, setAroundLatLng] = useState<string>("");
   const [aroundUserLocationRadius, setAroundRadius] =
     useState<AroundRadius>(1600);
   const [boundingBox, setBoundingBox] = useState<string | undefined>(undefined);
 
+  // Fetch user location ONCE on app mount - not on every route change
   useEffect(() => {
-    getLocation().then((userLocation) => {
-      setUserLocation(userLocation);
-      const lat = userLocation.coords.lat;
-      const lng = userLocation.coords.lng;
+    getLocation().then((loc) => {
+      setUserLocation(loc);
+      const lat = loc.coords.lat;
+      const lng = loc.coords.lng;
       setAroundLatLng(`${lat},${lng}`);
 
       // Set default bounding box to cover all of San Francisco
@@ -41,7 +40,7 @@ export const App = () => {
       const SF_BOUNDING_BOX = "37.812,-122.527,37.708,-122.357";
       setBoundingBox(SF_BOUNDING_BOX);
     });
-  }, [location, setAroundLatLng]);
+  }, []);
 
   if (!userLocation) {
     return <Loader />;

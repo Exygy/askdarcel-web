@@ -23,10 +23,9 @@ export class TypesenseProvider implements ISearchProvider {
   private instantSearchAdapter: TypesenseInstantSearchAdapter;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private cachedSearchClient: any = null;
+  // Cache for deduplicating searches - maps request hash to promise or result
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private lastRequestHash: string | null = null;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private lastRequestResult: any = null;
+  private searchCache: Map<string, { promise?: Promise<any>; result?: any }> = new Map();
 
   constructor() {
     this.client = new Typesense.Client({
@@ -90,65 +89,87 @@ export class TypesenseProvider implements ISearchProvider {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.cachedSearchClient = {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      search: async (requests: any[]) => {
+      search: (requests: any[]) => {
         // Create a hash of the request to detect duplicates
         const requestHash = JSON.stringify(requests);
 
-        // If this is the exact same request as the last one, return cached result immediately
-        if (
-          requestHash === this.lastRequestHash &&
-          this.lastRequestResult !== null
-        ) {
-          return this.lastRequestResult;
+        // Check cache - return existing promise or result if available
+        const cached = this.searchCache.get(requestHash);
+        if (cached) {
+          if (cached.result) {
+            return Promise.resolve(cached.result);
+          }
+          if (cached.promise) {
+            return cached.promise;
+          }
         }
 
-        const responses = await baseSearchClient.search(requests);
+        // Start a new request and cache the promise
+        const searchPromise = (async () => {
+          try {
+            const responses = await baseSearchClient.search(requests);
 
-        // Normalize responses to ensure all required fields are present
-        // This prevents infinite loops when results are empty
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-
-        const normalizedResults = responses.results.map((result: any) => {
-          // Transform hits to add locations field from _geoloc
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const transformedHits = (result.hits || []).map(
-            (hit: any, index: number) => {
-              // Compute locations from _geoloc, linking addresses
-              const locations = this.extractLocationsFromGeoloc(
-                hit.locations,
-                index + 1,
-                hit.addresses
+            // Normalize responses to ensure all required fields are present
+            // This prevents infinite loops when results are empty
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const normalizedResults = responses.results.map((result: any) => {
+              // Transform hits to add locations field from _geoloc
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              const transformedHits = (result.hits || []).map(
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                (hit: any, index: number) => {
+                  // Compute locations from _geoloc, linking addresses
+                  const locations = this.extractLocationsFromGeoloc(
+                    hit.locations,
+                    index + 1,
+                    hit.addresses
+                  );
+                  return {
+                    ...hit,
+                    locations,
+                    addressDisplay: this.computeAddressDisplay(hit),
+                  };
+                }
               );
+
+              // Ensure required fields exist even when empty
               return {
-                ...hit,
-                locations,
-                addressDisplay: this.computeAddressDisplay(hit),
+                ...result,
+                hits: transformedHits,
+                nbHits: result.nbHits ?? result.found ?? 0,
+                nbPages: Math.ceil(
+                  (result.nbHits ?? result.found ?? 0) / (result.per_page ?? 20)
+                ),
+                page: result.page ?? 0,
+                processingTimeMS: result.processingTimeMS ?? 0,
               };
+            });
+
+            const result = {
+              results: normalizedResults,
+            };
+
+            // Update cache with result (keep for short time to handle rapid duplicates)
+            this.searchCache.set(requestHash, { result });
+
+            // Clear old cache entries to prevent memory leaks (keep last 5)
+            if (this.searchCache.size > 5) {
+              const firstKey = this.searchCache.keys().next().value;
+              if (firstKey) this.searchCache.delete(firstKey);
             }
-          );
 
-          // Ensure required fields exist even when empty
-          return {
-            ...result,
-            hits: transformedHits,
-            nbHits: result.nbHits ?? result.found ?? 0,
-            nbPages: Math.ceil(
-              (result.nbHits ?? result.found ?? 0) / (result.per_page ?? 20)
-            ),
-            page: result.page ?? 0,
-            processingTimeMS: result.processingTimeMS ?? 0,
-          };
-        });
+            return result;
+          } catch (error) {
+            // On error, remove from cache so retry is possible
+            this.searchCache.delete(requestHash);
+            throw error;
+          }
+        })();
 
-        const result = {
-          results: normalizedResults,
-        };
+        // Cache the promise immediately so concurrent requests get the same promise
+        this.searchCache.set(requestHash, { promise: searchPromise });
 
-        // Cache this request and result for deduplication
-        this.lastRequestHash = requestHash;
-        this.lastRequestResult = result;
-
-        return result;
+        return searchPromise;
       },
     };
 

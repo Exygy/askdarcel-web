@@ -1,43 +1,33 @@
 import React, { FormEvent, useEffect, useState } from "react";
-import { useClearRefinements, useSearchQuery } from "../../search/hooks";
+import { useSearchQuery } from "../../search/hooks";
 import classNames from "classnames";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import styles from "./SiteSearchInput.module.scss";
 
 /**
- * Sitewide listing search component that controls the search query input
- *
- * The custom submit logic determines that applying a new search term will reset all refinements and
- * return a fresh set of results for the new query.
+ * Sitewide search input. On submit, navigates to /search with query in state.
+ * SearchResultsPage sets the query after its config is ready.
  */
 export const SiteSearchInput = () => {
-  const { query, setQuery: refine } = useSearchQuery();
-  const { clearAll: clearRefine } = useClearRefinements();
+  const { query } = useSearchQuery();
   const [inputValue, setInputValue] = useState(query);
   const navigate = useNavigate();
+  const location = useLocation();
 
-  function setQuery(newQuery: string) {
-    setInputValue(newQuery);
-  }
-
-  // Sets query, clears refinements, and then redirects to the search page. If the user is already on the
-  // search page the last step is basically a noop.
   const submitSearch = (e: FormEvent) => {
     e.preventDefault();
-
-    refine(inputValue);
-    clearRefine();
-    navigate("/search");
-
+    navigate("/search", { state: { searchQuery: inputValue } });
     return false;
   };
 
-  // Watches changes to the query that can come from other components, like a "Clear Search" button
+  // Sync input with InstantSearch query, unless we just navigated with a searchQuery
   useEffect(() => {
-    if (!query) {
-      setInputValue("");
+    const stateQuery = (location.state as { searchQuery?: string })
+      ?.searchQuery;
+    if (!stateQuery) {
+      setInputValue(query);
     }
-  }, [query]);
+  }, [query, location.state]);
 
   return (
     <form
@@ -46,7 +36,7 @@ export const SiteSearchInput = () => {
       role="search"
     >
       <input
-        onChange={(e) => setQuery(e.target.value)}
+        onChange={(e) => setInputValue(e.target.value)}
         value={inputValue}
         type="text"
         className={styles.searchField}
