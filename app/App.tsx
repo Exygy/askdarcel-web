@@ -12,7 +12,6 @@ import { Loader } from "components/ui/Loader";
 import MetaImage from "./assets/img/our415-og.png";
 import styles from "./App.module.scss";
 import config from "./config";
-import { AroundRadius } from "algoliasearch";
 
 const { siteUrl, title } = websiteConfig;
 export const OUTER_CONTAINER_ID = "outer-container";
@@ -22,8 +21,7 @@ TagManager.initialize({ gtmId: config.GOOGLE_ANALYTICS_GA4_ID });
 export const App = () => {
   const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
   const [aroundLatLng, setAroundLatLng] = useState<string>("");
-  const [aroundUserLocationRadius, setAroundRadius] =
-    useState<AroundRadius>(1600);
+  const [aroundUserLocationRadius, setAroundRadius] = useState<number>(1600);
   const [boundingBox, setBoundingBox] = useState<string | undefined>(undefined);
 
   // Fetch user location ONCE on app mount - not on every route change

@@ -31,6 +31,7 @@ export const HITS_PER_PAGE = 40;
  */
 // Map radius values to appropriate zoom levels
 const RADIUS_TO_ZOOM: Record<number, number> = {
+  805: 16, // 0.5 miles
   1609: 15, // 1 mile
   3219: 14, // 2 miles
   4828: 13, // 3 miles
@@ -106,14 +107,9 @@ const SearchResultsPageContent = () => {
   ]);
 
   const handleLocationSelect = useCallback(
-    (lat: number, lng: number, radius: number | "all") => {
+    (lat: number, lng: number, radius: number) => {
       setCustomMapCenter({ lat, lng });
-      // Set zoom level based on radius, or null for "all" (uses bounding box)
-      if (radius === "all") {
-        setCustomMapZoom(null);
-      } else {
-        setCustomMapZoom(RADIUS_TO_ZOOM[radius] || 14);
-      }
+      setCustomMapZoom(RADIUS_TO_ZOOM[radius] || 14);
       goToPage(0);
     },
     [goToPage]

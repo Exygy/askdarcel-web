@@ -73,7 +73,7 @@ jest.mock("search/context/SearchContext", () => ({
 // Test wrapper with AppProvider
 const TestWrapper = ({ children }: { children: React.ReactNode }) => {
   const [aroundLatLng, setAroundLatLng] = React.useState("");
-  const [aroundRadius, setAroundRadius] = React.useState<"all" | number>(1600);
+  const [aroundRadius, setAroundRadius] = React.useState<number>(1600);
   const [boundingBox, setBoundingBox] = React.useState<string | undefined>();
 
   return (

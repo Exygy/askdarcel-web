@@ -4,6 +4,8 @@ import { Button } from "components/ui/inline/Button/Button";
 import { useClearRefinements } from "../../../search/hooks";
 import { useAppContextUpdater } from "utils";
 
+const DEFAULT_RADIUS = 1609; // 1 mile in meters
+
 /**
  * Filter clearing component that handles both facet clearing and map boundary reset
  */
@@ -16,7 +18,7 @@ const ClearAllFilter = () => {
       variant="linkBlue"
       onClick={() => {
         clearAll();
-        setAroundRadius("all");
+        setAroundRadius(DEFAULT_RADIUS);
       }}
       mobileFullWidth={false}
       size="lg"

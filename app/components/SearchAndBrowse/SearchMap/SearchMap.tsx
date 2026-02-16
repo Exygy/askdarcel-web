@@ -39,8 +39,7 @@ export const SearchMap = ({
   );
   const [clickedHitId, setClickedHitId] = useState<string | null>(null);
   const { userLocation, aroundLatLng, boundingBox } = useAppContext();
-  const { setAroundLatLng, setAroundRadius, setBoundingBox } =
-    useAppContextUpdater();
+  const { setAroundLatLng, setBoundingBox } = useAppContextUpdater();
 
   // Pan to custom center and zoom when they change (e.g. from distance filter)
   React.useEffect(() => {
@@ -66,11 +65,10 @@ export const SearchMap = ({
           const sw = bounds.getSouthWest();
           const boundingBoxString = `${ne.lat()},${sw.lng()},${sw.lat()},${ne.lng()}`;
           setBoundingBox(boundingBoxString);
-          setAroundRadius("all");
         }
       });
     }
-  }, [googleMapObject, customCenter, customZoom, setBoundingBox, setAroundRadius]);
+  }, [googleMapObject, customCenter, customZoom, setBoundingBox]);
 
   function handleSearchThisAreaClick() {
     const map = googleMapObject;
@@ -85,11 +83,8 @@ export const SearchMap = ({
         // Where (lat1, lng1) is the top-left (NW) corner and (lat2, lng2) is the bottom-right (SE) corner
         const boundingBoxString = `${ne.lat()},${sw.lng()},${sw.lat()},${ne.lng()}`;
 
-        // Update the bounding box for search
+        // Update the bounding box for search (takes precedence over radius-based filtering)
         setBoundingBox(boundingBoxString);
-
-        // Set aroundRadius to "all" to disable radius-based filtering
-        setAroundRadius("all");
 
         // Keep center point updated for reference (used for map centering)
         const center = map.getCenter();

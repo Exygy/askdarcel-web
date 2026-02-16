@@ -149,7 +149,7 @@ export interface SearchConfig {
   page?: number;
   hitsPerPage?: number;
   aroundLatLng?: string;
-  aroundRadius?: number | "all";
+  aroundRadius?: number;
   aroundPrecision?: number;
   insideBoundingBox?: number[][];
   facets?: string[];

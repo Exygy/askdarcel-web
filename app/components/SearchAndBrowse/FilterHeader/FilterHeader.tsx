@@ -19,16 +19,14 @@ import classNames from "classnames";
 // Set to false to hide the hours filter from both the standalone button and "All Filters" dropdown
 const ENABLE_HOURS_FILTER = false;
 
+const DEFAULT_RADIUS = 1609; // 1 mile in meters
+
 interface FilterHeaderProps {
   isSearchResultsPage: boolean;
   pageFilter?: string;
   isMapCollapsed?: boolean;
   setIsMapCollapsed?: (_isMapCollapsed: boolean) => void;
-  onLocationSelect?: (
-    lat: number,
-    lng: number,
-    radius: number | "all"
-  ) => void;
+  onLocationSelect?: (lat: number, lng: number, radius: number) => void;
 }
 
 const FilterHeader = ({
@@ -108,7 +106,7 @@ const FilterHeader = ({
   const handleClear = useCallback(() => {
     filterState.clearFilters();
     updateConfig({ filters: pageFilter || undefined });
-    setAroundRadius("all");
+    setAroundRadius(DEFAULT_RADIUS);
   }, [filterState, pageFilter, updateConfig, setAroundRadius]);
 
   const makeFooter = useCallback(

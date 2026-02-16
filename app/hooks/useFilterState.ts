@@ -6,15 +6,17 @@ export interface FilterState {
   hoursSelection: HoursSelection;
   locationSearchText: string;
   locationCoords: { lat: number; lng: number } | null;
-  distanceRadius: number | "all";
+  distanceRadius: number;
   selectedEligibilities: Set<string>;
 }
+
+const DEFAULT_RADIUS = 1609; // 1 mile in meters
 
 const DEFAULT_STATE: FilterState = {
   hoursSelection: "any",
   locationSearchText: "",
   locationCoords: null,
-  distanceRadius: "all",
+  distanceRadius: DEFAULT_RADIUS,
   selectedEligibilities: new Set(),
 };
 
@@ -29,7 +31,7 @@ function countChanges(state: FilterState): number {
   let count = 0;
   if (state.hoursSelection !== "any") count += 1;
   if (state.locationCoords !== null) count += 1;
-  if (state.distanceRadius !== "all") count += 1;
+  if (state.distanceRadius !== DEFAULT_RADIUS) count += 1;
   count += state.selectedEligibilities.size;
   return count;
 }
@@ -42,7 +44,7 @@ export function useFilterState() {
     setPending((prev) => ({ ...prev, hoursSelection: value }));
   }, []);
 
-  const setPendingDistance = useCallback((value: number | "all") => {
+  const setPendingDistance = useCallback((value: number) => {
     setPending((prev) => ({ ...prev, distanceRadius: value }));
   }, []);
 

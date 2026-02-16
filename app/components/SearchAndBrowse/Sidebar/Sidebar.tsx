@@ -260,13 +260,13 @@ const Sidebar = ({
                 />
               </label>
               <label className={styles.checkBox}>
-                Full map area
+                Within 0.5 miles
                 <input
                   type="radio"
                   name="searchRadius"
                   onChange={onChangeValue}
-                  value="all"
-                  checked={aroundUserLocationRadius === "all"}
+                  value="805"
+                  checked={aroundUserLocationRadius === 805}
                   className={styles.refinementInput}
                 />
               </label>

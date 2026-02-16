@@ -7,19 +7,19 @@ import styles from "./FilterHeader.module.scss";
 
 interface DistanceFilterContentProps {
   locationText: string;
-  selectedRadius: number | "all";
+  selectedRadius: number;
   onLocationChange: (
     text: string,
     coords: { lat: number; lng: number } | null
   ) => void;
-  onRadiusChange: (value: number | "all") => void;
+  onRadiusChange: (value: number) => void;
 }
 
-const RADIUS_OPTIONS: { label: string; value: number | "all" }[] = [
+const RADIUS_OPTIONS: { label: string; value: number }[] = [
+  { label: "Within 0.5 miles", value: 805 },
   { label: "Within 1 mile", value: 1609 },
   { label: "Within 2 miles", value: 3219 },
   { label: "Within 3 miles", value: 4828 },
-  { label: "Full map area", value: "all" },
 ];
 
 export const DistanceFilterContent = ({
