@@ -110,15 +110,16 @@ const FilterHeader = ({
   }, [filterState, pageFilter, updateConfig, setAroundRadius]);
 
   const makeFooter = useCallback(
-    () => (
+    (requiresLocation = false) => (
       <FilterFooter
         pendingCount={filterState.pendingChangeCount}
         onApply={handleApply}
         onClear={handleClear}
         onClose={closeMenu}
+        disabled={requiresLocation && !filterState.pending.locationCoords}
       />
     ),
-    [filterState.pendingChangeCount, handleApply, handleClear, closeMenu]
+    [filterState.pendingChangeCount, filterState.pending.locationCoords, handleApply, handleClear, closeMenu]
   );
 
   return (
@@ -151,13 +152,14 @@ const FilterHeader = ({
             onClose={closeMenu}
             title="Distance"
             triggerRef={distanceButtonRef}
-            footer={makeFooter()}
+            footer={makeFooter(true)}
           >
             <DistanceFilterContent
               locationText={filterState.pending.locationSearchText}
               selectedRadius={filterState.pending.distanceRadius}
               onLocationChange={handleLocationChange}
               onRadiusChange={filterState.setPendingDistance}
+              hasLocation={!!filterState.pending.locationCoords}
             />
           </FilterDropdown>
         </div>
@@ -224,6 +226,7 @@ const FilterHeader = ({
                 selectedRadius={filterState.pending.distanceRadius}
                 onLocationChange={handleLocationChange}
                 onRadiusChange={filterState.setPendingDistance}
+                hasLocation={!!filterState.pending.locationCoords}
               />
             </div>
 

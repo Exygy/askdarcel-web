@@ -13,6 +13,7 @@ interface DistanceFilterContentProps {
     coords: { lat: number; lng: number } | null
   ) => void;
   onRadiusChange: (value: number) => void;
+  hasLocation?: boolean;
 }
 
 const RADIUS_OPTIONS: { label: string; value: number }[] = [
@@ -27,6 +28,7 @@ export const DistanceFilterContent = ({
   selectedRadius,
   onLocationChange,
   onRadiusChange,
+  hasLocation = true,
 }: DistanceFilterContentProps) => {
   const [inputValue, setInputValue] = useState(locationText);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -256,13 +258,17 @@ export const DistanceFilterContent = ({
 
       <div className={styles.radioGrid}>
         {RADIUS_OPTIONS.map((opt) => (
-          <label key={String(opt.value)} className={styles.radioOption}>
+          <label
+            key={String(opt.value)}
+            className={`${styles.radioOption} ${!hasLocation ? styles.radioOptionDisabled : ""}`}
+          >
             <input
               type="radio"
               name="distanceRadius"
               className={styles.radioInput}
               checked={selectedRadius === opt.value}
               onChange={() => onRadiusChange(opt.value)}
+              disabled={!hasLocation}
             />
             <span>{opt.label}</span>
           </label>
