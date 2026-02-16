@@ -8,7 +8,7 @@ import styles from "./LabelTag.module.scss";
 // should be aware of the possibility.
 //
 // THOUGHT: replacing with enum if another type is added
-const SHELTER_TECH_TYPE_FOR_ORGANIZATION = "resource";
+const SHELTER_TECH_TYPE_FOR_ORGANIZATION = "organization";
 const SHELTER_TECH_TYPE_FOR_SERVICE = "service";
 
 export const LabelTag = ({ label }: { label: string }) => {

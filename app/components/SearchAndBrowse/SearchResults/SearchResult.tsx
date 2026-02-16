@@ -74,7 +74,13 @@ export const SearchResult = forwardRef<HTMLDivElement, SearchResultProps>(
           <div className={styles.searchResultContent}>
             <div className={styles.searchText}>
               <div className={`notranslate ${styles.address}`}>
-                {renderAddressMetadata(hit)}
+                {!hit.addresses || hit.addresses.length === 0 ? (
+                  <span className={styles.noLocationBadge}>
+                    No location available
+                  </span>
+                ) : (
+                  renderAddressMetadata(hit)
+                )}
               </div>
               {/* Once we can update all dependencies, we can add remarkBreaks as remarkPlugin here */}
               <ReactMarkdown

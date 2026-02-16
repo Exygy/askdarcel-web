@@ -3,8 +3,6 @@ import { useLocation } from "react-router-dom";
 import { SearchMapActions } from "components/SearchAndBrowse/SearchResults/SearchResults";
 import FilterHeader from "components/SearchAndBrowse/FilterHeader/FilterHeader";
 import styles from "./SearchResultsPage.module.scss";
-import { useAppContext } from "utils";
-import { DEFAULT_AROUND_PRECISION } from "utils/location";
 import classNames from "classnames";
 import { SearchMap } from "components/SearchAndBrowse/SearchMap/SearchMap";
 import { SearchResult } from "components/SearchAndBrowse/SearchResults/SearchResult";
@@ -46,8 +44,6 @@ const SearchResultsPageContent = () => {
   } | null>(null);
   const [customMapZoom, setCustomMapZoom] = useState<number | null>(null);
   const [hoveredHitId, setHoveredHitId] = useState<string | null>(null);
-  const { boundingBox, aroundLatLng, aroundUserLocationRadius } =
-    useAppContext();
   const { updateConfig } = useSearchConfig();
   const { goToPage, currentPage } = useSearchPagination();
   const {
@@ -62,30 +58,23 @@ const SearchResultsPageContent = () => {
 
   useEffect(() => window.scrollTo(0, 0), []);
 
-  // Update search config when map initializes or geo parameters change
+  // Update search config when map initializes
+  // Note: We intentionally omit geo parameters (aroundLatLng, insideBoundingBox, etc.)
+  // to allow results without locations to appear in search results.
+  // The map will still display markers for results that have location data.
   useEffect(() => {
     if (!isMapInitialized) return;
-    if (!boundingBox && !aroundLatLng) return;
 
-    const config = boundingBox
-      ? {
-          insideBoundingBox: [boundingBox.split(",").map(Number)],
-          hitsPerPage: HITS_PER_PAGE,
-          filters: "",
-          aroundLatLng: undefined,
-          aroundRadius: undefined,
-          aroundPrecision: undefined,
-          minimumAroundRadius: undefined,
-        }
-      : {
-          aroundLatLng,
-          aroundRadius: aroundUserLocationRadius,
-          aroundPrecision: DEFAULT_AROUND_PRECISION,
-          minimumAroundRadius: 100,
-          hitsPerPage: HITS_PER_PAGE,
-          filters: "",
-          insideBoundingBox: undefined,
-        };
+    const config = {
+      hitsPerPage: HITS_PER_PAGE,
+      filters: "",
+      // Clear any geo parameters to show all results by text relevance
+      aroundLatLng: undefined,
+      aroundRadius: undefined,
+      aroundPrecision: undefined,
+      minimumAroundRadius: undefined,
+      insideBoundingBox: undefined,
+    };
     updateConfig(config);
 
     // After config is updated, check if we have a search query from navigation
@@ -96,15 +85,7 @@ const SearchResultsPageContent = () => {
       hasSetQueryRef.current = true;
       setQuery(searchQuery);
     }
-  }, [
-    isMapInitialized,
-    boundingBox,
-    aroundLatLng,
-    aroundUserLocationRadius,
-    updateConfig,
-    location.state,
-    setQuery,
-  ]);
+  }, [isMapInitialized, updateConfig, location.state, setQuery]);
 
   const handleLocationSelect = useCallback(
     (lat: number, lng: number, radius: number) => {
@@ -222,31 +203,19 @@ const SearchResultsPageContent = () => {
 
 /**
  * SearchResultsPage - Wrapper that provides SearchConfigProvider
+ *
+ * Note: We intentionally omit geo parameters to allow results without locations
+ * to appear in search results. Results are ordered by text relevance.
  */
 export const SearchResultsPage = () => {
-  const { boundingBox, aroundLatLng, aroundUserLocationRadius } =
-    useAppContext();
-
-  // Calculate initial config synchronously so Configure renders immediately
-  // This prevents searches from being blocked while waiting for map init
-  const initialConfig = React.useMemo(() => {
-    if (!boundingBox && !aroundLatLng) return {};
-
-    return boundingBox
-      ? {
-          insideBoundingBox: [boundingBox.split(",").map(Number)],
-          hitsPerPage: HITS_PER_PAGE,
-          filters: "",
-        }
-      : {
-          aroundLatLng,
-          aroundRadius: aroundUserLocationRadius,
-          aroundPrecision: DEFAULT_AROUND_PRECISION,
-          minimumAroundRadius: 100,
-          hitsPerPage: HITS_PER_PAGE,
-          filters: "",
-        };
-  }, [boundingBox, aroundLatLng, aroundUserLocationRadius]);
+  // Initial config without geo parameters - all results appear by text relevance
+  const initialConfig = React.useMemo(
+    () => ({
+      hitsPerPage: HITS_PER_PAGE,
+      filters: "",
+    }),
+    []
+  );
 
   return (
     <SearchConfigProvider initialConfig={initialConfig}>
