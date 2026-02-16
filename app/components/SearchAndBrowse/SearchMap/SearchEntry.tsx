@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import websiteConfig from "utils/websiteConfig";
 import { RelativeOpeningTime } from "components/DetailPage/RelativeOpeningTime";
 import { MapPinIcon, ClockIcon, XMarkIcon } from "@heroicons/react/16/solid";
@@ -19,6 +19,7 @@ interface Props {
 }
 
 const SearchEntry = ({ hit, lat, lng, location, onClose }: Props) => {
+  const navigate = useNavigate();
   const { recurringSchedule, type } = hit;
 
   const currentAddress: Address | undefined = location.address;
@@ -32,6 +33,21 @@ const SearchEntry = ({ hit, lat, lng, location, onClose }: Props) => {
   const hasMultipleLocations = otherAddresses.length > 0;
 
   const addressText = currentAddress?.address_1 || "No address found";
+
+  const handleNavigate = (path: string) => (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onClose?.();
+    // Use setTimeout to ensure tooltip closes before navigation
+    setTimeout(() => navigate(path), 0);
+  };
+
+  // Build the path to the detail page
+  const detailPath =
+    hit.path ||
+    (type === "service"
+      ? `/services/${hit.service_id}`
+      : `/organizations/${hit.id}`);
 
   return (
     <div className="search-entry">
@@ -49,14 +65,17 @@ const SearchEntry = ({ hit, lat, lng, location, onClose }: Props) => {
       </button>
 
       <h4 className="search-entry-name">
-        <Link to={{ pathname: hit.path }}>{hit.name}</Link>
+        <a href={detailPath} onClick={handleNavigate(detailPath)}>{hit.name}</a>
       </h4>
 
       {type === "service" && hit.organization_name && (
         <p className="search-entry-org">
-          <Link to={`/organizations/${hit.organization_id}`}>
+          <a
+            href={`/organizations/${hit.organization_id}`}
+            onClick={handleNavigate(`/organizations/${hit.organization_id}`)}
+          >
             {hit.organization_name}
-          </Link>
+          </a>
         </p>
       )}
 

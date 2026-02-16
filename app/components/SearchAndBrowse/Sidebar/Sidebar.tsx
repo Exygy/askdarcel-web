@@ -87,8 +87,7 @@ const Sidebar = ({
   );
 
   const onChangeValue = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    const aroundRadius =
-      evt.target.value === "all" ? "all" : Number(evt.target.value);
+    const aroundRadius = Number(evt.target.value);
     setAroundRadius(aroundRadius);
   };
 
