@@ -120,7 +120,9 @@ module.exports = {
     new webpack.ProvidePlugin({
       process: "process/browser.js",
     }),
-    new CompressionPlugin(),
+    new CompressionPlugin({
+      exclude: /sitemap\.xml$/,
+    }),
   ],
   devtool: "source-map",
   module: {
