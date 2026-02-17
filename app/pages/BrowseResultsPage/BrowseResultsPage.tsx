@@ -40,30 +40,20 @@ const RADIUS_TO_ZOOM: Record<number, number> = {
   4828: 13, // 3 miles
 };
 
+interface BrowseResultsPageContentProps {
+  category: { name: string; slug: string };
+  typesenseCategoryName: string;
+}
+
 /**
  * BrowseResultsPageContent - The main content component that uses search config
  * This is separated so it can access the SearchConfigProvider context
  */
-const BrowseResultsPageContent = () => {
-  const { categorySlug } = useParams();
+const BrowseResultsPageContent = ({
+  category,
+  typesenseCategoryName,
+}: BrowseResultsPageContentProps) => {
   const { updateConfig } = useSearchConfig();
-  const facets = useTypesenseFacets();
-
-  // Find the category from Typesense facets
-  const category = useMemo(() => {
-    if (!facets) return null;
-
-    const matchedCategory = facets.categories.find(
-      (cat) => categoryToSlug(cat.value) === categorySlug
-    );
-
-    if (!matchedCategory) return null;
-
-    return {
-      name: matchedCategory.value,
-      slug: categorySlug || "",
-    };
-  }, [facets, categorySlug]);
 
   const [isMapCollapsed, setIsMapCollapsed] = useState(false);
   const [isMapInitialized, setIsMapInitialized] = useState(false);
@@ -129,20 +119,11 @@ const BrowseResultsPageContent = () => {
     [goToPage]
   );
 
-  const categoryName = category?.name || "";
+  const categoryName = category.name;
 
-  // Escape apostrophes for Typesense filter syntax
-  const typesenseCategoryName = categoryName
-    ? categoryName.replace(/'/g, "\\'")
-    : null;
-
-  // Update Typesense search config when map is initialized and we have category name
+  // Update Typesense search config when map is initialized with geo parameters
   useEffect(() => {
-    // Wait until map is initialized
     if (!isMapInitialized) return;
-
-    // Wait until we have category name
-    if (!typesenseCategoryName) return;
 
     // Wait until we have geographic data (boundingBox OR aroundLatLng)
     if (!boundingBox && !aroundLatLng) return;
@@ -190,13 +171,7 @@ const BrowseResultsPageContent = () => {
     }
   };
 
-  // TS compiler requires explicit null type checks
-  if (
-    !category ||
-    !facets ||
-    typesenseCategoryName === null ||
-    userLocation === null
-  ) {
+  if (userLocation === null) {
     return <Loader />;
   }
 
@@ -288,10 +263,47 @@ const BrowseResultsPageContent = () => {
 };
 
 /**
- * BrowseResultsPage - Wrapper that provides SearchConfigProvider
+ * BrowseResultsPage - Resolves the category before rendering SearchConfigProvider
+ * so the very first Configure render includes the category filter (no flash of all results).
  */
-export const BrowseResultsPage = () => (
-  <SearchConfigProvider>
-    <BrowseResultsPageContent />
-  </SearchConfigProvider>
-);
+export const BrowseResultsPage = () => {
+  const { categorySlug } = useParams();
+  const facets = useTypesenseFacets();
+
+  const category = useMemo(() => {
+    if (!facets) return null;
+
+    const matchedCategory = facets.categories.find(
+      (cat) => categoryToSlug(cat.value) === categorySlug
+    );
+
+    if (!matchedCategory) return null;
+
+    return {
+      name: matchedCategory.value,
+      slug: categorySlug || "",
+    };
+  }, [facets, categorySlug]);
+
+  // Wait until category is resolved before rendering the search tree
+  if (!category) {
+    return <Loader />;
+  }
+
+  // Escape apostrophes for Typesense filter syntax
+  const typesenseCategoryName = category.name.replace(/'/g, "\\'");
+
+  const initialConfig = {
+    filters: `categories:'${typesenseCategoryName}'`,
+    hitsPerPage: HITS_PER_PAGE,
+  };
+
+  return (
+    <SearchConfigProvider initialConfig={initialConfig}>
+      <BrowseResultsPageContent
+        category={category}
+        typesenseCategoryName={typesenseCategoryName}
+      />
+    </SearchConfigProvider>
+  );
+};

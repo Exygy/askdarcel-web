@@ -23,9 +23,11 @@ export class TypesenseProvider implements ISearchProvider {
   private instantSearchAdapter: TypesenseInstantSearchAdapter;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private cachedSearchClient: any = null;
-  // Cache for deduplicating searches - maps request hash to promise or result
+  // Dedup: store the last request/response so identical consecutive searches
+  // return the same object reference, preventing InstantSearch re-render loops.
+  private lastRequestKey: string = "";
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private searchCache: Map<string, { promise?: Promise<any>; result?: any }> = new Map();
+  private lastResponse: any = null;
 
   constructor() {
     this.client = new Typesense.Client({
@@ -89,87 +91,55 @@ export class TypesenseProvider implements ISearchProvider {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.cachedSearchClient = {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      search: (requests: any[]) => {
-        // Create a hash of the request to detect duplicates
-        const requestHash = JSON.stringify(requests);
-
-        // Check cache - return existing promise or result if available
-        const cached = this.searchCache.get(requestHash);
-        if (cached) {
-          if (cached.result) {
-            return Promise.resolve(cached.result);
-          }
-          if (cached.promise) {
-            return cached.promise;
-          }
+      search: async (requests: any[]) => {
+        // Return the same response object for identical consecutive requests.
+        // This prevents InstantSearch from re-rendering in a loop when it
+        // re-fires the same search and gets a structurally identical but
+        // referentially different response.
+        const requestKey = JSON.stringify(requests);
+        if (requestKey === this.lastRequestKey && this.lastResponse) {
+          return this.lastResponse;
         }
 
-        // Start a new request and cache the promise
-        const searchPromise = (async () => {
-          try {
-            const responses = await baseSearchClient.search(requests);
+        const responses = await baseSearchClient.search(requests);
 
-            // Normalize responses to ensure all required fields are present
-            // This prevents infinite loops when results are empty
+        // Normalize responses to ensure all required fields are present
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const normalizedResults = responses.results.map((result: any) => {
+          // Transform hits to add locations field from _geoloc
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const transformedHits = (result.hits || []).map(
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const normalizedResults = responses.results.map((result: any) => {
-              // Transform hits to add locations field from _geoloc
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              const transformedHits = (result.hits || []).map(
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (hit: any, index: number) => {
-                  // Compute locations from _geoloc, linking addresses
-                  const locations = this.extractLocationsFromGeoloc(
-                    hit.locations,
-                    index + 1,
-                    hit.addresses
-                  );
-                  return {
-                    ...hit,
-                    locations,
-                    addressDisplay: this.computeAddressDisplay(hit),
-                  };
-                }
+            (hit: any, index: number) => {
+              const locations = this.extractLocationsFromGeoloc(
+                hit.locations,
+                index + 1,
+                hit.addresses
               );
-
-              // Ensure required fields exist even when empty
               return {
-                ...result,
-                hits: transformedHits,
-                nbHits: result.nbHits ?? result.found ?? 0,
-                nbPages: Math.ceil(
-                  (result.nbHits ?? result.found ?? 0) / (result.per_page ?? 20)
-                ),
-                page: result.page ?? 0,
-                processingTimeMS: result.processingTimeMS ?? 0,
+                ...hit,
+                locations,
+                addressDisplay: this.computeAddressDisplay(hit),
               };
-            });
-
-            const result = {
-              results: normalizedResults,
-            };
-
-            // Update cache with result (keep for short time to handle rapid duplicates)
-            this.searchCache.set(requestHash, { result });
-
-            // Clear old cache entries to prevent memory leaks (keep last 5)
-            if (this.searchCache.size > 5) {
-              const firstKey = this.searchCache.keys().next().value;
-              if (firstKey) this.searchCache.delete(firstKey);
             }
+          );
 
-            return result;
-          } catch (error) {
-            // On error, remove from cache so retry is possible
-            this.searchCache.delete(requestHash);
-            throw error;
-          }
-        })();
+          return {
+            ...result,
+            hits: transformedHits,
+            nbHits: result.nbHits ?? result.found ?? 0,
+            nbPages: Math.ceil(
+              (result.nbHits ?? result.found ?? 0) / (result.per_page ?? 20)
+            ),
+            page: result.page ?? 0,
+            processingTimeMS: result.processingTimeMS ?? 0,
+          };
+        });
 
-        // Cache the promise immediately so concurrent requests get the same promise
-        this.searchCache.set(requestHash, { promise: searchPromise });
-
-        return searchPromise;
+        const result = { results: normalizedResults };
+        this.lastRequestKey = requestKey;
+        this.lastResponse = result;
+        return result;
       },
     };
 

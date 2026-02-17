@@ -5,18 +5,26 @@ import { useNavigate, useLocation } from "react-router-dom";
 import styles from "./SiteSearchInput.module.scss";
 
 /**
- * Sitewide search input. On submit, navigates to /search with query in state.
- * SearchResultsPage sets the query after its config is ready.
+ * Sitewide search input. On submit, either navigates to /search (from other pages)
+ * or directly updates the InstantSearch query (when already on /search).
  */
 export const SiteSearchInput = () => {
-  const { query } = useSearchQuery();
+  const { query, setQuery } = useSearchQuery();
   const [inputValue, setInputValue] = useState(query);
   const navigate = useNavigate();
   const location = useLocation();
 
   const submitSearch = (e: FormEvent) => {
     e.preventDefault();
-    navigate("/search", { state: { searchQuery: inputValue } });
+    if (location.pathname === "/search") {
+      // Already on the search page: update the query directly via
+      // InstantSearch's helper. Navigating would change the URL and
+      // cause the historyRouter to reset the query to default.
+      setQuery(inputValue);
+      window.scrollTo(0, 0);
+    } else {
+      navigate("/search", { state: { searchQuery: inputValue } });
+    }
     return false;
   };
 

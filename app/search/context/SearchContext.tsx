@@ -32,16 +32,12 @@ export const SearchProvider: React.FC<SearchProviderProps> = ({ children }) => {
   const searchClient = useMemo(() => provider.getLiteClient(), [provider]);
   const indexName = useMemo(() => provider.getIndexName(), [provider]);
 
-  // Search function that prevents searches without Configure component
-  // Configure sets maxValuesPerFacet, so we use that as an indicator
-  // Unconfigured searches are simply skipped - Configure will trigger a proper search when ready
+  // searchFunction provides batching: helper.setState() calls are deferred
+  // until this function is called, preventing infinite search loops from
+  // Configure re-applying props on every render.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const searchFunction = useCallback((helper: any) => {
-    const hasConfig = helper.state.maxValuesPerFacet !== undefined;
-
-    if (hasConfig) {
-      helper.search();
-    }
-    // If no config, don't search - wait for Configure to render and trigger a proper search
+    helper.search();
   }, []);
 
   const contextValue = useMemo<SearchContextValue>(

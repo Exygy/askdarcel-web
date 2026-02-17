@@ -1,14 +1,14 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Button } from "components/ui/inline/Button/Button";
-import { useSearchQuery } from "../../../search/hooks";
+import { useInstantSearch } from "react-instantsearch-core";
 
 const ClearSearchButton = () => {
-  const { clearQuery } = useSearchQuery();
+  const { setIndexUiState } = useInstantSearch();
 
-  // Clear the search query when the button is clicked
-  const handleOnClick = () => {
-    clearQuery();
-  };
+  // Clear the search query without creating a search box widget
+  const handleOnClick = useCallback(() => {
+    setIndexUiState((prev) => ({ ...prev, query: "" }));
+  }, [setIndexUiState]);
 
   return (
     <Button

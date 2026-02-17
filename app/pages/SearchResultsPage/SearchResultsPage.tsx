@@ -1,5 +1,6 @@
-import React, { useCallback, useState, useEffect, useRef } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { useInstantSearch } from "react-instantsearch-core";
 import { SearchMapActions } from "components/SearchAndBrowse/SearchResults/SearchResults";
 import FilterHeader from "components/SearchAndBrowse/FilterHeader/FilterHeader";
 import styles from "./SearchResultsPage.module.scss";
@@ -9,17 +10,13 @@ import { SearchResult } from "components/SearchAndBrowse/SearchResults/SearchRes
 import {
   useSearchResults,
   useSearchPagination,
-  useSearchQuery,
 } from "../../search/hooks";
 import searchResultsStyles from "components/SearchAndBrowse/SearchResults/SearchResults.module.scss";
 import { Loader } from "components/ui/Loader";
 import ResultsPagination from "components/SearchAndBrowse/Pagination/ResultsPagination";
 import { NoSearchResultsDisplay } from "components/ui/NoSearchResultsDisplay";
 import { SearchResultsHeader } from "components/ui/SearchResultsHeader";
-import {
-  SearchConfigProvider,
-  useSearchConfig,
-} from "utils/SearchConfigContext";
+import { SearchConfigProvider } from "utils/SearchConfigContext";
 
 export const HITS_PER_PAGE = 40;
 
@@ -44,7 +41,6 @@ const SearchResultsPageContent = () => {
   } | null>(null);
   const [customMapZoom, setCustomMapZoom] = useState<number | null>(null);
   const [hoveredHitId, setHoveredHitId] = useState<string | null>(null);
-  const { updateConfig } = useSearchConfig();
   const { goToPage, currentPage } = useSearchPagination();
   const {
     results: searchResults,
@@ -52,40 +48,21 @@ const SearchResultsPageContent = () => {
     isSearching,
     query,
   } = useSearchResults();
-  const { setQuery } = useSearchQuery();
+  const { setIndexUiState } = useInstantSearch();
   const location = useLocation();
-  const hasSetQueryRef = useRef(false);
 
   useEffect(() => window.scrollTo(0, 0), []);
 
-  // Update search config when map initializes
-  // Note: We intentionally omit geo parameters (aroundLatLng, insideBoundingBox, etc.)
-  // to allow results without locations to appear in search results.
-  // The map will still display markers for results that have location data.
+  // Set query from location.state on initial navigation (from home/browse pages).
+  // Uses setIndexUiState instead of useSearchBox's refine to avoid creating a
+  // competing search box widget that resets the query during state rebuilds.
+  // Repeat searches from the search page use refine() directly in SiteSearchInput.
   useEffect(() => {
-    if (!isMapInitialized) return;
-
-    const config = {
-      hitsPerPage: HITS_PER_PAGE,
-      filters: "",
-      // Clear any geo parameters to show all results by text relevance
-      aroundLatLng: undefined,
-      aroundRadius: undefined,
-      aroundPrecision: undefined,
-      minimumAroundRadius: undefined,
-      insideBoundingBox: undefined,
-    };
-    updateConfig(config);
-
-    // After config is updated, check if we have a search query from navigation
-    // This ensures the search happens AFTER filters are cleared
     const searchQuery = (location.state as { searchQuery?: string })
       ?.searchQuery;
-    if (searchQuery && !hasSetQueryRef.current) {
-      hasSetQueryRef.current = true;
-      setQuery(searchQuery);
-    }
-  }, [isMapInitialized, updateConfig, location.state, setQuery]);
+    if (!searchQuery) return;
+    setIndexUiState((prevState) => ({ ...prevState, query: searchQuery }));
+  }, [location.state, setIndexUiState]);
 
   const handleLocationSelect = useCallback(
     (lat: number, lng: number, radius: number) => {
