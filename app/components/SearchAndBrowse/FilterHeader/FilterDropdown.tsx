@@ -49,7 +49,10 @@ export const FilterDropdown = ({
       }),
       shift({ padding: 16 }),
     ],
-    whileElementsMounted: autoUpdate,
+    whileElementsMounted: (reference, floating, update) =>
+      autoUpdate(reference, floating, update, {
+        ancestorScroll: false,
+      }),
     placement: "bottom-start",
   });
 

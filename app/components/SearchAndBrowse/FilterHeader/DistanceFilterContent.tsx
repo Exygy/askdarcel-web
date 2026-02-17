@@ -158,7 +158,7 @@ export const DistanceFilterContent = ({
           ref={inputRef}
           type="text"
           className={styles.locationSearchInput}
-          placeholder="Search by zip code or address"
+          placeholder="Search for a location"
           value={inputValue}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
@@ -260,7 +260,9 @@ export const DistanceFilterContent = ({
         {RADIUS_OPTIONS.map((opt) => (
           <label
             key={String(opt.value)}
-            className={`${styles.radioOption} ${!hasLocation ? styles.radioOptionDisabled : ""}`}
+            className={`${styles.radioOption} ${
+              !hasLocation ? styles.radioOptionDisabled : ""
+            }`}
           >
             <input
               type="radio"
