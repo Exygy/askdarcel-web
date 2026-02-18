@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { useInstantSearch } from "react-instantsearch-core";
 import { SearchMapActions } from "components/SearchAndBrowse/SearchResults/SearchResults";
 import FilterHeader from "components/SearchAndBrowse/FilterHeader/FilterHeader";
@@ -49,20 +49,19 @@ const SearchResultsPageContent = () => {
     query,
   } = useSearchResults();
   const { setIndexUiState } = useInstantSearch();
-  const location = useLocation();
+  const [searchParams] = useSearchParams();
 
   useEffect(() => window.scrollTo(0, 0), []);
 
-  // Set query from location.state on initial navigation (from home/browse pages).
+  // Set query from URL search params (e.g., /search?q=food) on navigation.
   // Uses setIndexUiState instead of useSearchBox's refine to avoid creating a
   // competing search box widget that resets the query during state rebuilds.
-  // Repeat searches from the search page use refine() directly in SiteSearchInput.
+  // The query is in the URL so it survives back/forward navigation reliably.
   useEffect(() => {
-    const searchQuery = (location.state as { searchQuery?: string })
-      ?.searchQuery;
+    const searchQuery = searchParams.get("q");
     if (!searchQuery) return;
     setIndexUiState((prevState) => ({ ...prevState, query: searchQuery }));
-  }, [location.state, setIndexUiState]);
+  }, [searchParams, setIndexUiState]);
 
   const handleLocationSelect = useCallback(
     (lat: number, lng: number, radius: number) => {
@@ -83,8 +82,9 @@ const SearchResultsPageContent = () => {
   // No need for additional transformation
   const searchMapHitData = searchResults || { hits: [], nbHits: 0 };
 
-  // Show loading state while map initializes or search is in progress
-  const isLoading = !isMapInitialized || isSearching;
+  // Show loading state only while search is in progress (not map)
+  // Search results are pure text-relevance, independent of the map
+  const isLoading = isSearching;
 
   // Only show "no results" when search is complete (idle) and we have 0 hits
   const hasNoResults = !isLoading && searchMapHitData.nbHits === 0 && isIdle;
@@ -105,15 +105,12 @@ const SearchResultsPageContent = () => {
   return (
     <div className={styles.results}>
       <div className={classNames(styles.container, "searchResultsPage")}>
-        {/* Only render FilterHeader after map is initialized to prevent premature search */}
-        {isMapInitialized && (
-          <FilterHeader
-            isSearchResultsPage
-            isMapCollapsed={isMapCollapsed}
-            setIsMapCollapsed={setIsMapCollapsed}
-            onLocationSelect={handleLocationSelect}
-          />
-        )}
+        <FilterHeader
+          isSearchResultsPage
+          isMapCollapsed={isMapCollapsed}
+          setIsMapCollapsed={setIsMapCollapsed}
+          onLocationSelect={handleLocationSelect}
+        />
 
         <div className={styles.flexContainer}>
           <div className={styles.results}>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useParams } from "react-router-dom";
+import { useInstantSearch } from "react-instantsearch-core";
 import {
   DEFAULT_AROUND_PRECISION,
   useAppContext,
@@ -72,14 +73,20 @@ const BrowseResultsPageContent = ({
   const { results: searchResults, isIdle } = useSearchResults();
   const { goToPage, currentPage } = useSearchPagination();
   const { clearAll: clearRefinements } = useClearRefinements();
+  const { setIndexUiState } = useInstantSearch();
 
   useEffect(() => window.scrollTo(0, 0), []);
 
-  // Clear refinements when category changes
+  // Clear search query and refinements when category changes
+  // This ensures that selecting a category after a text search
+  // results in a pure category filter (no lingering search text).
+  // Uses setIndexUiState instead of useSearchBox to avoid registering
+  // a competing search box widget that interferes with SiteSearchInput.
   useEffect(() => {
     if (!category) return;
+    setIndexUiState((prevState) => ({ ...prevState, query: "" }));
     clearRefinements();
-  }, [category, clearRefinements]);
+  }, [category, setIndexUiState, clearRefinements]);
 
   // Reset map state when category changes
   useEffect(

@@ -1,7 +1,7 @@
 import React, { FormEvent, useEffect, useState } from "react";
 import { useSearchQuery } from "../../search/hooks";
 import classNames from "classnames";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 import styles from "./SiteSearchInput.module.scss";
 
 /**
@@ -13,29 +13,25 @@ export const SiteSearchInput = () => {
   const [inputValue, setInputValue] = useState(query);
   const navigate = useNavigate();
   const location = useLocation();
+  const [, setSearchParams] = useSearchParams();
 
   const submitSearch = (e: FormEvent) => {
     e.preventDefault();
     if (location.pathname === "/search") {
-      // Already on the search page: update the query directly via
-      // InstantSearch's helper. Navigating would change the URL and
-      // cause the historyRouter to reset the query to default.
       setQuery(inputValue);
+      // Keep URL in sync so back navigation restores the correct query
+      setSearchParams({ q: inputValue }, { replace: true });
       window.scrollTo(0, 0);
     } else {
-      navigate("/search", { state: { searchQuery: inputValue } });
+      navigate(`/search?q=${encodeURIComponent(inputValue)}`);
     }
     return false;
   };
 
-  // Sync input with InstantSearch query, unless we just navigated with a searchQuery
+  // Sync input with InstantSearch query
   useEffect(() => {
-    const stateQuery = (location.state as { searchQuery?: string })
-      ?.searchQuery;
-    if (!stateQuery) {
-      setInputValue(query);
-    }
-  }, [query, location.state]);
+    setInputValue(query);
+  }, [query]);
 
   return (
     <form
