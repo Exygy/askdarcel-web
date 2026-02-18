@@ -6,7 +6,6 @@ import React, {
   useCallback,
 } from "react";
 import { InstantSearch } from "react-instantsearch-core";
-import { history as historyRouter } from "instantsearch.js/es/lib/routers";
 import { getSearchProvider } from "../providers";
 import type { ISearchProvider } from "../types";
 
@@ -53,20 +52,6 @@ export const SearchProvider: React.FC<SearchProviderProps> = ({ children }) => {
         searchClient={searchClient}
         indexName={indexName}
         searchFunction={searchFunction}
-        routing={{
-          router: historyRouter({
-            // Prevent InstantSearch from clearing URL state when components unmount
-            // This preserves the query when navigating between pages
-            cleanUrlOnDispose: false,
-            windowTitle(routeState) {
-              const query = routeState[indexName]?.query;
-              const queryTitle = query
-                ? `Our415 - Search results for "${query}" in San Francisco`
-                : "Our415 - Services in San Francisco";
-              return queryTitle;
-            },
-          }),
-        }}
       >
         {children}
       </InstantSearch>

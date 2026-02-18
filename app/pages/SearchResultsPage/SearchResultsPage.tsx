@@ -17,6 +17,7 @@ import ResultsPagination from "components/SearchAndBrowse/Pagination/ResultsPagi
 import { NoSearchResultsDisplay } from "components/ui/NoSearchResultsDisplay";
 import { SearchResultsHeader } from "components/ui/SearchResultsHeader";
 import { SearchConfigProvider } from "utils/SearchConfigContext";
+import { useAppContext, DEFAULT_AROUND_PRECISION } from "utils";
 
 export const HITS_PER_PAGE = 40;
 
@@ -54,13 +55,12 @@ const SearchResultsPageContent = () => {
   useEffect(() => window.scrollTo(0, 0), []);
 
   // Set query from URL search params (e.g., /search?q=food) on navigation.
-  // Uses setIndexUiState instead of useSearchBox's refine to avoid creating a
-  // competing search box widget that resets the query during state rebuilds.
-  // The query is in the URL so it survives back/forward navigation reliably.
+  // Replaces the entire UI state (not merge) to wipe any lingering geo params
+  // or other state that the historyRouter may have restored from the previous page.
   useEffect(() => {
     const searchQuery = searchParams.get("q");
     if (!searchQuery) return;
-    setIndexUiState((prevState) => ({ ...prevState, query: searchQuery }));
+    setIndexUiState({ query: searchQuery });
   }, [searchParams, setIndexUiState]);
 
   const handleLocationSelect = useCallback(
@@ -178,17 +178,24 @@ const SearchResultsPageContent = () => {
 /**
  * SearchResultsPage - Wrapper that provides SearchConfigProvider
  *
- * Note: We intentionally omit geo parameters to allow results without locations
- * to appear in search results. Results are ordered by text relevance.
+ * Geo params are included in the initial config so "All Services" (/search
+ * with no query) returns location-relevant results. When the user types a
+ * query, the TypesenseProvider strips geo params at the request level to
+ * allow text-relevance ordering.
  */
 export const SearchResultsPage = () => {
-  // Initial config without geo parameters - all results appear by text relevance
+  const { userLocation, aroundUserLocationRadius } = useAppContext();
+
   const initialConfig = React.useMemo(
     () => ({
       hitsPerPage: HITS_PER_PAGE,
       filters: "",
+      aroundLatLng: `${userLocation?.coords.lat},${userLocation?.coords.lng}`,
+      aroundRadius: aroundUserLocationRadius,
+      aroundPrecision: DEFAULT_AROUND_PRECISION,
+      minimumAroundRadius: 100,
     }),
-    []
+    [userLocation, aroundUserLocationRadius]
   );
 
   return (

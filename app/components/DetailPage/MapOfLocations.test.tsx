@@ -2,7 +2,6 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import { AppContext } from "utils";
 import { MapOfLocations } from "./MapOfLocations";
-import { AroundRadius } from "algoliasearch";
 
 const FAKE_LOCATIONS = [
   {
