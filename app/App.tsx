@@ -31,7 +31,15 @@ export const App = () => {
   useEffect(() => {
     getLocation().then((userLocation) => {
       setUserLocation(userLocation);
-      setAroundLatLng(`${userLocation.coords.lat},${userLocation.coords.lng}`);
+      const lat = userLocation.coords.lat;
+      const lng = userLocation.coords.lng;
+      setAroundLatLng(`${lat},${lng}`);
+
+      // Set default bounding box to cover all of San Francisco
+      // This ensures users see all available resources, not just those in their immediate area
+      // Format: "northLat,westLng,southLat,eastLng" (NW corner, SE corner)
+      const SF_BOUNDING_BOX = "37.812,-122.527,37.708,-122.357";
+      setBoundingBox(SF_BOUNDING_BOX);
     });
   }, [location, setAroundLatLng]);
 

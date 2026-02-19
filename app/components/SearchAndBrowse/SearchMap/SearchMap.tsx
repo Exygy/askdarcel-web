@@ -30,7 +30,7 @@ export const SearchMap = ({
   const [googleMapObject, setMapObject] = useState<google.maps.Map | null>(
     null
   );
-  const { userLocation, aroundLatLng } = useAppContext();
+  const { userLocation, aroundLatLng, boundingBox } = useAppContext();
   const { setAroundLatLng, setAroundRadius, setBoundingBox } =
     useAppContextUpdater();
 
@@ -157,22 +157,38 @@ export const SearchMap = ({
             // so that they can adjustments to markers, coordinates, layout, etc.,
             setMapObject(map);
 
-            // Set initial bounding box when map is first loaded
-            const idleListener = map.addListener("idle", () => {
-              // Remove the listener so it only fires once
-              google.maps.event.removeListener(idleListener);
+            // If we have a bounding box from App.tsx, fit the map to it
+            // This ensures the map shows the same area as the search results
+            if (boundingBox) {
+              const [neLat, swLng, swLat, neLng] = boundingBox
+                .split(",")
+                .map(Number);
+              const bounds = new google.maps.LatLngBounds(
+                new google.maps.LatLng(swLat, swLng), // SW corner
+                new google.maps.LatLng(neLat, neLng) // NE corner
+              );
+              map.fitBounds(bounds);
 
-              const bounds = map.getBounds();
-              if (bounds) {
-                const ne = bounds.getNorthEast();
-                const sw = bounds.getSouthWest();
-                const boundingBoxString = `${ne.lat()},${sw.lng()},${sw.lat()},${ne.lng()}`;
-                setBoundingBox(boundingBoxString);
+              // Notify that map is initialized
+              handleSearchMapAction(SearchMapActions.MapInitialized);
+            } else {
+              // Fallback: Set initial bounding box from map bounds when first loaded
+              const idleListener = map.addListener("idle", () => {
+                // Remove the listener so it only fires once
+                google.maps.event.removeListener(idleListener);
 
-                // Notify that map is initialized
-                handleSearchMapAction(SearchMapActions.MapInitialized);
-              }
-            });
+                const bounds = map.getBounds();
+                if (bounds) {
+                  const ne = bounds.getNorthEast();
+                  const sw = bounds.getSouthWest();
+                  const boundingBoxString = `${ne.lat()},${sw.lng()},${sw.lat()},${ne.lng()}`;
+                  setBoundingBox(boundingBoxString);
+
+                  // Notify that map is initialized
+                  handleSearchMapAction(SearchMapActions.MapInitialized);
+                }
+              });
+            }
           }}
           options={createMapOptions}
         >

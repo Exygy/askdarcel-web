@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Button } from "components/ui/inline/Button/Button";
-import { useClearRefinements } from "react-instantsearch";
+import { useClearRefinements } from "../../../search/hooks";
 import { useAppContextUpdater } from "utils";
 
 /**
@@ -9,13 +9,13 @@ import { useAppContextUpdater } from "utils";
  */
 const ClearAllFilter = () => {
   const { setAroundRadius } = useAppContextUpdater();
-  const { refine } = useClearRefinements();
+  const { clearAll } = useClearRefinements();
   return (
     <Button
       tabIndex={0}
       variant="linkBlue"
       onClick={() => {
-        refine();
+        clearAll();
         setAroundRadius("all");
       }}
       mobileFullWidth={false}

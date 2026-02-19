@@ -18,25 +18,36 @@ import {
 } from "hooks/APIHooks";
 import { CATEGORIES, ServiceCategory } from "../constants";
 import styles from "./BrowseResultsPage.module.scss";
-import { Configure, useClearRefinements } from "react-instantsearch-core";
+import {
+  useSearchResults,
+  useSearchPagination,
+  useClearRefinements,
+} from "../../search/hooks";
 import { SearchMap } from "components/SearchAndBrowse/SearchMap/SearchMap";
 import { SearchResult } from "components/SearchAndBrowse/SearchResults/SearchResult";
 import {
   TransformedSearchHit,
   transformSearchResults,
 } from "models/SearchHits";
-import { useInstantSearch, usePagination } from "react-instantsearch";
 import ResultsPagination from "components/SearchAndBrowse/Pagination/ResultsPagination";
 import searchResultsStyles from "components/SearchAndBrowse/SearchResults/SearchResults.module.scss";
 import { SearchResultsHeader } from "components/ui/SearchResultsHeader";
 import { NoSearchResultsDisplay } from "components/ui/NoSearchResultsDisplay";
 import { our415SubcategoryNames } from "utils/refinementMappings";
+import {
+  SearchConfigProvider,
+  useSearchConfig,
+} from "utils/SearchConfigContext";
 
 export const HITS_PER_PAGE = 40;
 
-/** Wrapper component that handles state management, URL parsing, and external API requests. */
-export const BrowseResultsPage = () => {
+/**
+ * BrowseResultsPageContent - The main content component that uses search config
+ * This is separated so it can access the SearchConfigProvider context
+ */
+const BrowseResultsPageContent = () => {
   const { categorySlug } = useParams();
+  const { updateConfig } = useSearchConfig();
 
   const category = CATEGORIES.find((c) => c.slug === categorySlug);
   if (category === undefined) {
@@ -55,14 +66,9 @@ export const BrowseResultsPage = () => {
 
   const { setBoundingBox, setAroundLatLng, setAroundRadius } =
     useAppContextUpdater();
-  const {
-    // Results type is algoliasearchHelper.SearchResults<SearchHit>
-    results: searchResults,
-    status,
-  } = useInstantSearch();
-  const { refine: refinePagination, currentRefinement: currentPage } =
-    usePagination();
-  const { refine: clearRefinements } = useClearRefinements();
+  const { results: searchResults, isIdle } = useSearchResults();
+  const { goToPage, currentPage } = useSearchPagination();
+  const { clearAll: clearRefinements } = useClearRefinements();
 
   useEffect(() => window.scrollTo(0, 0), []);
 
@@ -113,16 +119,56 @@ export const BrowseResultsPage = () => {
     ? escapeApostrophes(parentCategory.name)
     : null;
 
-  const searchMapHitData = transformSearchResults(searchResults);
+  // Update search config when map is initialized and we have category name
+  useEffect(() => {
+    // Wait until map is initialized
+    if (!isMapInitialized) return;
 
-  const hasNoResults = searchMapHitData.nbHits === 0 && status === "idle";
+    // Wait until we have category name
+    if (!algoliaCategoryName) return;
+
+    // Wait until we have geographic data (boundingBox OR aroundLatLng)
+    if (!boundingBox && !aroundLatLng) return;
+
+    const config = {
+      filters: `categories:'${algoliaCategoryName}'`,
+      hitsPerPage: HITS_PER_PAGE,
+      ...(boundingBox
+        ? {
+            insideBoundingBox: [boundingBox.split(",").map(Number)],
+          }
+        : {
+            aroundLatLng,
+            aroundRadius: aroundUserLocationRadius,
+            aroundPrecision: DEFAULT_AROUND_PRECISION,
+            minimumAroundRadius: 100,
+          }),
+    };
+    updateConfig(config);
+  }, [
+    isMapInitialized,
+    algoliaCategoryName,
+    boundingBox,
+    aroundLatLng,
+    aroundUserLocationRadius,
+    updateConfig,
+  ]);
+
+  // Transform search results for display
+  // TODO: Update transformSearchResults to work with provider-agnostic types
+  const searchMapHitData = searchResults
+    ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      transformSearchResults(searchResults as any)
+    : { hits: [], nbHits: 0 };
+
+  const hasNoResults = searchMapHitData.nbHits === 0 && isIdle;
 
   const handleAction = (searchMapAction: SearchMapActions) => {
     switch (searchMapAction) {
       case SearchMapActions.SearchThisArea:
         // Center and radius are already updated in the SearchMap component
         // Just reset pagination to show the first page of results
-        return refinePagination(0);
+        return goToPage(0);
       case SearchMapActions.MapInitialized:
         // Map has initialized and bounding box is now available
         setIsMapInitialized(true);
@@ -148,35 +194,20 @@ export const BrowseResultsPage = () => {
       <div className={styles.container}>
         <BrowseSubheader currentCategory={categoryName} />
 
-        {/* Only render the Configure component (which triggers the search) when the map is initialized */}
-        {isMapInitialized && (
-          <Configure
-            filters={`categories:'${algoliaCategoryName}'`}
-            {...(boundingBox
-              ? {
-                  insideBoundingBox: [boundingBox.split(",").map(Number)],
-                  hitsPerPage: HITS_PER_PAGE,
-                }
-              : {
-                  aroundLatLng,
-                  aroundRadius: aroundUserLocationRadius,
-                  aroundPrecision: DEFAULT_AROUND_PRECISION,
-                  minimumAroundRadius: 100,
-                })}
-          />
-        )}
-
         <div className={styles.flexContainer}>
-          <Sidebar
-            isSearchResultsPage={false}
-            eligibilities={eligibilities || []}
-            subcategoryNames={subcategoryNames || []}
-            sortAlgoliaSubcategoryRefinements={
-              sortAlgoliaSubcategoryRefinements
-            }
-            isMapCollapsed={isMapCollapsed}
-            setIsMapCollapsed={setIsMapCollapsed}
-          />
+          {/* Only render Sidebar after map is initialized to prevent premature Algolia search */}
+          {isMapInitialized && (
+            <Sidebar
+              isSearchResultsPage={false}
+              eligibilities={eligibilities || []}
+              subcategoryNames={subcategoryNames || []}
+              sortAlgoliaSubcategoryRefinements={
+                sortAlgoliaSubcategoryRefinements
+              }
+              isMapCollapsed={isMapCollapsed}
+              setIsMapCollapsed={setIsMapCollapsed}
+            />
+          )}
 
           <div className={styles.results}>
             <div className={searchResultsStyles.searchResultsAndMapContainer}>
@@ -200,7 +231,7 @@ export const BrowseResultsPage = () => {
                     {/* This is browse not search */}
                     <SearchResultsHeader
                       currentPage={currentPage}
-                      totalResults={searchResults.nbHits}
+                      totalResults={searchResults?.nbHits || 0}
                     />
                     {searchMapHitData.hits.map(
                       (hit: TransformedSearchHit, index) => (
@@ -233,5 +264,50 @@ export const BrowseResultsPage = () => {
         </div>
       </div>
     </>
+  );
+};
+
+/**
+ * BrowseResultsPage - Wrapper that provides SearchConfigProvider
+ * This handles state management, URL parsing, and external API requests.
+ */
+export const BrowseResultsPage = () => {
+  const { categorySlug } = useParams();
+  const category = CATEGORIES.find((c) => c.slug === categorySlug);
+
+  if (category === undefined) {
+    throw new Error(`Unknown category slug ${categorySlug}`);
+  }
+
+  const { boundingBox, aroundLatLng, aroundUserLocationRadius } =
+    useAppContext();
+
+  // Calculate initial config synchronously BEFORE rendering
+  // For browse pages, we don't have the category filter yet (loaded async)
+  // But we can set the geographic config to prevent searches without it
+  const initialConfig = React.useMemo(() => {
+    // Wait until we have geographic data before providing initial config
+    if (!boundingBox && !aroundLatLng) {
+      return {};
+    }
+
+    return boundingBox
+      ? {
+          insideBoundingBox: [boundingBox.split(",").map(Number)],
+          hitsPerPage: HITS_PER_PAGE,
+        }
+      : {
+          aroundLatLng,
+          aroundRadius: aroundUserLocationRadius,
+          aroundPrecision: DEFAULT_AROUND_PRECISION,
+          minimumAroundRadius: 100,
+          hitsPerPage: HITS_PER_PAGE,
+        };
+  }, [boundingBox, aroundLatLng, aroundUserLocationRadius]);
+
+  return (
+    <SearchConfigProvider initialConfig={initialConfig}>
+      <BrowseResultsPageContent />
+    </SearchConfigProvider>
   );
 };
