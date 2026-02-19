@@ -363,9 +363,70 @@ describe("Search Flow Integration Tests", () => {
   });
 
   // ---------------------------------------------------------------
-  // Flow 6: Search → re-search → query updates
+  // Flow 6: Switching categories updates the filter (regression)
   // ---------------------------------------------------------------
-  describe("Flow 6: Sequential searches update query", () => {
+  describe("Flow 6: Switching categories updates the search filter", () => {
+    it("sends the new category filter when navigating from one category to another", async () => {
+      // Start on Housing category
+      const { unmount } = render(
+        <MemoryRouter initialEntries={["/housing/results"]}>
+          <TestWrapper>
+            <Routes>
+              <Route
+                path="/:categorySlug/results"
+                element={<BrowseResultsPage />}
+              />
+            </Routes>
+          </TestWrapper>
+        </MemoryRouter>
+      );
+
+      await waitFor(() => {
+        const match = findSearchCallWith(
+          (p) =>
+            typeof p.filters === "string" && p.filters.includes("Housing")
+        );
+        expect(match).not.toBeNull();
+      });
+
+      // Unmount and navigate to Food category
+      unmount();
+      mockSearch.mockClear();
+
+      render(
+        <MemoryRouter initialEntries={["/food/results"]}>
+          <TestWrapper>
+            <Routes>
+              <Route
+                path="/:categorySlug/results"
+                element={<BrowseResultsPage />}
+              />
+            </Routes>
+          </TestWrapper>
+        </MemoryRouter>
+      );
+
+      await waitFor(() => {
+        const match = findSearchCallWith(
+          (p) =>
+            typeof p.filters === "string" && p.filters.includes("Food")
+        );
+        expect(match).not.toBeNull();
+      });
+
+      // Verify the filter contains the NEW category, not the old one
+      const params = findSearchCallWith(
+        (p) => typeof p.filters === "string" && p.filters.includes("Food")
+      )!;
+      expect(params.filters).toContain("Food");
+      expect(params.filters).not.toContain("Housing");
+    });
+  });
+
+  // ---------------------------------------------------------------
+  // Flow 7: Search → re-search → query updates
+  // ---------------------------------------------------------------
+  describe("Flow 7: Sequential searches update query", () => {
     it("search query updates when URL changes", async () => {
       const { unmount } = render(
         <MemoryRouter initialEntries={["/search?q=food"]}>

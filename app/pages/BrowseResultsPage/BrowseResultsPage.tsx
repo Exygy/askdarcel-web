@@ -304,7 +304,7 @@ export const BrowseResultsPage = () => {
   };
 
   return (
-    <SearchConfigProvider initialConfig={initialConfig}>
+    <SearchConfigProvider key={category.slug} initialConfig={initialConfig}>
       <BrowseResultsPageContent
         category={category}
         typesenseCategoryName={typesenseCategoryName}
