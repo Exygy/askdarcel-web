@@ -56,7 +56,38 @@ export const SearchConfigProvider: React.FC<SearchConfigProviderProps> = ({
   const [config, setConfig] = useState<SearchConfig>(initialConfig);
 
   const updateConfig = useCallback((newConfig: Partial<SearchConfig>) => {
-    setConfig((prev) => ({ ...prev, ...newConfig }));
+    setConfig((prev) => {
+      const merged = { ...prev, ...newConfig };
+      // Remove keys explicitly set to undefined so they aren't passed
+      // to <Configure> as undefined props (which can conflict with other
+      // geo params, e.g. aroundLatLng vs insideBoundingBox).
+      const next = Object.fromEntries(
+        Object.entries(merged).filter(([, v]) => v !== undefined)
+      ) as SearchConfig;
+
+      // Shallow-compare to avoid unnecessary state updates.
+      // A new object reference from Object.fromEntries would cause
+      // <Configure> to re-render and fire a new search even when nothing
+      // actually changed, which can trigger infinite render loops.
+      const prevKeys = Object.keys(prev);
+      const nextKeys = Object.keys(next);
+      if (prevKeys.length === nextKeys.length) {
+        const changed = nextKeys.some((key) => {
+          const pv = prev[key];
+          const nv = next[key];
+          // Deep-compare arrays (e.g. insideBoundingBox) by value
+          if (Array.isArray(pv) && Array.isArray(nv)) {
+            return JSON.stringify(pv) !== JSON.stringify(nv);
+          }
+          return pv !== nv;
+        });
+        if (!changed) {
+          return prev; // same reference → React skips re-render
+        }
+      }
+
+      return next;
+    });
   }, []);
 
   const contextValue: SearchConfigContextValue = {

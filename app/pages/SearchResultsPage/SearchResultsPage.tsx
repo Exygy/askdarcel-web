@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useCallback, useState, useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useInstantSearch } from "react-instantsearch-core";
 import { SearchMapActions } from "components/SearchAndBrowse/SearchResults/SearchResults";
@@ -7,19 +7,33 @@ import styles from "./SearchResultsPage.module.scss";
 import classNames from "classnames";
 import { SearchMap } from "components/SearchAndBrowse/SearchMap/SearchMap";
 import { SearchResult } from "components/SearchAndBrowse/SearchResults/SearchResult";
-import {
-  useSearchResults,
-  useSearchPagination,
-} from "../../search/hooks";
+import { useSearchResults, useSearchPagination } from "../../search/hooks";
 import searchResultsStyles from "components/SearchAndBrowse/SearchResults/SearchResults.module.scss";
 import { Loader } from "components/ui/Loader";
 import ResultsPagination from "components/SearchAndBrowse/Pagination/ResultsPagination";
 import { NoSearchResultsDisplay } from "components/ui/NoSearchResultsDisplay";
 import { SearchResultsHeader } from "components/ui/SearchResultsHeader";
-import { SearchConfigProvider } from "utils/SearchConfigContext";
+import {
+  SearchConfigProvider,
+  useSearchConfig,
+} from "utils/SearchConfigContext";
 import { useAppContext, DEFAULT_AROUND_PRECISION } from "utils";
 
 export const HITS_PER_PAGE = 40;
+
+/**
+ * Helper: build a bounding-box config object from a comma-separated string.
+ * Returned object also clears all radius-based params to avoid conflicts.
+ */
+const buildBoundingBoxConfig = (bb: string) => ({
+  hitsPerPage: HITS_PER_PAGE,
+  filters: "",
+  insideBoundingBox: [bb.split(",").map(Number)],
+  aroundLatLng: undefined,
+  aroundRadius: undefined,
+  aroundPrecision: undefined,
+  minimumAroundRadius: undefined,
+});
 
 /**
  * SearchResultsPageContent - The main content component that uses search config
@@ -34,6 +48,8 @@ const RADIUS_TO_ZOOM: Record<number, number> = {
 };
 
 const SearchResultsPageContent = () => {
+  const { updateConfig } = useSearchConfig();
+
   const [isMapCollapsed, setIsMapCollapsed] = useState(false);
   const [isMapInitialized, setIsMapInitialized] = useState(false);
   const [customMapCenter, setCustomMapCenter] = useState<{
@@ -51,17 +67,64 @@ const SearchResultsPageContent = () => {
   } = useSearchResults();
   const { setIndexUiState } = useInstantSearch();
   const [searchParams] = useSearchParams();
+  const { aroundUserLocationRadius, aroundLatLng, boundingBox } =
+    useAppContext();
+
+  // Track the last bounding-box / aroundLatLng values that we applied to
+  // the search config.  This prevents the reactive useEffect from firing
+  // repeatedly with the same values (which would create new array
+  // references, cause <Configure> to re-render, and trigger an infinite
+  // search loop).
+  const lastAppliedGeo = useRef<string>("");
 
   useEffect(() => window.scrollTo(0, 0), []);
 
   // Set query from URL search params (e.g., /search?q=food) on navigation.
-  // Replaces the entire UI state (not merge) to wipe any lingering geo params
-  // or other state that the historyRouter may have restored from the previous page.
+  // Uses a functional update to merge with existing state instead of
+  // replacing it, so geo parameters and other config are not wiped.
   useEffect(() => {
     const searchQuery = searchParams.get("q");
     if (!searchQuery) return;
-    setIndexUiState({ query: searchQuery });
-  }, [searchParams, setIndexUiState]);
+    setIndexUiState((prev) => ({ ...prev, query: searchQuery }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
+
+  // Apply geo config when the map initialises or the bounding box /
+  // aroundLatLng changes (e.g. "Search this area").
+  useEffect(() => {
+    if (!isMapInitialized) return;
+    if (!boundingBox && !aroundLatLng) return;
+
+    // Build a stable key that represents the geo params we would apply.
+    // If nothing changed since the last application, skip to avoid
+    // creating new object references that trigger <Configure> re-renders.
+    const geoKey = boundingBox
+      ? `bb:${boundingBox}`
+      : `ll:${aroundLatLng}|r:${aroundUserLocationRadius}`;
+
+    if (geoKey === lastAppliedGeo.current) return;
+    lastAppliedGeo.current = geoKey;
+
+    if (boundingBox) {
+      updateConfig(buildBoundingBoxConfig(boundingBox));
+    } else {
+      updateConfig({
+        hitsPerPage: HITS_PER_PAGE,
+        filters: "",
+        aroundLatLng,
+        aroundRadius: aroundUserLocationRadius,
+        aroundPrecision: DEFAULT_AROUND_PRECISION,
+        minimumAroundRadius: 100,
+        insideBoundingBox: undefined,
+      });
+    }
+  }, [
+    isMapInitialized,
+    boundingBox,
+    aroundLatLng,
+    aroundUserLocationRadius,
+    updateConfig,
+  ]);
 
   const handleLocationSelect = useCallback(
     (lat: number, lng: number, radius: number) => {
@@ -92,9 +155,13 @@ const SearchResultsPageContent = () => {
   const handleAction = (searchMapAction: SearchMapActions) => {
     switch (searchMapAction) {
       case SearchMapActions.SearchThisArea:
-        // Center and radius are already updated in the SearchMap component
-        // Just reset pagination to show the first page of results
-        return goToPage(0);
+        // Do NOT call goToPage(0) here. That would trigger
+        // helper.search() immediately with stale helper state (old
+        // bounding box) before the reactive useEffect has a chance to
+        // apply the new bounding box via <Configure>. InstantSearch
+        // automatically resets to page 0 when search parameters change,
+        // so explicit pagination reset is unnecessary.
+        return;
       case SearchMapActions.MapInitialized:
         // Map has initialized and bounding box is now available
         setIsMapInitialized(true);
@@ -105,12 +172,15 @@ const SearchResultsPageContent = () => {
   return (
     <div className={styles.results}>
       <div className={classNames(styles.container, "searchResultsPage")}>
-        <FilterHeader
-          isSearchResultsPage
-          isMapCollapsed={isMapCollapsed}
-          setIsMapCollapsed={setIsMapCollapsed}
-          onLocationSelect={handleLocationSelect}
-        />
+        {/* Only render FilterHeader after map is initialized to prevent premature search */}
+        {isMapInitialized && (
+          <FilterHeader
+            isSearchResultsPage
+            isMapCollapsed={isMapCollapsed}
+            setIsMapCollapsed={setIsMapCollapsed}
+            onLocationSelect={handleLocationSelect}
+          />
+        )}
 
         <div className={styles.flexContainer}>
           <div className={styles.results}>
@@ -178,24 +248,21 @@ const SearchResultsPageContent = () => {
 /**
  * SearchResultsPage - Wrapper that provides SearchConfigProvider
  *
- * Geo params are included in the initial config so "All Services" (/search
- * with no query) returns location-relevant results. When the user types a
- * query, the TypesenseProvider strips geo params at the request level to
- * allow text-relevance ordering.
+ * Geo params are NOT included in the initial config. Instead, the page waits
+ * for the map to initialize and provide a bounding box, then applies it via
+ * updateConfig. This mirrors the BrowseResultsPage pattern and ensures:
+ * 1. The initial "All Services" search uses the map's visible bounding box
+ *    (not a radius), giving a spread of pins across the map.
+ * 2. "Search this area" updates the bounding box and triggers a clean
+ *    config update without infinite loops.
  */
 export const SearchResultsPage = () => {
-  const { userLocation, aroundUserLocationRadius } = useAppContext();
-
   const initialConfig = React.useMemo(
     () => ({
       hitsPerPage: HITS_PER_PAGE,
       filters: "",
-      aroundLatLng: `${userLocation?.coords.lat},${userLocation?.coords.lng}`,
-      aroundRadius: aroundUserLocationRadius,
-      aroundPrecision: DEFAULT_AROUND_PRECISION,
-      minimumAroundRadius: 100,
     }),
-    [userLocation, aroundUserLocationRadius]
+    []
   );
 
   return (

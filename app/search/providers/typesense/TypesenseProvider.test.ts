@@ -15,6 +15,11 @@ jest.mock("typesense-instantsearch-adapter", () => {
     searchClient: {
       search: mockAdapterSearch,
     },
+    // configuration: {
+    //   additionalSearchParameters: {
+    //     sort_by: "_text_match:desc,name:asc",
+    //   },
+    // },
   }));
 });
 

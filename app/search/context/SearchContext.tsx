@@ -1,10 +1,4 @@
-import React, {
-  createContext,
-  useContext,
-  ReactNode,
-  useMemo,
-  useCallback,
-} from "react";
+import React, { createContext, useContext, ReactNode, useMemo } from "react";
 import { InstantSearch } from "react-instantsearch-core";
 import { getSearchProvider } from "../providers";
 import type { ISearchProvider } from "../types";
@@ -31,14 +25,6 @@ export const SearchProvider: React.FC<SearchProviderProps> = ({ children }) => {
   const searchClient = useMemo(() => provider.getLiteClient(), [provider]);
   const indexName = useMemo(() => provider.getIndexName(), [provider]);
 
-  // searchFunction provides batching: helper.setState() calls are deferred
-  // until this function is called, preventing infinite search loops from
-  // Configure re-applying props on every render.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const searchFunction = useCallback((helper: any) => {
-    helper.search();
-  }, []);
-
   const contextValue = useMemo<SearchContextValue>(
     () => ({
       provider,
@@ -48,11 +34,7 @@ export const SearchProvider: React.FC<SearchProviderProps> = ({ children }) => {
 
   return (
     <SearchContext.Provider value={contextValue}>
-      <InstantSearch
-        searchClient={searchClient}
-        indexName={indexName}
-        searchFunction={searchFunction}
-      >
+      <InstantSearch searchClient={searchClient} indexName={indexName}>
         {children}
       </InstantSearch>
     </SearchContext.Provider>

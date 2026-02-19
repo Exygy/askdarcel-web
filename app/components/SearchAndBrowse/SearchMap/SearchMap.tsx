@@ -86,12 +86,11 @@ export const SearchMap = ({
         // Update the bounding box for search (takes precedence over radius-based filtering)
         setBoundingBox(boundingBoxString);
 
-        // Keep center point updated for reference (used for map centering)
-        const center = map.getCenter();
-        if (center) {
-          const centerStr = `${center.lat()}, ${center.lng()}`;
-          setAroundLatLng(centerStr);
-        }
+        // NOTE: We intentionally do NOT call setAroundLatLng here.
+        // Updating aroundLatLng triggers AppContext changes that feed back
+        // into the geo useEffect in SearchResultsPage, contributing to
+        // infinite loops. The map already knows its own center via the
+        // google maps object — no need to round-trip through React state.
 
         // Notify SearchResultsPage component to reset pagination
         handleSearchMapAction(SearchMapActions.SearchThisArea);
@@ -154,7 +153,9 @@ export const SearchMap = ({
             lng={offsetLng}
             hit={item.hit}
             location={item.location}
-            isHighlighted={highlightedHitId === item.hit.id || clickedHitId === item.hit.id}
+            isHighlighted={
+              highlightedHitId === item.hit.id || clickedHitId === item.hit.id
+            }
             onTooltipShow={() => setClickedHitId(item.hit.id)}
             onTooltipHide={() => setClickedHitId(null)}
           />

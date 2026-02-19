@@ -23,11 +23,12 @@ export class TypesenseProvider implements ISearchProvider {
   private instantSearchAdapter: TypesenseInstantSearchAdapter;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private cachedSearchClient: any = null;
-  // Dedup: store the last request/response so identical consecutive searches
-  // return the same object reference, preventing InstantSearch re-render loops.
+  // Dedup: store the last request key and response Promise so identical
+  // consecutive searches return the exact same Promise object reference,
+  // avoiding redundant network requests.
   private lastRequestKey = "";
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private lastResponse: any = null;
+  private lastResponsePromise: Promise<any> | null = null;
 
   constructor() {
     this.client = new Typesense.Client({
@@ -58,6 +59,12 @@ export class TypesenseProvider implements ISearchProvider {
       },
       additionalSearchParameters: {
         query_by: "name,description,organization_name",
+        // For wildcard (q=*) queries every document ties on _text_match,
+        // so the secondary sort (name:asc) controls ordering. This gives
+        // alphabetical A→Z results which naturally distributes different
+        // service types across the result set instead of clustering
+        // duplicates (e.g. many Zumba classes) together.
+        // sort_by: "_text_match:desc,name:asc",
       },
       geoLocationField: "locations",
     });
@@ -91,7 +98,7 @@ export class TypesenseProvider implements ISearchProvider {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.cachedSearchClient = {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      search: async (requests: any[]) => {
+      search: (requests: any[]): Promise<any> => {
         // Strip geo params from requests that have no category filter.
         // When navigating from a browse page (which uses geo filtering) to
         // the text search page, InstantSearch's helper retains stale geo
@@ -102,10 +109,13 @@ export class TypesenseProvider implements ISearchProvider {
           const params = req.params || req;
           const filters = params.filters;
           const query = params.query;
+
+          // Strip geo params from text-query requests with no category
+          // filter to prevent stale geo constraints from browse pages.
           if (!filters && query) {
             const {
               insideBoundingBox,
-              aroundLatLng,
+              aroundLatLng: _aroundLatLng,
               aroundRadius,
               aroundPrecision,
               minimumAroundRadius,
@@ -113,57 +123,78 @@ export class TypesenseProvider implements ISearchProvider {
             } = params;
             return req.params ? { ...req, params: cleanParams } : cleanParams;
           }
+
           return req;
         });
 
-        // Return the same response object for identical consecutive requests.
-        // This prevents InstantSearch from re-rendering in a loop when it
-        // re-fires the same search and gets a structurally identical but
-        // referentially different response.
+        // TODO: Dynamic sort_by for discovery queries (randomization).
+        // Uncomment to use random sort for wildcard queries (q=* or empty)
+        // so users see a varied mix of services instead of strict A→Z.
+        // The adapter reads sort_by from additionalSearchParameters
+        // internally (not from per-request params), so we mutate it directly.
+        //
+        // const firstParams =
+        //   cleanedRequests[0]?.params || cleanedRequests[0] || {};
+        // const queryStr = ((firstParams.query as string) ?? "").trim();
+        // const isWildcard = queryStr === "" || queryStr === "*";
+        // // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // const adapterConfig = (this.instantSearchAdapter as any).configuration;
+        // adapterConfig.additionalSearchParameters.sort_by = isWildcard
+        //   ? "_rand(42):asc"
+        //   : "_text_match:desc,name:asc";
+
+        // Return the exact same Promise for identical consecutive requests.
+        // Because the function is NOT async, we return the same Promise
+        // object reference, avoiding redundant network requests.
         const requestKey = JSON.stringify(cleanedRequests);
-        if (requestKey === this.lastRequestKey && this.lastResponse) {
-          return this.lastResponse;
+        if (requestKey === this.lastRequestKey && this.lastResponsePromise) {
+          return this.lastResponsePromise;
         }
 
-        const responses = await baseSearchClient.search(cleanedRequests);
-
-        // Normalize responses to ensure all required fields are present
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const normalizedResults = responses.results.map((result: any) => {
-          // Transform hits to add locations field from _geoloc
+        // Build the response promise and cache it.
+        const responsePromise = baseSearchClient.search(cleanedRequests).then(
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const transformedHits = (result.hits || []).map(
+          (responses: any) => {
+            // Normalize responses to ensure all required fields are present
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (hit: any, index: number) => {
-              const locations = this.extractLocationsFromGeoloc(
-                hit.locations,
-                index + 1,
-                hit.addresses
+            const normalizedResults = responses.results.map((result: any) => {
+              // Transform hits to add locations field from _geoloc
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              const transformedHits = (result.hits || []).map(
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                (hit: any, index: number) => {
+                  const locations = this.extractLocationsFromGeoloc(
+                    hit.locations,
+                    index + 1,
+                    hit.addresses
+                  );
+                  return {
+                    ...hit,
+                    locations,
+                    addressDisplay: this.computeAddressDisplay(hit),
+                  };
+                }
               );
+
               return {
-                ...hit,
-                locations,
-                addressDisplay: this.computeAddressDisplay(hit),
+                ...result,
+                hits: transformedHits,
+                nbHits: result.nbHits ?? result.found ?? 0,
+                nbPages: Math.ceil(
+                  (result.nbHits ?? result.found ?? 0) / (result.per_page ?? 20)
+                ),
+                page: result.page ?? 0,
+                processingTimeMS: result.processingTimeMS ?? 0,
               };
-            }
-          );
+            });
 
-          return {
-            ...result,
-            hits: transformedHits,
-            nbHits: result.nbHits ?? result.found ?? 0,
-            nbPages: Math.ceil(
-              (result.nbHits ?? result.found ?? 0) / (result.per_page ?? 20)
-            ),
-            page: result.page ?? 0,
-            processingTimeMS: result.processingTimeMS ?? 0,
-          };
-        });
+            return { results: normalizedResults };
+          }
+        );
 
-        const result = { results: normalizedResults };
         this.lastRequestKey = requestKey;
-        this.lastResponse = result;
-        return result;
+        this.lastResponsePromise = responsePromise;
+        return responsePromise;
       },
     };
 
