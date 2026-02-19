@@ -27,7 +27,6 @@ export const HITS_PER_PAGE = 40;
  */
 const buildBoundingBoxConfig = (bb: string) => ({
   hitsPerPage: HITS_PER_PAGE,
-  filters: "",
   insideBoundingBox: [bb.split(",").map(Number)],
   aroundLatLng: undefined,
   aroundRadius: undefined,
@@ -110,7 +109,6 @@ const SearchResultsPageContent = () => {
     } else {
       updateConfig({
         hitsPerPage: HITS_PER_PAGE,
-        filters: "",
         aroundLatLng,
         aroundRadius: aroundUserLocationRadius,
         aroundPrecision: DEFAULT_AROUND_PRECISION,

@@ -136,7 +136,6 @@ const BrowseResultsPageContent = ({
     if (!boundingBox && !aroundLatLng) return;
 
     const config = {
-      filters: `categories:'${typesenseCategoryName}'`,
       hitsPerPage: HITS_PER_PAGE,
       ...(boundingBox
         ? {
@@ -152,7 +151,6 @@ const BrowseResultsPageContent = ({
     updateConfig(config);
   }, [
     isMapInitialized,
-    typesenseCategoryName,
     boundingBox,
     aroundLatLng,
     aroundUserLocationRadius,
