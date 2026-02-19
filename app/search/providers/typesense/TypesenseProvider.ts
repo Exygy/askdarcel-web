@@ -181,7 +181,8 @@ export class TypesenseProvider implements ISearchProvider {
                 hits: transformedHits,
                 nbHits: result.nbHits ?? result.found ?? 0,
                 nbPages: Math.ceil(
-                  (result.nbHits ?? result.found ?? 0) / (result.per_page ?? 20)
+                  (result.nbHits ?? result.found ?? 0) /
+                    (result.hitsPerPage || 20)
                 ),
                 page: result.page ?? 0,
                 processingTimeMS: result.processingTimeMS ?? 0,

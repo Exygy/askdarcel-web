@@ -43,7 +43,11 @@ jest.mock("../../../config", () => ({
 import { TypesenseProvider } from "./TypesenseProvider";
 
 // Helper: create a minimal adapter response
-function makeAdapterResponse(hits: any[] = [], nbHits = 0) {
+function makeAdapterResponse(
+  hits: any[] = [],
+  nbHits = 0,
+  extras: Record<string, any> = {}
+) {
   return {
     results: [
       {
@@ -51,6 +55,7 @@ function makeAdapterResponse(hits: any[] = [], nbHits = 0) {
         nbHits,
         page: 0,
         processingTimeMS: 1,
+        ...extras,
       },
     ],
   };
@@ -336,6 +341,49 @@ describe("TypesenseProvider – getLiteClient().search()", () => {
         label: "1.2",
         address: { address_1: "456 Oak Ave" },
       });
+    });
+  });
+
+  // ---------------------------------------------------------------
+  // nbPages calculation
+  // ---------------------------------------------------------------
+  describe("nbPages calculation", () => {
+    it("calculates correct nbPages when hitsPerPage is 40", async () => {
+      mockAdapterSearch.mockResolvedValueOnce(
+        makeAdapterResponse([], 100, { hitsPerPage: 40 })
+      );
+
+      const response = await searchClient.search([
+        { params: { query: "test" } },
+      ]);
+
+      expect(response.results[0].nbPages).toBe(3);
+    });
+
+    it("handles facet-only requests where hitsPerPage is 0", async () => {
+      mockAdapterSearch.mockResolvedValueOnce(
+        makeAdapterResponse([], 100, { hitsPerPage: 0 })
+      );
+
+      const response = await searchClient.search([
+        { params: { query: "test" } },
+      ]);
+
+      // hitsPerPage 0 should fall back to 20, not produce Infinity
+      expect(response.results[0].nbPages).toBe(5);
+      expect(response.results[0].nbPages).not.toBe(Infinity);
+    });
+
+    it("calculates nbPages as 1 for results fewer than hitsPerPage", async () => {
+      mockAdapterSearch.mockResolvedValueOnce(
+        makeAdapterResponse([], 15, { hitsPerPage: 40 })
+      );
+
+      const response = await searchClient.search([
+        { params: { query: "test" } },
+      ]);
+
+      expect(response.results[0].nbPages).toBe(1);
     });
   });
 

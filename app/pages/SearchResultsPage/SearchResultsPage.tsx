@@ -145,12 +145,13 @@ const SearchResultsPageContent = () => {
   // No need for additional transformation
   const searchMapHitData = searchResults || { hits: [], nbHits: 0 };
 
-  // Show loading state only while search is in progress (not map)
-  // Search results are pure text-relevance, independent of the map
-  const isLoading = isSearching;
+  // Show the initial loader only before the first results arrive.
+  // Once we have results, keep them (and the Pagination widget) mounted
+  // during subsequent searches so InstantSearch widgets don't reset.
+  const isInitialLoad = !searchResults && isSearching;
 
   // Only show "no results" when search is complete (idle) and we have 0 hits
-  const hasNoResults = !isLoading && searchMapHitData.nbHits === 0 && isIdle;
+  const hasNoResults = !isSearching && searchMapHitData.nbHits === 0 && isIdle;
 
   const handleAction = (searchMapAction: SearchMapActions) => {
     switch (searchMapAction) {
@@ -193,7 +194,7 @@ const SearchResultsPageContent = () => {
                 }`}
               >
                 <h2 className="sr-only">Search results</h2>
-                {isLoading ? (
+                {isInitialLoad ? (
                   <div className={styles.loadingContainer}>
                     <Loader />
                     <p>Loading results...</p>

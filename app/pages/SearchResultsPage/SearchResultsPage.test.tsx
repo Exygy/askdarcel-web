@@ -94,6 +94,31 @@ const TestWrapper = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
+/** Creates a search client that returns hits so pagination renders */
+function createSearchClientWithHits() {
+  return {
+    search: (requests: any) =>
+      Promise.resolve({
+        results: requests.map(() => ({
+          hits: Array.from({ length: 10 }, (_, i) => ({
+            objectID: `${i}`,
+            id: `${i}`,
+            name: `Result ${i}`,
+            addresses: [{ address_1: `${i} Main St` }],
+            locations: [],
+          })),
+          page: 0,
+          nbHits: 50,
+          nbPages: 2,
+          hitsPerPage: 40,
+          processingTimeMS: 1,
+          params: "",
+          query: "food",
+        })),
+      }),
+  };
+}
+
 describe("SearchResultsPage", () => {
   test("renders the Clear Search button", async () => {
     const searchClient = createSearchClient();
@@ -121,6 +146,42 @@ describe("SearchResultsPage", () => {
 
     await waitFor(() => {
       expect(screen.getByTestId("clear-search-button")).toBeInTheDocument();
+    });
+  });
+
+  test("keeps Pagination widget mounted during loading", async () => {
+    const searchClient = createSearchClientWithHits();
+
+    render(
+      <MemoryRouter>
+        <TestWrapper>
+          <InstantSearch
+            searchClient={searchClient}
+            indexName="fake_test_search_index"
+            initialUiState={{
+              fake_test_search_index: {
+                query: "food",
+              },
+            }}
+          >
+            <SearchContextTestProvider>
+              <SearchResultsPage />
+            </SearchContextTestProvider>
+          </InstantSearch>
+        </TestWrapper>
+      </MemoryRouter>
+    );
+
+    // Wait for results to render — pagination appears with page links
+    await waitFor(() => {
+      expect(screen.getByLabelText("Page 1")).toBeInTheDocument();
+    });
+
+    // The pagination widget should remain in the DOM even after the initial
+    // render cycle (which previously caused unmount/remount due to
+    // isLoading toggling). Verify it's still there after a short wait.
+    await waitFor(() => {
+      expect(screen.getByLabelText("Page 1")).toBeInTheDocument();
     });
   });
 });
