@@ -1,4 +1,5 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
+import ReactDOM from "react-dom";
 import {
   usePlacesAutocomplete,
   PlacePrediction,
@@ -33,8 +34,24 @@ export const DistanceFilterContent = ({
   const [inputValue, setInputValue] = useState(locationText);
   const [showDropdown, setShowDropdown] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const [dropdownPos, setDropdownPos] = useState<{
+    top: number;
+    left: number;
+    width: number;
+  } | null>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const updateDropdownPos = useCallback(() => {
+    if (wrapperRef.current) {
+      const rect = wrapperRef.current.getBoundingClientRect();
+      setDropdownPos({
+        top: rect.bottom + 4,
+        left: rect.left,
+        width: rect.width,
+      });
+    }
+  }, []);
 
   const {
     predictions,
@@ -129,12 +146,17 @@ export const DistanceFilterContent = ({
     inputRef.current?.focus();
   };
 
-  // Close dropdown when clicking outside
+  // Close dropdown when clicking outside (check both the wrapper and the portal dropdown)
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
+      const portalDropdown = document.getElementById(
+        "places-autocomplete-list"
+      );
       if (
         wrapperRef.current &&
-        !wrapperRef.current.contains(event.target as Node)
+        !wrapperRef.current.contains(target) &&
+        (!portalDropdown || !portalDropdown.contains(target))
       ) {
         setShowDropdown(false);
       }
@@ -147,9 +169,22 @@ export const DistanceFilterContent = ({
   // Show dropdown when predictions arrive
   useEffect(() => {
     if (predictions.length > 0) {
+      updateDropdownPos();
       setShowDropdown(true);
     }
-  }, [predictions]);
+  }, [predictions, updateDropdownPos]);
+
+  // Reposition on scroll/resize while dropdown is visible
+  useEffect(() => {
+    if (!showDropdown) return;
+    const handleReposition = () => updateDropdownPos();
+    window.addEventListener("scroll", handleReposition, true);
+    window.addEventListener("resize", handleReposition);
+    return () => {
+      window.removeEventListener("scroll", handleReposition, true);
+      window.removeEventListener("resize", handleReposition);
+    };
+  }, [showDropdown, updateDropdownPos]);
 
   return (
     <div>
@@ -164,6 +199,7 @@ export const DistanceFilterContent = ({
           onKeyDown={handleKeyDown}
           onFocus={() => {
             if (predictions.length > 0) {
+              updateDropdownPos();
               setShowDropdown(true);
             }
           }}
@@ -204,50 +240,72 @@ export const DistanceFilterContent = ({
           </svg>
         </button>
 
-        {showDropdown && predictions.length > 0 && (
-          <div
-            id="places-autocomplete-list"
-            className={styles.autocompleteDropdown}
-            role="listbox"
-          >
-            {predictions.map((prediction, index) => (
-              <div
-                key={prediction.placeId}
-                className={`${styles.autocompleteItem} ${
-                  index === highlightedIndex
-                    ? styles.autocompleteItemHighlighted
-                    : ""
-                }`}
-                onClick={() => handleSelectPlace(prediction)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    handleSelectPlace(prediction);
-                  }
-                }}
-                onMouseEnter={() => setHighlightedIndex(index)}
-                role="option"
-                aria-selected={index === highlightedIndex}
-                tabIndex={0}
-              >
-                <span className={styles.autocompleteMainText}>
-                  {prediction.mainText}
-                </span>
-                {prediction.secondaryText && (
-                  <span className={styles.autocompleteSecondaryText}>
-                    {prediction.secondaryText}
+        {showDropdown &&
+          predictions.length > 0 &&
+          dropdownPos &&
+          ReactDOM.createPortal(
+            <div
+              id="places-autocomplete-list"
+              className={styles.autocompleteDropdown}
+              role="listbox"
+              style={{
+                position: "fixed",
+                top: dropdownPos.top,
+                left: dropdownPos.left,
+                width: dropdownPos.width,
+              }}
+            >
+              {predictions.map((prediction, index) => (
+                <div
+                  key={prediction.placeId}
+                  className={`${styles.autocompleteItem} ${
+                    index === highlightedIndex
+                      ? styles.autocompleteItemHighlighted
+                      : ""
+                  }`}
+                  onClick={() => handleSelectPlace(prediction)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      handleSelectPlace(prediction);
+                    }
+                  }}
+                  onMouseEnter={() => setHighlightedIndex(index)}
+                  role="option"
+                  aria-selected={index === highlightedIndex}
+                  tabIndex={0}
+                >
+                  <span className={styles.autocompleteMainText}>
+                    {prediction.mainText}
                   </span>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
+                  {prediction.secondaryText && (
+                    <span className={styles.autocompleteSecondaryText}>
+                      {prediction.secondaryText}
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>,
+            document.body
+          )}
 
-        {isLoading && predictions.length === 0 && (
-          <div className={styles.autocompleteDropdown}>
-            <div className={styles.autocompleteLoading}>Searching...</div>
-          </div>
-        )}
+        {isLoading &&
+          predictions.length === 0 &&
+          dropdownPos &&
+          ReactDOM.createPortal(
+            <div
+              className={styles.autocompleteDropdown}
+              style={{
+                position: "fixed",
+                top: dropdownPos.top,
+                left: dropdownPos.left,
+                width: dropdownPos.width,
+              }}
+            >
+              <div className={styles.autocompleteLoading}>Searching...</div>
+            </div>,
+            document.body
+          )}
       </div>
 
       {locationText && (

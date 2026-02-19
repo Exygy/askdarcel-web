@@ -99,6 +99,8 @@
   border-bottom: 1px solid #e0e0e0;
   background-color: #fff;
   flex-shrink: 0;
+  width: 100%;
+  box-sizing: border-box;
 
   @include r_max($break-tablet-s) {
     padding: 12px 16px;
@@ -154,10 +156,11 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 0;
+  padding: 8px 10px;
   cursor: pointer;
   font-size: 14px;
   color: #333;
+  border-radius: 6px;
 
   &:hover {
     background-color: #f5f5f5;
@@ -183,9 +186,13 @@
   height: 18px;
   margin: 0;
   flex-shrink: 0;
+  pointer-events: none;
 
   &:disabled {
     cursor: not-allowed;
+  }
+  &:hover {
+    box-shadow: none;
   }
 }
 
@@ -310,24 +317,25 @@
 .radioGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 4px 16px;
+  gap: 2px 8px;
 }
 
 // Eligibility checkbox grid
 .checkboxGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 4px 16px;
+  gap: 2px 8px;
 }
 
 .checkboxOption {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 0;
+  padding: 8px 10px;
   cursor: pointer;
   font-size: 14px;
   color: #333;
+  border-radius: 6px;
 
   &:hover {
     background-color: #f5f5f5;
@@ -365,13 +373,8 @@
   }
 }
 
-// Autocomplete dropdown for location search
+// Autocomplete dropdown for location search (rendered via portal with fixed positioning)
 .autocompleteDropdown {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  margin-top: 4px;
   background-color: #fff;
   border: 1px solid #e0e0e0;
   border-radius: 8px;

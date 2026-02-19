@@ -79,7 +79,11 @@ export const FilterDropdown = ({
     return (
       <FloatingPortal>
         <div className={styles.filterDropdownMobileOverlay}>
-          <div className={styles.filterDropdownMobile}>
+          <div
+            ref={refs.setFloating}
+            className={styles.filterDropdownMobile}
+            {...getFloatingProps()}
+          >
             <div className={styles.filterDropdownHeader}>
               <h3 className={styles.filterDropdownTitle}>{title}</h3>
               <Button variant="linkBlue" onClick={onClose} size="sm">
