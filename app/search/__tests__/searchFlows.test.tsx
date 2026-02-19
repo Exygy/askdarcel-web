@@ -424,7 +424,72 @@ describe("Search Flow Integration Tests", () => {
   });
 
   // ---------------------------------------------------------------
-  // Flow 7: Search → re-search → query updates
+  // Flow 7: Geo params are NOT stripped from text search requests
+  // ---------------------------------------------------------------
+  describe("Flow 7: Geo params preserved in text search", () => {
+    it("geo params are NOT stripped from text search requests", async () => {
+      render(
+        <MemoryRouter initialEntries={["/search?q=food"]}>
+          <TestWrapper initialQuery="food">
+            <SearchResultsPage />
+          </TestWrapper>
+        </MemoryRouter>
+      );
+
+      // Wait for map to initialize and geo params to be applied
+      await waitFor(() => {
+        const match = findSearchCallWith(
+          (p) => p.query === "food" && p.aroundLatLng !== undefined && p.aroundLatLng !== ""
+        );
+        expect(match).not.toBeNull();
+      });
+
+      const params = findSearchCallWith(
+        (p) => p.query === "food" && p.aroundLatLng !== undefined && p.aroundLatLng !== ""
+      )!;
+      expect(params.aroundLatLng).toContain("37.7749");
+    });
+  });
+
+  // ---------------------------------------------------------------
+  // Flow 8: Geo params preserved when filters is empty string
+  // (Regression: previously, filters="" caused geo stripping)
+  // ---------------------------------------------------------------
+  describe("Flow 8: Geo preserved with empty filters (search page)", () => {
+    it("geo params are sent even though filters is empty string", async () => {
+      render(
+        <MemoryRouter initialEntries={["/search?q=child+care"]}>
+          <TestWrapper initialQuery="child care">
+            <SearchResultsPage />
+          </TestWrapper>
+        </MemoryRouter>
+      );
+
+      // The search page sets filters: "" initially. After map init,
+      // geo params should still be present in the search request.
+      await waitFor(() => {
+        const match = findSearchCallWith(
+          (p) =>
+            p.query === "child care" &&
+            p.aroundLatLng !== undefined &&
+            p.aroundLatLng !== ""
+        );
+        expect(match).not.toBeNull();
+      });
+
+      const params = findSearchCallWith(
+        (p) =>
+          p.query === "child care" &&
+          p.aroundLatLng !== undefined &&
+          p.aroundLatLng !== ""
+      )!;
+      // filters is empty string (falsy) but geo should NOT be stripped
+      expect(params.aroundLatLng).toContain("37.7749");
+    });
+  });
+
+  // ---------------------------------------------------------------
+  // Flow 9: Search → re-search → query updates
   // ---------------------------------------------------------------
   describe("Flow 7: Sequential searches update query", () => {
     it("search query updates when URL changes", async () => {

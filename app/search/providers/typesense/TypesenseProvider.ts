@@ -99,33 +99,9 @@ export class TypesenseProvider implements ISearchProvider {
     this.cachedSearchClient = {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       search: (requests: any[]): Promise<any> => {
-        // Strip geo params from requests that have no category filter.
-        // When navigating from a browse page (which uses geo filtering) to
-        // the text search page, InstantSearch's helper retains stale geo
-        // params (insideBoundingBox, aroundLatLng, etc.) across page
-        // transitions. On a fresh page load these params are never set,
-        // so we replicate that clean state here.
-        const cleanedRequests = requests.map((req: any) => {
-          const params = req.params || req;
-          const filters = params.filters;
-          const query = params.query;
-
-          // Strip geo params from text-query requests with no category
-          // filter to prevent stale geo constraints from browse pages.
-          if (!filters && query) {
-            const {
-              insideBoundingBox,
-              aroundLatLng: _aroundLatLng,
-              aroundRadius,
-              aroundPrecision,
-              minimumAroundRadius,
-              ...cleanParams
-            } = params;
-            return req.params ? { ...req, params: cleanParams } : cleanParams;
-          }
-
-          return req;
-        });
+        // Each page manages its own geo params via <Configure>, and
+        // Configure's mount/dispose cycle handles cleanup during page
+        // transitions. No geo stripping needed here.
 
         // TODO: Dynamic sort_by for discovery queries (randomization).
         // Uncomment to use random sort for wildcard queries (q=* or empty)
@@ -146,13 +122,13 @@ export class TypesenseProvider implements ISearchProvider {
         // Return the exact same Promise for identical consecutive requests.
         // Because the function is NOT async, we return the same Promise
         // object reference, avoiding redundant network requests.
-        const requestKey = JSON.stringify(cleanedRequests);
+        const requestKey = JSON.stringify(requests);
         if (requestKey === this.lastRequestKey && this.lastResponsePromise) {
           return this.lastResponsePromise;
         }
 
         // Build the response promise and cache it.
-        const responsePromise = baseSearchClient.search(cleanedRequests).then(
+        const responsePromise = baseSearchClient.search(requests).then(
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (responses: any) => {
             // Normalize responses to ensure all required fields are present

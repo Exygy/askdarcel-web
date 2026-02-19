@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import GoogleMap from "google-map-react";
 import { Tooltip } from "react-tippy";
 import "react-tippy/dist/tippy.css";
@@ -24,6 +24,8 @@ interface SearchMapProps {
   customCenter?: { lat: number; lng: number } | null;
   customZoom?: number | null;
   highlightedHitId?: string | null;
+  /** Increment to trigger a fitBounds reset to the initial map view. */
+  resetViewCount?: number;
 }
 
 export const SearchMap = ({
@@ -33,6 +35,7 @@ export const SearchMap = ({
   customCenter,
   customZoom,
   highlightedHitId,
+  resetViewCount,
 }: SearchMapProps) => {
   const [googleMapObject, setMapObject] = useState<google.maps.Map | null>(
     null
@@ -40,6 +43,10 @@ export const SearchMap = ({
   const [clickedHitId, setClickedHitId] = useState<string | null>(null);
   const { userLocation, aroundLatLng, boundingBox } = useAppContext();
   const { setAroundLatLng, setBoundingBox } = useAppContextUpdater();
+
+  // Stores the LatLngBounds captured when the map first becomes idle.
+  // Used to restore the original view when the user performs a new search.
+  const initialBoundsRef = useRef<google.maps.LatLngBounds | null>(null);
 
   // Pan to custom center and zoom when they change (e.g. from distance filter)
   React.useEffect(() => {
@@ -69,6 +76,24 @@ export const SearchMap = ({
       });
     }
   }, [googleMapObject, customCenter, customZoom, setBoundingBox]);
+
+  // When resetViewCount increments, fit the map back to the initial bounding
+  // box captured on first load, then re-capture the actual rendered bounds.
+  React.useEffect(() => {
+    if (!googleMapObject || !resetViewCount || !initialBoundsRef.current) return;
+
+    googleMapObject.fitBounds(initialBoundsRef.current);
+
+    const idleListener = googleMapObject.addListener("idle", () => {
+      google.maps.event.removeListener(idleListener);
+      const bounds = googleMapObject.getBounds();
+      if (bounds) {
+        const ne = bounds.getNorthEast();
+        const sw = bounds.getSouthWest();
+        setBoundingBox(`${ne.lat()},${sw.lng()},${sw.lat()},${ne.lng()}`);
+      }
+    });
+  }, [googleMapObject, resetViewCount, setBoundingBox]);
 
   function handleSearchThisAreaClick() {
     const map = googleMapObject;
@@ -202,11 +227,12 @@ export const SearchMap = ({
               const [neLat, swLng, swLat, neLng] = boundingBox
                 .split(",")
                 .map(Number);
-              const bounds = new google.maps.LatLngBounds(
+              const llBounds = new google.maps.LatLngBounds(
                 new google.maps.LatLng(swLat, swLng), // SW corner
                 new google.maps.LatLng(neLat, neLng) // NE corner
               );
-              map.fitBounds(bounds);
+              map.fitBounds(llBounds);
+              initialBoundsRef.current = llBounds;
 
               // Notify that map is initialized
               handleSearchMapAction(SearchMapActions.MapInitialized);
@@ -218,6 +244,7 @@ export const SearchMap = ({
 
                 const bounds = map.getBounds();
                 if (bounds) {
+                  initialBoundsRef.current = bounds;
                   const ne = bounds.getNorthEast();
                   const sw = bounds.getSouthWest();
                   const boundingBoxString = `${ne.lat()},${sw.lng()},${sw.lat()},${ne.lng()}`;

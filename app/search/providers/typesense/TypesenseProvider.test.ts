@@ -74,10 +74,11 @@ describe("TypesenseProvider – getLiteClient().search()", () => {
   });
 
   // ---------------------------------------------------------------
-  // Flow: Text search = no geo filtering (has query, no filters)
+  // Flow: Text search – geo params are now preserved (no stripping)
+  // Each page manages its own geo params via <Configure>.
   // ---------------------------------------------------------------
-  describe("geo-param stripping (text search – has query, no filters)", () => {
-    it("strips geo params when request has a query and no filters", async () => {
+  describe("geo-param preservation (text search – has query, no filters)", () => {
+    it("does not strip geo params from requests with query and no filters", async () => {
       const request = {
         params: {
           query: "food",
@@ -95,19 +96,19 @@ describe("TypesenseProvider – getLiteClient().search()", () => {
       const sentRequests = mockAdapterSearch.mock.calls[0][0];
       const sentParams = sentRequests[0].params;
 
-      // Geo params should be removed
-      expect(sentParams).not.toHaveProperty("insideBoundingBox");
-      expect(sentParams).not.toHaveProperty("aroundLatLng");
-      expect(sentParams).not.toHaveProperty("aroundRadius");
-      expect(sentParams).not.toHaveProperty("aroundPrecision");
-      expect(sentParams).not.toHaveProperty("minimumAroundRadius");
+      // Geo params should be preserved
+      expect(sentParams.insideBoundingBox).toEqual([[37.8, -122.5, 37.7, -122.4]]);
+      expect(sentParams.aroundLatLng).toBe("37.78,-122.42");
+      expect(sentParams.aroundRadius).toBe(1600);
+      expect(sentParams.aroundPrecision).toBe(100);
+      expect(sentParams.minimumAroundRadius).toBe(500);
 
-      // Non-geo params should be preserved
+      // Non-geo params should also be preserved
       expect(sentParams.query).toBe("food");
       expect(sentParams.hitsPerPage).toBe(40);
     });
 
-    it("strips geo params when query is present and filters is empty string", async () => {
+    it("does not strip geo params when query is present and filters is empty string", async () => {
       const request = {
         params: {
           query: "shelter",
@@ -119,8 +120,8 @@ describe("TypesenseProvider – getLiteClient().search()", () => {
       await searchClient.search([request]);
 
       const sentParams = mockAdapterSearch.mock.calls[0][0][0].params;
-      // Empty string is falsy, so geo params should be stripped
-      expect(sentParams).not.toHaveProperty("aroundLatLng");
+      // Geo params should be preserved even with empty filters
+      expect(sentParams.aroundLatLng).toBe("37.78,-122.42");
       expect(sentParams.query).toBe("shelter");
     });
   });

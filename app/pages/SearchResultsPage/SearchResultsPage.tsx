@@ -7,7 +7,11 @@ import styles from "./SearchResultsPage.module.scss";
 import classNames from "classnames";
 import { SearchMap } from "components/SearchAndBrowse/SearchMap/SearchMap";
 import { SearchResult } from "components/SearchAndBrowse/SearchResults/SearchResult";
-import { useSearchResults, useSearchPagination } from "../../search/hooks";
+import {
+  useSearchResults,
+  useSearchPagination,
+  useClearRefinements,
+} from "../../search/hooks";
 import searchResultsStyles from "components/SearchAndBrowse/SearchResults/SearchResults.module.scss";
 import { Loader } from "components/ui/Loader";
 import ResultsPagination from "components/SearchAndBrowse/Pagination/ResultsPagination";
@@ -17,7 +21,7 @@ import {
   SearchConfigProvider,
   useSearchConfig,
 } from "utils/SearchConfigContext";
-import { useAppContext, DEFAULT_AROUND_PRECISION } from "utils";
+import { useAppContext, useAppContextUpdater, DEFAULT_AROUND_PRECISION } from "utils";
 
 export const HITS_PER_PAGE = 40;
 
@@ -56,6 +60,7 @@ const SearchResultsPageContent = () => {
     lng: number;
   } | null>(null);
   const [customMapZoom, setCustomMapZoom] = useState<number | null>(null);
+  const [resetViewCount, setResetViewCount] = useState(0);
   const [hoveredHitId, setHoveredHitId] = useState<string | null>(null);
   const { goToPage, currentPage } = useSearchPagination();
   const {
@@ -64,10 +69,13 @@ const SearchResultsPageContent = () => {
     isSearching,
     query,
   } = useSearchResults();
+  const { clearAll: clearRefinements } = useClearRefinements();
   const { setIndexUiState } = useInstantSearch();
   const [searchParams] = useSearchParams();
-  const { aroundUserLocationRadius, aroundLatLng, boundingBox } =
+  const { userLocation, aroundUserLocationRadius, aroundLatLng, boundingBox } =
     useAppContext();
+  const { setBoundingBox, setAroundLatLng, setAroundRadius } =
+    useAppContextUpdater();
 
   // Track the last bounding-box / aroundLatLng values that we applied to
   // the search config.  This prevents the reactive useEffect from firing
@@ -76,15 +84,54 @@ const SearchResultsPageContent = () => {
   // search loop).
   const lastAppliedGeo = useRef<string>("");
 
+  // Track whether the searchParams effect has already fired once (initial load).
+  const isInitialSearchRef = useRef(true);
+
+  // Stores the initial bounding box string so we can restore it on new searches.
+  const initialBoundingBox = useRef<string | undefined>(undefined);
+
   useEffect(() => window.scrollTo(0, 0), []);
 
+  // Capture the initial bounding box once after map initialization.
+  // Uses a useEffect (not handleAction) because setBoundingBox is a batched
+  // React state update: boundingBox in context hasn't updated yet when the
+  // MapInitialized action fires synchronously in the same callback.
+  useEffect(() => {
+    if (isMapInitialized && boundingBox && !initialBoundingBox.current) {
+      initialBoundingBox.current = boundingBox;
+    }
+  }, [isMapInitialized, boundingBox]);
+
   // Set query from URL search params (e.g., /search?q=food) on navigation.
-  // Uses a functional update to merge with existing state instead of
-  // replacing it, so geo parameters and other config are not wiped.
+  // On subsequent searches (not the initial load), reset all geo state and
+  // the map view so the new search starts fresh.
   useEffect(() => {
     const searchQuery = searchParams.get("q");
     if (!searchQuery) return;
+
     setIndexUiState((prev) => ({ ...prev, query: searchQuery }));
+
+    if (isInitialSearchRef.current) {
+      isInitialSearchRef.current = false;
+    } else {
+      // Restore the initial bounding box immediately so search results reflect
+      // the original map view while the map is animating back.
+      setBoundingBox(initialBoundingBox.current);
+      // Tell SearchMap to fitBounds back to the initial view. SearchMap will
+      // re-capture the bounding box once the animation completes.
+      setResetViewCount((c) => c + 1);
+      // Reset fallback geo params (used if bounding box is undefined)
+      if (userLocation) {
+        setAroundLatLng(
+          `${userLocation.coords.lat},${userLocation.coords.lng}`
+        );
+      }
+      setAroundRadius(1600);
+      // Allow the geo useEffect to re-apply with the reset values
+      lastAppliedGeo.current = "";
+      // Clear eligibility refinements
+      clearRefinements();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
@@ -162,7 +209,6 @@ const SearchResultsPageContent = () => {
         // so explicit pagination reset is unnecessary.
         return;
       case SearchMapActions.MapInitialized:
-        // Map has initialized and bounding box is now available
         setIsMapInitialized(true);
         return;
     }
@@ -234,6 +280,7 @@ const SearchResultsPageContent = () => {
                 handleSearchMapAction={handleAction}
                 customCenter={customMapCenter}
                 customZoom={customMapZoom}
+                resetViewCount={resetViewCount}
                 highlightedHitId={hoveredHitId}
               />
             </div>

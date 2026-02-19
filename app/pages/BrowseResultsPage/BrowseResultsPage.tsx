@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useInstantSearch } from "react-instantsearch-core";
 import {
@@ -70,6 +70,10 @@ const BrowseResultsPageContent = ({
 
   const { setBoundingBox, setAroundLatLng, setAroundRadius } =
     useAppContextUpdater();
+
+  // Track the last geo values applied to prevent unnecessary re-renders
+  const lastAppliedGeo = useRef<string>("");
+
   const { results: searchResults, isIdle } = useSearchResults();
   const { goToPage, currentPage } = useSearchPagination();
   const { clearAll: clearRefinements } = useClearRefinements();
@@ -128,27 +132,40 @@ const BrowseResultsPageContent = ({
 
   const categoryName = category.name;
 
-  // Update Typesense search config when map is initialized with geo parameters
+  // Update Typesense search config when map is initialized with geo parameters.
+  // Explicitly clears conflicting geo params to prevent both insideBoundingBox
+  // and aroundLatLng from coexisting in the merged SearchConfig.
   useEffect(() => {
     if (!isMapInitialized) return;
-
-    // Wait until we have geographic data (boundingBox OR aroundLatLng)
     if (!boundingBox && !aroundLatLng) return;
 
-    const config = {
-      hitsPerPage: HITS_PER_PAGE,
-      ...(boundingBox
-        ? {
-            insideBoundingBox: [boundingBox.split(",").map(Number)],
-          }
-        : {
-            aroundLatLng,
-            aroundRadius: aroundUserLocationRadius,
-            aroundPrecision: DEFAULT_AROUND_PRECISION,
-            minimumAroundRadius: 100,
-          }),
-    };
-    updateConfig(config);
+    // Build a stable key to skip duplicate applications
+    const geoKey = boundingBox
+      ? `bb:${boundingBox}`
+      : `ll:${aroundLatLng}|r:${aroundUserLocationRadius}`;
+
+    if (geoKey === lastAppliedGeo.current) return;
+    lastAppliedGeo.current = geoKey;
+
+    if (boundingBox) {
+      updateConfig({
+        hitsPerPage: HITS_PER_PAGE,
+        insideBoundingBox: [boundingBox.split(",").map(Number)],
+        aroundLatLng: undefined,
+        aroundRadius: undefined,
+        aroundPrecision: undefined,
+        minimumAroundRadius: undefined,
+      });
+    } else {
+      updateConfig({
+        hitsPerPage: HITS_PER_PAGE,
+        aroundLatLng,
+        aroundRadius: aroundUserLocationRadius,
+        aroundPrecision: DEFAULT_AROUND_PRECISION,
+        minimumAroundRadius: 100,
+        insideBoundingBox: undefined,
+      });
+    }
   }, [
     isMapInitialized,
     boundingBox,
