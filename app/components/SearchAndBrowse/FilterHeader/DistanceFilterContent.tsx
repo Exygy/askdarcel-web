@@ -14,6 +14,7 @@ interface DistanceFilterContentProps {
     coords: { lat: number; lng: number } | null
   ) => void;
   onRadiusChange: (value: number) => void;
+  onClearDistance: () => void;
   hasLocation?: boolean;
 }
 
@@ -29,6 +30,7 @@ export const DistanceFilterContent = ({
   selectedRadius,
   onLocationChange,
   onRadiusChange,
+  onClearDistance,
   hasLocation = true,
 }: DistanceFilterContentProps) => {
   const [inputValue, setInputValue] = useState(locationText);
@@ -137,12 +139,13 @@ export const DistanceFilterContent = ({
     }
   };
 
-  // Handle clear input
+  // Handle clear input — resets both the text input and the location/radius state.
   const handleClearInput = () => {
     setInputValue("");
     clearPredictions();
     setShowDropdown(false);
     setHighlightedIndex(-1);
+    onClearDistance();
     inputRef.current?.focus();
   };
 

@@ -22,6 +22,7 @@ import {
   useSearchConfig,
 } from "utils/SearchConfigContext";
 import { useAppContext, useAppContextUpdater, DEFAULT_AROUND_PRECISION } from "utils";
+import { useFilterState } from "hooks/useFilterState";
 
 export const HITS_PER_PAGE = 40;
 
@@ -50,8 +51,11 @@ const RADIUS_TO_ZOOM: Record<number, number> = {
   4828: 13, // 3 miles
 };
 
+const DEFAULT_RADIUS = 1609;
+
 const SearchResultsPageContent = () => {
   const { updateConfig } = useSearchConfig();
+  const filterState = useFilterState();
 
   const [isMapCollapsed, setIsMapCollapsed] = useState(false);
   const [isMapInitialized, setIsMapInitialized] = useState(false);
@@ -180,6 +184,19 @@ const SearchResultsPageContent = () => {
     [goToPage]
   );
 
+  const handleLocationClear = useCallback(() => {
+    setCustomMapCenter(null);
+    setCustomMapZoom(null);
+  }, []);
+
+  const handleClearAll = useCallback(() => {
+    filterState.clearFilters();
+    updateConfig({ filters: "" });
+    setAroundRadius(DEFAULT_RADIUS);
+    handleLocationClear();
+    setIndexUiState((prev) => ({ ...prev, query: "" }));
+  }, [filterState, updateConfig, setAroundRadius, handleLocationClear, setIndexUiState]);
+
   const handleFirstResultFocus = useCallback((node: HTMLDivElement | null) => {
     if (node) {
       node.focus();
@@ -220,10 +237,12 @@ const SearchResultsPageContent = () => {
         {/* Only render FilterHeader after map is initialized to prevent premature search */}
         {isMapInitialized && (
           <FilterHeader
+            filterState={filterState}
             isSearchResultsPage
             isMapCollapsed={isMapCollapsed}
             setIsMapCollapsed={setIsMapCollapsed}
             onLocationSelect={handleLocationSelect}
+            onLocationClear={handleLocationClear}
           />
         )}
 
@@ -244,12 +263,13 @@ const SearchResultsPageContent = () => {
                     <p>Loading results...</p>
                   </div>
                 ) : hasNoResults ? (
-                  <NoSearchResultsDisplay query={query} />
+                  <NoSearchResultsDisplay query={query} onClearSearch={handleClearAll} />
                 ) : (
                   <>
                     <SearchResultsHeader
                       currentPage={currentPage}
                       totalResults={searchResults?.nbHits || 0}
+                      onClearSearch={handleClearAll}
                     />
                     {searchMapHitData.hits.map((hit, index) => (
                       <SearchResult

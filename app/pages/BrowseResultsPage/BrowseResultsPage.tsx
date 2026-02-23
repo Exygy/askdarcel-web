@@ -30,6 +30,7 @@ import {
   SearchConfigProvider,
   useSearchConfig,
 } from "utils/SearchConfigContext";
+import { useFilterState } from "hooks/useFilterState";
 
 export const HITS_PER_PAGE = 40;
 
@@ -55,6 +56,7 @@ const BrowseResultsPageContent = ({
   typesenseCategoryName,
 }: BrowseResultsPageContentProps) => {
   const { updateConfig } = useSearchConfig();
+  const filterState = useFilterState();
 
   const [isMapCollapsed, setIsMapCollapsed] = useState(false);
   const [isMapInitialized, setIsMapInitialized] = useState(false);
@@ -129,6 +131,11 @@ const BrowseResultsPageContent = ({
     },
     [goToPage]
   );
+
+  const handleLocationClear = useCallback(() => {
+    setCustomMapCenter(null);
+    setCustomMapZoom(null);
+  }, []);
 
   const categoryName = category.name;
 
@@ -208,6 +215,7 @@ const BrowseResultsPageContent = ({
         {/* Only render FilterHeader after map is initialized to prevent premature search */}
         {isMapInitialized && (
           <FilterHeader
+            filterState={filterState}
             isSearchResultsPage={false}
             pageFilter={
               typesenseCategoryName
@@ -217,6 +225,7 @@ const BrowseResultsPageContent = ({
             isMapCollapsed={isMapCollapsed}
             setIsMapCollapsed={setIsMapCollapsed}
             onLocationSelect={handleLocationSelect}
+            onLocationClear={handleLocationClear}
           />
         )}
 

@@ -30,8 +30,8 @@ function cloneState(state: FilterState): FilterState {
 function countChanges(state: FilterState): number {
   let count = 0;
   if (state.hoursSelection !== "any") count += 1;
+  // Location + radius together form a single "distance" filter.
   if (state.locationCoords !== null) count += 1;
-  if (state.distanceRadius !== DEFAULT_RADIUS) count += 1;
   count += state.selectedEligibilities.size;
   return count;
 }

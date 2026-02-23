@@ -2,12 +2,18 @@ import React from "react";
 import styles from "components/SearchAndBrowse/SearchResults/SearchResults.module.scss";
 import ClearSearchButton from "components/SearchAndBrowse/Refinements/ClearSearchButton";
 
-export const NoSearchResultsDisplay = ({ query }: { query: string | null }) => (
+export const NoSearchResultsDisplay = ({
+  query,
+  onClearSearch,
+}: {
+  query: string | null;
+  onClearSearch?: () => void;
+}) => (
   <div className={`${styles.noResultsMessage}`}>
     <div className={styles.noResultsText}>
       No results {query && `for ${` "${query}" `}`} found in your area.
       <br /> Try a different location, filter, or search term.
     </div>
-    {query && <ClearSearchButton />}
+    {query && <ClearSearchButton onClearAll={onClearSearch} />}
   </div>
 );

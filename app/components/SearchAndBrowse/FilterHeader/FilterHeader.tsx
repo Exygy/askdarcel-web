@@ -22,19 +22,23 @@ const ENABLE_HOURS_FILTER = false;
 const DEFAULT_RADIUS = 1609; // 1 mile in meters
 
 interface FilterHeaderProps {
+  filterState: ReturnType<typeof useFilterState>;
   isSearchResultsPage: boolean;
   pageFilter?: string;
   isMapCollapsed?: boolean;
   setIsMapCollapsed?: (_isMapCollapsed: boolean) => void;
   onLocationSelect?: (lat: number, lng: number, radius: number) => void;
+  onLocationClear?: () => void;
 }
 
 const FilterHeader = ({
+  filterState,
   isSearchResultsPage,
   pageFilter,
   isMapCollapsed = false,
   setIsMapCollapsed,
   onLocationSelect,
+  onLocationClear,
 }: FilterHeaderProps) => {
   const [activeFilterMenu, setActiveFilterMenu] = useState<string | null>(null);
   const distanceButtonRef = useRef<HTMLDivElement>(null);
@@ -45,7 +49,6 @@ const FilterHeader = ({
   const { facetableFields } = useSearchCapabilities();
   const { updateConfig } = useSearchConfig();
   const facets = useTypesenseFacets();
-  const filterState = useFilterState();
 
   const canShowEligibilities = facetableFields.includes("eligibilities");
   const eligibilities = canShowEligibilities
@@ -75,22 +78,20 @@ const FilterHeader = ({
       eligibilities: filterState.pending.selectedEligibilities,
     });
 
-    if (filterString) {
-      updateConfig({ filters: filterString });
-    } else {
-      updateConfig({ filters: pageFilter || undefined });
-    }
+    updateConfig({ filters: filterString || pageFilter || "" });
 
     // Apply distance radius
     setAroundRadius(filterState.pending.distanceRadius);
 
-    // Update map center and zoom based on location and radius
+    // Update map center/zoom when a location is set; clear the marker when it isn't.
     if (filterState.pending.locationCoords && onLocationSelect) {
       onLocationSelect(
         filterState.pending.locationCoords.lat,
         filterState.pending.locationCoords.lng,
         filterState.pending.distanceRadius
       );
+    } else {
+      onLocationClear?.();
     }
 
     closeMenu();
@@ -100,14 +101,23 @@ const FilterHeader = ({
     updateConfig,
     setAroundRadius,
     onLocationSelect,
+    onLocationClear,
     closeMenu,
   ]);
 
   const handleClear = useCallback(() => {
     filterState.clearFilters();
-    updateConfig({ filters: pageFilter || undefined });
+    updateConfig({ filters: pageFilter || "" });
     setAroundRadius(DEFAULT_RADIUS);
-  }, [filterState, pageFilter, updateConfig, setAroundRadius]);
+    onLocationClear?.();
+  }, [filterState, pageFilter, updateConfig, setAroundRadius, onLocationClear]);
+
+  // Clears just the distance filter (location + radius) without touching other filters.
+  const handleClearDistance = useCallback(() => {
+    filterState.setPendingLocation("", null);
+    filterState.setPendingDistance(DEFAULT_RADIUS);
+    onLocationClear?.();
+  }, [filterState, onLocationClear]);
 
   const makeFooter = useCallback(
     (requiresLocation = false) => (
@@ -159,6 +169,7 @@ const FilterHeader = ({
               selectedRadius={filterState.pending.distanceRadius}
               onLocationChange={handleLocationChange}
               onRadiusChange={filterState.setPendingDistance}
+              onClearDistance={handleClearDistance}
               hasLocation={!!filterState.pending.locationCoords}
             />
           </FilterDropdown>
@@ -226,6 +237,7 @@ const FilterHeader = ({
                 selectedRadius={filterState.pending.distanceRadius}
                 onLocationChange={handleLocationChange}
                 onRadiusChange={filterState.setPendingDistance}
+                onClearDistance={handleClearDistance}
                 hasLocation={!!filterState.pending.locationCoords}
               />
             </div>
