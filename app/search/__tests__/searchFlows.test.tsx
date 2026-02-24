@@ -11,9 +11,9 @@
  */
 
 import React from "react";
-import { MemoryRouter, Routes, Route } from "react-router-dom";
+import { MemoryRouter, Routes, Route, useNavigate } from "react-router-dom";
 import { InstantSearch, useSearchBox } from "react-instantsearch-core";
-import { render, waitFor } from "@testing-library/react";
+import { render, waitFor, screen, fireEvent } from "@testing-library/react";
 import { AppProvider } from "utils/useAppContext";
 import { COORDS_MID_SAN_FRANCISCO } from "utils";
 
@@ -70,13 +70,23 @@ jest.mock("search/context/SearchContext", () => ({
 }));
 
 // ---------------------------------------------------------------------------
-// Mock SearchMap to avoid Google Maps in tests
+// Mock SearchMap to avoid Google Maps in tests.
+// Exposes a "Search this area" button so tests can simulate the explicit geo
+// action: clicking it sets a fake bounding box in AppContext and fires the
+// SearchThisArea action (0), mirroring what the real SearchMap does.
 // ---------------------------------------------------------------------------
+const FAKE_BOUNDING_BOX = "37.812,-122.527,37.708,-122.357";
+
 jest.mock("components/SearchAndBrowse/SearchMap/SearchMap", () => {
   const mockReact = require("react");
+  // Use the real AppContextUpdater so setBoundingBox propagates to SearchResultsPage
+  const { useAppContextUpdater } = require("utils/useAppContext");
+
   return {
     SearchMap: ({ handleSearchMapAction }: any) => {
       const hasInit = mockReact.useRef(false);
+      const { setBoundingBox } = useAppContextUpdater();
+
       mockReact.useEffect(() => {
         if (!hasInit.current) {
           hasInit.current = true;
@@ -84,10 +94,21 @@ jest.mock("components/SearchAndBrowse/SearchMap/SearchMap", () => {
           handleSearchMapAction(1);
         }
       }, [handleSearchMapAction]);
+
+      const handleSearchThisArea = () => {
+        setBoundingBox(FAKE_BOUNDING_BOX);
+        // SearchMapActions.SearchThisArea = 0
+        handleSearchMapAction(0);
+      };
+
       return mockReact.createElement(
         "div",
         { "data-testid": "search-map-mock" },
-        "Map"
+        mockReact.createElement(
+          "button",
+          { "data-testid": "search-this-area-btn", onClick: handleSearchThisArea },
+          "Search this area"
+        )
       );
     },
   };
@@ -133,6 +154,31 @@ import { BrowseResultsPage } from "pages/BrowseResultsPage/BrowseResultsPage";
 const QueryConnector = () => {
   useSearchBox();
   return null;
+};
+
+// ---------------------------------------------------------------------------
+// SearchSubmitSimulator - mimics SiteSearchInput's on-page submit path.
+// SiteSearchInput calls setSearchParams({ q }, { replace: true }), which
+// internally calls navigate(). Real browser history always generates a new
+// location.key on every navigate, even for the same URL. MemoryRouter can
+// be inconsistent for same-URL replace, so we use navigate() with a
+// changing state value to guarantee a fresh location object.
+// ---------------------------------------------------------------------------
+const SearchSubmitSimulator = ({ query }: { query: string }) => {
+  const navigate = useNavigate();
+  return (
+    <button
+      data-testid="submit-search-btn"
+      onClick={() =>
+        navigate(`/search?q=${query}`, {
+          replace: true,
+          state: { submittedAt: Date.now() },
+        })
+      }
+    >
+      Submit search
+    </button>
+  );
 };
 
 // ---------------------------------------------------------------------------
@@ -305,10 +351,12 @@ describe("Search Flow Integration Tests", () => {
   });
 
   // ---------------------------------------------------------------
-  // Flow 4: All Services = no category, has geo
+  // Flow 4: All Services – initial load has no geo filter
+  // Services without a location would be excluded by a bounding-box
+  // filter, so the fresh search must be geo-free.
   // ---------------------------------------------------------------
   describe("Flow 4: All Services (/search with no query)", () => {
-    it("sends geo params with no category filter and no query", async () => {
+    it("does not apply a geo filter on the initial load", async () => {
       render(
         <MemoryRouter initialEntries={["/search"]}>
           <TestWrapper>
@@ -317,48 +365,57 @@ describe("Search Flow Integration Tests", () => {
         </MemoryRouter>
       );
 
+      // Wait for the map to initialize (which would have triggered geo
+      // params under the old behaviour).
       await waitFor(() => {
-        const match = findSearchCallWith(
-          (p) => p.aroundLatLng !== undefined && p.aroundLatLng !== ""
-        );
-        expect(match).not.toBeNull();
+        expect(screen.getByTestId("search-map-mock")).toBeInTheDocument();
       });
 
-      const params = findSearchCallWith(
-        (p) => p.aroundLatLng !== undefined && p.aroundLatLng !== ""
-      )!;
-      expect(params.aroundLatLng).toContain("37.7749");
-      expect(params.aroundLatLng).toContain("-122.4194");
-      expect(params.filters || "").toBeFalsy();
-      expect(params.query || "").toBe("");
+      // Wait for at least one search call to confirm the page has settled.
+      await waitFor(() => {
+        expect(mockSearch).toHaveBeenCalled();
+      });
+
+      // No call should include a bounding-box or radius geo filter.
+      // Use truthy check: null/undefined insideBoundingBox means no geo applied.
+      const geoCall = findSearchCallWith(
+        (p) =>
+          !!p.insideBoundingBox ||
+          (p.aroundLatLng !== undefined && p.aroundLatLng !== "")
+      );
+      expect(geoCall).toBeNull();
     });
   });
 
   // ---------------------------------------------------------------
-  // Flow 5: All Services page has geo but no category
+  // Flow 5: Keyword search – initial search has no geo filter
   // ---------------------------------------------------------------
-  describe("Flow 5: All Services has geo but no category filter", () => {
-    it("geo is preserved and category is absent", async () => {
+  describe("Flow 5: Fresh keyword search has no geo filter", () => {
+    it("does not include insideBoundingBox or aroundLatLng on a fresh search", async () => {
       render(
-        <MemoryRouter initialEntries={["/search"]}>
-          <TestWrapper>
+        <MemoryRouter initialEntries={["/search?q=food"]}>
+          <TestWrapper initialQuery="food">
             <SearchResultsPage />
           </TestWrapper>
         </MemoryRouter>
       );
 
+      // Wait for the query call to land.
       await waitFor(() => {
-        const match = findSearchCallWith(
-          (p) => p.aroundLatLng !== undefined && p.aroundLatLng !== ""
-        );
+        const match = findSearchCallWith((p) => p.query === "food");
         expect(match).not.toBeNull();
       });
 
-      const params = findSearchCallWith(
-        (p) => p.aroundLatLng !== undefined && p.aroundLatLng !== ""
-      )!;
-      expect(params.aroundLatLng).toBeDefined();
-      expect(params.filters || "").toBeFalsy();
+      // The map initialises and tries to apply a bounding box, but
+      // geoSearchEnabled is false so it must not trigger a geo search.
+      // Use truthy check: null/undefined insideBoundingBox means no geo applied.
+      const geoCall = findSearchCallWith(
+        (p) =>
+          p.query === "food" &&
+          (!!p.insideBoundingBox ||
+            (p.aroundLatLng !== undefined && p.aroundLatLng !== ""))
+      );
+      expect(geoCall).toBeNull();
     });
   });
 
@@ -424,10 +481,12 @@ describe("Search Flow Integration Tests", () => {
   });
 
   // ---------------------------------------------------------------
-  // Flow 7: Geo params are NOT stripped from text search requests
+  // Flow 7: "Search this area" enables bounding-box geo filter
+  // The user must explicitly opt in to geo filtering; the map
+  // initialising alone must not trigger a geo-filtered search.
   // ---------------------------------------------------------------
-  describe("Flow 7: Geo params preserved in text search", () => {
-    it("geo params are NOT stripped from text search requests", async () => {
+  describe("Flow 7: 'Search this area' enables geo filter", () => {
+    it("applies insideBoundingBox only after 'Search this area' is clicked", async () => {
       render(
         <MemoryRouter initialEntries={["/search?q=food"]}>
           <TestWrapper initialQuery="food">
@@ -436,63 +495,179 @@ describe("Search Flow Integration Tests", () => {
         </MemoryRouter>
       );
 
-      // Wait for map to initialize and geo params to be applied
+      // Wait for map to initialise and the initial (geo-free) search to land.
+      await waitFor(() => {
+        expect(screen.getByTestId("search-this-area-btn")).toBeInTheDocument();
+      });
+      await waitFor(() => {
+        expect(mockSearch).toHaveBeenCalled();
+      });
+
+      // Confirm no truthy bounding-box geo filter has been applied yet.
+      expect(
+        findSearchCallWith((p) => !!p.insideBoundingBox)
+      ).toBeNull();
+
+      // Simulate "Search this area" click: mock sets bounding box in
+      // AppContext and fires SearchMapActions.SearchThisArea.
+      mockSearch.mockClear();
+      fireEvent.click(screen.getByTestId("search-this-area-btn"));
+
+      // A new search with a real bounding-box filter must now be sent.
       await waitFor(() => {
         const match = findSearchCallWith(
-          (p) => p.query === "food" && p.aroundLatLng !== undefined && p.aroundLatLng !== ""
+          (p) => !!p.insideBoundingBox
         );
         expect(match).not.toBeNull();
       });
-
-      const params = findSearchCallWith(
-        (p) => p.query === "food" && p.aroundLatLng !== undefined && p.aroundLatLng !== ""
-      )!;
-      expect(params.aroundLatLng).toContain("37.7749");
     });
   });
 
   // ---------------------------------------------------------------
-  // Flow 8: Geo params preserved when filters is empty string
-  // (Regression: previously, filters="" caused geo stripping)
+  // Flow 8: Re-searching the same term after "Search this area"
+  // clears the geo filter.
+  // SiteSearchInput calls setSearchParams({ q }, { replace: true })
+  // when already on /search — the URL string doesn't change but
+  // location.key does, so the effect must still detect it.
   // ---------------------------------------------------------------
-  describe("Flow 8: Geo preserved with empty filters (search page)", () => {
-    it("geo params are sent even though filters is empty string", async () => {
+  describe("Flow 8: Same-term re-search after 'Search this area' clears geo", () => {
+    it("removes insideBoundingBox when the same query is re-submitted", async () => {
       render(
-        <MemoryRouter initialEntries={["/search?q=child+care"]}>
-          <TestWrapper initialQuery="child care">
+        <MemoryRouter initialEntries={["/search?q=food"]}>
+          <TestWrapper initialQuery="food">
+            <SearchSubmitSimulator query="food" />
             <SearchResultsPage />
           </TestWrapper>
         </MemoryRouter>
       );
 
-      // The search page sets filters: "" initially. After map init,
-      // geo params should still be present in the search request.
+      // Wait for map to initialise.
       await waitFor(() => {
-        const match = findSearchCallWith(
-          (p) =>
-            p.query === "child care" &&
-            p.aroundLatLng !== undefined &&
-            p.aroundLatLng !== ""
-        );
-        expect(match).not.toBeNull();
+        expect(screen.getByTestId("search-this-area-btn")).toBeInTheDocument();
+      });
+      await waitFor(() => expect(mockSearch).toHaveBeenCalled());
+
+      // Enable geo via "Search this area".
+      fireEvent.click(screen.getByTestId("search-this-area-btn"));
+
+      await waitFor(() => {
+        expect(
+          findSearchCallWith((p) => !!p.insideBoundingBox)
+        ).not.toBeNull();
       });
 
-      const params = findSearchCallWith(
-        (p) =>
-          p.query === "child care" &&
-          p.aroundLatLng !== undefined &&
-          p.aroundLatLng !== ""
-      )!;
-      // filters is empty string (falsy) but geo should NOT be stripped
-      expect(params.aroundLatLng).toContain("37.7749");
+      // Snapshot the call count BEFORE re-submitting so we can isolate
+      // calls that happen after the submit from earlier geo calls.
+      const callCountBeforeSubmit = mockSearch.mock.calls.length;
+
+      // Re-submit the same query "food".
+      fireEvent.click(screen.getByTestId("submit-search-btn"));
+
+      // Wait until at least one new search fires AND the most-recent call
+      // is geo-free. "Most-recent" is the right invariant: even if there
+      // is a brief intermediate search (e.g., clearRefinements firing
+      // before the Configure update commits), the final search the user
+      // sees must not have a bounding-box filter.
+      await waitFor(() => {
+        expect(mockSearch.mock.calls.length).toBeGreaterThan(
+          callCountBeforeSubmit
+        );
+        const allCalls = mockSearch.mock.calls;
+        const lastCall = allCalls[allCalls.length - 1];
+        const raw = lastCall[0]?.[0]?.params ?? lastCall[0]?.[0];
+        const params = parseParams(raw);
+        expect(params.insideBoundingBox).toBeUndefined();
+      });
     });
   });
 
   // ---------------------------------------------------------------
-  // Flow 9: Search → re-search → query updates
+  // Flow 10: Navigate from browse page to /search clears category filter
+  // When the user submits a keyword search from a category results page,
+  // the resulting /search page must NOT include the category's filter
+  // string or any geo params that were applied on the browse page.
   // ---------------------------------------------------------------
-  describe("Flow 7: Sequential searches update query", () => {
-    it("search query updates when URL changes", async () => {
+  describe("Flow 10: Navigate from browse page to search clears category filter and geo", () => {
+    it("fires a category-free, geo-free search after navigating from a browse page", async () => {
+      // A button rendered alongside BrowseResultsPage that simulates
+      // SiteSearchInput navigating to /search from a non-search route.
+      const NavigateToSearch = () => {
+        const navigate = useNavigate();
+        return (
+          <button
+            data-testid="nav-to-search"
+            onClick={() => navigate("/search?q=food")}
+          >
+            Search Food
+          </button>
+        );
+      };
+
+      render(
+        <MemoryRouter initialEntries={["/housing/results"]}>
+          <TestWrapper>
+            <Routes>
+              <Route
+                path="/:categorySlug/results"
+                element={
+                  <>
+                    <BrowseResultsPage />
+                    <NavigateToSearch />
+                  </>
+                }
+              />
+              <Route path="/search" element={<SearchResultsPage />} />
+            </Routes>
+          </TestWrapper>
+        </MemoryRouter>
+      );
+
+      // Wait for BrowseResultsPage to settle and fire a category-filtered search.
+      await waitFor(() => {
+        expect(
+          findSearchCallWith(
+            (p) => typeof p.filters === "string" && p.filters.includes("Housing")
+          )
+        ).not.toBeNull();
+      });
+
+      // Simulate the user submitting a keyword search from the browse page.
+      mockSearch.mockClear();
+      fireEvent.click(screen.getByTestId("nav-to-search"));
+
+      // Wait for SearchResultsPage to render (map mock is present).
+      await waitFor(() => {
+        expect(screen.getByTestId("search-map-mock")).toBeInTheDocument();
+      });
+
+      // Wait for a search with query="food" to arrive.
+      await waitFor(() => {
+        expect(
+          findSearchCallWith((p) => p.query === "food")
+        ).not.toBeNull();
+      });
+
+      // The most-recent call must have "food" as the query and must NOT
+      // include the browse page's category filter or any geo params.
+      await waitFor(() => {
+        const allCalls = mockSearch.mock.calls;
+        const lastCall = allCalls[allCalls.length - 1];
+        const raw = lastCall[0]?.[0]?.params ?? lastCall[0]?.[0];
+        const params = parseParams(raw);
+        expect(params.query).toBe("food");
+        expect(params.filters || "").not.toContain("categories:");
+        expect(params.insideBoundingBox).toBeFalsy();
+        expect(params.aroundLatLng || "").toBeFalsy();
+      });
+    });
+  });
+
+  // ---------------------------------------------------------------
+  // Flow 9: Sequential searches update query
+  // ---------------------------------------------------------------
+  describe("Flow 9: Sequential searches update query", () => {
+
+    it("search query updates when navigating to a different query", async () => {
       const { unmount } = render(
         <MemoryRouter initialEntries={["/search?q=food"]}>
           <TestWrapper initialQuery="food">

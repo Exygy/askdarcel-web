@@ -125,11 +125,17 @@ const BrowseResultsPageContent = ({
 
   const handleLocationSelect = useCallback(
     (lat: number, lng: number, radius: number) => {
+      // Clear the bounding box and set aroundLatLng so the geo useEffect
+      // switches to radius-based search at the new location.
+      setBoundingBox(undefined);
+      setAroundLatLng(`${lat},${lng}`);
+      // Reset the dedup key so the geo useEffect re-fires with the new values.
+      lastAppliedGeo.current = "";
       setCustomMapCenter({ lat, lng });
       setCustomMapZoom(RADIUS_TO_ZOOM[radius] || 14);
       goToPage(0);
     },
-    [goToPage]
+    [goToPage, setBoundingBox, setAroundLatLng]
   );
 
   const handleLocationClear = useCallback(() => {
