@@ -54,6 +54,15 @@ export function buildIdsFilter(ids: string[]): string {
 }
 
 /**
+ * Builds a SoQL WHERE clause for an arbitrary field IN a list of values
+ */
+export function buildFieldInFilter(field: string, values: string[]): string {
+  if (values.length === 0) return "";
+  const escaped = values.map((v) => `'${escapeString(v)}'`).join(",");
+  return `${field} in (${escaped})`;
+}
+
+/**
  * Builds a case-insensitive LIKE filter for text search
  */
 export function buildTextSearchFilter(field: string, query: string): string {

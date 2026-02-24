@@ -283,18 +283,38 @@ export const ServiceDetailPage = () => {
         </div>
       )}
 
-      {service.categories.length > 0 && (
+      {service.categories.filter((c) => c.top_level).length > 0 && (
         <div className={styles.tagsSection}>
           <h2>Categories</h2>
           <div className={styles.tagsList}>
-            {service.categories.map((cat) => (
-              <span
-                key={`cat-${cat.id}`}
-                className={`${styles.tag} ${styles.tagCategory}`}
-              >
-                {cat.name}
-              </span>
-            ))}
+            {service.categories
+              .filter((c) => c.top_level)
+              .map((cat) => (
+                <span
+                  key={`cat-${cat.id}`}
+                  className={`${styles.tag} ${styles.tagCategory}`}
+                >
+                  {cat.name}
+                </span>
+              ))}
+          </div>
+        </div>
+      )}
+
+      {service.categories.filter((c) => !c.top_level).length > 0 && (
+        <div className={styles.tagsSection}>
+          <h2>Subcategories</h2>
+          <div className={styles.tagsList}>
+            {service.categories
+              .filter((c) => !c.top_level)
+              .map((cat) => (
+                <span
+                  key={`subcat-${cat.id}`}
+                  className={`${styles.tag} ${styles.tagCategory}`}
+                >
+                  {cat.name}
+                </span>
+              ))}
           </div>
         </div>
       )}
