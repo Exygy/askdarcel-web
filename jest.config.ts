@@ -99,6 +99,8 @@ const config: Config = {
     "react-markdown": "<rootDir>/test/jest/__mocks__/react-markdown.tsx",
     "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$":
       "<rootDir>/test/jest/__mocks__/fileMock.ts",
+    "^instantsearch\\.js/es/lib/routers$":
+      "<rootDir>/test/jest/__mocks__/instantsearch-router.ts",
   },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
@@ -183,10 +185,10 @@ const config: Config = {
   // transform: undefined,
 
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
-  // transformIgnorePatterns: [
-  //   "/node_modules/",
-  //   "\\.pnp\\.[^\\/]+$"
-  // ],
+  // Transform instantsearch.js and related packages that use ES modules
+  transformIgnorePatterns: [
+    "node_modules/(?!(instantsearch\\.js|search-insights)/)",
+  ],
 
   // An array of regexp pattern strings that are matched against all modules before the module loader will automatically return a mock for them
   // unmockedModulePathPatterns: undefined,

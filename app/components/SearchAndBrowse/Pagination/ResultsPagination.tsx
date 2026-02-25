@@ -28,9 +28,6 @@ const ResultsPagination = ({ noResults }: { noResults?: boolean }) => (
           }}
         />
       </div>
-      <div className={styles.algoliaImgWrapper}>
-        <img src={algolia} alt="Search by Algolia" />
-      </div>
     </div>
   </div>
 );

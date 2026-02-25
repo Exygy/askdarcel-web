@@ -1,4 +1,6 @@
 build
+coverage
+docs
 # Unignore any .js that start with a dot so that we prettify config files themselves
 !.*.js
 node_modules

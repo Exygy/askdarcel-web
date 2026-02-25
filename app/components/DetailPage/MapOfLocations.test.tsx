@@ -2,7 +2,6 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import { AppContext } from "utils";
 import { MapOfLocations } from "./MapOfLocations";
-import { AroundRadius } from "algoliasearch";
 
 const FAKE_LOCATIONS = [
   {
@@ -64,7 +63,7 @@ describe("MapOfLocations", () => {
         coords: { lat: 37.7749, lng: -122.4194 },
         inSanFrancisco: true,
       },
-      aroundUserLocationRadius: "all" as AroundRadius,
+      aroundUserLocationRadius: 1609,
       aroundLatLng: "37.7749,-122.4194",
     };
 
@@ -86,7 +85,7 @@ describe("MapOfLocations", () => {
         coords: { lat: 37.7749, lng: -122.4194 },
         inSanFrancisco: false,
       },
-      aroundUserLocationRadius: "all" as AroundRadius,
+      aroundUserLocationRadius: 1609,
       aroundLatLng: "37.7749,-122.4194",
     };
 

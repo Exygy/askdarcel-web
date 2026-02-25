@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 // https://support.google.com/analytics/answer/12938611#zippy=%2Cin-this-article
 import TagManager from "react-gtm-module";
 import { Helmet } from "react-helmet-async";
-import { useLocation } from "react-router-dom";
 import { UserLocation, getLocation, websiteConfig, AppProvider } from "./utils";
 import { Footer } from "components/ui/Footer/Footer";
 import { Navigation } from "components/ui/Navigation/Navigation";
@@ -13,7 +12,6 @@ import { Loader } from "components/ui/Loader";
 import MetaImage from "./assets/img/our415-og.png";
 import styles from "./App.module.scss";
 import config from "./config";
-import { AroundRadius } from "algoliasearch";
 
 const { siteUrl, title } = websiteConfig;
 export const OUTER_CONTAINER_ID = "outer-container";
@@ -21,19 +19,26 @@ export const OUTER_CONTAINER_ID = "outer-container";
 TagManager.initialize({ gtmId: config.GOOGLE_ANALYTICS_GA4_ID });
 
 export const App = () => {
-  const location = useLocation();
   const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
   const [aroundLatLng, setAroundLatLng] = useState<string>("");
-  const [aroundUserLocationRadius, setAroundRadius] =
-    useState<AroundRadius>(1600);
+  const [aroundUserLocationRadius, setAroundRadius] = useState<number>(1600);
   const [boundingBox, setBoundingBox] = useState<string | undefined>(undefined);
 
+  // Fetch user location ONCE on app mount - not on every route change
   useEffect(() => {
-    getLocation().then((userLocation) => {
-      setUserLocation(userLocation);
-      setAroundLatLng(`${userLocation.coords.lat},${userLocation.coords.lng}`);
+    getLocation().then((loc) => {
+      setUserLocation(loc);
+      const lat = loc.coords.lat;
+      const lng = loc.coords.lng;
+      setAroundLatLng(`${lat},${lng}`);
+
+      // Set default bounding box to cover all of San Francisco
+      // This ensures users see all available resources, not just those in their immediate area
+      // Format: "northLat,westLng,southLat,eastLng" (NW corner, SE corner)
+      const SF_BOUNDING_BOX = "37.812,-122.527,37.708,-122.357";
+      setBoundingBox(SF_BOUNDING_BOX);
     });
-  }, [location, setAroundLatLng]);
+  }, []);
 
   if (!userLocation) {
     return <Loader />;

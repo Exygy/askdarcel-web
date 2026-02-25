@@ -1,6 +1,6 @@
 import { Button } from "components/ui/inline/Button/Button";
 import React from "react";
-import { useSearchBox } from "react-instantsearch-core";
+import { useInstantSearch } from "react-instantsearch-core";
 import styles from "./SearchHeaderSection.module.scss";
 
 /**
@@ -11,7 +11,8 @@ export const SearchHeaderSection = ({
 }: {
   descriptionText: string;
 }) => {
-  const { query } = useSearchBox();
+  const { indexUiState } = useInstantSearch();
+  const query = indexUiState.query;
   return (
     <div className={styles.searchHeaderContainer}>
       <div className={styles.searchHeaderContainerLeft}>

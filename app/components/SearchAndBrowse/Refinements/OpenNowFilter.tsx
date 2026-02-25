@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useRefinementList } from "react-instantsearch";
 import { getCurrentDayTime } from "utils/index";
+import { useSearchCapabilities } from "../../../search/hooks";
 import styles from "./RefinementFilters.module.scss";
 
 /**
@@ -21,6 +22,23 @@ import styles from "./RefinementFilters.module.scss";
  * the open_times array.
  */
 const OpenNowFilter = () => {
+  const { facetableFields } = useSearchCapabilities();
+  const canShowOpenNow = facetableFields.includes("open_times");
+
+  // Don't render if provider doesn't support open_times facet
+  // Early return to avoid calling useRefinementList hook
+  if (!canShowOpenNow) {
+    return null;
+  }
+
+  return <OpenNowFilterContent />;
+};
+
+/**
+ * Internal component that uses the InstantSearch hook
+ * This is separated so we only call useRefinementList when the feature is supported
+ */
+const OpenNowFilterContent = () => {
   const { refine } = useRefinementList({ attribute: "open_times" });
   const [isChecked, setChecked] = useState(false);
 

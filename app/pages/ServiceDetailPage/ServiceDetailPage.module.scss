@@ -1,34 +1,321 @@
 @import "../../styles/utils/_helpers.scss";
 
-.service--program--details {
-  font-family: "Montserrat";
-  font-size: 18px;
-  @include r_max($break-tablet-s) {
-    font-size: 16px;
+.servicePage {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px 48px;
+}
 
-    a {
-      font-size: 16px;
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+  margin-top: 96px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.headerLeft {
+  flex: 1;
+  min-width: 300px;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 8px;
+  color: var(--color-grey-800, #1a1a1a);
+}
+
+.subtitle {
+  color: var(--color-grey-600, #666);
+  font-size: 1rem;
+  margin: 0;
+
+  a {
+    color: var(--color-blue, #0066cc);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
     }
   }
 }
 
-p {
-  padding-left: $spacing-0;
-  line-height: 150%;
+.headerActions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
-a {
-  color: $link-blue-default;
+.mainContent {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 32px;
+  margin-bottom: 48px;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.aboutSection {
+  h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0 0 16px;
+    color: var(--color-grey-800, #1a1a1a);
+  }
+}
+
+.description {
+  color: var(--color-grey-700, #444);
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.detailsSection {
+  margin-bottom: 24px;
+
+  h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0 0 16px;
+    color: var(--color-grey-800, #1a1a1a);
+  }
+}
+
+.detailsList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.detailItem {
+  display: flex;
+  gap: 16px;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .label {
+    font-weight: 500;
+    color: var(--color-grey-600, #666);
+    min-width: 140px;
+    flex-shrink: 0;
+  }
+
+  .value {
+    color: var(--color-grey-700, #444);
+    line-height: 1.5;
+  }
+}
+
+.contactList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.contactItem {
+  display: flex;
+  gap: 16px;
+
+  .label {
+    font-weight: 500;
+    color: var(--color-grey-600, #666);
+    min-width: 80px;
+  }
+
+  a {
+    color: var(--color-blue, #0066cc);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.mapSection {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  @media (max-width: 900px) {
+    order: -1;
+  }
+}
+
+.mapContainer {
+  height: 200px;
+  width: 100%;
+}
+
+.locationInfo {
+  padding: 16px;
+  border-top: 1px solid var(--color-grey-200, #eee);
+}
+
+.address {
+  font-weight: 500;
+  margin-bottom: 12px;
+  color: var(--color-grey-800, #1a1a1a);
+}
+
+.scheduleList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.scheduleItem {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: var(--color-grey-700, #444);
+
+  .day {
+    font-weight: 500;
+  }
+
+  .time {
+    color: var(--color-grey-600, #666);
+  }
+}
+
+.otherServicesSection {
+  margin-bottom: 48px;
+
+  h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0 0 24px;
+    color: var(--color-grey-800, #1a1a1a);
+  }
+}
+
+.servicesGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.serviceCard {
+  background: white;
+  border: 1px solid var(--color-grey-200, #eee);
+  border-radius: 8px;
+  padding: 20px;
+  transition: box-shadow 0.2s ease;
+  text-decoration: none;
+  color: inherit;
+  display: block;
 
   &:hover {
-    color: $link-blue-hover;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+  }
+
+  h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 8px;
+  }
+
+  p {
+    font-size: 0.9rem;
+    color: var(--color-grey-600, #666);
+    line-height: 1.5;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 }
 
-p,
-a {
-  @include r_max($break-tablet-s) {
-    font-size: 14px;
-    line-height: 125%;
+.showMoreCard {
+  background: var(--color-grey-100, #f5f5f5);
+  border: 1px dashed var(--color-grey-300, #ddd);
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 120px;
+
+  &:hover {
+    background: var(--color-grey-200, #eee);
+    border-color: var(--color-grey-400, #ccc);
   }
+}
+
+.showMoreCount {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-orange, #f58220);
+  line-height: 1;
+}
+
+.showMoreLabel {
+  font-size: 1rem;
+  color: var(--color-grey-600, #666);
+  margin-top: 4px;
+}
+
+.tagsSection {
+  margin-bottom: 48px;
+
+  h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0 0 16px;
+    color: var(--color-grey-800, #1a1a1a);
+  }
+}
+
+.tagsList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag {
+  display: inline-block;
+  padding: 6px 12px;
+  background: var(--color-grey-100, #f5f5f5);
+  border-radius: 16px;
+  font-size: 0.875rem;
+  color: var(--color-grey-700, #444);
+}
+
+.tagCategory {
+  background: var(--color-orange-light, #fff3e6);
+  color: var(--color-orange-dark, #c55a00);
+}
+
+.tagEligibility {
+  background: var(--color-blue-light, #e6f2ff);
+  color: var(--color-blue-dark, #004d99);
+}
+
+.loadingIndicator {
+  padding: 16px;
+  color: var(--color-grey-500, #888);
+  font-style: italic;
 }

@@ -31,6 +31,7 @@ const environmentConfig = [
   "API_PROXY_CHANGE_ORIGIN",
   "API_PROXY_REWRITE",
   "GOOGLE_API_KEY",
+  "GOOGLE_API_KEY_V2",
   "GOOGLE_ANALYTICS_GA4_ID",
   "ALGOLIA_INDEX_PREFIX",
   "ALGOLIA_APPLICATION_ID",
@@ -41,6 +42,10 @@ const environmentConfig = [
   "AUTH0_REDIRECT_URI",
   "STRAPI_API_TOKEN",
   "STRAPI_API_URL",
+  "TYPESENSE_HOST",
+  "TYPESENSE_PORT",
+  "TYPESENSE_PROTOCOL",
+  "TYPESENSE_API_KEY",
 ];
 
 const config = environmentConfig.reduce((acc, key) => {
@@ -115,7 +120,9 @@ module.exports = {
     new webpack.ProvidePlugin({
       process: "process/browser.js",
     }),
-    new CompressionPlugin(),
+    new CompressionPlugin({
+      exclude: /sitemap\.xml$/,
+    }),
   ],
   devtool: "source-map",
   module: {

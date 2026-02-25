@@ -10,9 +10,11 @@ import { HITS_PER_PAGE } from "pages/SearchResultsPage/SearchResultsPage";
 export const SearchResultsHeader = ({
   currentPage,
   totalResults,
+  onClearSearch,
 }: {
   currentPage: number;
   totalResults: number;
+  onClearSearch?: () => void;
 }) => {
   const firstResultIndex = currentPage * HITS_PER_PAGE + 1;
   const lastResultIndex = Math.min(
@@ -26,7 +28,7 @@ export const SearchResultsHeader = ({
         <span style={{ fontWeight: 700 }}>{lastResultIndex}</span> of{" "}
         <span style={{ fontWeight: 700 }}>{totalResults}</span> results
       </h2>
-      <ClearSearchButton />
+      <ClearSearchButton onClearAll={onClearSearch} />
     </div>
   );
 };

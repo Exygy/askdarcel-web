@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
 import styles from "components/ui/Navigation/Navigation.module.scss";
 import desktopNavigationStyles from "components/ui/Navigation/DesktopNavigation.module.scss";
@@ -11,32 +11,40 @@ import {
   NavigationMenu,
 } from "models/Strapi";
 import { useNavigationData } from "hooks/StrapiAPI";
+import { useTopLevelCategories } from "hooks/TypesenseHooks";
+import { categoryToSlug } from "utils/categoryIcons";
 import { Router } from "../../../Router";
 import NavigationFocusReset from "./NavigationFocusReset";
 import SkipButton from "./SkipButton";
 import TopBanner from "./TopBanner";
 import { SiteSearchInput } from "components/ui/SiteSearchInput";
-import { InstantSearch } from "react-instantsearch-core";
-import { liteClient } from "algoliasearch/lite";
-import config from "./../../../config";
-import { history as historyRouter } from "instantsearch.js/es/lib/routers";
+import { SearchProvider } from "../../../search";
 import { Loader } from "components/ui/Loader";
 import classNames from "classnames";
 import { EmailSignup } from "components/EmailSignup/Emailsignup";
 
-const searchClient = liteClient(
-  config.ALGOLIA_APPLICATION_ID,
-  config.ALGOLIA_READ_ONLY_API_KEY
-);
-
-const INDEX_NAME = `${config.ALGOLIA_INDEX_PREFIX}_services_search`;
-
 export const Navigation = () => {
   const { data: navigationResponse } = useNavigationData();
+  const { categories, isLoading: categoriesLoading } = useTopLevelCategories();
 
   const logoData = extractLogoFromNavigationResponse(navigationResponse);
   const menuData =
     extractNavigationMenusFromNavigationResponse(navigationResponse);
+
+  // Create dynamic services menu from Typesense categories
+  const servicesMenu = useMemo(() => {
+    if (categories.length === 0) return null;
+
+    return {
+      id: 999, // Use a unique ID that won't conflict
+      title: "Services",
+      link: categories.map((category, index) => ({
+        id: index,
+        url: `/${categoryToSlug(category.value)}/results`,
+        text: category.value,
+      })),
+    };
+  }, [categories]);
 
   function menuItemHasLinks(
     menuItem: ExtractedNavigationMenusFromNavigationResponse[number]
@@ -44,28 +52,22 @@ export const Navigation = () => {
     return "link" in menuItem;
   }
 
-  if (!menuData) {
+  if (!menuData || categoriesLoading) {
     return <Loader />;
   }
 
+  // Filter out any "Services" menu from Strapi and replace with dynamic one
+  const filteredMenuData = menuData.filter(
+    (item) => !("title" in item && item.title === "Services")
+  );
+
+  // Combine filtered Strapi menus with dynamic services menu
+  const combinedMenuData = servicesMenu
+    ? [servicesMenu, ...filteredMenuData]
+    : filteredMenuData;
+
   return (
-    <InstantSearch
-      searchClient={searchClient}
-      indexName={INDEX_NAME}
-      routing={{
-        router: historyRouter({
-          windowTitle(routeState) {
-            const query = routeState[INDEX_NAME]?.query;
-
-            const queryTitle = query
-              ? `Our415 - Search results for "${query}" in San Francisco`
-              : "Our415 - Services in San Francisco";
-
-            return queryTitle;
-          },
-        }),
-      }}
-    >
+    <SearchProvider>
       <NavigationFocusReset />
       <SkipButton />
       <TopBanner />
@@ -77,14 +79,14 @@ export const Navigation = () => {
             </Link>
             <SiteSearchInput />
 
-            <MobileNavigation menuData={menuData} />
+            <MobileNavigation menuData={combinedMenuData} />
             <div
               className={classNames(
                 styles.desktopNavigationContainer,
                 "no-print"
               )}
             >
-              {menuData.map((menuDataItem) => {
+              {combinedMenuData.map((menuDataItem) => {
                 if (menuItemHasLinks(menuDataItem)) {
                   const links = menuDataItem.link.map((linkItem) => ({
                     id: linkItem.id,
@@ -92,22 +94,22 @@ export const Navigation = () => {
                     text: linkItem.text,
                   }));
 
-                  const uniqueKey = crypto.randomUUID();
+                  const menuId = `nav-menu-${menuDataItem.id}`;
 
                   return (
                     <DropdownMenu
-                      key={uniqueKey}
-                      id={uniqueKey}
+                      key={menuId}
+                      id={menuId}
                       title={menuDataItem.title}
                       links={links}
                     />
                   );
                 }
 
-                const uniqueKey = crypto.randomUUID();
+                const linkId = `nav-link-${menuDataItem.id}`;
                 return (
                   <Link
-                    key={uniqueKey}
+                    key={linkId}
                     to={menuDataItem.url}
                     className={desktopNavigationStyles.navigationMenuLink}
                   >
@@ -123,7 +125,7 @@ export const Navigation = () => {
           <EmailSignup />
         </main>
       </div>
-    </InstantSearch>
+    </SearchProvider>
   );
 };
 

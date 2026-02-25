@@ -1,42 +1,36 @@
 import React, { FormEvent, useEffect, useState } from "react";
-import { useClearRefinements, useSearchBox } from "react-instantsearch";
+import { useSearchQuery } from "../../search/hooks";
 import classNames from "classnames";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 import styles from "./SiteSearchInput.module.scss";
 
 /**
- * Sitewide listing search component that controls the search query input
- *
- * The custom submit logic determines that applying a new search term will reset all refinements and
- * return a fresh set of results for the new query.
+ * Sitewide search input. On submit, either navigates to /search (from other pages)
+ * or directly updates the InstantSearch query (when already on /search).
  */
 export const SiteSearchInput = () => {
-  const { query, refine } = useSearchBox();
-  const { refine: clearRefine } = useClearRefinements();
+  const { query, setQuery } = useSearchQuery();
   const [inputValue, setInputValue] = useState(query);
   const navigate = useNavigate();
+  const location = useLocation();
+  const [, setSearchParams] = useSearchParams();
 
-  function setQuery(newQuery: string) {
-    setInputValue(newQuery);
-  }
-
-  // Sets query, clears refinements, and then redirects to the search page. If the user is already on the
-  // search page the last step is basically a noop.
   const submitSearch = (e: FormEvent) => {
     e.preventDefault();
-
-    refine(inputValue);
-    clearRefine();
-    navigate("/search");
-
+    if (location.pathname === "/search") {
+      setQuery(inputValue);
+      // Keep URL in sync so back navigation restores the correct query
+      setSearchParams({ q: inputValue }, { replace: true });
+      window.scrollTo(0, 0);
+    } else {
+      navigate(`/search?q=${encodeURIComponent(inputValue)}`);
+    }
     return false;
   };
 
-  // Watches changes to the query that can come from other components, like a "Clear Search" button
+  // Sync input with InstantSearch query
   useEffect(() => {
-    if (!query) {
-      setInputValue("");
-    }
+    setInputValue(query);
   }, [query]);
 
   return (
@@ -46,7 +40,7 @@ export const SiteSearchInput = () => {
       role="search"
     >
       <input
-        onChange={(e) => setQuery(e.target.value)}
+        onChange={(e) => setInputValue(e.target.value)}
         value={inputValue}
         type="text"
         className={styles.searchField}

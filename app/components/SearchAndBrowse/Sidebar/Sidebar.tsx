@@ -5,8 +5,7 @@ import {
 } from "utils/refinementMappings";
 import ClearAllFilters from "components/SearchAndBrowse/Refinements/ClearAllFilters";
 import OpenNowFilter from "components/SearchAndBrowse/Refinements/OpenNowFilter";
-import BrowseRefinementList from "components/SearchAndBrowse/Refinements/BrowseRefinementList";
-import SearchRefinementList from "components/SearchAndBrowse/Refinements/SearchRefinementList";
+import RefinementList from "components/SearchAndBrowse/Refinements/RefinementList";
 import { Button } from "components/ui/inline/Button/Button";
 import {
   DEFAULT_AROUND_PRECISION,
@@ -16,8 +15,9 @@ import {
 import useClickOutside from "../../../hooks/MenuHooks";
 import MobileMapToggleButtons from "./MobileMapToggleButtons";
 import styles from "./Sidebar.module.scss";
-import { RefinementListItem } from "instantsearch.js/es/connectors/refinement-list/connectRefinementList";
+import type { RefinementItem } from "../../../search/types";
 import classNames from "classnames";
+import { useSearchCapabilities } from "../../../search/hooks";
 
 const Sidebar = ({
   isSearchResultsPage,
@@ -38,6 +38,11 @@ const Sidebar = ({
   const filterMenuRef = useRef<HTMLDivElement>(null);
   const { aroundUserLocationRadius, userLocation } = useAppContext();
   const { setAroundRadius } = useAppContextUpdater();
+  const { facetableFields } = useSearchCapabilities();
+
+  // Check if the current provider supports these facets
+  const canShowEligibilities = facetableFields.includes("eligibilities");
+  const canShowCategories = facetableFields.includes("categories");
 
   useClickOutside(
     filterMenuRef as React.RefObject<HTMLElement>,
@@ -82,13 +87,12 @@ const Sidebar = ({
   );
 
   const onChangeValue = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    const aroundRadius =
-      evt.target.value === "all" ? "all" : Number(evt.target.value);
+    const aroundRadius = Number(evt.target.value);
     setAroundRadius(aroundRadius);
   };
 
   const refinementItemTransform = useCallback(
-    (items: RefinementListItem[]) =>
+    (items: RefinementItem[]) =>
       items
         .filter(({ label }: { label: string }) =>
           subcategoryNames.includes(label)
@@ -106,29 +110,34 @@ const Sidebar = ({
   );
 
   if (isSearchResultsPage) {
-    eligibilityRefinementJsx = (
-      <SearchRefinementList
-        attribute="eligibilities"
-        mapping={our415EligibilitiesMapping}
-      />
-    );
-  } else {
-    if (eligibilities?.length) {
+    // Only show eligibilities refinement if provider supports it
+    if (canShowEligibilities) {
       eligibilityRefinementJsx = (
-        <BrowseRefinementList
+        <RefinementList
           attribute="eligibilities"
-          transform={(items: RefinementListItem[]) =>
+          mapping={our415EligibilitiesMapping}
+          mode="search"
+        />
+      );
+    }
+  } else {
+    if (eligibilities?.length && canShowEligibilities) {
+      eligibilityRefinementJsx = (
+        <RefinementList
+          attribute="eligibilities"
+          transform={(items: RefinementItem[]) =>
             mapSFSGApiEligibilitiesToOur415ByConfig(
               items,
               our415EligibilitiesMapping
             )
           }
+          mode="browse"
         />
       );
     }
-    if (subcategoryNames?.length) {
+    if (subcategoryNames?.length && canShowCategories) {
       categoryRefinementJsx = (
-        <BrowseRefinementList
+        <RefinementList
           attribute="categories"
           // The number of tagged categories returned by Algolia can be very large.
           // We set an artificially high limit to attempt capturing all the subcategories
@@ -140,6 +149,7 @@ const Sidebar = ({
           // category returned from the api
           // (`/api/categories/subcategories?id=${categoryID}`).
           transform={refinementItemTransform}
+          mode="browse"
         />
       );
     }
@@ -249,13 +259,13 @@ const Sidebar = ({
                 />
               </label>
               <label className={styles.checkBox}>
-                Full map area
+                Within 0.5 miles
                 <input
                   type="radio"
                   name="searchRadius"
                   onChange={onChangeValue}
-                  value="all"
-                  checked={aroundUserLocationRadius === "all"}
+                  value="805"
+                  checked={aroundUserLocationRadius === 805}
                   className={styles.refinementInput}
                 />
               </label>

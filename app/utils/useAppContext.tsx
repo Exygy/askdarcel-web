@@ -16,7 +16,7 @@ interface Context {
 }
 
 interface ContextUpdater {
-  setAroundRadius: Dispatch<SetStateAction<"all" | number>>;
+  setAroundRadius: Dispatch<SetStateAction<number>>;
   setAroundLatLng: Dispatch<SetStateAction<string>>;
   setBoundingBox: Dispatch<SetStateAction<string | undefined>>;
 }
@@ -27,7 +27,7 @@ interface AppProviderProps {
   children: React.ReactNode;
   setAroundLatLng: Dispatch<SetStateAction<string>>;
   aroundUserLocationRadius: AroundRadius;
-  setAroundRadius: Dispatch<SetStateAction<"all" | number>>;
+  setAroundRadius: Dispatch<SetStateAction<number>>;
   boundingBox?: string;
   setBoundingBox: Dispatch<SetStateAction<string | undefined>>;
 }

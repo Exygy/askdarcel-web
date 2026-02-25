@@ -1,41 +1,249 @@
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useCallback, useState, useEffect, useRef } from "react";
+import { useSearchParams, useLocation } from "react-router-dom";
+import { useInstantSearch } from "react-instantsearch-core";
 import { SearchMapActions } from "components/SearchAndBrowse/SearchResults/SearchResults";
-import Sidebar from "components/SearchAndBrowse/Sidebar/Sidebar";
+import FilterHeader from "components/SearchAndBrowse/FilterHeader/FilterHeader";
 import styles from "./SearchResultsPage.module.scss";
-import { DEFAULT_AROUND_PRECISION, useAppContext } from "utils";
-import { Configure } from "react-instantsearch-core";
 import classNames from "classnames";
 import { SearchMap } from "components/SearchAndBrowse/SearchMap/SearchMap";
 import { SearchResult } from "components/SearchAndBrowse/SearchResults/SearchResult";
 import {
-  TransformedSearchHit,
-  transformSearchResults,
-} from "models/SearchHits";
-import { useInstantSearch, usePagination } from "react-instantsearch";
+  useSearchResults,
+  useSearchPagination,
+  useClearRefinements,
+} from "../../search/hooks";
 import searchResultsStyles from "components/SearchAndBrowse/SearchResults/SearchResults.module.scss";
 import { Loader } from "components/ui/Loader";
 import ResultsPagination from "components/SearchAndBrowse/Pagination/ResultsPagination";
 import { NoSearchResultsDisplay } from "components/ui/NoSearchResultsDisplay";
 import { SearchResultsHeader } from "components/ui/SearchResultsHeader";
+import {
+  SearchConfigProvider,
+  useSearchConfig,
+} from "utils/SearchConfigContext";
+import {
+  useAppContext,
+  useAppContextUpdater,
+  DEFAULT_AROUND_PRECISION,
+} from "utils";
+import { useFilterState } from "hooks/useFilterState";
 
 export const HITS_PER_PAGE = 40;
 
-// NOTE: The .searchResultsPage is added plain so that it can be targeted by print-specific css
-export const SearchResultsPage = () => {
+/**
+ * Helper: build a bounding-box config object from a comma-separated string.
+ * Returned object also clears all radius-based params to avoid conflicts.
+ */
+const buildBoundingBoxConfig = (bb: string) => ({
+  hitsPerPage: HITS_PER_PAGE,
+  insideBoundingBox: [bb.split(",").map(Number)],
+  aroundLatLng: undefined,
+  aroundRadius: undefined,
+  aroundPrecision: undefined,
+  minimumAroundRadius: undefined,
+});
+
+/**
+ * SearchResultsPageContent - The main content component that uses search config
+ * This is separated so it can access the SearchConfigProvider context
+ */
+// Map radius values to appropriate zoom levels
+const RADIUS_TO_ZOOM: Record<number, number> = {
+  805: 16, // 0.5 miles
+  1609: 15, // 1 mile
+  3219: 14, // 2 miles
+  4828: 13, // 3 miles
+};
+
+const DEFAULT_RADIUS = 1609;
+
+const SearchResultsPageContent = () => {
+  const { updateConfig } = useSearchConfig();
+  const filterState = useFilterState();
+
   const [isMapCollapsed, setIsMapCollapsed] = useState(false);
   const [isMapInitialized, setIsMapInitialized] = useState(false);
-  const { aroundUserLocationRadius, aroundLatLng, boundingBox } =
-    useAppContext();
-  const { refine: refinePagination, currentRefinement: currentPage } =
-    usePagination();
+  // Controls whether geo filtering is active. Starts false so a fresh
+  // keyword search never gets a bounding-box filter applied automatically.
+  // Only set to true when the user explicitly clicks "Search this area".
+  const [geoSearchEnabled, setGeoSearchEnabled] = useState(false);
+  const [customMapCenter, setCustomMapCenter] = useState<{
+    lat: number;
+    lng: number;
+  } | null>(null);
+  const [customMapZoom, setCustomMapZoom] = useState<number | null>(null);
+  const [resetViewCount, setResetViewCount] = useState(0);
+  const [hoveredHitId, setHoveredHitId] = useState<string | null>(null);
+  const { goToPage, currentPage } = useSearchPagination();
   const {
-    // Results type is algoliasearchHelper.SearchResults<SearchHit>
     results: searchResults,
-    status,
-    indexUiState: { query = null },
-  } = useInstantSearch();
+    isIdle,
+    isSearching,
+    query,
+  } = useSearchResults();
+  const { clearAll: clearRefinements } = useClearRefinements();
+  const { setIndexUiState } = useInstantSearch();
+  const [searchParams] = useSearchParams();
+  const location = useLocation();
+  const { userLocation, aroundUserLocationRadius, aroundLatLng, boundingBox } =
+    useAppContext();
+  const { setBoundingBox, setAroundLatLng, setAroundRadius } =
+    useAppContextUpdater();
+
+  // Track the last bounding-box / aroundLatLng values that we applied to
+  // the search config.  This prevents the reactive useEffect from firing
+  // repeatedly with the same values (which would create new array
+  // references, cause <Configure> to re-render, and trigger an infinite
+  // search loop).
+  const lastAppliedGeo = useRef<string>("");
+
+  // Track whether the searchParams effect has already fired once (initial load).
+  const isInitialSearchRef = useRef(true);
+
+  // Stores the initial bounding box string so we can restore it on new searches.
+  const initialBoundingBox = useRef<string | undefined>(undefined);
 
   useEffect(() => window.scrollTo(0, 0), []);
+
+  // Capture the initial bounding box once after map initialization.
+  // Uses a useEffect (not handleAction) because setBoundingBox is a batched
+  // React state update: boundingBox in context hasn't updated yet when the
+  // MapInitialized action fires synchronously in the same callback.
+  useEffect(() => {
+    if (isMapInitialized && boundingBox && !initialBoundingBox.current) {
+      initialBoundingBox.current = boundingBox;
+    }
+  }, [isMapInitialized, boundingBox]);
+
+  // Set query from URL search params (e.g., /search?q=food) on navigation.
+  // On subsequent searches (not the initial load), reset all geo state and
+  // the map view so the new search starts fresh.
+  useEffect(() => {
+    const searchQuery = searchParams.get("q");
+    if (!searchQuery) return;
+
+    if (isInitialSearchRef.current) {
+      isInitialSearchRef.current = false;
+      // Sync the query from the URL into InstantSearch on first navigation
+      // to this page (e.g. landing on /search?q=food from the home page).
+      // For re-searches on the same page, SiteSearchInput.setQuery already
+      // updated the InstantSearch query via refine() before the navigation
+      // event fired, so calling setIndexUiState here would be redundant and
+      // would race with updateConfig's geo-clearing in the else branch below.
+      setIndexUiState((prev) => ({ ...prev, query: searchQuery }));
+    } else {
+      // Disable geo filtering so the new fresh search runs without a bounding
+      // box, and clear any geo params already in the config.
+      setGeoSearchEnabled(false);
+      updateConfig({
+        insideBoundingBox: undefined,
+        aroundLatLng: undefined,
+        aroundRadius: undefined,
+        aroundPrecision: undefined,
+        minimumAroundRadius: undefined,
+      });
+      // Restore the initial bounding box immediately so search results reflect
+      // the original map view while the map is animating back.
+      setBoundingBox(initialBoundingBox.current);
+      // Tell SearchMap to fitBounds back to the initial view. SearchMap will
+      // re-capture the bounding box once the animation completes.
+      setResetViewCount((c) => c + 1);
+      // Reset fallback geo params (used if bounding box is undefined)
+      if (userLocation) {
+        setAroundLatLng(
+          `${userLocation.coords.lat},${userLocation.coords.lng}`
+        );
+      }
+      setAroundRadius(1600);
+      // Allow the geo useEffect to re-apply with the reset values
+      lastAppliedGeo.current = "";
+      // Clear eligibility refinements
+      clearRefinements();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location]);
+
+  // Apply geo config when the map initialises or the bounding box /
+  // aroundLatLng changes (e.g. "Search this area").
+  // geoSearchEnabled must be true — it is only set on an explicit
+  // "Search this area" click, so fresh keyword searches are never
+  // affected by the map's automatic bounding-box updates.
+  useEffect(() => {
+    if (!isMapInitialized) return;
+    if (!geoSearchEnabled) return;
+    if (!boundingBox && !aroundLatLng) return;
+
+    // Build a stable key that represents the geo params we would apply.
+    // If nothing changed since the last application, skip to avoid
+    // creating new object references that trigger <Configure> re-renders.
+    const geoKey = boundingBox
+      ? `bb:${boundingBox}`
+      : `ll:${aroundLatLng}|r:${aroundUserLocationRadius}`;
+
+    if (geoKey === lastAppliedGeo.current) return;
+    lastAppliedGeo.current = geoKey;
+
+    if (boundingBox) {
+      updateConfig(buildBoundingBoxConfig(boundingBox));
+    } else {
+      updateConfig({
+        hitsPerPage: HITS_PER_PAGE,
+        aroundLatLng,
+        aroundRadius: aroundUserLocationRadius,
+        aroundPrecision: DEFAULT_AROUND_PRECISION,
+        minimumAroundRadius: 100,
+        insideBoundingBox: undefined,
+      });
+    }
+  }, [
+    isMapInitialized,
+    geoSearchEnabled,
+    boundingBox,
+    aroundLatLng,
+    aroundUserLocationRadius,
+    updateConfig,
+  ]);
+
+  const handleLocationSelect = useCallback(
+    (lat: number, lng: number, radius: number) => {
+      setCustomMapCenter({ lat, lng });
+      setCustomMapZoom(RADIUS_TO_ZOOM[radius] || 14);
+      goToPage(0);
+      // Apply the radius-based geo search directly, bypassing the map-boundary
+      // tracking mechanism so the radius isn't overridden when the map pans to
+      // the new center. The user can still click "Search this area" afterward
+      // to switch back to bounding-box mode.
+      setGeoSearchEnabled(false);
+      updateConfig({
+        hitsPerPage: HITS_PER_PAGE,
+        aroundLatLng: `${lat},${lng}`,
+        aroundRadius: radius,
+        aroundPrecision: DEFAULT_AROUND_PRECISION,
+        minimumAroundRadius: 100,
+        insideBoundingBox: undefined,
+      });
+    },
+    [goToPage, updateConfig]
+  );
+
+  const handleLocationClear = useCallback(() => {
+    setCustomMapCenter(null);
+    setCustomMapZoom(null);
+  }, []);
+
+  const handleClearAll = useCallback(() => {
+    filterState.clearFilters();
+    updateConfig({ filters: "" });
+    setAroundRadius(DEFAULT_RADIUS);
+    handleLocationClear();
+    setIndexUiState((prev) => ({ ...prev, query: "" }));
+  }, [
+    filterState,
+    updateConfig,
+    setAroundRadius,
+    handleLocationClear,
+    setIndexUiState,
+  ]);
 
   const handleFirstResultFocus = useCallback((node: HTMLDivElement | null) => {
     if (node) {
@@ -43,56 +251,49 @@ export const SearchResultsPage = () => {
     }
   }, []);
 
-  const searchMapHitData = transformSearchResults(searchResults);
+  // Search results are already transformed by the provider
+  // No need for additional transformation
+  const searchMapHitData = searchResults || { hits: [], nbHits: 0 };
 
-  const hasNoResults = searchMapHitData.nbHits === 0 && status === "idle" && (
-    <Loader />
-  );
+  // Show the initial loader only before the first results arrive.
+  // Once we have results, keep them (and the Pagination widget) mounted
+  // during subsequent searches so InstantSearch widgets don't reset.
+  const isInitialLoad = !searchResults && isSearching;
+
+  // Only show "no results" when search is complete (idle) and we have 0 hits
+  const hasNoResults = !isSearching && searchMapHitData.nbHits === 0 && isIdle;
 
   const handleAction = (searchMapAction: SearchMapActions) => {
     switch (searchMapAction) {
       case SearchMapActions.SearchThisArea:
-        // Center and radius are already updated in the SearchMap component
-        // Just reset pagination to show the first page of results
-        return refinePagination(0);
+        // Enable geo filtering on an explicit user action. The reactive
+        // geo useEffect will then apply the current bounding box.
+        // Do NOT call goToPage(0) here — InstantSearch resets pagination
+        // automatically when search parameters change.
+        setGeoSearchEnabled(true);
+        return;
       case SearchMapActions.MapInitialized:
-        // Map has initialized and bounding box is now available
         setIsMapInitialized(true);
         return;
     }
   };
 
-  // Search parameters are now configured based on map initialization
-
   return (
     <div className={styles.results}>
       <div className={classNames(styles.container, "searchResultsPage")}>
-        {/* Only render the Configure component (which triggers the search) when the map is initialized */}
+        {/* Only render FilterHeader after map is initialized to prevent premature search */}
         {isMapInitialized && (
-          <Configure
-            // Use the bounding box if available, otherwise fall back to radius-based search
-            {...(boundingBox
-              ? {
-                  // Convert bounding box string to array of numbers that Algolia expects
-                  insideBoundingBox: [boundingBox.split(",").map(Number)],
-                  hitsPerPage: HITS_PER_PAGE,
-                }
-              : {
-                  aroundLatLng: aroundLatLng,
-                  aroundRadius: aroundUserLocationRadius,
-                  aroundPrecision: DEFAULT_AROUND_PRECISION,
-                  minimumAroundRadius: 100, // Prevent the radius from being too small (100m minimum)
-                })}
+          <FilterHeader
+            filterState={filterState}
+            isSearchResultsPage
+            isMapCollapsed={isMapCollapsed}
+            setIsMapCollapsed={setIsMapCollapsed}
+            onLocationSelect={handleLocationSelect}
+            onLocationClear={handleLocationClear}
           />
         )}
 
         <div className={styles.flexContainer}>
-          <Sidebar
-            isSearchResultsPage
-            isMapCollapsed={isMapCollapsed}
-            setIsMapCollapsed={setIsMapCollapsed}
-          />
-
           <div className={styles.results}>
             <div className={searchResultsStyles.searchResultsAndMapContainer}>
               <div
@@ -103,28 +304,34 @@ export const SearchResultsPage = () => {
                 }`}
               >
                 <h2 className="sr-only">Search results</h2>
-                {!isMapInitialized ? (
+                {isInitialLoad ? (
                   <div className={styles.loadingContainer}>
                     <Loader />
-                    <p>Initializing map and loading results...</p>
+                    <p>Loading results...</p>
                   </div>
                 ) : hasNoResults ? (
-                  <NoSearchResultsDisplay query={query} />
+                  <NoSearchResultsDisplay
+                    query={query}
+                    onClearSearch={handleClearAll}
+                  />
                 ) : (
                   <>
                     <SearchResultsHeader
                       currentPage={currentPage}
-                      totalResults={searchResults.nbHits}
+                      totalResults={searchResults?.nbHits || 0}
+                      onClearSearch={handleClearAll}
                     />
-                    {searchMapHitData.hits.map(
-                      (hit: TransformedSearchHit, index) => (
-                        <SearchResult
-                          hit={hit}
-                          key={`${hit.id} - ${hit.name}`}
-                          ref={index === 0 ? handleFirstResultFocus : null}
-                        />
-                      )
-                    )}
+                    {searchMapHitData.hits.map((hit, index) => (
+                      <SearchResult
+                        hit={hit}
+                        index={index}
+                        key={`${hit.id} - ${hit.name}`}
+                        ref={index === 0 ? handleFirstResultFocus : null}
+                        isHighlighted={hoveredHitId === hit.id}
+                        onMouseEnter={() => setHoveredHitId(hit.id)}
+                        onMouseLeave={() => setHoveredHitId(null)}
+                      />
+                    ))}
                     <div
                       className={`${searchResultsStyles.paginationContainer} ${
                         hasNoResults ? searchResultsStyles.hidePagination : ""
@@ -141,11 +348,63 @@ export const SearchResultsPage = () => {
                 hits={searchMapHitData.hits}
                 mobileMapIsCollapsed={isMapCollapsed}
                 handleSearchMapAction={handleAction}
+                customCenter={customMapCenter}
+                customZoom={customMapZoom}
+                resetViewCount={resetViewCount}
+                highlightedHitId={hoveredHitId}
               />
             </div>
           </div>
         </div>
       </div>
     </div>
+  );
+};
+
+/**
+ * SearchResultsPage - Wrapper that provides SearchConfigProvider
+ *
+ * Geo params are NOT included in the initial config. Instead, the page waits
+ * for the map to initialize and provide a bounding box, then applies it via
+ * updateConfig. This mirrors the BrowseResultsPage pattern and ensures:
+ * 1. The initial "All Services" search uses the map's visible bounding box
+ *    (not a radius), giving a spread of pins across the map.
+ * 2. "Search this area" updates the bounding box and triggers a clean
+ *    config update without infinite loops.
+ */
+export const SearchResultsPage = () => {
+  const initialConfig = React.useMemo(
+    () => ({
+      hitsPerPage: HITS_PER_PAGE,
+      filters: "",
+      // Falsy-but-defined values for geo params so that stale geo state from
+      // a previous page's Configure widget (e.g. BrowseResultsPage) cannot
+      // leak into this page's initial search.
+      //
+      // react-instantsearch defers widget disposal via two nested setTimeout(0)
+      // calls, so the old widget can still be active when the first search on
+      // this page fires. connectConfigure.getWidgetSearchParameters computes:
+      //   { ...uiState.configure, ...widgetParams.searchParameters }
+      // By including these keys in widgetParams.searchParameters (our own
+      // Configure props), they override whatever the still-active old widget
+      // contributed to uiState.configure.
+      //
+      // The Typesense adapter uses truthiness checks:
+      //   if (insideBoundingBox) { /* apply bounding box */ }
+      //   if (aroundLatLng || aroundRadius) { /* apply radius geo */ }
+      // so null, "" and 0 effectively disable geo for the initial search.
+      // SearchConfigProvider strips undefined but passes null/""/0 through.
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      insideBoundingBox: null as any,
+      aroundLatLng: "" as string,
+      aroundRadius: 0 as number,
+    }),
+    []
+  );
+
+  return (
+    <SearchConfigProvider initialConfig={initialConfig}>
+      <SearchResultsPageContent />
+    </SearchConfigProvider>
   );
 };

@@ -1,5 +1,5 @@
 import React, { forwardRef } from "react";
-import { TransformedSearchHit } from "models";
+import type { SearchHit } from "../../../search/types";
 import { Link } from "react-router-dom";
 import { LabelTag } from "components/ui/LabelTag";
 import { formatPhoneNumber, renderAddressMetadata } from "utils";
@@ -8,24 +8,41 @@ import ReactMarkdown from "react-markdown";
 import styles from "./SearchResults.module.scss";
 
 interface SearchResultProps {
-  hit: TransformedSearchHit;
+  hit: SearchHit;
+  index: number;
+  isHighlighted?: boolean;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
 }
 
 export const SearchResult = forwardRef<HTMLDivElement, SearchResultProps>(
   (props, ref) => {
-    const { hit } = props;
+    const { hit, index, isHighlighted, onMouseEnter, onMouseLeave } = props;
 
     return (
       // ref is for focusing on the first search hit when user paginates and scrolls to top
-      <div className={styles.searchResult} ref={ref} tabIndex={-1}>
+      // eslint-disable-next-line jsx-a11y/no-static-element-interactions -- mouse handlers are cosmetic map-pin hover effects, not keyboard interactions
+      <div
+        className={`${styles.searchResult} ${
+          isHighlighted ? styles.searchResultHighlighted : ""
+        }`}
+        ref={ref}
+        tabIndex={-1}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+      >
         <div className={styles.searchResultContentContainer}>
           <div>
             <div className={styles.titleContainer}>
               <div>
                 <h2 className={styles.title}>
-                  {hit.resultListIndexDisplay}.{" "}
                   <Link
-                    to={{ pathname: hit.path }}
+                    to={{
+                      pathname:
+                        hit.type === "service"
+                          ? `/services/${hit.service_id}`
+                          : `/organizations/${hit.organization_id}`,
+                    }}
                     className={`notranslate ${styles.titleLink}`}
                   >
                     {hit.name}
@@ -34,10 +51,10 @@ export const SearchResult = forwardRef<HTMLDivElement, SearchResultProps>(
                 {hit.type === "service" && (
                   <div className={styles.serviceOf}>
                     <Link
-                      to={`/organizations/${hit.resource_id}`}
+                      to={`/organizations/${hit.organization_id}`}
                       className={`notranslate ${styles.serviceOfLink}`}
                     >
-                      {hit.service_of}
+                      {hit.organization_name}
                     </Link>
                   </div>
                 )}
@@ -58,15 +75,21 @@ export const SearchResult = forwardRef<HTMLDivElement, SearchResultProps>(
           <div className={styles.searchResultContent}>
             <div className={styles.searchText}>
               <div className={`notranslate ${styles.address}`}>
-                {renderAddressMetadata(hit)}
+                {!hit.addresses || hit.addresses.length === 0 ? (
+                  <span className={styles.noLocationBadge}>
+                    No location available
+                  </span>
+                ) : (
+                  renderAddressMetadata(hit)
+                )}
               </div>
               {/* Once we can update all dependencies, we can add remarkBreaks as remarkPlugin here */}
               <ReactMarkdown
                 className={`rendered-markdown ${styles.description}`}
                 linkTarget="_blank"
               >
-                {hit.longDescription
-                  ? removeAsterisksAndHashes(hit.longDescription)
+                {hit.description
+                  ? removeAsterisksAndHashes(hit.description)
                   : ""}
               </ReactMarkdown>
             </div>
@@ -84,11 +107,11 @@ export const SearchResult = forwardRef<HTMLDivElement, SearchResultProps>(
               </span>
             </a>
           )}
-          {hit.websiteUrl && (
+          {hit.organization_website && (
             <a
               target="_blank"
               rel="noopener noreferrer"
-              href={hit.websiteUrl}
+              href={hit.organization_website}
               className={`${styles.icon} ${styles["icon-popout"]}`}
               title="Go to website"
             >

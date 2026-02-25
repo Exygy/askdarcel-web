@@ -1,10 +1,8 @@
+// This is not used anywhere else, can we remove it?
+
 import React, { useCallback } from "react";
 import { SearchMap } from "components/SearchAndBrowse/SearchMap/SearchMap";
 import { SearchResult } from "components/SearchAndBrowse/SearchResults/SearchResult";
-import {
-  TransformedSearchHit,
-  transformSearchResults,
-} from "models/SearchHits";
 import {
   useInstantSearch,
   usePagination,
@@ -41,7 +39,8 @@ const SearchResults = ({
     }
   }, []);
 
-  const searchMapHitData = transformSearchResults(searchResults);
+  // Search results are already transformed by the provider
+  const searchMapHitData = searchResults;
 
   const hasNoResults = searchMapHitData.nbHits === 0 && status === "idle" && (
     <Loader />
@@ -81,9 +80,10 @@ const SearchResults = ({
               currentPage={currentPage}
               totalResults={searchResults.nbHits}
             />
-            {searchMapHitData.hits.map((hit: TransformedSearchHit, index) => (
+            {searchMapHitData.hits.map((hit, index) => (
               <SearchResult
                 hit={hit}
+                index={index}
                 key={`${hit.id} - ${hit.name}`}
                 ref={index === 0 ? handleFirstResultFocus : null}
               />

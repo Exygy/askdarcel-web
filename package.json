@@ -21,6 +21,7 @@
   "dependencies": {
     "@algolia/client-search": "^5.10.2",
     "@babel/polyfill": "^7.4.4",
+    "@floating-ui/react": "^0.27.16",
     "@heroicons/react": "^2.2.0",
     "@strapi/blocks-react-renderer": "^1.0.1",
     "@types/dompurify": "^3.0.5",
@@ -52,7 +53,9 @@
     "react-modal": "^3.12.1",
     "react-router-dom": "^6.27.0",
     "react-tippy": "^1.4.0",
-    "swr": "^2.2.5"
+    "swr": "^2.2.5",
+    "typesense": "^2.1.0",
+    "typesense-instantsearch-adapter": "^2.9.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.4",
