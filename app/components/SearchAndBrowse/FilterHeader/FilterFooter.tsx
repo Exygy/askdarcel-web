@@ -32,7 +32,12 @@ export const FilterFooter = ({
       <Button variant="linkBlue" onClick={handleClear} size="sm">
         Clear filters
       </Button>
-      <Button variant="primary" onClick={handleApply} size="base" disabled={disabled}>
+      <Button
+        variant="primary"
+        onClick={handleApply}
+        size="base"
+        disabled={disabled}
+      >
         {pendingCount > 0
           ? `Apply ${pendingCount} filter${pendingCount !== 1 ? "s" : ""}`
           : "Apply filters"}

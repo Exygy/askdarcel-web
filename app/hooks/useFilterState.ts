@@ -37,8 +37,12 @@ function countChanges(state: FilterState): number {
 }
 
 export function useFilterState() {
-  const [pending, setPending] = useState<FilterState>(cloneState(DEFAULT_STATE));
-  const [applied, setApplied] = useState<FilterState>(cloneState(DEFAULT_STATE));
+  const [pending, setPending] = useState<FilterState>(
+    cloneState(DEFAULT_STATE)
+  );
+  const [applied, setApplied] = useState<FilterState>(
+    cloneState(DEFAULT_STATE)
+  );
 
   const setPendingHours = useCallback((value: HoursSelection) => {
     setPending((prev) => ({ ...prev, hoursSelection: value }));

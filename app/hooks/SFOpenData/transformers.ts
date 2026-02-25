@@ -12,7 +12,12 @@ import {
 } from "./types";
 import { Organization, DetailAction } from "../../models/Organization";
 import { Service } from "../../models/Service";
-import { Address, Category, Eligibility, LocationDetails } from "../../models/Meta";
+import {
+  Address,
+  Category,
+  Eligibility,
+  LocationDetails,
+} from "../../models/Meta";
 import {
   DAY_TO_INT,
   DAYS_IN_WEEK,
@@ -24,7 +29,9 @@ import {
 /**
  * Parse time string (e.g., "12:30:00") into hour and minute
  */
-function parseTimeString(timeStr: string | undefined): { hour: number; minute: number } | null {
+function parseTimeString(
+  timeStr: string | undefined
+): { hour: number; minute: number } | null {
   if (!timeStr) return null;
   const parts = timeStr.split(":");
   if (parts.length < 2) return null;
@@ -46,7 +53,9 @@ function parseDayString(dayStr: string | undefined): number | null {
 /**
  * Transform SF Open Data schedules to RecurringSchedule
  */
-export function transformSchedules(schedules: SFSchedule[] | undefined): RecurringSchedule {
+export function transformSchedules(
+  schedules: SFSchedule[] | undefined
+): RecurringSchedule {
   if (!schedules || schedules.length === 0) {
     return new RecurringSchedule({ intervals: [], hoursKnown: false });
   }
@@ -65,9 +74,14 @@ export function transformSchedules(schedules: SFSchedule[] | undefined): Recurri
 
     intervals.push(
       new RecurringInterval({
-        opensAt: new RecurringTime({ day, hour: opensAt.hour, minute: opensAt.minute }),
+        opensAt: new RecurringTime({
+          day,
+          hour: opensAt.hour,
+          minute: opensAt.minute,
+        }),
         closesAt: new RecurringTime({
-          day: (day + (closesAtMinutes < opensAtMinutes ? 1 : 0)) % DAYS_IN_WEEK,
+          day:
+            (day + (closesAtMinutes < opensAtMinutes ? 1 : 0)) % DAYS_IN_WEEK,
           hour: closesAt.hour,
           minute: closesAt.minute,
         }),
@@ -113,7 +127,9 @@ export function transformTaxonomyToCategory(taxonomy: SFTaxonomy): Category {
 /**
  * Transform SF Open Data taxonomy to internal Eligibility format
  */
-export function transformTaxonomyToEligibility(taxonomy: SFTaxonomy): Eligibility {
+export function transformTaxonomyToEligibility(
+  taxonomy: SFTaxonomy
+): Eligibility {
   return {
     id: parseInt(taxonomy.taxonomy_term_id, 10) || 0,
     name: taxonomy.taxonomy_term,
@@ -133,7 +149,12 @@ export function transformOrganization(
     schedules?: SFSchedule[];
   }
 ): Organization {
-  const { locations = [], categories = [], services = [], schedules = [] } = options || {};
+  const {
+    locations = [],
+    categories = [],
+    services = [],
+    schedules = [],
+  } = options || {};
 
   const recurringSchedule = transformSchedules(schedules);
   const addresses = locations.map(transformLocationToAddress);
@@ -173,7 +194,10 @@ export function transformOrganization(
  * Transform basic SF service without related data
  */
 function transformServiceBasic(service: SFService): Service {
-  const emptySchedule = new RecurringSchedule({ intervals: [], hoursKnown: false });
+  const emptySchedule = new RecurringSchedule({
+    intervals: [],
+    hoursKnown: false,
+  });
 
   return {
     id: parseInt(service.id, 10) || 0,
@@ -217,7 +241,9 @@ function transformServiceBasic(service: SFService): Service {
 /**
  * Transform SF Open Data service with all related data to internal Service format
  */
-export function transformService(serviceWithDetails: SFServiceWithDetails): Service {
+export function transformService(
+  serviceWithDetails: SFServiceWithDetails
+): Service {
   const {
     organization,
     locations = [],

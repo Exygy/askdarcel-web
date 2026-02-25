@@ -51,9 +51,7 @@ const FilterHeader = ({
   const facets = useTypesenseFacets();
 
   const canShowEligibilities = facetableFields.includes("eligibilities");
-  const eligibilities = canShowEligibilities
-    ? facets?.eligibilities ?? []
-    : [];
+  const eligibilities = canShowEligibilities ? facets?.eligibilities ?? [] : [];
 
   const closeMenu = useCallback(() => setActiveFilterMenu(null), []);
 
@@ -129,7 +127,13 @@ const FilterHeader = ({
         disabled={requiresLocation && !filterState.pending.locationCoords}
       />
     ),
-    [filterState.pendingChangeCount, filterState.pending.locationCoords, handleApply, handleClear, closeMenu]
+    [
+      filterState.pendingChangeCount,
+      filterState.pending.locationCoords,
+      handleApply,
+      handleClear,
+      closeMenu,
+    ]
   );
 
   return (
@@ -147,9 +151,7 @@ const FilterHeader = ({
         {/* Distance Filter */}
         <div className={styles.filterButtonWrapper} ref={distanceButtonRef}>
           <Button
-            variant={
-              activeFilterMenu === "distance" ? "primary" : "secondary"
-            }
+            variant={activeFilterMenu === "distance" ? "primary" : "secondary"}
             onClick={() => toggleFilterMenu("distance")}
             iconName="chevron-down"
             iconVariant="after"

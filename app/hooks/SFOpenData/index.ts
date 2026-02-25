@@ -58,7 +58,11 @@ export {
 export { useOrganization, useOrganizations } from "./useOrganizations";
 
 // Service hooks
-export { useService, useServices, useOrganizationServices } from "./useServices";
+export {
+  useService,
+  useServices,
+  useOrganizationServices,
+} from "./useServices";
 
 // Location hooks
 export {
@@ -69,7 +73,10 @@ export {
 } from "./useLocations";
 
 // Service↔Location join hooks
-export { useServiceLocations, useLocationServices } from "./useServiceAtLocation";
+export {
+  useServiceLocations,
+  useLocationServices,
+} from "./useServiceAtLocation";
 
 // Taxonomy hooks (categories and eligibilities)
 export {
@@ -84,7 +91,10 @@ export {
 export { useServiceSchedules } from "./useSchedules";
 
 // Composite hooks
-export { useServiceDetails, useServiceWithOrganization } from "./useServiceDetails";
+export {
+  useServiceDetails,
+  useServiceWithOrganization,
+} from "./useServiceDetails";
 export { useOrganizationDetails } from "./useOrganizationDetails";
 export type { SFOrganizationWithDetails } from "./useOrganizationDetails";
 

@@ -15,11 +15,11 @@ jest.mock("react-instantsearch-core", () => ({
  * Test harness that exposes updateConfig and currentConfig via refs
  * so tests can drive state changes and inspect results.
  */
-function ConfigInspector({
+const ConfigInspector = ({
   onMount,
 }: {
   onMount: (api: ReturnType<typeof useSearchConfig>) => void;
-}) {
+}) => {
   const api = useSearchConfig();
   const mounted = React.useRef(false);
   if (!mounted.current) {
@@ -27,7 +27,7 @@ function ConfigInspector({
     onMount(api);
   }
   return null;
-}
+};
 
 describe("SearchConfigContext", () => {
   let updateConfig: ReturnType<typeof useSearchConfig>["updateConfig"];

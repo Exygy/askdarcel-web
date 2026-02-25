@@ -186,11 +186,7 @@ export const ServiceDetailPage = () => {
             {service.url && (
               <div className={styles.contactItem}>
                 <span className={styles.label}>Website</span>
-                <a
-                  href={service.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <a href={service.url} target="_blank" rel="noopener noreferrer">
                   {service.url}
                 </a>
               </div>

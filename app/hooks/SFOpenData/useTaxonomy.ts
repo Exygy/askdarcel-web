@@ -7,7 +7,12 @@ import {
   SFOpenDataHookResult,
   SFTaxonomyLinkEntity,
 } from "./types";
-import { buildSoQLUrl, buildEqualityFilter, combineFilters, buildFieldInFilter } from "./soqlUtils";
+import {
+  buildSoQLUrl,
+  buildEqualityFilter,
+  combineFilters,
+  buildFieldInFilter,
+} from "./soqlUtils";
 
 /**
  * Fetch categories for a service or organization

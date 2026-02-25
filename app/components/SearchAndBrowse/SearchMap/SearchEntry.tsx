@@ -65,7 +65,9 @@ const SearchEntry = ({ hit, lat, lng, location, onClose }: Props) => {
       </button>
 
       <h4 className="search-entry-name">
-        <a href={detailPath} onClick={handleNavigate(detailPath)}>{hit.name}</a>
+        <a href={detailPath} onClick={handleNavigate(detailPath)}>
+          {hit.name}
+        </a>
       </h4>
 
       {type === "service" && hit.organization_name && (

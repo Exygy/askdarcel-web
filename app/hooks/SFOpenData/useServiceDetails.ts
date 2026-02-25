@@ -3,11 +3,20 @@ import { useService } from "./useServices";
 import { useOrganization } from "./useOrganizations";
 import { useServiceLocations } from "./useServiceAtLocation";
 import { useLocationsByIds } from "./useLocations";
-import { useCategories, useEligibilities, useParentTaxonomyTerms } from "./useTaxonomy";
+import {
+  useCategories,
+  useEligibilities,
+  useParentTaxonomyTerms,
+} from "./useTaxonomy";
 import { useServiceSchedules } from "./useSchedules";
-import { SFServiceWithDetails, SFOpenDataHookResult, SFTaxonomy } from "./types";
+import {
+  SFServiceWithDetails,
+  SFOpenDataHookResult,
+  SFTaxonomy,
+} from "./types";
 
-interface UseServiceDetailsResult extends SFOpenDataHookResult<SFServiceWithDetails> {
+interface UseServiceDetailsResult
+  extends SFOpenDataHookResult<SFServiceWithDetails> {
   isLoadingRelated: boolean;
 }
 
@@ -77,13 +86,15 @@ export function useServiceDetails(
   const rawCategories: SFTaxonomy[] | null =
     serviceCategories && serviceCategories.length > 0
       ? serviceCategories
-      : (orgCategories ?? serviceCategories);
+      : orgCategories ?? serviceCategories;
 
   // Find parent_id values referenced by subcategories that are not present as their
   // own taxonomy_term_id entries in the resolved list.
   const missingParentIds = useMemo(() => {
     if (!rawCategories || rawCategories.length === 0) return null;
-    const presentTermIds = new Set(rawCategories.map((c) => c.taxonomy_term_id));
+    const presentTermIds = new Set(
+      rawCategories.map((c) => c.taxonomy_term_id)
+    );
     const missing = rawCategories
       .filter((c) => c.parent_id && !presentTermIds.has(c.parent_id))
       .map((c) => c.parent_id as string);
@@ -101,20 +112,27 @@ export function useServiceDetails(
   // Inject resolved parent terms as top-level category entries.
   const categories = useMemo((): SFTaxonomy[] | null => {
     if (!rawCategories) return null;
-    if (!parentCategoryTerms || parentCategoryTerms.length === 0) return rawCategories;
-    const presentTermIds = new Set(rawCategories.map((c) => c.taxonomy_term_id));
+    if (!parentCategoryTerms || parentCategoryTerms.length === 0)
+      return rawCategories;
+    const presentTermIds = new Set(
+      rawCategories.map((c) => c.taxonomy_term_id)
+    );
     const newParents = parentCategoryTerms
       .filter((t) => !presentTermIds.has(t.taxonomy_term_id))
-      .map((t): SFTaxonomy => ({
-        id: "",
-        link_id: "",
-        link_type: "our415_categories",
-        link_entity: "service",
-        taxonomy_term_id: t.taxonomy_term_id,
-        taxonomy_term: t.taxonomy_term,
-        parent_id: null,
-      }));
-    return newParents.length > 0 ? [...rawCategories, ...newParents] : rawCategories;
+      .map(
+        (t): SFTaxonomy => ({
+          id: "",
+          link_id: "",
+          link_type: "our415_categories",
+          link_entity: "service",
+          taxonomy_term_id: t.taxonomy_term_id,
+          taxonomy_term: t.taxonomy_term,
+          parent_id: null,
+        })
+      );
+    return newParents.length > 0
+      ? [...rawCategories, ...newParents]
+      : rawCategories;
   }, [rawCategories, parentCategoryTerms]);
 
   // Fetch service's own eligibilities
@@ -135,7 +153,7 @@ export function useServiceDetails(
   const eligibilities =
     serviceEligibilities && serviceEligibilities.length > 0
       ? serviceEligibilities
-      : (orgEligibilities ?? serviceEligibilities);
+      : orgEligibilities ?? serviceEligibilities;
 
   // Fetch schedules
   const {
@@ -199,14 +217,23 @@ export function useServiceDetails(
  * Use this when you don't need all the related data
  */
 export function useServiceWithOrganization(serviceId: string | null): {
-  data: { service: SFServiceWithDetails | null; organizationName?: string } | null;
+  data: {
+    service: SFServiceWithDetails | null;
+    organizationName?: string;
+  } | null;
   error?: Error;
   isLoading: boolean;
 } {
-  const { data: service, error: serviceError, isLoading: isLoadingService } = useService(serviceId);
-  const { data: organization, error: orgError, isLoading: isLoadingOrg } = useOrganization(
-    service?.organization_id ?? null
-  );
+  const {
+    data: service,
+    error: serviceError,
+    isLoading: isLoadingService,
+  } = useService(serviceId);
+  const {
+    data: organization,
+    error: orgError,
+    isLoading: isLoadingOrg,
+  } = useOrganization(service?.organization_id ?? null);
 
   const data = useMemo(() => {
     if (!service) return null;

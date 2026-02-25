@@ -16,6 +16,8 @@ import { InstantSearch, useSearchBox } from "react-instantsearch-core";
 import { render, waitFor, screen, fireEvent } from "@testing-library/react";
 import { AppProvider } from "utils/useAppContext";
 import { COORDS_MID_SAN_FRANCISCO } from "utils";
+import { SearchResultsPage } from "pages/SearchResultsPage/SearchResultsPage";
+import { BrowseResultsPage } from "pages/BrowseResultsPage/BrowseResultsPage";
 
 // ---------------------------------------------------------------------------
 // Mock search client – a jest.fn() so we can inspect requests
@@ -78,8 +80,10 @@ jest.mock("search/context/SearchContext", () => ({
 const FAKE_BOUNDING_BOX = "37.812,-122.527,37.708,-122.357";
 
 jest.mock("components/SearchAndBrowse/SearchMap/SearchMap", () => {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
   const mockReact = require("react");
   // Use the real AppContextUpdater so setBoundingBox propagates to SearchResultsPage
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
   const { useAppContextUpdater } = require("utils/useAppContext");
 
   return {
@@ -106,7 +110,10 @@ jest.mock("components/SearchAndBrowse/SearchMap/SearchMap", () => {
         { "data-testid": "search-map-mock" },
         mockReact.createElement(
           "button",
-          { "data-testid": "search-this-area-btn", onClick: handleSearchThisArea },
+          {
+            "data-testid": "search-this-area-btn",
+            onClick: handleSearchThisArea,
+          },
           "Search this area"
         )
       );
@@ -141,12 +148,6 @@ jest.mock("hooks/StrapiAPI", () => ({
   useNavigationData: () => ({ data: null, isLoading: false }),
   formatHomePageEventsData: () => [],
 }));
-
-// ---------------------------------------------------------------------------
-// Imports under test (after mocks)
-// ---------------------------------------------------------------------------
-import { SearchResultsPage } from "pages/SearchResultsPage/SearchResultsPage";
-import { BrowseResultsPage } from "pages/BrowseResultsPage/BrowseResultsPage";
 
 // ---------------------------------------------------------------------------
 // QueryConnector - registers a SearchBox widget so query appears in params
@@ -215,9 +216,7 @@ const TestWrapper = ({
         searchClient={mockSearchClient}
         indexName="resources"
         initialUiState={
-          initialQuery
-            ? { resources: { query: initialQuery } }
-            : undefined
+          initialQuery ? { resources: { query: initialQuery } } : undefined
         }
       >
         <QueryConnector />
@@ -440,8 +439,7 @@ describe("Search Flow Integration Tests", () => {
 
       await waitFor(() => {
         const match = findSearchCallWith(
-          (p) =>
-            typeof p.filters === "string" && p.filters.includes("Housing")
+          (p) => typeof p.filters === "string" && p.filters.includes("Housing")
         );
         expect(match).not.toBeNull();
       });
@@ -465,8 +463,7 @@ describe("Search Flow Integration Tests", () => {
 
       await waitFor(() => {
         const match = findSearchCallWith(
-          (p) =>
-            typeof p.filters === "string" && p.filters.includes("Food")
+          (p) => typeof p.filters === "string" && p.filters.includes("Food")
         );
         expect(match).not.toBeNull();
       });
@@ -504,9 +501,7 @@ describe("Search Flow Integration Tests", () => {
       });
 
       // Confirm no truthy bounding-box geo filter has been applied yet.
-      expect(
-        findSearchCallWith((p) => !!p.insideBoundingBox)
-      ).toBeNull();
+      expect(findSearchCallWith((p) => !!p.insideBoundingBox)).toBeNull();
 
       // Simulate "Search this area" click: mock sets bounding box in
       // AppContext and fires SearchMapActions.SearchThisArea.
@@ -515,9 +510,7 @@ describe("Search Flow Integration Tests", () => {
 
       // A new search with a real bounding-box filter must now be sent.
       await waitFor(() => {
-        const match = findSearchCallWith(
-          (p) => !!p.insideBoundingBox
-        );
+        const match = findSearchCallWith((p) => !!p.insideBoundingBox);
         expect(match).not.toBeNull();
       });
     });
@@ -551,9 +544,7 @@ describe("Search Flow Integration Tests", () => {
       fireEvent.click(screen.getByTestId("search-this-area-btn"));
 
       await waitFor(() => {
-        expect(
-          findSearchCallWith((p) => !!p.insideBoundingBox)
-        ).not.toBeNull();
+        expect(findSearchCallWith((p) => !!p.insideBoundingBox)).not.toBeNull();
       });
 
       // Snapshot the call count BEFORE re-submitting so we can isolate
@@ -563,8 +554,8 @@ describe("Search Flow Integration Tests", () => {
       // Re-submit the same query "food".
       fireEvent.click(screen.getByTestId("submit-search-btn"));
 
-      // Wait until at least one new search fires AND the most-recent call
-      // is geo-free. "Most-recent" is the right invariant: even if there
+      // Wait until at least one new search fires, then verify the most-recent
+      // call is geo-free. "Most-recent" is the right invariant: even if there
       // is a brief intermediate search (e.g., clearRefinements firing
       // before the Configure update commits), the final search the user
       // sees must not have a bounding-box filter.
@@ -572,12 +563,13 @@ describe("Search Flow Integration Tests", () => {
         expect(mockSearch.mock.calls.length).toBeGreaterThan(
           callCountBeforeSubmit
         );
-        const allCalls = mockSearch.mock.calls;
-        const lastCall = allCalls[allCalls.length - 1];
-        const raw = lastCall[0]?.[0]?.params ?? lastCall[0]?.[0];
-        const params = parseParams(raw);
-        expect(params.insideBoundingBox).toBeUndefined();
       });
+      const postSubmitCalls = mockSearch.mock.calls;
+      const postSubmitLast = postSubmitCalls[postSubmitCalls.length - 1];
+      const postSubmitRaw =
+        postSubmitLast[0]?.[0]?.params ?? postSubmitLast[0]?.[0];
+      const postSubmitParams = parseParams(postSubmitRaw);
+      expect(postSubmitParams.insideBoundingBox).toBeUndefined();
     });
   });
 
@@ -626,7 +618,8 @@ describe("Search Flow Integration Tests", () => {
       await waitFor(() => {
         expect(
           findSearchCallWith(
-            (p) => typeof p.filters === "string" && p.filters.includes("Housing")
+            (p) =>
+              typeof p.filters === "string" && p.filters.includes("Housing")
           )
         ).not.toBeNull();
       });
@@ -642,9 +635,7 @@ describe("Search Flow Integration Tests", () => {
 
       // Wait for a search with query="food" to arrive.
       await waitFor(() => {
-        expect(
-          findSearchCallWith((p) => p.query === "food")
-        ).not.toBeNull();
+        expect(findSearchCallWith((p) => p.query === "food")).not.toBeNull();
       });
 
       // The most-recent call must have "food" as the query and must NOT
@@ -653,12 +644,16 @@ describe("Search Flow Integration Tests", () => {
         const allCalls = mockSearch.mock.calls;
         const lastCall = allCalls[allCalls.length - 1];
         const raw = lastCall[0]?.[0]?.params ?? lastCall[0]?.[0];
-        const params = parseParams(raw);
-        expect(params.query).toBe("food");
-        expect(params.filters || "").not.toContain("categories:");
-        expect(params.insideBoundingBox).toBeFalsy();
-        expect(params.aroundLatLng || "").toBeFalsy();
+        const p = parseParams(raw);
+        expect(p.query).toBe("food");
       });
+      const finalCalls = mockSearch.mock.calls;
+      const finalLast = finalCalls[finalCalls.length - 1];
+      const finalRaw = finalLast[0]?.[0]?.params ?? finalLast[0]?.[0];
+      const finalParams = parseParams(finalRaw);
+      expect(finalParams.filters || "").not.toContain("categories:");
+      expect(finalParams.insideBoundingBox).toBeFalsy();
+      expect(finalParams.aroundLatLng || "").toBeFalsy();
     });
   });
 
@@ -666,7 +661,6 @@ describe("Search Flow Integration Tests", () => {
   // Flow 9: Sequential searches update query
   // ---------------------------------------------------------------
   describe("Flow 9: Sequential searches update query", () => {
-
     it("search query updates when navigating to a different query", async () => {
       const { unmount } = render(
         <MemoryRouter initialEntries={["/search?q=food"]}>

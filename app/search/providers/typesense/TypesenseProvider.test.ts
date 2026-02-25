@@ -97,7 +97,9 @@ describe("TypesenseProvider – getLiteClient().search()", () => {
       const sentParams = sentRequests[0].params;
 
       // Geo params should be preserved
-      expect(sentParams.insideBoundingBox).toEqual([[37.8, -122.5, 37.7, -122.4]]);
+      expect(sentParams.insideBoundingBox).toEqual([
+        [37.8, -122.5, 37.7, -122.4],
+      ]);
       expect(sentParams.aroundLatLng).toBe("37.78,-122.42");
       expect(sentParams.aroundRadius).toBe(1600);
       expect(sentParams.aroundPrecision).toBe(100);

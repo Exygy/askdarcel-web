@@ -42,11 +42,7 @@ export function usePlacesAutocomplete(
   // Initialize services when Google Maps API is available
   useEffect(() => {
     const initServices = () => {
-      if (
-        typeof google !== "undefined" &&
-        google.maps &&
-        google.maps.places
-      ) {
+      if (typeof google !== "undefined" && google.maps && google.maps.places) {
         if (!autocompleteServiceRef.current) {
           autocompleteServiceRef.current =
             new google.maps.places.AutocompleteService();

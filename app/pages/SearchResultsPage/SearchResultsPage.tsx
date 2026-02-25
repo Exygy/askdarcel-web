@@ -21,7 +21,11 @@ import {
   SearchConfigProvider,
   useSearchConfig,
 } from "utils/SearchConfigContext";
-import { useAppContext, useAppContextUpdater, DEFAULT_AROUND_PRECISION } from "utils";
+import {
+  useAppContext,
+  useAppContextUpdater,
+  DEFAULT_AROUND_PRECISION,
+} from "utils";
 import { useFilterState } from "hooks/useFilterState";
 
 export const HITS_PER_PAGE = 40;
@@ -233,7 +237,13 @@ const SearchResultsPageContent = () => {
     setAroundRadius(DEFAULT_RADIUS);
     handleLocationClear();
     setIndexUiState((prev) => ({ ...prev, query: "" }));
-  }, [filterState, updateConfig, setAroundRadius, handleLocationClear, setIndexUiState]);
+  }, [
+    filterState,
+    updateConfig,
+    setAroundRadius,
+    handleLocationClear,
+    setIndexUiState,
+  ]);
 
   const handleFirstResultFocus = useCallback((node: HTMLDivElement | null) => {
     if (node) {
@@ -300,7 +310,10 @@ const SearchResultsPageContent = () => {
                     <p>Loading results...</p>
                   </div>
                 ) : hasNoResults ? (
-                  <NoSearchResultsDisplay query={query} onClearSearch={handleClearAll} />
+                  <NoSearchResultsDisplay
+                    query={query}
+                    onClearSearch={handleClearAll}
+                  />
                 ) : (
                   <>
                     <SearchResultsHeader

@@ -101,7 +101,8 @@
   display: flex;
   justify-content: space-between;
   gap: $general-spacing-md;
-  transition: border-color 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+  transition: border-color 0.3s ease, background-color 0.3s ease,
+    box-shadow 0.3s ease;
 
   @media screen and (max-width: $break-tablet-p) {
     border-radius: 0;

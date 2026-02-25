@@ -56,9 +56,15 @@ jest.mock("search/providers", () => ({
 }));
 
 // Create a test context provider that supplies the search context
-const SearchContext = React.createContext<{ provider: typeof mockSearchProvider } | null>(null);
+const SearchContext = React.createContext<{
+  provider: typeof mockSearchProvider;
+} | null>(null);
 
-const SearchContextTestProvider = ({ children }: { children: React.ReactNode }) => (
+const SearchContextTestProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => (
   <SearchContext.Provider value={{ provider: mockSearchProvider }}>
     {children}
   </SearchContext.Provider>

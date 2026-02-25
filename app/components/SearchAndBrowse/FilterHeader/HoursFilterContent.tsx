@@ -15,9 +15,7 @@ export const HoursFilterContent = ({
     <button
       type="button"
       className={
-        selected === "any"
-          ? styles.toggleButtonActive
-          : styles.toggleButton
+        selected === "any" ? styles.toggleButtonActive : styles.toggleButton
       }
       onClick={() => onChange("any")}
     >

@@ -25,9 +25,7 @@ export function buildFilterString({
     parts.push(pageFilter);
   }
 
-  const eligibilityValues = eligibilities
-    ? Array.from(eligibilities)
-    : [];
+  const eligibilityValues = eligibilities ? Array.from(eligibilities) : [];
 
   if (eligibilityValues.length > 0) {
     const facetFilters = eligibilityValues.map(

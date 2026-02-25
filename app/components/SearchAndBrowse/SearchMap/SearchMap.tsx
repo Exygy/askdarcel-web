@@ -80,7 +80,8 @@ export const SearchMap = ({
   // When resetViewCount increments, fit the map back to the initial bounding
   // box captured on first load, then re-capture the actual rendered bounds.
   React.useEffect(() => {
-    if (!googleMapObject || !resetViewCount || !initialBoundsRef.current) return;
+    if (!googleMapObject || !resetViewCount || !initialBoundsRef.current)
+      return;
 
     googleMapObject.fitBounds(initialBoundsRef.current);
 

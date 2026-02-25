@@ -21,6 +21,7 @@ export const SearchResult = forwardRef<HTMLDivElement, SearchResultProps>(
 
     return (
       // ref is for focusing on the first search hit when user paginates and scrolls to top
+      // eslint-disable-next-line jsx-a11y/no-static-element-interactions -- mouse handlers are cosmetic map-pin hover effects, not keyboard interactions
       <div
         className={`${styles.searchResult} ${
           isHighlighted ? styles.searchResultHighlighted : ""
