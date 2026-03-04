@@ -246,9 +246,7 @@ const FilterHeader = ({
 
             {eligibilities.length > 0 && (
               <div className={styles.filterGroup}>
-                <h4 className={styles.filterGroupTitle}>
-                  {isSearchResultsPage ? "Eligibilities" : "Age"}
-                </h4>
+                <h4 className={styles.filterGroupTitle}>Tags</h4>
                 <EligibilityFilterContent
                   eligibilities={eligibilities}
                   selected={filterState.pending.selectedEligibilities}
