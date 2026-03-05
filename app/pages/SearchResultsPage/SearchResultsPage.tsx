@@ -229,7 +229,13 @@ const SearchResultsPageContent = () => {
   const handleLocationClear = useCallback(() => {
     setCustomMapCenter(null);
     setCustomMapZoom(null);
-  }, []);
+    setResetViewCount((c) => c + 1);
+    lastAppliedGeo.current = "";
+    if (initialBoundingBox.current) {
+      setBoundingBox(initialBoundingBox.current);
+      updateConfig(buildBoundingBoxConfig(initialBoundingBox.current));
+    }
+  }, [updateConfig, setBoundingBox]);
 
   const handleClearAll = useCallback(() => {
     filterState.clearFilters();

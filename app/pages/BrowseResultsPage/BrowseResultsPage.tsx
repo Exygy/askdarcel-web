@@ -71,7 +71,9 @@ const BrowseResultsPageContent = ({
     lng: number;
   } | null>(null);
   const [customMapZoom, setCustomMapZoom] = useState<number | null>(null);
+  const [resetViewCount, setResetViewCount] = useState(0);
   const [hoveredHitId, setHoveredHitId] = useState<string | null>(null);
+  const initialBoundingBox = useRef<string | undefined>(undefined);
   const { userLocation } = useAppContext();
   const { aroundUserLocationRadius, aroundLatLng, boundingBox } =
     useAppContext();
@@ -88,6 +90,13 @@ const BrowseResultsPageContent = ({
   const { setIndexUiState } = useInstantSearch();
 
   useEffect(() => window.scrollTo(0, 0), []);
+
+  // Capture the initial bounding box once after map initialization.
+  useEffect(() => {
+    if (isMapInitialized && boundingBox && !initialBoundingBox.current) {
+      initialBoundingBox.current = boundingBox;
+    }
+  }, [isMapInitialized, boundingBox]);
 
   // Clear search query and refinements when category changes
   // This ensures that selecting a category after a text search
@@ -147,7 +156,12 @@ const BrowseResultsPageContent = ({
   const handleLocationClear = useCallback(() => {
     setCustomMapCenter(null);
     setCustomMapZoom(null);
-  }, []);
+    setResetViewCount((c) => c + 1);
+    lastAppliedGeo.current = "";
+    if (initialBoundingBox.current) {
+      setBoundingBox(initialBoundingBox.current);
+    }
+  }, [setBoundingBox]);
 
   const categoryName = category.name;
 
@@ -295,6 +309,7 @@ const BrowseResultsPageContent = ({
                 handleSearchMapAction={handleAction}
                 customCenter={customMapCenter}
                 customZoom={customMapZoom}
+                resetViewCount={resetViewCount}
                 highlightedHitId={hoveredHitId}
               />
             </div>
