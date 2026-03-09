@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "components/SearchAndBrowse/SearchResults/SearchResults.module.scss";
 import ClearSearchButton from "components/SearchAndBrowse/Refinements/ClearSearchButton";
-import { HITS_PER_PAGE } from "pages/SearchResultsPage/SearchResultsPage";
+import { HITS_PER_PAGE } from "../../search/constants";
 
 /**
  * Layout component for the header above the search results list that allows for
