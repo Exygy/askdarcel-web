@@ -1,9 +1,9 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import GoogleMap from "google-map-react";
 import { Tooltip } from "react-tippy";
 import "react-tippy/dist/tippy.css";
 import SearchEntry from "components/SearchAndBrowse/SearchMap/SearchEntry";
-import { useAppContext, useAppContextUpdater } from "utils";
+import { useAppContext, useAppContextUpdater, SF_MAP_BOUNDS, COORDS_MID_SAN_FRANCISCO } from "utils";
 import { groupHitsByLocation, computeGridOffset } from "utils/map";
 import { Button } from "components/ui/inline/Button/Button";
 import {
@@ -41,12 +41,8 @@ export const SearchMap = ({
     null
   );
   const [clickedHitId, setClickedHitId] = useState<string | null>(null);
-  const { userLocation, aroundLatLng, boundingBox } = useAppContext();
-  const { setAroundLatLng, setBoundingBox } = useAppContextUpdater();
-
-  // Stores the LatLngBounds captured when the map first becomes idle.
-  // Used to restore the original view when the user performs a new search.
-  const initialBoundsRef = useRef<google.maps.LatLngBounds | null>(null);
+  const { userLocation } = useAppContext();
+  const { setBoundingBox } = useAppContextUpdater();
 
   // Pan to custom center and zoom when they change (e.g. from distance filter)
   React.useEffect(() => {
@@ -77,13 +73,17 @@ export const SearchMap = ({
     }
   }, [googleMapObject, customCenter, customZoom, setBoundingBox]);
 
-  // When resetViewCount increments, fit the map back to the initial bounding
-  // box captured on first load, then re-capture the actual rendered bounds.
+  // When resetViewCount increments, fit the map back to the full SF view.
+  // Always use SF_MAP_BOUNDS directly (not previously captured rendered bounds)
+  // to avoid progressive zoom-out from compounding fitBounds padding.
   React.useEffect(() => {
-    if (!googleMapObject || !resetViewCount || !initialBoundsRef.current)
-      return;
+    if (!googleMapObject || !resetViewCount) return;
 
-    googleMapObject.fitBounds(initialBoundsRef.current);
+    const sfBounds = new google.maps.LatLngBounds(
+      new google.maps.LatLng(SF_MAP_BOUNDS.sw.lat, SF_MAP_BOUNDS.sw.lng),
+      new google.maps.LatLng(SF_MAP_BOUNDS.ne.lat, SF_MAP_BOUNDS.ne.lng)
+    );
+    googleMapObject.fitBounds(sfBounds);
 
     const idleListener = googleMapObject.addListener("idle", () => {
       google.maps.event.removeListener(idleListener);
@@ -125,23 +125,6 @@ export const SearchMap = ({
       handleSearchMapAction(SearchMapActions.SearchThisArea);
     }
   }
-
-  const aroundLatLngToMapCenter = {
-    lat: Number(aroundLatLng.split(",")[0]),
-    lng: Number(aroundLatLng.split(",")[1]),
-  };
-
-  // Center the map to the user's choice (`aroundLatLng`) with a fallback to our best guess when sniffing their
-  // location on app start (`userLocation`)
-  const googleMapsCenter = () => {
-    if (aroundLatLng) {
-      return aroundLatLngToMapCenter;
-    } else if (userLocation) {
-      return { lat: userLocation?.coords.lat, lng: userLocation?.coords.lng };
-    } else {
-      return undefined;
-    }
-  };
 
   const groupedHits = groupHitsByLocation(hits);
 
@@ -215,47 +198,38 @@ export const SearchMap = ({
             key: config.GOOGLE_API_KEY,
             libraries: ["places"],
           }}
-          center={googleMapsCenter()}
-          defaultZoom={14}
+          defaultCenter={COORDS_MID_SAN_FRANCISCO}
+          defaultZoom={11}
           onGoogleApiLoaded={({ map }) => {
             // SetMapObject shares the Google Map object across parent/sibling components
             // so that they can adjustments to markers, coordinates, layout, etc.,
             setMapObject(map);
 
-            // If we have a bounding box from App.tsx, fit the map to it
-            // This ensures the map shows the same area as the search results
-            if (boundingBox) {
-              const [neLat, swLng, swLat, neLng] = boundingBox
-                .split(",")
-                .map(Number);
-              const llBounds = new google.maps.LatLngBounds(
-                new google.maps.LatLng(swLat, swLng), // SW corner
-                new google.maps.LatLng(neLat, neLng) // NE corner
-              );
-              map.fitBounds(llBounds);
-              initialBoundsRef.current = llBounds;
+            // Fit the map to the full SF bounding box so every user sees the
+            // same geographic area on load, regardless of screen size.
+            // fitBounds adjusts zoom automatically — small screens zoom out more,
+            // large screens zoom in more, but all of SF is always visible.
+            const sfBounds = new google.maps.LatLngBounds(
+              new google.maps.LatLng(SF_MAP_BOUNDS.sw.lat, SF_MAP_BOUNDS.sw.lng),
+              new google.maps.LatLng(SF_MAP_BOUNDS.ne.lat, SF_MAP_BOUNDS.ne.lng)
+            );
+            map.fitBounds(sfBounds);
 
-              // Notify that map is initialized
-              handleSearchMapAction(SearchMapActions.MapInitialized);
-            } else {
-              // Fallback: Set initial bounding box from map bounds when first loaded
-              const idleListener = map.addListener("idle", () => {
-                // Remove the listener so it only fires once
-                google.maps.event.removeListener(idleListener);
+            // After fitBounds settles, capture the actual rendered bounds as
+            // the initial bounding box for search queries.
+            const idleListener = map.addListener("idle", () => {
+              google.maps.event.removeListener(idleListener);
 
-                const bounds = map.getBounds();
-                if (bounds) {
-                  initialBoundsRef.current = bounds;
-                  const ne = bounds.getNorthEast();
-                  const sw = bounds.getSouthWest();
-                  const boundingBoxString = `${ne.lat()},${sw.lng()},${sw.lat()},${ne.lng()}`;
-                  setBoundingBox(boundingBoxString);
+              const bounds = map.getBounds();
+              if (bounds) {
+                const ne = bounds.getNorthEast();
+                const sw = bounds.getSouthWest();
+                const boundingBoxString = `${ne.lat()},${sw.lng()},${sw.lat()},${ne.lng()}`;
+                setBoundingBox(boundingBoxString);
 
-                  // Notify that map is initialized
-                  handleSearchMapAction(SearchMapActions.MapInitialized);
-                }
-              });
-            }
+                handleSearchMapAction(SearchMapActions.MapInitialized);
+              }
+            });
           }}
           options={createMapOptions}
         >

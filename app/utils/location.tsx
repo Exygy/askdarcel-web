@@ -15,6 +15,16 @@ export const COORDS_MID_SAN_FRANCISCO: GeoCoordinates = {
   lng: -122.4194,
 };
 
+/**
+ * Bounding box that encompasses all of San Francisco.
+ * Used to initialize the map so every user sees the full city
+ * regardless of screen size, ensuring consistent search results.
+ */
+export const SF_MAP_BOUNDS = {
+  ne: { lat: 37.83, lng: -122.35 },
+  sw: { lat: 37.7, lng: -122.52 },
+} as const;
+
 export const areCoordsInSanFrancisco = (coords: GeoCoordinates): boolean => {
   // These are conservative bounds, extending into the ocean, the Bay, and Daly City.
   const bb = {
