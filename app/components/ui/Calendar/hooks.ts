@@ -1,6 +1,7 @@
-import { useMemo, useLayoutEffect, useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 import { SFGovEvent } from "hooks/SFGovAPI";
-import { CalendarEvent, CategoryFilter } from "./types";
+import { haversineDistanceMeters } from "utils/location";
+import { CalendarEvent, DistanceFilter } from "./types";
 import {
   extractUniqueCategories,
   shouldEventOccurOnDay,
@@ -8,103 +9,24 @@ import {
 } from "./utils";
 
 export const useEventProcessing = (events: SFGovEvent[] | null) => {
-  // Extract unique categories from events
   const availableCategories = useMemo(
     () => extractUniqueCategories(events),
     [events]
   );
 
-  // State for category filters - initialize empty to prevent flash
-  const [categoryFilters, setCategoryFilters] = useState<CategoryFilter[]>([]);
-
-  // Use useLayoutEffect to set category filters before paint to prevent flashing
-  useLayoutEffect(() => {
-    if (availableCategories.length > 0 && events) {
-      // Count events per category
-      const categoryCounts = new Map<string, number>();
-
-      events.forEach((event) => {
-        if (event.events_category) {
-          categoryCounts.set(
-            event.events_category,
-            (categoryCounts.get(event.events_category) || 0) + 1
-          );
-        }
-      });
-
-      // Find category with most events
-      let maxCount = 0;
-      let categoryWithMostEvents = availableCategories[0];
-
-      availableCategories.forEach((category) => {
-        const count = categoryCounts.get(category) || 0;
-        if (count > maxCount) {
-          maxCount = count;
-          categoryWithMostEvents = category;
-        }
-      });
-
-      setCategoryFilters(
-        availableCategories.map((category) => ({
-          category,
-          enabled: category === categoryWithMostEvents, // Only category with most events is enabled by default
-        }))
-      );
-    }
-  }, [availableCategories, events]);
-
-  // Update category filters when available categories change
-  useEffect(() => {
-    setCategoryFilters((prev) => {
-      const existingCategories = new Set(prev.map((f) => f.category));
-      const newFilters = [...prev];
-
-      // Add new categories that weren't present before (default to disabled)
-      availableCategories.forEach((category) => {
-        if (!existingCategories.has(category)) {
-          newFilters.push({
-            category,
-            enabled: false, // New categories default to disabled to maintain single-select
-          });
-        }
-      });
-
-      // Remove categories that no longer exist
-      return newFilters.filter((filter) =>
-        availableCategories.includes(filter.category)
-      );
-    });
-  }, [availableCategories]);
-
-  // Get enabled category names
-  const enabledCategories = useMemo(
-    () =>
-      new Set(categoryFilters.filter((f) => f.enabled).map((f) => f.category)),
-    [categoryFilters]
-  );
-
-  // Toggle category filter - only one can be selected at a time (radio button behavior)
-  const toggleCategory = (category: string) => {
-    setCategoryFilters((prev) =>
-      prev.map((filter) => ({
-        ...filter,
-        enabled: filter.category === category,
-      }))
-    );
-  };
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   return {
     availableCategories,
-    categoryFilters,
-    enabledCategories,
-    toggleCategory,
+    selectedCategory,
+    setSelectedCategory,
   };
 };
 
 export const useEventTransformation = (
   events: SFGovEvent[] | null,
-  categoryFilters: CategoryFilter[],
-  enabledCategories: Set<string>,
+  selectedCategory: string | null,
+  distanceFilter: DistanceFilter | null,
   currentMobileDate: Date
 ) => {
   const calendarEvents = useMemo(() => {
@@ -114,15 +36,24 @@ export const useEventTransformation = (
 
     events
       .filter((event) => {
-        // Filter out events without start date
         if (!event.event_start_date) return false;
 
-        // Filter by category if category filters are active
-        if (
-          categoryFilters.length > 0 &&
-          !enabledCategories.has(event.events_category)
-        ) {
+        if (selectedCategory && event.events_category !== selectedCategory) {
           return false;
+        }
+
+        if (distanceFilter) {
+          const lat = parseFloat(event.latitude);
+          const lng = parseFloat(event.longitude);
+          if (!isNaN(lat) && !isNaN(lng)) {
+            const dist = haversineDistanceMeters(
+              distanceFilter.coords.lat,
+              distanceFilter.coords.lng,
+              lat,
+              lng
+            );
+            if (dist > distanceFilter.radiusMeters) return false;
+          }
         }
 
         return true;
@@ -133,7 +64,6 @@ export const useEventTransformation = (
           ? new Date(event.event_end_date)
           : new Date(event.event_start_date);
 
-        // Check if this is a recurring event (has both start/end dates AND start/end times)
         const isRecurringEvent =
           event.event_end_date &&
           event.start_time &&
@@ -141,46 +71,38 @@ export const useEventTransformation = (
           startDateOnly.toDateString() !== endDateOnly.toDateString();
 
         if (isRecurringEvent) {
-          // Create individual events for each day between start and end dates
           const currentDate = new Date(startDateOnly);
 
           while (currentDate <= endDateOnly) {
-            // Check if event should occur on this day of the week
             if (shouldEventOccurOnDay(event.days_of_week, currentDate)) {
-              // Parse times for this specific day
               const [startHours, startMinutes, startSeconds = 0] =
                 event.start_time.split(":").map(Number);
               const [endHours, endMinutes, endSeconds = 0] = event.end_time
                 .split(":")
                 .map(Number);
 
-              // Create start datetime for this day
               const dayStartDate = new Date(currentDate);
               dayStartDate.setHours(startHours, startMinutes, startSeconds);
 
-              // Create end datetime for this day
               const dayEndDate = new Date(currentDate);
               dayEndDate.setHours(endHours, endMinutes, endSeconds);
 
-              // Add individual event for this day
               transformedEvents.push({
-                id: `${event.id}-${currentDate.toISOString().split("T")[0]}`, // Unique ID per day
+                id: `${event.id}-${currentDate.toISOString().split("T")[0]}`,
                 title: event.event_name,
                 start: dayStartDate,
                 end: dayEndDate,
                 pageLink: ensureHttpsProtocol(event.more_info || ""),
                 description: event.event_description || "",
                 location: event.site_location_name || "",
-                allDay: false, // These are timed events
+                allDay: false,
                 originalEvent: event,
               });
             }
 
-            // Move to next day
             currentDate.setDate(currentDate.getDate() + 1);
           }
         } else {
-          // Handle as single event (existing logic)
           const startDate = new Date(event.event_start_date);
           if (event.start_time) {
             const [hours, minutes, seconds] = event.start_time
@@ -200,21 +122,16 @@ export const useEventTransformation = (
                 .map(Number);
               endDate.setHours(hours, minutes, seconds || 0);
             } else if (event.start_time) {
-              // If there's a start time but no end time, default to 1 hour duration
               endDate = new Date(startDate);
               endDate.setHours(endDate.getHours() + 1);
             } else {
-              // No specific time, treat as all day event - end date should be same day
               endDate.setHours(23, 59, 59, 999);
             }
           } else {
-            // If no end date, assume same day as start
             endDate = new Date(startDate);
             if (event.start_time && !event.end_time) {
-              // If there's a start time but no end time, default to 1 hour duration
               endDate.setHours(endDate.getHours() + 1);
             } else if (isAllDayEvent) {
-              // All day event - end should be same day
               endDate.setHours(23, 59, 59, 999);
             }
           }
@@ -233,12 +150,11 @@ export const useEventTransformation = (
         }
       });
 
-    // Filter events to show only the current selected day (for agenda view)
     const currentDateStr = currentMobileDate.toDateString();
     return transformedEvents.filter((event) => {
       return event.start && event.start.toDateString() === currentDateStr;
     });
-  }, [events, categoryFilters.length, enabledCategories, currentMobileDate]);
+  }, [events, selectedCategory, distanceFilter, currentMobileDate]);
 
   return calendarEvents;
 };

@@ -1,4 +1,24 @@
 import { useState, useCallback, useRef, useEffect } from "react";
+import config from "../config";
+
+/**
+ * Ensures the Google Maps script (with Places library) is loaded.
+ * If SearchMap has already loaded it, this is a no-op.
+ */
+function ensureGoogleMapsScript() {
+  if (typeof google !== "undefined" && google?.maps?.places) return;
+  if (document.querySelector('script[data-google-maps-places]')) return;
+
+  const key = config.GOOGLE_API_KEY;
+  if (!key) return;
+
+  const script = document.createElement("script");
+  script.src = `https://maps.googleapis.com/maps/api/js?key=${key}&libraries=places`;
+  script.async = true;
+  script.defer = true;
+  script.dataset.googleMapsPlaces = "true";
+  document.head.appendChild(script);
+}
 
 export interface PlacePrediction {
   placeId: string;
@@ -41,6 +61,8 @@ export function usePlacesAutocomplete(
 
   // Initialize services when Google Maps API is available
   useEffect(() => {
+    ensureGoogleMapsScript();
+
     const initServices = () => {
       if (typeof google !== "undefined" && google.maps && google.maps.places) {
         if (!autocompleteServiceRef.current) {
