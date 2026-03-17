@@ -64,7 +64,7 @@ export class TypesenseProvider implements ISearchProvider {
         // alphabetical A→Z results which naturally distributes different
         // service types across the result set instead of clustering
         // duplicates (e.g. many Zumba classes) together.
-        // sort_by: "_text_match:desc,name:asc",
+        sort_by: "_text_match:desc,name:asc",
       },
       geoLocationField: "locations",
     });

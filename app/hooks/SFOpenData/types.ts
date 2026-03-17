@@ -25,6 +25,7 @@ export interface SFService {
   description?: string;
   organization_id: string;
   url?: string;
+  application_process?: string;
 }
 
 // Location from /resource/rwbr-kbhe.json

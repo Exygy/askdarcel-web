@@ -127,7 +127,8 @@
   .label {
     font-weight: 500;
     color: var(--color-grey-600, #666);
-    min-width: 80px;
+    min-width: 140px;
+    flex-shrink: 0;
   }
 
   a {
