@@ -151,7 +151,7 @@ const ResultsPageContent = ({
           `${userLocation.coords.lat},${userLocation.coords.lng}`
         );
       }
-      setAroundRadius(1600);
+      setAroundRadius(DEFAULT_RADIUS);
       lastAppliedGeo.current = "";
       clearRefinements();
     }
@@ -255,10 +255,22 @@ const ResultsPageContent = ({
     if (initialBoundingBox.current) {
       setBoundingBox(initialBoundingBox.current);
       if (mode === "search") {
-        updateConfig(buildBoundingBoxConfig(initialBoundingBox.current));
+        if (geoSearchEnabled) {
+          updateConfig(buildBoundingBoxConfig(initialBoundingBox.current));
+        } else {
+          // geo is opt-in in search mode; clear any stale geo params without re-enabling filtering.
+          updateConfig({
+            hitsPerPage: HITS_PER_PAGE,
+            insideBoundingBox: undefined,
+            aroundLatLng: undefined,
+            aroundRadius: undefined,
+            aroundPrecision: undefined,
+            minimumAroundRadius: undefined,
+          });
+        }
       }
     }
-  }, [mode, updateConfig, setBoundingBox]);
+  }, [mode, geoSearchEnabled, updateConfig, setBoundingBox]);
 
   const handleClearAll = useCallback(() => {
     filterState.clearFilters();
@@ -443,7 +455,6 @@ export const ResultsPage = () => {
 
   // All hooks must be called unconditionally before any early returns.
   const facets = useTypesenseFacets();
-  const { userLocation } = useAppContext();
 
   const category = useMemo(() => {
     if (mode !== "browse" || !facets) return null;
@@ -477,11 +488,6 @@ export const ResultsPage = () => {
   if (mode === "browse") {
     // Wait for category to resolve before rendering the search tree.
     if (!category) {
-      return <Loader />;
-    }
-
-    // Wait for user location before showing browse results.
-    if (userLocation === null) {
       return <Loader />;
     }
 
