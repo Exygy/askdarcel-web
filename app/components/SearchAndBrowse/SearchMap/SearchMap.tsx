@@ -3,7 +3,12 @@ import GoogleMap from "google-map-react";
 import { Tooltip } from "react-tippy";
 import "react-tippy/dist/tippy.css";
 import SearchEntry from "components/SearchAndBrowse/SearchMap/SearchEntry";
-import { useAppContext, useAppContextUpdater, SF_MAP_BOUNDS, COORDS_MID_SAN_FRANCISCO } from "utils";
+import {
+  useAppContext,
+  useAppContextUpdater,
+  SF_MAP_BOUNDS,
+  COORDS_MID_SAN_FRANCISCO,
+} from "utils";
 import { groupHitsByLocation, computeGridOffset } from "utils/map";
 import { Button } from "components/ui/inline/Button/Button";
 import {
@@ -210,7 +215,10 @@ export const SearchMap = ({
             // fitBounds adjusts zoom automatically — small screens zoom out more,
             // large screens zoom in more, but all of SF is always visible.
             const sfBounds = new google.maps.LatLngBounds(
-              new google.maps.LatLng(SF_MAP_BOUNDS.sw.lat, SF_MAP_BOUNDS.sw.lng),
+              new google.maps.LatLng(
+                SF_MAP_BOUNDS.sw.lat,
+                SF_MAP_BOUNDS.sw.lng
+              ),
               new google.maps.LatLng(SF_MAP_BOUNDS.ne.lat, SF_MAP_BOUNDS.ne.lng)
             );
             map.fitBounds(sfBounds);

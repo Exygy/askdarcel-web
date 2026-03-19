@@ -93,7 +93,10 @@ const TestWrapper = ({
   userLocation = { coords: COORDS_MID_SAN_FRANCISCO, inSanFrancisco: false },
 }: {
   children: React.ReactNode;
-  userLocation?: { coords: typeof COORDS_MID_SAN_FRANCISCO; inSanFrancisco: boolean };
+  userLocation?: {
+    coords: typeof COORDS_MID_SAN_FRANCISCO;
+    inSanFrancisco: boolean;
+  };
 }) => {
   const [aroundLatLng, setAroundLatLng] = React.useState("");
   const [aroundRadius, setAroundRadius] = React.useState<number>(1600);
@@ -218,7 +221,10 @@ describe("ResultsPage (browse mode)", () => {
           >
             <SearchContextTestProvider>
               <Routes>
-                <Route path="/:categorySlug/results" element={<ResultsPage />} />
+                <Route
+                  path="/:categorySlug/results"
+                  element={<ResultsPage />}
+                />
               </Routes>
             </SearchContextTestProvider>
           </InstantSearch>
@@ -247,7 +253,10 @@ describe("ResultsPage (browse mode)", () => {
           >
             <SearchContextTestProvider>
               <Routes>
-                <Route path="/:categorySlug/results" element={<ResultsPage />} />
+                <Route
+                  path="/:categorySlug/results"
+                  element={<ResultsPage />}
+                />
               </Routes>
             </SearchContextTestProvider>
           </InstantSearch>

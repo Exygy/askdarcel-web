@@ -1,4 +1,10 @@
-import React, { useCallback, useState, useEffect, useRef, useMemo } from "react";
+import React, {
+  useCallback,
+  useState,
+  useEffect,
+  useRef,
+  useMemo,
+} from "react";
 import { useSearchParams, useLocation, useParams } from "react-router-dom";
 import { useInstantSearch } from "react-instantsearch-core";
 import { SearchMapActions } from "components/SearchAndBrowse/SearchResults/SearchResults";
@@ -76,9 +82,7 @@ const ResultsPageContent = ({
   const [isMapCollapsed, setIsMapCollapsed] = useState(false);
   const [isMapInitialized, setIsMapInitialized] = useState(false);
   // In browse mode geo is always active; in search mode the user must opt in.
-  const [geoSearchEnabled, setGeoSearchEnabled] = useState(
-    mode === "browse"
-  );
+  const [geoSearchEnabled, setGeoSearchEnabled] = useState(mode === "browse");
   const [customMapCenter, setCustomMapCenter] = useState<{
     lat: number;
     lng: number;
@@ -168,9 +172,7 @@ const ResultsPageContent = ({
     if (!category) return;
 
     setBoundingBox(undefined);
-    setAroundLatLng(
-      `${userLocation?.coords.lat},${userLocation?.coords.lng}`
-    );
+    setAroundLatLng(`${userLocation?.coords.lat},${userLocation?.coords.lng}`);
     setAroundRadius(1600);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
@@ -283,9 +285,7 @@ const ResultsPageContent = ({
   // Search mode: show initial loader before first results arrive.
   // Browse mode: show loader until map is initialized.
   const isInitialLoad =
-    mode === "search"
-      ? !searchResults && isSearching
-      : !isMapInitialized;
+    mode === "search" ? !searchResults && isSearching : !isMapInitialized;
 
   const hasNoResults =
     mode === "search"
@@ -492,7 +492,10 @@ export const ResultsPage = () => {
     };
 
     return (
-      <SearchConfigProvider key={category.slug} initialConfig={browseInitialConfig}>
+      <SearchConfigProvider
+        key={category.slug}
+        initialConfig={browseInitialConfig}
+      >
         <ResultsPageContent
           mode="browse"
           category={category}

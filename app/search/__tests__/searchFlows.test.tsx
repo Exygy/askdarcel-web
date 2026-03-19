@@ -323,10 +323,7 @@ describe("Search Flow Integration Tests", () => {
         <MemoryRouter initialEntries={["/housing/results"]}>
           <TestWrapper>
             <Routes>
-              <Route
-                path="/:categorySlug/results"
-                element={<ResultsPage />}
-              />
+              <Route path="/:categorySlug/results" element={<ResultsPage />} />
             </Routes>
           </TestWrapper>
         </MemoryRouter>
@@ -427,10 +424,7 @@ describe("Search Flow Integration Tests", () => {
         <MemoryRouter initialEntries={["/housing/results"]}>
           <TestWrapper>
             <Routes>
-              <Route
-                path="/:categorySlug/results"
-                element={<ResultsPage />}
-              />
+              <Route path="/:categorySlug/results" element={<ResultsPage />} />
             </Routes>
           </TestWrapper>
         </MemoryRouter>
@@ -451,10 +445,7 @@ describe("Search Flow Integration Tests", () => {
         <MemoryRouter initialEntries={["/food/results"]}>
           <TestWrapper>
             <Routes>
-              <Route
-                path="/:categorySlug/results"
-                element={<ResultsPage />}
-              />
+              <Route path="/:categorySlug/results" element={<ResultsPage />} />
             </Routes>
           </TestWrapper>
         </MemoryRouter>
