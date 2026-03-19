@@ -16,8 +16,7 @@ import { InstantSearch, useSearchBox } from "react-instantsearch-core";
 import { render, waitFor, screen, fireEvent } from "@testing-library/react";
 import { AppProvider } from "utils/useAppContext";
 import { COORDS_MID_SAN_FRANCISCO } from "utils";
-import { SearchResultsPage } from "pages/SearchResultsPage/SearchResultsPage";
-import { BrowseResultsPage } from "pages/BrowseResultsPage/BrowseResultsPage";
+import { ResultsPage } from "pages/ResultsPage/ResultsPage";
 
 // ---------------------------------------------------------------------------
 // Mock search client – a jest.fn() so we can inspect requests
@@ -277,7 +276,7 @@ describe("Search Flow Integration Tests", () => {
       render(
         <MemoryRouter initialEntries={["/search?q=food"]}>
           <TestWrapper initialQuery="food">
-            <SearchResultsPage />
+            <ResultsPage />
           </TestWrapper>
         </MemoryRouter>
       );
@@ -300,7 +299,7 @@ describe("Search Flow Integration Tests", () => {
       render(
         <MemoryRouter initialEntries={["/search?q=medical"]}>
           <TestWrapper initialQuery="medical">
-            <SearchResultsPage />
+            <ResultsPage />
           </TestWrapper>
         </MemoryRouter>
       );
@@ -324,10 +323,7 @@ describe("Search Flow Integration Tests", () => {
         <MemoryRouter initialEntries={["/housing/results"]}>
           <TestWrapper>
             <Routes>
-              <Route
-                path="/:categorySlug/results"
-                element={<BrowseResultsPage />}
-              />
+              <Route path="/:categorySlug/results" element={<ResultsPage />} />
             </Routes>
           </TestWrapper>
         </MemoryRouter>
@@ -359,7 +355,7 @@ describe("Search Flow Integration Tests", () => {
       render(
         <MemoryRouter initialEntries={["/search"]}>
           <TestWrapper>
-            <SearchResultsPage />
+            <ResultsPage />
           </TestWrapper>
         </MemoryRouter>
       );
@@ -394,7 +390,7 @@ describe("Search Flow Integration Tests", () => {
       render(
         <MemoryRouter initialEntries={["/search?q=food"]}>
           <TestWrapper initialQuery="food">
-            <SearchResultsPage />
+            <ResultsPage />
           </TestWrapper>
         </MemoryRouter>
       );
@@ -428,10 +424,7 @@ describe("Search Flow Integration Tests", () => {
         <MemoryRouter initialEntries={["/housing/results"]}>
           <TestWrapper>
             <Routes>
-              <Route
-                path="/:categorySlug/results"
-                element={<BrowseResultsPage />}
-              />
+              <Route path="/:categorySlug/results" element={<ResultsPage />} />
             </Routes>
           </TestWrapper>
         </MemoryRouter>
@@ -452,10 +445,7 @@ describe("Search Flow Integration Tests", () => {
         <MemoryRouter initialEntries={["/food/results"]}>
           <TestWrapper>
             <Routes>
-              <Route
-                path="/:categorySlug/results"
-                element={<BrowseResultsPage />}
-              />
+              <Route path="/:categorySlug/results" element={<ResultsPage />} />
             </Routes>
           </TestWrapper>
         </MemoryRouter>
@@ -487,7 +477,7 @@ describe("Search Flow Integration Tests", () => {
       render(
         <MemoryRouter initialEntries={["/search?q=food"]}>
           <TestWrapper initialQuery="food">
-            <SearchResultsPage />
+            <ResultsPage />
           </TestWrapper>
         </MemoryRouter>
       );
@@ -529,7 +519,7 @@ describe("Search Flow Integration Tests", () => {
         <MemoryRouter initialEntries={["/search?q=food"]}>
           <TestWrapper initialQuery="food">
             <SearchSubmitSimulator query="food" />
-            <SearchResultsPage />
+            <ResultsPage />
           </TestWrapper>
         </MemoryRouter>
       );
@@ -603,12 +593,12 @@ describe("Search Flow Integration Tests", () => {
                 path="/:categorySlug/results"
                 element={
                   <>
-                    <BrowseResultsPage />
+                    <ResultsPage />
                     <NavigateToSearch />
                   </>
                 }
               />
-              <Route path="/search" element={<SearchResultsPage />} />
+              <Route path="/search" element={<ResultsPage />} />
             </Routes>
           </TestWrapper>
         </MemoryRouter>
@@ -665,7 +655,7 @@ describe("Search Flow Integration Tests", () => {
       const { unmount } = render(
         <MemoryRouter initialEntries={["/search?q=food"]}>
           <TestWrapper initialQuery="food">
-            <SearchResultsPage />
+            <ResultsPage />
           </TestWrapper>
         </MemoryRouter>
       );
@@ -681,7 +671,7 @@ describe("Search Flow Integration Tests", () => {
       render(
         <MemoryRouter initialEntries={["/search?q=shelter"]}>
           <TestWrapper initialQuery="shelter">
-            <SearchResultsPage />
+            <ResultsPage />
           </TestWrapper>
         </MemoryRouter>
       );

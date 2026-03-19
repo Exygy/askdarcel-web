@@ -5,11 +5,10 @@ import { ContentPage } from "pages/ContentPage";
 import { FaqPage } from "pages/FaqPage/FaqPage";
 import { OrganizationDetailPage } from "pages/OrganizationDetailPage";
 import { ServiceDetailPage } from "pages/ServiceDetailPage/ServiceDetailPage";
-import { BrowseResultsPage } from "pages/BrowseResultsPage/BrowseResultsPage";
+import { ResultsPage } from "pages/ResultsPage/ResultsPage";
 import { PageHeader } from "components/ui/Navigation/PageHeader";
 import { BackButton } from "components/ui/BackButton";
 import { SearchHeaderSection } from "components/SearchAndBrowse/Header/SearchHeaderSection";
-import { SearchResultsPage } from "pages/SearchResultsPage/SearchResultsPage";
 import { PageNotFoundPage } from "pages/PageNotFoundPage/PageNotFoundPage";
 import { EventDetailPage } from "pages/EventDetailPage/EventDetailPage";
 
@@ -48,7 +47,7 @@ export const Router = () => {
             <PageHeader variant="secondary">
               <SearchHeaderSection descriptionText="Sign up for programs and access resources." />
             </PageHeader>
-            <SearchResultsPage />
+            <ResultsPage />
           </>
         }
       />
@@ -80,7 +79,7 @@ export const Router = () => {
         path="/terms-of-service"
         element={<ContentPage pageName="Terms of Service" />}
       />
-      <Route path="/:categorySlug/results" element={<BrowseResultsPage />} />
+      <Route path="/:categorySlug/results" element={<ResultsPage />} />
       <Route path="*" element={<PageNotFoundPage />} />
     </Routes>
   );
