@@ -58,6 +58,7 @@ export const useEventProcessing = (events: SFGovEvent[] | null) => {
     setCategoryFilters((prev) => {
       const existingCategories = new Set(prev.map((f) => f.category));
       const newFilters = [...prev];
+      let changed = false;
 
       // Add new categories that weren't present before (default to disabled)
       availableCategories.forEach((category) => {
@@ -66,13 +67,18 @@ export const useEventProcessing = (events: SFGovEvent[] | null) => {
             category,
             enabled: false, // New categories default to disabled to maintain single-select
           });
+          changed = true;
         }
       });
 
       // Remove categories that no longer exist
-      return newFilters.filter((filter) =>
+      const filtered = newFilters.filter((filter) =>
         availableCategories.includes(filter.category)
       );
+      if (filtered.length !== prev.length) changed = true;
+
+      // Return the same reference if nothing changed to avoid a re-render loop
+      return changed ? filtered : prev;
     });
   }, [availableCategories]);
 
