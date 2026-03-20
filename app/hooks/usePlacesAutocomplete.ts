@@ -7,7 +7,7 @@ import config from "../config";
  */
 function ensureGoogleMapsScript() {
   if (typeof google !== "undefined" && google?.maps?.places) return;
-  if (document.querySelector('script[data-google-maps-places]')) return;
+  if (document.querySelector("script[data-google-maps-places]")) return;
 
   const key = config.GOOGLE_API_KEY;
   if (!key) return;

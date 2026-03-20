@@ -305,7 +305,9 @@ export const EventFilterBar: React.FC<EventFilterBarProps> = ({
                         {prediction.mainText}
                       </span>
                       {prediction.secondaryText && (
-                        <span className={filterStyles.autocompleteSecondaryText}>
+                        <span
+                          className={filterStyles.autocompleteSecondaryText}
+                        >
                           {prediction.secondaryText}
                         </span>
                       )}
