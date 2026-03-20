@@ -45,7 +45,6 @@ export const OrganizationDetailPage = () => {
     return lat && lng ? [{ loc, lat, lng }] : [];
   });
 
-
   if (isLoading) {
     return <Loader />;
   }
