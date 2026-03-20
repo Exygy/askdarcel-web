@@ -111,6 +111,7 @@
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  align-self: start;
 
   @media (max-width: 900px) {
     order: -1;
@@ -129,14 +130,37 @@
 
 .address {
   font-weight: 500;
-  margin-bottom: 12px;
   color: var(--color-grey-800, #1a1a1a);
+
+  & + .address {
+    border-top: 1px solid var(--color-grey-200, #eee);
+    margin-top: 12px;
+    padding-top: 12px;
+  }
+}
+
+.viewMoreAddresses {
+  background: none;
+  border: none;
+  padding: 0;
+  margin-top: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-blue, #0066cc);
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 .scheduleList {
   display: flex;
   flex-direction: column;
   gap: 4px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--color-grey-200, #eee);
 }
 
 .scheduleItem {
