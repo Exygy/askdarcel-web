@@ -45,15 +45,16 @@ export const useEventTransformation = (
         if (distanceFilter) {
           const lat = parseFloat(event.latitude);
           const lng = parseFloat(event.longitude);
-          if (!isNaN(lat) && !isNaN(lng)) {
-            const dist = haversineDistanceMeters(
-              distanceFilter.coords.lat,
-              distanceFilter.coords.lng,
-              lat,
-              lng
-            );
-            if (dist > distanceFilter.radiusMeters) return false;
+          if (isNaN(lat) || isNaN(lng)) {
+            return false;
           }
+          const dist = haversineDistanceMeters(
+            distanceFilter.coords.lat,
+            distanceFilter.coords.lng,
+            lat,
+            lng
+          );
+          if (dist > distanceFilter.radiusMeters) return false;
         }
 
         return true;
