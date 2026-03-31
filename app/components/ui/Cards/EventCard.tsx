@@ -18,7 +18,7 @@ export const EventCard = ({ event }: { event: EventResponse }) => {
     <div className={styles.eventCard} data-testid={"eventcard"}>
       <img
         data-testid={"eventcard-title"}
-        alt={imageAlternativeText}
+        alt={imageAlternativeText || title || ""}
         src={imageUrl}
         className={styles.cardImage}
       />
