@@ -16,7 +16,7 @@ export const CategoryCard = (props: CategoryCardProps) => {
 
   return (
     <a href={href} className={styles.categoryCard}>
-      <span className={`${iconName} ${styles.icon}`} />
+      <span className={`${iconName} ${styles.icon}`} aria-hidden="true" />
       <span className={styles.categoryTitle}>{label}</span>
     </a>
   );

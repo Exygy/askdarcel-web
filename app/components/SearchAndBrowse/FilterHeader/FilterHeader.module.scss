@@ -341,6 +341,13 @@
     background-color: #f5f5f5;
   }
 
+  /* Highlight the label row when the checkbox inside it is keyboard-focused */
+  &:has(.checkboxInput:focus-visible) {
+    background-color: #f5f5f5;
+    outline: 2px solid #1a56db;
+    outline-offset: 1px;
+  }
+
   span {
     flex: 1;
   }
@@ -352,6 +359,12 @@
   height: 18px;
   margin: 0;
   flex-shrink: 0;
+
+  /* Suppress the default focus ring on the input itself since
+     the parent label row shows the focus indicator instead */
+  &:focus-visible {
+    outline: none;
+  }
 }
 
 // Filter dropdown footer (Apply/Clear)

@@ -35,7 +35,7 @@ export const SearchResult = forwardRef<HTMLDivElement, SearchResultProps>(
           <div>
             <div className={styles.titleContainer}>
               <div>
-                <h2 className={styles.title}>
+                <h3 className={styles.title}>
                   <Link
                     to={{
                       pathname:
@@ -47,7 +47,7 @@ export const SearchResult = forwardRef<HTMLDivElement, SearchResultProps>(
                   >
                     {hit.name}
                   </Link>
-                </h2>
+                </h3>
                 {hit.type === "service" && (
                   <div className={styles.serviceOf}>
                     <Link
@@ -100,12 +100,8 @@ export const SearchResult = forwardRef<HTMLDivElement, SearchResultProps>(
             <a
               href={`tel:${hit.phoneNumber}`}
               className={`${styles.icon} ${styles["icon-phone"]}`}
-              title={`Call ${formatPhoneNumber(hit.phoneNumber)}`}
-            >
-              <span className="sr-only">
-                Call {formatPhoneNumber(hit.phoneNumber)}
-              </span>
-            </a>
+              aria-label={`Call ${hit.name}: ${formatPhoneNumber(hit.phoneNumber)}`}
+            />
           )}
           {hit.organization_website && (
             <a
@@ -113,10 +109,8 @@ export const SearchResult = forwardRef<HTMLDivElement, SearchResultProps>(
               rel="noopener noreferrer"
               href={hit.organization_website}
               className={`${styles.icon} ${styles["icon-popout"]}`}
-              title="Go to website"
-            >
-              <span className="sr-only">Go to website</span>
-            </a>
+              aria-label={`Visit ${hit.name} website (opens in new tab)`}
+            />
           )}
         </div>
       </div>

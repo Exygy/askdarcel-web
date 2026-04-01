@@ -31,22 +31,17 @@
   }
 }
 
-.navigationSubMenuItem,
-.navigationMenuHeader {
-  a {
-    padding: $spacing-2 $spacing-4;
-  }
+.navigationSubMenuItem {
+  padding: $spacing-2 $spacing-4;
 
-  a:hover {
+  &:hover {
     background: $gray-50;
     color: inherit;
   }
 
-  .menuLink {
-    &:focus {
-      outline: 2px solid $color-brand-dark;
-      outline-offset: -2px;
-    }
+  &:focus-visible {
+    outline: 2px solid $color-brand-dark;
+    outline-offset: -2px;
   }
 }
 

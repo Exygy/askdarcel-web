@@ -44,6 +44,7 @@ export const EventCardSection = ({
           className={styles.showMoreButton}
           onClick={() => setShowAll(true)}
           aria-expanded="false"
+          aria-label="Show more featured resources"
           aria-controls="event-cards-container"
         >
           Show More

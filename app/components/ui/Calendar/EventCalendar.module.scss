@@ -785,10 +785,11 @@
   background-position: right 0.875rem center;
   white-space: nowrap;
 
-  &:focus {
+  &:focus-visible {
     border-color: #6b7280;
     border-radius: 999px;
     outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
   }
 
   &:hover {
@@ -873,8 +874,9 @@
     border-radius: 25px;
   }
 
-  &:focus {
+  &:focus-visible {
     outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
   }
 }
 

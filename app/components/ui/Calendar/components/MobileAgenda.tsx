@@ -26,11 +26,12 @@ export const MobileAgenda: React.FC<MobileAgendaProps> = ({
           <ChevronLeftIcon
             width={24}
             height={24}
+            aria-hidden="true"
             style={{ pointerEvents: "none" }}
           />
         </button>
         <div className={styles.dateHeaderTitle}>
-          <h2>{formatDateHeader(currentDate)}</h2>
+          <h3>{formatDateHeader(currentDate)}</h3>
           {new Date().toDateString() !== currentDate.toDateString() && (
             <button type="button" onClick={onGoToToday}>
               Go to today
@@ -46,6 +47,7 @@ export const MobileAgenda: React.FC<MobileAgendaProps> = ({
           <ChevronRightIcon
             width={24}
             height={24}
+            aria-hidden="true"
             style={{ pointerEvents: "none" }}
           />
         </button>
@@ -94,6 +96,7 @@ const AgendaEventChip: React.FC<AgendaEventChipProps> = ({
       className={styles.agendaEventChip}
       onClick={() => onSelect(event)}
       type="button"
+      aria-label={event.title}
     >
       <div
         className={styles.agendaChipTitle}

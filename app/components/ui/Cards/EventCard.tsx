@@ -34,6 +34,7 @@ export const EventCard = ({ event }: { event: EventResponse }) => {
               rel="noopener noreferrer"
             >
               {title}
+              <span className="sr-only"> (opens in new tab)</span>
             </a>
           </h3>
           {calendarEvent && calendarEvent?.startdate && (
