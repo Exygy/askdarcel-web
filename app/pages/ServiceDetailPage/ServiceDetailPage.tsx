@@ -22,6 +22,7 @@ const INITIAL_SERVICES_SHOWN = 5;
 export const ServiceDetailPage = () => {
   const { serviceListingId } = useParams();
   const [showAllServices, setShowAllServices] = useState(false);
+  const [showAllAddresses, setShowAllAddresses] = useState(false);
 
   const {
     data: serviceData,
@@ -85,14 +86,12 @@ export const ServiceDetailPage = () => {
     );
   }
 
-  // Get primary location for the map
-  const primaryLocation = serviceData.locations?.[0];
-  const lat = primaryLocation?.latitude
-    ? parseFloat(primaryLocation.latitude)
-    : null;
-  const lng = primaryLocation?.longitude
-    ? parseFloat(primaryLocation.longitude)
-    : null;
+  // Get all locations with valid coordinates
+  const allLocations = (serviceData.locations ?? []).flatMap((loc) => {
+    const lat = loc.latitude ? parseFloat(loc.latitude) : null;
+    const lng = loc.longitude ? parseFloat(loc.longitude) : null;
+    return lat && lng ? [{ loc, lat, lng }] : [];
+  });
 
   const formattedLongDescription = service.long_description
     ? removeAsterisksAndHashes(service.long_description)
@@ -108,8 +107,8 @@ export const ServiceDetailPage = () => {
   const hasMoreServices = otherServices.length > INITIAL_SERVICES_SHOWN;
 
   const directionsUrl =
-    lat && lng
-      ? `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`
+    allLocations.length > 0
+      ? `https://www.google.com/maps/dir/?api=1&destination=${allLocations[0].lat},${allLocations[0].lng}`
       : null;
 
   return (
@@ -200,28 +199,58 @@ export const ServiceDetailPage = () => {
           </div>
         </div>
 
-        {lat && lng && (
+        {allLocations.length > 0 && (
           <div className={styles.mapSection}>
             <div className={styles.mapContainer}>
               <GoogleMap
                 bootstrapURLKeys={{ key: config.GOOGLE_API_KEY }}
-                defaultCenter={{ lat, lng }}
+                defaultCenter={{
+                  lat: allLocations[0].lat,
+                  lng: allLocations[0].lng,
+                }}
                 defaultZoom={15}
                 options={createMapOptions}
+                yesIWantToUseGoogleMapApiInternals
+                onGoogleApiLoaded={({ map, maps }) => {
+                  if (allLocations.length > 1) {
+                    const bounds = new maps.LatLngBounds();
+                    allLocations.forEach(({ lat, lng }) =>
+                      bounds.extend({ lat, lng })
+                    );
+                    map.fitBounds(bounds);
+                  }
+                }}
               >
-                <CustomMarker lat={lat} lng={lng} text="1" />
+                {allLocations.map(({ lat, lng }, index) => (
+                  <CustomMarker
+                    key={`${lat}-${lng}`}
+                    lat={lat}
+                    lng={lng}
+                    text={String(index + 1)}
+                  />
+                ))}
               </GoogleMap>
             </div>
             <div className={styles.locationInfo}>
-              {primaryLocation && (
-                <div className={styles.address}>
-                  {primaryLocation.address_1}
-                  {primaryLocation.city && `, ${primaryLocation.city}`}
-                  {primaryLocation.state_province &&
-                    `, ${primaryLocation.state_province}`}
-                  {primaryLocation.postal_code &&
-                    ` ${primaryLocation.postal_code}`}
-                </div>
+              {(showAllAddresses ? allLocations : allLocations.slice(0, 3)).map(
+                ({ loc }, index) => (
+                  <div key={index} className={styles.address}>
+                    {loc.address_1}
+                    {loc.city && `, ${loc.city}`}
+                    {loc.state_province && `, ${loc.state_province}`}
+                    {loc.postal_code && ` ${loc.postal_code}`}
+                  </div>
+                )
+              )}
+              {allLocations.length > 3 && (
+                <button
+                  className={styles.viewMoreAddresses}
+                  onClick={() => setShowAllAddresses((v) => !v)}
+                >
+                  {showAllAddresses
+                    ? "Show less"
+                    : `+${allLocations.length - 3} more`}
+                </button>
               )}
               {schedule.intervals.length > 0 && (
                 <div className={styles.scheduleList}>
