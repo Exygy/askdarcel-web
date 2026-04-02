@@ -100,7 +100,9 @@ export const SearchResult = forwardRef<HTMLDivElement, SearchResultProps>(
             <a
               href={`tel:${hit.phoneNumber}`}
               className={`${styles.icon} ${styles["icon-phone"]}`}
-              aria-label={`Call ${hit.name}: ${formatPhoneNumber(hit.phoneNumber)}`}
+              aria-label={`Call ${hit.name}: ${formatPhoneNumber(
+                hit.phoneNumber
+              )}`}
             />
           )}
           {hit.organization_website && (

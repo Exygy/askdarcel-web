@@ -89,10 +89,7 @@ export const FilterDropdown = ({
               {...getFloatingProps()}
             >
               <div className={styles.filterDropdownHeader}>
-                <h3
-                  id={titleId}
-                  className={styles.filterDropdownTitle}
-                >
+                <h3 id={titleId} className={styles.filterDropdownTitle}>
                   {title}
                 </h3>
                 <Button variant="linkBlue" onClick={onClose} size="sm">
@@ -122,10 +119,7 @@ export const FilterDropdown = ({
           {...getFloatingProps()}
         >
           <div className={styles.filterDropdownHeader}>
-            <h3
-              id={titleId}
-              className={styles.filterDropdownTitle}
-            >
+            <h3 id={titleId} className={styles.filterDropdownTitle}>
               {title}
             </h3>
             <Button variant="linkBlue" onClick={onClose} size="sm">

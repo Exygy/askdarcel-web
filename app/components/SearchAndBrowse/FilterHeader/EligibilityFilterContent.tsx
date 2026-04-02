@@ -42,7 +42,10 @@ export const EligibilityFilterContent = ({
   );
 
   // Clamp in case the list shrinks while a high index is focused
-  const safeFocusedIndex = Math.min(focusedIndex, Math.max(0, sorted.length - 1));
+  const safeFocusedIndex = Math.min(
+    focusedIndex,
+    Math.max(0, sorted.length - 1)
+  );
 
   const moveFocus = useCallback((index: number) => {
     setFocusedIndex(index);

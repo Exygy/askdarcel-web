@@ -16,22 +16,41 @@ export const EventSlideout: React.FC<EventSlideoutProps> = ({
   const panelRef = useRef<HTMLDivElement>(null);
   const titleId = useId();
 
-  // Handle escape key to close slideout
+  // Handle escape key and focus trap
   useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isOpen) {
         onClose();
+        return;
+      }
+
+      if (e.key === "Tab") {
+        const focusable = panelRef.current?.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        );
+        if (!focusable || focusable.length === 0) return;
+
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
       }
     };
 
     if (isOpen) {
-      document.addEventListener("keydown", handleEscape);
+      document.addEventListener("keydown", handleKeyDown);
       // Prevent body scroll when slideout is open
       document.body.style.overflow = "hidden";
     }
 
     return () => {
-      document.removeEventListener("keydown", handleEscape);
+      document.removeEventListener("keydown", handleKeyDown);
       document.body.style.overflow = "unset";
     };
   }, [isOpen, onClose]);
@@ -42,27 +61,6 @@ export const EventSlideout: React.FC<EventSlideoutProps> = ({
       closeButtonRef.current.focus();
     }
   }, [isOpen]);
-
-  // Focus trap — keep Tab/Shift+Tab within the panel
-  const handlePanelKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key !== "Tab") return;
-
-    const focusable = panelRef.current?.querySelectorAll<HTMLElement>(
-      'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
-    );
-    if (!focusable || focusable.length === 0) return;
-
-    const first = focusable[0];
-    const last = focusable[focusable.length - 1];
-
-    if (e.shiftKey && document.activeElement === first) {
-      e.preventDefault();
-      last.focus();
-    } else if (!e.shiftKey && document.activeElement === last) {
-      e.preventDefault();
-      first.focus();
-    }
-  };
 
   if (!isOpen || (!selectedEvent && dayEvents.length === 0)) {
     return null;
@@ -85,7 +83,7 @@ export const EventSlideout: React.FC<EventSlideoutProps> = ({
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        onKeyDown={handlePanelKeyDown}
+        tabIndex={-1}
       >
         <div className={styles.slideoutHeader}>
           <h2 id={titleId} className={styles.slideoutTitle}>
@@ -129,13 +127,17 @@ export const EventSlideout: React.FC<EventSlideoutProps> = ({
 
               {selectedEvent.location && (
                 <div className={styles.eventDetail}>
-                  <strong><span aria-hidden="true">📍 </span>Location:</strong>
+                  <strong>
+                    <span aria-hidden="true">📍 </span>Location:
+                  </strong>
                   <span>{selectedEvent.location}</span>
                 </div>
               )}
 
               <div className={styles.eventDetail}>
-                <strong><span aria-hidden="true">📅 </span>Date &amp; Time:</strong>
+                <strong>
+                  <span aria-hidden="true">📅 </span>Date &amp; Time:
+                </strong>
                 <span>
                   {selectedEvent.start &&
                     selectedEvent.start.toLocaleDateString()}{" "}
@@ -151,7 +153,9 @@ export const EventSlideout: React.FC<EventSlideoutProps> = ({
 
               {selectedEvent.description && (
                 <div className={styles.eventDetail}>
-                  <strong><span aria-hidden="true">📝 </span>Description:</strong>
+                  <strong>
+                    <span aria-hidden="true">📝 </span>Description:
+                  </strong>
                   <span
                     dangerouslySetInnerHTML={{
                       __html: sanitizeHtml(selectedEvent.description),
@@ -162,28 +166,36 @@ export const EventSlideout: React.FC<EventSlideoutProps> = ({
 
               {selectedEvent.originalEvent.org_name && (
                 <div className={styles.eventDetail}>
-                  <strong><span aria-hidden="true">🏢 </span>Organization:</strong>
+                  <strong>
+                    <span aria-hidden="true">🏢 </span>Organization:
+                  </strong>
                   <span>{selectedEvent.originalEvent.org_name}</span>
                 </div>
               )}
 
               {selectedEvent.originalEvent.site_address && (
                 <div className={styles.eventDetail}>
-                  <strong><span aria-hidden="true">🗺️ </span>Address:</strong>
+                  <strong>
+                    <span aria-hidden="true">🗺️ </span>Address:
+                  </strong>
                   <span>{selectedEvent.originalEvent.site_address}</span>
                 </div>
               )}
 
               {selectedEvent.originalEvent.site_phone && (
                 <div className={styles.eventDetail}>
-                  <strong><span aria-hidden="true">📞 </span>Phone:</strong>
+                  <strong>
+                    <span aria-hidden="true">📞 </span>Phone:
+                  </strong>
                   <span>{selectedEvent.originalEvent.site_phone}</span>
                 </div>
               )}
 
               {selectedEvent.originalEvent.site_email && (
                 <div className={styles.eventDetail}>
-                  <strong><span aria-hidden="true">📧 </span>Email:</strong>
+                  <strong>
+                    <span aria-hidden="true">📧 </span>Email:
+                  </strong>
                   <span>
                     <a
                       href={`mailto:${selectedEvent.originalEvent.site_email}`}
@@ -196,7 +208,9 @@ export const EventSlideout: React.FC<EventSlideoutProps> = ({
 
               {selectedEvent.originalEvent.fee !== undefined && (
                 <div className={styles.eventDetail}>
-                  <strong><span aria-hidden="true">💰 </span>Fee:</strong>
+                  <strong>
+                    <span aria-hidden="true">💰 </span>Fee:
+                  </strong>
                   <span>
                     {selectedEvent.originalEvent.fee ? "Yes" : "Free"}
                   </span>
@@ -205,7 +219,9 @@ export const EventSlideout: React.FC<EventSlideoutProps> = ({
 
               {selectedEvent.originalEvent.age_group_eligibility_tags && (
                 <div className={styles.eventDetail}>
-                  <strong><span aria-hidden="true">👥 </span>Age Group:</strong>
+                  <strong>
+                    <span aria-hidden="true">👥 </span>Age Group:
+                  </strong>
                   <span>
                     {selectedEvent.originalEvent.age_group_eligibility_tags}
                   </span>

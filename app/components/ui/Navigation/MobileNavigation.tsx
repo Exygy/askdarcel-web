@@ -158,7 +158,9 @@ export const MobileNavigation = ({ menuData }: MobileNavigationProps) => {
               return (
                 <li
                   key={crypto.randomUUID()}
-                  className={mobileNavigationStyles.mobileNavigationMenuListItem}
+                  className={
+                    mobileNavigationStyles.mobileNavigationMenuListItem
+                  }
                 >
                   <Link
                     to={menuDataItem.url}
