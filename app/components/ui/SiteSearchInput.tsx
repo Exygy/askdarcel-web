@@ -39,14 +39,17 @@ export const SiteSearchInput = () => {
       className={classNames(styles.navSearch, "no-print")}
       role="search"
     >
+      <span className={styles.searchLabel} aria-hidden="true">
+        Search
+      </span>
       <input
         onChange={(e) => setInputValue(e.target.value)}
         value={inputValue}
         type="text"
         className={styles.searchField}
-        placeholder="Search for a service or organization"
         name="srch-term"
         id="srch-term"
+        aria-label="Search for a service or organization"
       />
       <button
         type="submit"

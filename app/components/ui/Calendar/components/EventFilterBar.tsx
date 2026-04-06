@@ -219,7 +219,6 @@ export const EventFilterBar: React.FC<EventFilterBarProps> = ({
               ref={inputRef}
               type="text"
               className={filterStyles.locationSearchInput}
-              placeholder="Search by address, school, or place"
               value={inputValue}
               onChange={handleInputChange}
               onKeyDown={handleKeyDown}

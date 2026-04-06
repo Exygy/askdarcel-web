@@ -191,12 +191,12 @@ export const DistanceFilterContent = ({
 
   return (
     <div>
+      <p className={styles.locationSearchLabel}>Search for a location</p>
       <div className={styles.locationSearchWrapper} ref={wrapperRef}>
         <input
           ref={inputRef}
           type="text"
           className={styles.locationSearchInput}
-          placeholder="Search for a location"
           value={inputValue}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
