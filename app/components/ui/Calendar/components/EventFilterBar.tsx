@@ -230,6 +230,7 @@ export const EventFilterBar: React.FC<EventFilterBarProps> = ({
               }}
               autoComplete="off"
               role="combobox"
+              aria-label="Search by location"
               aria-expanded={showDropdown}
               aria-autocomplete="list"
               aria-controls="calendar-places-autocomplete-list"
