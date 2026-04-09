@@ -263,7 +263,9 @@ const FilterHeader = ({
 
         {/* Print button */}
         {showPrint && (
-          <div className={`${styles.filterButtonWrapper} ${styles.printButtonWrapper}`}>
+          <div
+            className={`${styles.filterButtonWrapper} ${styles.printButtonWrapper}`}
+          >
             <Button
               variant="secondary"
               size="base"

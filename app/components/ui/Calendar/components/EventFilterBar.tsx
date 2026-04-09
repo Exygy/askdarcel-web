@@ -162,7 +162,9 @@ export const EventFilterBar: React.FC<EventFilterBarProps> = ({
     if (e.key === "Enter") {
       e.preventDefault();
       try {
-        (e.currentTarget as HTMLSelectElement & { showPicker(): void }).showPicker();
+        (
+          e.currentTarget as HTMLSelectElement & { showPicker(): void }
+        ).showPicker();
       } catch {
         // showPicker not supported — fall back to simulating a click
         e.currentTarget.click();
