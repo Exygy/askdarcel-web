@@ -9,7 +9,7 @@
   border-bottom: 1px solid #e0e0e0;
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 2;
   gap: 16px;
 
   @include r_max($break-tablet-s) {
@@ -52,6 +52,12 @@
       font-size: 14px;
       padding: 8px 12px;
     }
+  }
+}
+
+.printButtonWrapper {
+  @include r_max($break-tablet-s) {
+    display: none;
   }
 }
 
@@ -286,6 +292,15 @@
     background-color: #ccc;
     color: #333;
   }
+}
+
+// Variant for inputs without the search icon button
+.locationSearchInputNoIcon {
+  padding-right: 48px;
+}
+
+.locationClearButtonNoIcon {
+  right: 12px;
 }
 
 .locationSearchIcon {

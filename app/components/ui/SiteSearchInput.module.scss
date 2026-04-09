@@ -51,6 +51,11 @@ $border-width: 2px;
     cursor: pointer;
     height: $input-height;
     width: 48px;
+
+    &:hover {
+      background-color: $primary-button-hover-background;
+      border-color: $primary-button-hover-background;
+    }
   }
 
   border-radius: $rounded-full;

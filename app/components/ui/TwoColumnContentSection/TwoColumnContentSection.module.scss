@@ -37,7 +37,9 @@
   margin-right: $spacing-9;
   grid-column: 1;
   grid-row: 1;
-  align-self: center;
+  align-self: stretch;
+  overflow-y: auto;
+  max-height: 75vh;
 }
 
 .innerContainer {
@@ -48,11 +50,14 @@
 
 .imageContainer_right {
   width: 100%;
+  overflow: hidden;
 }
 
 .image {
   width: 100%;
   height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
 .contentLinkButton {

@@ -1,15 +1,11 @@
 import React, { useMemo } from "react";
 
-import { Button } from "components/ui/inline/Button/Button";
-import websiteConfig from "utils/websiteConfig";
 import { useTopLevelCategories } from "hooks/TypesenseHooks";
 import { categoryToSlug } from "utils/categoryIcons";
 import DropdownMenu from "components/ui/Navigation/DropdownMenu";
 import classNames from "classnames";
 
 import styles from "./BrowseSubheader.module.scss";
-
-const { showPrintResultsBtn } = websiteConfig;
 
 interface Props {
   currentCategory: string;
@@ -40,20 +36,6 @@ export const BrowseSubheader = ({ currentCategory }: Props) => {
             variant="category"
           />
         </div>
-        <Button
-          iconName="fas fa-print"
-          iconVariant="before"
-          variant="secondary"
-          size="lg"
-          onClick={() => {
-            window.print();
-          }}
-          addClass={`${styles.printAllBtn} ${
-            showPrintResultsBtn ? styles.showBtn : ""
-          }`}
-        >
-          Print this page
-        </Button>
       </div>
     </div>
   );

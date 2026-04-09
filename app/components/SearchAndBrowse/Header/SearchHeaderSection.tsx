@@ -1,4 +1,3 @@
-import { Button } from "components/ui/inline/Button/Button";
 import React from "react";
 import { useInstantSearch } from "react-instantsearch-core";
 import styles from "./SearchHeaderSection.module.scss";
@@ -22,18 +21,6 @@ export const SearchHeaderSection = ({
           <h1>Search results</h1>
         )}
       </div>
-      <Button
-        iconName="fas fa-print"
-        iconVariant="before"
-        variant="secondary"
-        size="lg"
-        onClick={() => {
-          window.print();
-        }}
-        addClass={`${styles.printAllBtn} ${styles.showBtn}`}
-      >
-        Print this page
-      </Button>
     </div>
   );
 };

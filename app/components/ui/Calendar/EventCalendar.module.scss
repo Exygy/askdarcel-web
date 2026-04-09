@@ -16,8 +16,12 @@
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
     border-bottom: 2px solid #dee2e6;
     font-weight: 600;
+    font-size: 0.75rem;
     color: #495057;
-    padding: 1rem 0.5rem;
+    padding: 0.625rem 0.5rem;
+    text-align: center;
+    overflow-wrap: break-word;
+    word-break: break-word;
   }
 
   :global(.rbc-month-view) {
@@ -463,18 +467,22 @@
     }
   }
 
-  h2 {
+  h2,
+  h3 {
     font-size: 1.1rem;
     font-weight: 600;
     color: #2c3e50;
     margin: 0;
+    padding: 0.25rem 0.75rem;
     text-align: center;
     flex: 1;
     letter-spacing: 0.5px;
     display: flex;
     align-items: center;
     justify-content: center;
-    line-height: 1;
+    line-height: 1.3;
+    overflow-wrap: break-word;
+    word-break: break-word;
 
     @media (max-width: 768px) {
       font-size: 1rem;
@@ -611,6 +619,8 @@
   cursor: pointer;
   text-align: left;
   width: 100%;
+  min-width: 0;
+  overflow: hidden;
   display: flex;
   align-items: center;
   gap: 20px;
@@ -665,13 +675,9 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  white-space: nowrap;
-  flex-shrink: 0;
-
-  // On mobile, allow wrapping
-  @media (max-width: 768px) {
-    white-space: normal;
-  }
+  overflow-wrap: break-word;
+  word-break: break-word;
+  min-width: 0;
 }
 
 // Responsive adjustments for mobile agenda
@@ -708,7 +714,7 @@
 .filterBar {
   display: flex;
   gap: 2rem;
-  align-items: flex-start;
+  align-items: flex-end;
   padding: 1.5rem;
   background: #f4f5f7;
   border-radius: 12px;
@@ -716,6 +722,7 @@
 
   @media (max-width: 768px) {
     flex-direction: column;
+    align-items: stretch;
     gap: 1.25rem;
   }
 }
@@ -727,6 +734,16 @@
 
 .filterBarRight {
   flex-shrink: 0;
+}
+
+.filterBarSearch {
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-end;
+
+  @media (max-width: 768px) {
+    align-items: stretch;
+  }
 }
 
 .filterBarLabel {
@@ -741,6 +758,47 @@
   align-items: center;
   gap: 0.625rem;
   flex-wrap: wrap;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+.filterSearchButton {
+  height: 44px;
+  padding: 0 1.5rem;
+  background: #cd4a23;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+
+  &:hover {
+    background: #a63b1b;
+  }
+
+  &:focus {
+    border-radius: 999px;
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(205, 74, 35, 0.4);
+    border-radius: 999px;
+  }
+
+  &:active {
+    border-radius: 999px;
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 }
 
 // Pill select dropdowns

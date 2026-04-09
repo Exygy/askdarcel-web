@@ -22,12 +22,15 @@ export const EventFilterBar: React.FC<EventFilterBarProps> = ({
   onDistanceFilterChange,
 }) => {
   const [inputValue, setInputValue] = useState("");
-  const [locationCoords, setLocationCoords] = useState<{
+  const [pendingCoords, setPendingCoords] = useState<{
     lat: number;
     lng: number;
   } | null>(null);
-  const [locationText, setLocationText] = useState("");
-  const [selectedRadius, setSelectedRadius] = useState<number | null>(null);
+  const [pendingLocationText, setPendingLocationText] = useState("");
+  const [pendingRadius, setPendingRadius] = useState<number | null>(null);
+  const [pendingCategory, setPendingCategory] = useState<string | null>(
+    selectedCategory
+  );
   const [showDropdown, setShowDropdown] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const [dropdownPos, setDropdownPos] = useState<{
@@ -58,26 +61,6 @@ export const EventFilterBar: React.FC<EventFilterBarProps> = ({
     }
   }, []);
 
-  const applyFilter = useCallback(
-    (
-      coords: { lat: number; lng: number } | null,
-      text: string,
-      radius: number | null
-    ) => {
-      if (coords && radius) {
-        const filter: DistanceFilter = {
-          coords,
-          radiusMeters: radius,
-          locationText: text,
-        };
-        onDistanceFilterChange(filter);
-      } else {
-        onDistanceFilterChange(null);
-      }
-    },
-    [onDistanceFilterChange]
-  );
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setInputValue(value);
@@ -91,10 +74,9 @@ export const EventFilterBar: React.FC<EventFilterBarProps> = ({
       setShowDropdown(false);
     }
 
-    if (locationCoords) {
-      setLocationCoords(null);
-      setLocationText("");
-      onDistanceFilterChange(null);
+    if (pendingCoords) {
+      setPendingCoords(null);
+      setPendingLocationText("");
     }
   };
 
@@ -105,36 +87,44 @@ export const EventFilterBar: React.FC<EventFilterBarProps> = ({
 
     const coords = await getPlaceDetails(prediction.placeId);
     if (coords) {
-      setLocationCoords(coords);
-      setLocationText(prediction.description);
-      applyFilter(coords, prediction.description, selectedRadius);
+      setPendingCoords(coords);
+      setPendingLocationText(prediction.description);
     }
   };
 
   const handleClearInput = () => {
     setInputValue("");
-    setLocationCoords(null);
-    setLocationText("");
+    setPendingCoords(null);
+    setPendingLocationText("");
     clearPredictions();
     setShowDropdown(false);
     setHighlightedIndex(-1);
+    // Clear immediately on explicit clear action
     onDistanceFilterChange(null);
     inputRef.current?.focus();
   };
 
-  const handleSearchClick = () => {
-    if (predictions.length > 0) {
-      handleSelectPlace(predictions[0]);
-    } else if (inputValue.length >= 2) {
-      searchPlaces(inputValue);
-      setShowDropdown(true);
-    }
-  };
-
   const handleRadiusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value ? parseInt(e.target.value) : null;
-    setSelectedRadius(value);
-    applyFilter(locationCoords, locationText, value);
+    setPendingRadius(value);
+  };
+
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setPendingCategory(e.target.value || null);
+  };
+
+  const handleSearchSubmit = () => {
+    if (pendingCoords && pendingRadius) {
+      const filter: DistanceFilter = {
+        coords: pendingCoords,
+        radiusMeters: pendingRadius,
+        locationText: pendingLocationText,
+      };
+      onDistanceFilterChange(filter);
+    } else {
+      onDistanceFilterChange(null);
+    }
+    onCategoryChange(pendingCategory);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -165,6 +155,18 @@ export const EventFilterBar: React.FC<EventFilterBarProps> = ({
         setShowDropdown(false);
         setHighlightedIndex(-1);
         break;
+    }
+  };
+
+  const handleSelectKeyDown = (e: React.KeyboardEvent<HTMLSelectElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      try {
+        e.currentTarget.showPicker();
+      } catch {
+        // showPicker not supported — fall back to simulating a click
+        e.currentTarget.click();
+      }
     }
   };
 
@@ -207,9 +209,9 @@ export const EventFilterBar: React.FC<EventFilterBarProps> = ({
   return (
     <div className={calStyles.filterBar}>
       <div className={calStyles.filterBarLeft}>
-        <p className={calStyles.filterBarLabel}>Find an event near you</p>
+        <p className={calStyles.filterBarLabel}>Search by location</p>
         <div className={calStyles.filterBarRow}>
-          {/* Location input — same structure as DistanceFilterContent */}
+          {/* Location autocomplete input */}
           <div
             className={filterStyles.locationSearchWrapper}
             style={{ flex: 1, marginBottom: 0 }}
@@ -218,7 +220,7 @@ export const EventFilterBar: React.FC<EventFilterBarProps> = ({
             <input
               ref={inputRef}
               type="text"
-              className={filterStyles.locationSearchInput}
+              className={`${filterStyles.locationSearchInput} ${filterStyles.locationSearchInputNoIcon}`}
               value={inputValue}
               onChange={handleInputChange}
               onKeyDown={handleKeyDown}
@@ -234,11 +236,12 @@ export const EventFilterBar: React.FC<EventFilterBarProps> = ({
               aria-expanded={showDropdown}
               aria-autocomplete="list"
               aria-controls="calendar-places-autocomplete-list"
+              aria-haspopup="listbox"
             />
             {inputValue && (
               <button
                 type="button"
-                className={filterStyles.locationClearButton}
+                className={`${filterStyles.locationClearButton} ${filterStyles.locationClearButtonNoIcon}`}
                 onClick={handleClearInput}
                 aria-label="Clear location"
               >
@@ -252,19 +255,6 @@ export const EventFilterBar: React.FC<EventFilterBarProps> = ({
                 </svg>
               </button>
             )}
-            <button
-              type="button"
-              className={filterStyles.locationSearchIcon}
-              onClick={handleSearchClick}
-              aria-label="Search location"
-            >
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path
-                  d="M11.7 10.3L15.7 14.3C15.9 14.5 15.9 14.9 15.7 15.1L15.1 15.7C14.9 15.9 14.5 15.9 14.3 15.7L10.3 11.7C9.2 12.5 7.9 13 6.5 13C2.9 13 0 10.1 0 6.5C0 2.9 2.9 0 6.5 0C10.1 0 13 2.9 13 6.5C13 7.9 12.5 9.2 11.7 10.3ZM6.5 11C8.99 11 11 8.99 11 6.5C11 4.01 8.99 2 6.5 2C4.01 2 2 4.01 2 6.5C2 8.99 4.01 11 6.5 11Z"
-                  fill="currentColor"
-                />
-              </svg>
-            </button>
 
             {showDropdown &&
               predictions.length > 0 &&
@@ -274,6 +264,7 @@ export const EventFilterBar: React.FC<EventFilterBarProps> = ({
                   id="calendar-places-autocomplete-list"
                   className={filterStyles.autocompleteDropdown}
                   role="listbox"
+                  aria-label="Location suggestions"
                   style={{
                     position: "fixed",
                     top: dropdownPos.top,
@@ -341,8 +332,9 @@ export const EventFilterBar: React.FC<EventFilterBarProps> = ({
           <div className={calStyles.filterSelectWrapper}>
             <select
               className={calStyles.pillSelect}
-              value={selectedRadius ?? ""}
+              value={pendingRadius ?? ""}
               onChange={handleRadiusChange}
+              onKeyDown={handleSelectKeyDown}
               aria-label="Distance filter"
             >
               <option value="">Any distance</option>
@@ -388,8 +380,9 @@ export const EventFilterBar: React.FC<EventFilterBarProps> = ({
             </svg>
             <select
               className={`${calStyles.pillSelect} ${calStyles.pillSelectIconPadding}`}
-              value={selectedCategory ?? ""}
-              onChange={(e) => onCategoryChange(e.target.value || null)}
+              value={pendingCategory ?? ""}
+              onChange={handleCategoryChange}
+              onKeyDown={handleSelectKeyDown}
               aria-label="Category filter"
             >
               <option value="">All event types</option>
@@ -401,6 +394,16 @@ export const EventFilterBar: React.FC<EventFilterBarProps> = ({
             </select>
           </div>
         </div>
+      </div>
+
+      <div className={calStyles.filterBarSearch}>
+        <button
+          type="button"
+          className={calStyles.filterSearchButton}
+          onClick={handleSearchSubmit}
+        >
+          Search
+        </button>
       </div>
     </div>
   );
