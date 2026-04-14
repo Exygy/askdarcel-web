@@ -161,12 +161,12 @@ const FilterHeader = ({
             iconVariant="after"
             size="base"
           >
-            Distance
+            Location
           </Button>
           <FilterDropdown
             isOpen={activeFilterMenu === "distance"}
             onClose={closeMenu}
-            title="Distance"
+            title="Location"
             triggerRef={distanceButtonRef}
             footer={makeFooter(true)}
           >
@@ -237,7 +237,7 @@ const FilterHeader = ({
             )}
 
             <div className={styles.filterGroup}>
-              <h4 className={styles.filterGroupTitle}>Distance</h4>
+              <h4 className={styles.filterGroupTitle}>Location</h4>
               <DistanceFilterContent
                 locationText={filterState.pending.locationSearchText}
                 selectedRadius={filterState.pending.distanceRadius}
