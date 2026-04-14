@@ -354,17 +354,20 @@ const ResultsPageContent = ({
               totalResults={searchResults?.nbHits || 0}
               onClearSearch={mode === "search" ? handleClearAll : undefined}
             />
-            {searchMapHitData.hits.map((hit, index) => (
-              <SearchResult
-                hit={hit}
-                index={index}
-                key={`${hit.id} - ${hit.name}`}
-                ref={index === 0 ? handleFirstResultFocus : null}
-                isHighlighted={hoveredHitId === hit.id}
-                onMouseEnter={() => setHoveredHitId(hit.id)}
-                onMouseLeave={() => setHoveredHitId(null)}
-              />
-            ))}
+            <ul className={searchResultsStyles.resultsList}>
+              {searchMapHitData.hits.map((hit, index) => (
+                <li key={`${hit.id} - ${hit.name}`}>
+                  <SearchResult
+                    hit={hit}
+                    index={index}
+                    ref={index === 0 ? handleFirstResultFocus : null}
+                    isHighlighted={hoveredHitId === hit.id}
+                    onMouseEnter={() => setHoveredHitId(hit.id)}
+                    onMouseLeave={() => setHoveredHitId(null)}
+                  />
+                </li>
+              ))}
+            </ul>
             <div
               className={`${searchResultsStyles.paginationContainer} ${
                 hasNoResults ? searchResultsStyles.hidePagination : ""

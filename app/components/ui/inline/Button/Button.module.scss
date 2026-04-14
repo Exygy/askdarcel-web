@@ -56,6 +56,7 @@
   &--secondary {
     color: $secondary-button-default-label !important;
     background: $white;
+    transition: background-color 200ms ease, border-color 200ms ease;
 
     &:hover {
       background: $secondary-button-hover-background;
@@ -89,19 +90,18 @@
   }
 
   &--linkBlue {
-    padding: $spacing-0;
-    border-bottom: 1px solid transparent;
-
-    border-radius: $rounded-none;
+    padding: 2px 4px;
+    border: 1px solid transparent;
+    border-radius: 12px;
     color: $link-blue-default;
 
     &:hover {
-      border-bottom: 1px solid $link-blue-hover;
+      border-color: $link-blue-hover;
       color: $link-blue-hover;
     }
 
     &:active {
-      border-bottom: 1px solid $link-blue-active;
+      border-color: $link-blue-active;
       color: $link-blue-active;
     }
   }

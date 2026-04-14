@@ -58,7 +58,7 @@ const DropdownMenu = ({
 
   const click = useClick(context);
   const dismiss = useDismiss(context);
-  const role = useRole(context);
+  const role = useRole(context, { role: "menu" });
 
   const { getReferenceProps, getFloatingProps } = useInteractions([
     click,
@@ -95,18 +95,15 @@ const DropdownMenu = ({
               {...getFloatingProps()}
             >
               {links.map((linkItem) => (
-                <span
+                <Link
                   key={linkItem.id}
-                  className={styles.navigationSubMenuItem}
+                  to={linkItem.url}
+                  role="menuitem"
+                  className={`${styles.navigationSubMenuItem} ${styles.menuLink}`}
+                  onClick={() => handleMenuToggle(id)}
                 >
-                  <Link
-                    to={linkItem.url}
-                    className={styles.menuLink}
-                    onClick={() => handleMenuToggle(id)}
-                  >
-                    {linkItem.text}
-                  </Link>
-                </span>
+                  {linkItem.text}
+                </Link>
               ))}
             </div>
           </FloatingFocusManager>

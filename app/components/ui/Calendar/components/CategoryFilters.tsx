@@ -25,6 +25,7 @@ export const CategoryFilters: React.FC<CategoryFiltersProps> = ({
               enabled ? styles.enabled : styles.disabled
             }`}
             onClick={() => onToggleCategory(category)}
+            aria-pressed={enabled}
           >
             {category}
           </button>

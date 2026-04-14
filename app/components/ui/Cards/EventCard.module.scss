@@ -11,14 +11,7 @@
 
   &:focus-within {
     outline: 3px solid $black;
-  }
-
-  &:focus-within {
-    outline: 3px solid $black;
-  }
-
-  &:focus-within {
-    outline: 3px solid $black;
+    outline-offset: 2px;
   }
 
   &:hover {
@@ -77,8 +70,9 @@
         font-size: 1.125rem;
       }
 
-      &:active,
-      :focus {
+      /* Focus ring is shown on the card container via :focus-within above.
+         Suppress the link's own ring to avoid a double indicator. */
+      a:focus-visible {
         outline: none;
       }
     }

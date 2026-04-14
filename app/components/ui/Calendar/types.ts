@@ -1,5 +1,11 @@
 import { SFGovEvent } from "hooks/SFGovAPI";
 
+export interface DistanceFilter {
+  coords: { lat: number; lng: number };
+  radiusMeters: number;
+  locationText: string;
+}
+
 // Base event interface (replacing react-big-calendar's Event type)
 export interface BaseEvent {
   title?: string;
@@ -30,6 +36,13 @@ export interface CategoryFiltersProps {
   availableCategories: string[];
   categoryFilters: CategoryFilter[];
   onToggleCategory: (category: string) => void;
+}
+
+export interface EventFilterBarProps {
+  availableCategories: string[];
+  selectedCategory: string | null;
+  onCategoryChange: (category: string | null) => void;
+  onDistanceFilterChange: (filter: DistanceFilter | null) => void;
 }
 
 export interface MobileAgendaProps {

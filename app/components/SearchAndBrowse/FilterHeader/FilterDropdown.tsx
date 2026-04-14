@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useId } from "react";
 import {
   useFloating,
   autoUpdate,
@@ -32,6 +32,8 @@ export const FilterDropdown = ({
   triggerRef,
   footer,
 }: FilterDropdownProps) => {
+  const titleId = useId();
+
   const { refs, floatingStyles, context } = useFloating({
     open: isOpen,
     onOpenChange: (open) => {
@@ -78,24 +80,29 @@ export const FilterDropdown = ({
     // Mobile: Full-screen overlay
     return (
       <FloatingPortal>
-        <div className={styles.filterDropdownMobileOverlay}>
-          <div
-            ref={refs.setFloating}
-            className={styles.filterDropdownMobile}
-            {...getFloatingProps()}
-          >
-            <div className={styles.filterDropdownHeader}>
-              <h3 className={styles.filterDropdownTitle}>{title}</h3>
-              <Button variant="linkBlue" onClick={onClose} size="sm">
-                Close
-              </Button>
+        <FloatingFocusManager context={context} modal>
+          <div className={styles.filterDropdownMobileOverlay}>
+            <div
+              ref={refs.setFloating}
+              className={styles.filterDropdownMobile}
+              aria-labelledby={titleId}
+              {...getFloatingProps()}
+            >
+              <div className={styles.filterDropdownHeader}>
+                <h3 id={titleId} className={styles.filterDropdownTitle}>
+                  {title}
+                </h3>
+                <Button variant="linkBlue" onClick={onClose} size="sm">
+                  Close
+                </Button>
+              </div>
+              <div className={styles.filterDropdownContent}>{children}</div>
+              {footer && (
+                <div className={styles.filterDropdownFooter}>{footer}</div>
+              )}
             </div>
-            <div className={styles.filterDropdownContent}>{children}</div>
-            {footer && (
-              <div className={styles.filterDropdownFooter}>{footer}</div>
-            )}
           </div>
-        </div>
+        </FloatingFocusManager>
       </FloatingPortal>
     );
   }
@@ -108,10 +115,13 @@ export const FilterDropdown = ({
           ref={refs.setFloating}
           style={floatingStyles}
           className={styles.filterDropdown}
+          aria-labelledby={titleId}
           {...getFloatingProps()}
         >
           <div className={styles.filterDropdownHeader}>
-            <h3 className={styles.filterDropdownTitle}>{title}</h3>
+            <h3 id={titleId} className={styles.filterDropdownTitle}>
+              {title}
+            </h3>
             <Button variant="linkBlue" onClick={onClose} size="sm">
               Close
             </Button>

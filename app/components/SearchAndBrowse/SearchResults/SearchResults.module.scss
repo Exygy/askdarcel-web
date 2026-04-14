@@ -40,6 +40,18 @@
   }
 }
 
+.resultsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: $general-spacing-md;
+
+  @media screen and (max-width: $break-tablet-p) {
+    gap: $spacing-0;
+  }
+}
+
 .noResultsMessage {
   margin: 35px auto 65px;
   text-align: center;
@@ -98,6 +110,12 @@
   padding: $general-spacing-md;
   border: 1px solid $border-gray;
   border-radius: $rounded-md;
+
+  /* This element is focused programmatically for scroll-to-top on pagination,
+     not for keyboard navigation. Links inside are in the natural tab order. */
+  &:focus {
+    outline: none;
+  }
   display: flex;
   justify-content: space-between;
   gap: $general-spacing-md;

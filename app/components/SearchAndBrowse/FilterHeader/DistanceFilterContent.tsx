@@ -129,16 +129,6 @@ export const DistanceFilterContent = ({
     }
   };
 
-  // Handle click on search icon
-  const handleSearchClick = () => {
-    if (predictions.length > 0) {
-      handleSelectPlace(predictions[0]);
-    } else if (inputValue.length >= 2) {
-      searchPlaces(inputValue);
-      setShowDropdown(true);
-    }
-  };
-
   // Handle clear input — resets both the text input and the location/radius state.
   const handleClearInput = () => {
     setInputValue("");
@@ -191,12 +181,12 @@ export const DistanceFilterContent = ({
 
   return (
     <div>
+      <p className={styles.locationSearchLabel}>Search for a location</p>
       <div className={styles.locationSearchWrapper} ref={wrapperRef}>
         <input
           ref={inputRef}
           type="text"
-          className={styles.locationSearchInput}
-          placeholder="Search for a location"
+          className={`${styles.locationSearchInput} ${styles.locationSearchInputNoIcon}`}
           value={inputValue}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
@@ -215,7 +205,7 @@ export const DistanceFilterContent = ({
         {inputValue && (
           <button
             type="button"
-            className={styles.locationClearButton}
+            className={`${styles.locationClearButton} ${styles.locationClearButtonNoIcon}`}
             onClick={handleClearInput}
             aria-label="Clear location"
           >
@@ -229,20 +219,6 @@ export const DistanceFilterContent = ({
             </svg>
           </button>
         )}
-        <button
-          type="button"
-          className={styles.locationSearchIcon}
-          onClick={handleSearchClick}
-          aria-label="Search location"
-        >
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path
-              d="M11.7 10.3L15.7 14.3C15.9 14.5 15.9 14.9 15.7 15.1L15.1 15.7C14.9 15.9 14.5 15.9 14.3 15.7L10.3 11.7C9.2 12.5 7.9 13 6.5 13C2.9 13 0 10.1 0 6.5C0 2.9 2.9 0 6.5 0C10.1 0 13 2.9 13 6.5C13 7.9 12.5 9.2 11.7 10.3ZM6.5 11C8.99 11 11 8.99 11 6.5C11 4.01 8.99 2 6.5 2C4.01 2 2 4.01 2 6.5C2 8.99 4.01 11 6.5 11Z"
-              fill="currentColor"
-            />
-          </svg>
-        </button>
-
         {showDropdown &&
           predictions.length > 0 &&
           dropdownPos &&

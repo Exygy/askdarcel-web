@@ -23,11 +23,16 @@ export const SearchResultsHeader = ({
   );
   return (
     <div className={styles.searchResultsHeader}>
-      <h2 style={{ fontWeight: 500, fontSize: 16 }}>
+      <p
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        style={{ fontWeight: 500, fontSize: 16 }}
+      >
         Showing <span style={{ fontWeight: 700 }}>{firstResultIndex}</span> -{" "}
         <span style={{ fontWeight: 700 }}>{lastResultIndex}</span> of{" "}
         <span style={{ fontWeight: 700 }}>{totalResults}</span> results
-      </h2>
+      </p>
       <ClearSearchButton onClearAll={onClearSearch} />
     </div>
   );

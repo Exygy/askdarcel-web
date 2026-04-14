@@ -12,6 +12,7 @@ import { useTypesenseFacets } from "hooks/TypesenseHooks";
 import { useSearchConfig } from "utils/SearchConfigContext";
 import { useSearchCapabilities } from "../../../search/hooks";
 import { buildFilterString } from "utils/filterStringBuilder";
+import websiteConfig from "utils/websiteConfig";
 import styles from "./FilterHeader.module.scss";
 import classNames from "classnames";
 
@@ -52,6 +53,9 @@ const FilterHeader = ({
 
   const canShowEligibilities = facetableFields.includes("eligibilities");
   const eligibilities = canShowEligibilities ? facets?.eligibilities ?? [] : [];
+
+  const { showPrintResultsBtn } = websiteConfig;
+  const showPrint = isSearchResultsPage || showPrintResultsBtn;
 
   const closeMenu = useCallback(() => setActiveFilterMenu(null), []);
 
@@ -157,12 +161,12 @@ const FilterHeader = ({
             iconVariant="after"
             size="base"
           >
-            Distance
+            Location
           </Button>
           <FilterDropdown
             isOpen={activeFilterMenu === "distance"}
             onClose={closeMenu}
-            title="Distance"
+            title="Location"
             triggerRef={distanceButtonRef}
             footer={makeFooter(true)}
           >
@@ -233,7 +237,7 @@ const FilterHeader = ({
             )}
 
             <div className={styles.filterGroup}>
-              <h4 className={styles.filterGroupTitle}>Distance</h4>
+              <h4 className={styles.filterGroupTitle}>Location</h4>
               <DistanceFilterContent
                 locationText={filterState.pending.locationSearchText}
                 selectedRadius={filterState.pending.distanceRadius}
@@ -256,6 +260,23 @@ const FilterHeader = ({
             )}
           </FilterDropdown>
         </div>
+
+        {/* Print button */}
+        {showPrint && (
+          <div
+            className={`${styles.filterButtonWrapper} ${styles.printButtonWrapper}`}
+          >
+            <Button
+              variant="secondary"
+              size="base"
+              iconName="print"
+              iconVariant="before"
+              onClick={() => window.print()}
+            >
+              Print this page
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );

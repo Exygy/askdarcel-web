@@ -77,94 +77,102 @@ export const MobileNavigation = ({ menuData }: MobileNavigationProps) => {
           className={mobileNavigationStyles.mobileNavigationContainer}
           ref={filterMenuRef}
         >
-          {menuData?.map((menuDataItem) => {
-            if (menuItemHasLinks(menuDataItem)) {
-              const uid = menuDataItem.title;
-              return (
-                <div
-                  className={
-                    mobileNavigationStyles.mobileNavigationMenuContainer
-                  }
-                  key={uid}
-                >
-                  <button
-                    type="button"
-                    aria-haspopup="menu"
-                    aria-expanded={
-                      activeMobileSubMenu === uid ? "true" : "false"
-                    }
-                    onClick={() => setActiveMobileSubMenu(uid)}
+          <ul>
+            {menuData?.map((menuDataItem) => {
+              if (menuItemHasLinks(menuDataItem)) {
+                const uid = menuDataItem.title;
+                return (
+                  <li
                     className={
-                      mobileNavigationStyles.mobileNavigationMenuHeader
+                      mobileNavigationStyles.mobileNavigationMenuContainer
                     }
-                  >
-                    {menuDataItem.title}
-                    <span
-                      className={`fas fa-chevron-right ${mobileNavigationStyles.chevron}`}
-                    />
-                  </button>
-                  <ul
-                    className={`${
-                      mobileNavigationStyles.mobileNavigationMenuList
-                    } ${
-                      activeMobileSubMenu === uid
-                        ? mobileNavigationStyles.mobileNavigationMenuListOpen
-                        : ""
-                    }`}
+                    key={uid}
                   >
                     <button
                       type="button"
-                      onClick={goBackToTopMenu}
+                      aria-haspopup="menu"
+                      aria-expanded={
+                        activeMobileSubMenu === uid ? "true" : "false"
+                      }
+                      onClick={() => setActiveMobileSubMenu(uid)}
                       className={
-                        mobileNavigationStyles.mobileNavigationMenuBack
+                        mobileNavigationStyles.mobileNavigationMenuHeader
                       }
                     >
+                      {menuDataItem.title}
                       <span
-                        className={`fas fa-chevron-left ${mobileNavigationStyles.chevron}`}
+                        aria-hidden="true"
+                        className={`fas fa-chevron-right ${mobileNavigationStyles.chevron}`}
                       />
-                      Back
                     </button>
-                    {menuDataItem.link.map((linkItem: LinkModel) => {
-                      const uuid = crypto.randomUUID();
-                      return (
-                        <li
-                          key={uuid}
+                    <ul
+                      className={`${
+                        mobileNavigationStyles.mobileNavigationMenuList
+                      } ${
+                        activeMobileSubMenu === uid
+                          ? mobileNavigationStyles.mobileNavigationMenuListOpen
+                          : ""
+                      }`}
+                    >
+                      <li role="none">
+                        <button
+                          type="button"
+                          onClick={goBackToTopMenu}
                           className={
-                            mobileNavigationStyles.mobileNavigationMenuListItem
+                            mobileNavigationStyles.mobileNavigationMenuBack
                           }
                         >
-                          <Link
-                            to={linkItem.url}
+                          <span
+                            aria-hidden="true"
+                            className={`fas fa-chevron-left ${mobileNavigationStyles.chevron}`}
+                          />
+                          Back
+                        </button>
+                      </li>
+                      {menuDataItem.link.map((linkItem: LinkModel) => {
+                        const uuid = crypto.randomUUID();
+                        return (
+                          <li
+                            key={uuid}
                             className={
-                              mobileNavigationStyles.mobileNavigationMenuLink
+                              mobileNavigationStyles.mobileNavigationMenuListItem
                             }
-                            onClick={closeMobileMenu}
                           >
-                            {linkItem.text}
-                          </Link>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </div>
-              );
-            }
+                            <Link
+                              to={linkItem.url}
+                              className={
+                                mobileNavigationStyles.mobileNavigationMenuLink
+                              }
+                              onClick={closeMobileMenu}
+                            >
+                              {linkItem.text}
+                            </Link>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </li>
+                );
+              }
 
-            return (
-              <li
-                key={crypto.randomUUID()}
-                className={mobileNavigationStyles.mobileNavigationMenuListItem}
-              >
-                <Link
-                  to={menuDataItem.url}
-                  className={mobileNavigationStyles.mobileNavigationMenuLink}
-                  onClick={closeMobileMenu}
+              return (
+                <li
+                  key={crypto.randomUUID()}
+                  className={
+                    mobileNavigationStyles.mobileNavigationMenuListItem
+                  }
                 >
-                  {menuDataItem.text}
-                </Link>
-              </li>
-            );
-          })}
+                  <Link
+                    to={menuDataItem.url}
+                    className={mobileNavigationStyles.mobileNavigationMenuLink}
+                    onClick={closeMobileMenu}
+                  >
+                    {menuDataItem.text}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
         </div>
       )}
     </>

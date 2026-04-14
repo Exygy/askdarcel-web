@@ -214,8 +214,15 @@ button {
   border: none;
 }
 
-*:focus {
+/* Remove focus ring for mouse/touch users, keep it for keyboard users */
+*:focus:not(:focus-visible) {
   outline: 0;
+}
+
+/* Consistent focus ring for keyboard navigation */
+*:focus-visible {
+  outline: 2px solid #1a56db;
+  outline-offset: 2px;
 }
 
 ::selection {
