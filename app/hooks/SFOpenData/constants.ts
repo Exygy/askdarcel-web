@@ -2,7 +2,7 @@
  * SF Open Data API endpoints and configuration
  */
 
-export const SF_OPEN_DATA_BASE_URL = "https://data.sfgov.org/resource";
+export const SF_OPEN_DATA_BASE_URL = "https://data.sf.gov/resource";
 
 export const SF_OPEN_DATA_ENDPOINTS = {
   organizations: `${SF_OPEN_DATA_BASE_URL}/ddhd-yzyc.json`,

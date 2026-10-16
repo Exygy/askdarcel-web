@@ -563,6 +563,12 @@
   font-style: italic;
 }
 
+.errorMessage {
+  padding: 3rem 2rem;
+  text-align: center;
+  color: #495057;
+}
+
 .agendaTimeGroup {
   display: flex;
   border-bottom: 1px solid #f0f0f0;

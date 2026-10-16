@@ -116,7 +116,9 @@ const ResultsPageContent = ({
   // Stores the initial bounding box string so we can restore it on new searches.
   const initialBoundingBox = useRef<string | undefined>(undefined);
 
-  useEffect(() => window.scrollTo(0, 0), []);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   // Capture the initial bounding box once after map initialization.
   useEffect(() => {

@@ -2,7 +2,7 @@
  * SF Open Data API Hooks
  *
  * This module provides React hooks for fetching data from the SF Open Data API
- * (data.sfgov.org) for the SF social services directory.
+ * (data.sf.gov) for the SF social services directory.
  *
  * Usage:
  *   import { useService, useServiceDetails, useCategories } from "hooks/SFOpenData";

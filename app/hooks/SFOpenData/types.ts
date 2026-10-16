@@ -1,5 +1,5 @@
 /**
- * Type definitions for SF Open Data API (data.sfgov.org)
+ * Type definitions for SF Open Data API (data.sf.gov)
  * These types represent the raw API responses from the SF social services directory.
  */
 

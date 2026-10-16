@@ -78,7 +78,12 @@ export const Button = ({
   const content = (
     <>
       {iconName && iconVariant === "before" && <span className={iconClass} />}
-      {children}
+      {/* linkWhite underlines only the label, not the arrow or icons */}
+      {variant === "linkWhite" ? (
+        <span className={styles.label}>{children}</span>
+      ) : (
+        children
+      )}
       {iconName && iconVariant === "after" && <span className={iconClass} />}
     </>
   );

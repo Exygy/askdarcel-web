@@ -12,7 +12,11 @@ import styles from "./EventCalendar.module.scss";
 export const EventCalendar: React.FC<EventCalendarProps> = ({
   onEventSelect,
 }) => {
-  const { data: events, isLoading: eventsAreLoading } = useAllSFGovEvents();
+  const {
+    data: events,
+    error: eventsError,
+    isLoading: eventsAreLoading,
+  } = useAllSFGovEvents();
 
   const [slideoutOpen, setSlideoutOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(
@@ -115,6 +119,19 @@ export const EventCalendar: React.FC<EventCalendarProps> = ({
     setDayEvents([]);
     setSelectedDate(null);
   };
+
+  // Keep the error up during SWR's background retries so it doesn't flicker
+  if (!events && eventsError) {
+    return (
+      <div className={styles.calendarContainer}>
+        <div className={styles.errorMessage} role="alert">
+          <p>
+            We couldn&apos;t load events right now. Please check back later.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   if (!events || eventsAreLoading) {
     return <Loader />;

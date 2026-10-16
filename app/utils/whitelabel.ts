@@ -46,7 +46,7 @@ interface WhiteLabelSite {
 }
 
 const whiteLabelDefaults = {
-  enabledTranslations: ["en", "es", "tl", "zh-TW"],
+  enabledTranslations: ["en", "es", "tl", "vi", "zh-TW"],
   footerOptions: {
     showOnListingPages: false,
     showTitle: true,

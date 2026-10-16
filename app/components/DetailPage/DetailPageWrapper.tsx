@@ -19,7 +19,9 @@ const DetailPageWrapper = ({
   sidebarActions,
   onClickAction,
 }: DetailPageWrapperProps) => {
-  useEffect(() => window.scrollTo(0, 0), []);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <div className={styles[`detail-wrapper`]}>

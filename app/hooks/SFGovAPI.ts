@@ -1,5 +1,5 @@
 import useSWR from "swr";
-import fetcher from "../utils/fetcher";
+import { SF_OPEN_DATA_BASE_URL } from "./SFOpenData/constants";
 
 // Interface for the SF Gov API data structure
 export interface SFGovEvent {
@@ -41,16 +41,30 @@ interface SFGovEventsHookResult {
   isLoading: boolean;
 }
 
+// Unlike the shared fetcher, treat HTTP errors and non-array bodies (e.g. a
+// Socrata error object) as failures so callers can show an error state
+async function fetchEvents(url: string): Promise<SFGovEvent[]> {
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw new Error(`Events request failed with status ${res.status}`);
+  }
+  const body = await res.json();
+  if (!Array.isArray(body)) {
+    throw new Error("Events response was not a list");
+  }
+  return body;
+}
+
 /**
  * Hook to fetch all events from SF Gov Open Data API
  * Shows all events regardless of date
  */
 export function useAllSFGovEvents(limit = 1000): SFGovEventsHookResult {
-  const url = `https://data.sfgov.org/resource/8i3s-ih2a.json`;
+  const url = `${SF_OPEN_DATA_BASE_URL}/8i3s-ih2a.json`;
 
   const { data, error, isLoading } = useSWR<SFGovEvent[]>(
     `sfgov-all-events-${limit}`,
-    () => fetcher<SFGovEvent[]>(url),
+    () => fetchEvents(url),
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: true,

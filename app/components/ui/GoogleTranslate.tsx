@@ -17,7 +17,7 @@ declare const window: {
   googleTranslateElementInit: () => void;
 } & Window;
 
-const SUPPORTED_LANGUAGES = ["en", "es", "tl", "zh-TW"];
+const SUPPORTED_LANGUAGES = ["en", "es", "tl", "vi", "zh-TW"];
 const GOOGLE_TRANSLATE_CONFIG = {
   includedLanguages: `${SUPPORTED_LANGUAGES.join(",")}`,
   pageLanguage: "auto/en",

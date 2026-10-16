@@ -107,14 +107,28 @@
   }
 
   &--linkWhite {
-    border-bottom: 1px solid transparent;
     border-radius: $rounded-none;
     color: $white;
 
     &:hover,
     &:active {
-      border-bottom: 1px solid $white;
       color: $white;
+
+      .label {
+        text-decoration: underline;
+        text-underline-offset: 4px;
+      }
+    }
+
+    // Hover and active share one look; only keyboard focus gets the outline
+    &:active,
+    &:focus:not(:focus-visible) {
+      outline: none;
+    }
+
+    &:focus-visible {
+      outline: 3px solid $black;
+      border-radius: $rounded-full;
     }
   }
 
