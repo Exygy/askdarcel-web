@@ -75,9 +75,29 @@ const ExternalLinkCard = ({ label, url }: { label: string; url: string }) => {
   );
 };
 
+const isSafeHref = (url: string) => {
+  if (url.startsWith("/") || url.startsWith("#")) return true;
+  try {
+    return ["http:", "https:", "mailto:", "tel:"].includes(
+      new URL(url).protocol
+    );
+  } catch {
+    return false;
+  }
+};
+
+const SafeLink = ({
+  url,
+  children,
+}: {
+  url: string;
+  children?: React.ReactNode;
+}) => (isSafeHref(url) ? <a href={url}>{children}</a> : <>{children}</>);
+
 const SpotlightHeader = ({ spotlight }: { spotlight: Spotlight }) => {
   const { title, description, image, event_date, location, link } = spotlight;
   const imageAttributes = image?.data?.attributes;
+  const websiteUrl = link?.url && isSafeHref(link.url) ? link.url : null;
   const locationText = location
     ? [location.name, location.street].filter(Boolean).join(", ")
     : "";
@@ -92,7 +112,10 @@ const SpotlightHeader = ({ spotlight }: { spotlight: Spotlight }) => {
         <p className={styles.eyebrow}>Spotlight</p>
         <h1 className={styles.title}>{title}</h1>
         <div className={styles.description}>
-          <BlocksRenderer content={description || []} />
+          <BlocksRenderer
+            content={description || []}
+            blocks={{ link: SafeLink }}
+          />
         </div>
         {event_date?.startdate && (
           <p className={styles.detail}>
@@ -106,17 +129,17 @@ const SpotlightHeader = ({ spotlight }: { spotlight: Spotlight }) => {
             {locationText}
           </p>
         )}
-        {(link?.url || directionsUrl) && (
+        {(websiteUrl || directionsUrl) && (
           <div className={styles.buttons}>
-            {link?.url && (
+            {websiteUrl && (
               <Button
                 variant="primary"
                 iconName="arrow-up-right-from-square"
                 iconVariant="after"
-                href={link.url}
+                href={websiteUrl}
                 isExternalLink
               >
-                {link.text || "Visit website"}
+                {link?.text || "Visit website"}
               </Button>
             )}
             {directionsUrl && (
