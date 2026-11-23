@@ -29,11 +29,15 @@ export const UserLocationMarker = ({}: { lat?: number; lng?: number }) => (
 /* eslint-disable react/no-unused-prop-types */
 export const CustomMarker = ({
   isHighlighted,
+  fill = "#F15A29",
+  stroke = "#CD4A23",
 }: {
   lat?: number;
   lng?: number;
   text?: string;
   isHighlighted?: boolean;
+  fill?: string;
+  stroke?: string;
 }) => (
   <svg
     width="36"
@@ -48,8 +52,8 @@ export const CustomMarker = ({
           d="M160.39 34.315c0 18.546-36.825 83.958-36.825 83.958S86.74 52.86 86.74 34.315C86.74 15.768 104.885.73 123.565.73c18.68 0 36.825 15.038 36.825 33.585z"
           strokeWidth="3"
           style={{
-            fill: isHighlighted ? "#007ac7" : "#F15A29",
-            stroke: isHighlighted ? "#005f9e" : "#CD4A23",
+            fill: isHighlighted ? "#007ac7" : fill,
+            stroke: isHighlighted ? "#005f9e" : stroke,
             transition: "fill 0.3s ease, stroke 0.3s ease",
           }}
         />

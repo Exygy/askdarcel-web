@@ -234,7 +234,7 @@ export class TypesenseProvider implements ISearchProvider {
    * Compute a display string for the address based on the addresses array.
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private computeAddressDisplay(hit: any): string {
+  computeAddressDisplay(hit: any): string {
     const addresses: Address[] | undefined = hit.addresses;
     if (!addresses || addresses.length === 0) {
       return "No address found";
@@ -251,7 +251,7 @@ export class TypesenseProvider implements ISearchProvider {
    * Optionally attaches the corresponding address to each location (index-aligned).
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private extractLocationsFromGeoloc(
+  extractLocationsFromGeoloc(
     locationsField: any,
     resultIndex: number,
     addresses?: Address[]

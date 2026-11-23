@@ -119,6 +119,32 @@ export function useEventData(eventId: string) {
   };
 }
 
+const SPOTLIGHT_POPULATE =
+  "populate[image]=*&populate[event_date]=*&populate[location]=*&populate[link]=*&populate[items]=*";
+
+// A spotlight is on the site from display_start to display_end. Either one
+// can be empty.
+export const isSpotlightOnDisplay = (
+  spotlight: SpotlightResponse,
+  now: Date = new Date()
+) =>
+  (!spotlight.display_start || new Date(spotlight.display_start) <= now) &&
+  (!spotlight.display_end || new Date(spotlight.display_end) > now);
+
+export function useSpotlightData(slug: string) {
+  const { data, error, isLoading } = useStrapiHook<SpotlightResponse>(
+    `spotlights?filters[slug][$eq]=${encodeURIComponent(
+      slug
+    )}&${SPOTLIGHT_POPULATE}`
+  );
+  const spotlight = Array.isArray(data) ? data[0]?.attributes : undefined;
+  return {
+    data: spotlight && isSpotlightOnDisplay(spotlight) ? spotlight : null,
+    error,
+    isLoading,
+  };
+}
+
 export function formatEventData(
   data:
     | {
@@ -386,6 +412,44 @@ interface CategoryResponse {
 
 interface EligibilityResponse {
   label: string;
+}
+
+export interface SpotlightLocationResponse {
+  id: number;
+  name: string | null;
+  street: string;
+  zipcode: string;
+  latitude: number | null;
+  longitude: number | null;
+}
+
+export type SpotlightItemResponse =
+  | { id: number; __component: "spotlight.service-item"; service_id: string }
+  | {
+      id: number;
+      __component: "spotlight.organization-item";
+      organization_id: string;
+    }
+  | {
+      id: number;
+      __component: "spotlight.external-link";
+      label: string;
+      url: string;
+    };
+
+export interface SpotlightResponse extends BaseDatumAttributesResponse {
+  title: string;
+  slug: string;
+  description: RootNode[];
+  short_description: string | null;
+  image: StrapiObjectResponse<ImageResponse>;
+  display_start: string | null;
+  display_end: string | null;
+  event_date: CalendarEventResponse | null;
+  location: SpotlightLocationResponse | null;
+  link: LinkResponse | null;
+  supervisor_district: number | null;
+  items: SpotlightItemResponse[];
 }
 
 export interface AddressResponse {

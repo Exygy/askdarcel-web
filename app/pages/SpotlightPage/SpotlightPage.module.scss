@@ -1,0 +1,137 @@
+@import "../../styles/utils/_helpers.scss";
+
+.page {
+  padding-bottom: 48px;
+}
+
+.headerContainer {
+  max-width: 1184px;
+  margin: 0 auto;
+  padding: 24px 24px 48px;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 24px;
+  color: $blue-700;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 48px;
+  align-items: start;
+
+  @media screen and (max-width: $break-tablet-p) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+  }
+}
+
+.image {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  border-radius: $rounded-md;
+
+  @media screen and (max-width: $break-tablet-p) {
+    order: -1;
+  }
+}
+
+.eyebrow {
+  margin-bottom: 12px;
+  color: $color-brand-dark;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin-bottom: 24px;
+}
+
+.description {
+  color: $gray-600;
+  line-height: 150%;
+
+  p {
+    margin-bottom: 12px;
+  }
+}
+
+.detail {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-top: 16px;
+  font-weight: 700;
+
+  span {
+    width: 16px;
+    color: $gray-700;
+  }
+}
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.items {
+  border-top: 1px solid $gray-200;
+  padding: 32px 24px 0;
+
+  // The list and map are full width on phones, as on the results page.
+  @media screen and (max-width: $break-tablet-p) {
+    padding: 32px 0 0;
+  }
+}
+
+.itemsTitle,
+.itemsCount {
+  @media screen and (max-width: $break-tablet-p) {
+    padding: 0 24px;
+  }
+}
+
+.itemsTitle {
+  margin-bottom: 4px;
+}
+
+.itemsCount {
+  margin-bottom: 24px;
+  font-size: 14px;
+}
+
+.itemsError {
+  max-width: 1184px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.locationOnlyMap {
+  margin-top: 24px;
+
+  :global(.results-map) {
+    position: static;
+    height: 400px;
+  }
+}
+
+.locationMarker {
+  display: inline-block;
+  transform: translate(-50%, -100%);
+}

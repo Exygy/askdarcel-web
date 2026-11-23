@@ -31,6 +31,8 @@ interface SearchMapProps {
   highlightedHitId?: string | null;
   /** Increment to trigger a fitBounds reset to the initial map view. */
   resetViewCount?: number;
+  showSearchAreaButton?: boolean;
+  children?: React.ReactNode;
 }
 
 export const SearchMap = ({
@@ -41,6 +43,8 @@ export const SearchMap = ({
   customZoom,
   highlightedHitId,
   resetViewCount,
+  showSearchAreaButton = true,
+  children,
 }: SearchMapProps) => {
   const [googleMapObject, setMapObject] = useState<google.maps.Map | null>(
     null
@@ -186,7 +190,7 @@ export const SearchMap = ({
         {/* If map is being overlaid, hide the search area button. It is is neither clickable
             nor relevant in this mode.
         */}
-        {!mobileMapIsCollapsed && (
+        {showSearchAreaButton && !mobileMapIsCollapsed && (
           <Button
             addClass="searchAreaButton"
             variant="primary"
@@ -256,6 +260,7 @@ export const SearchMap = ({
             />
           )}
           {markers}
+          {children}
         </GoogleMap>
       </div>
     </div>
