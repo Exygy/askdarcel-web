@@ -36,7 +36,22 @@ const SpotlightLocationMarker = ({
 );
 /* eslint-enable react/no-unused-prop-types */
 
+const isSafeHref = (url: string) => {
+  if (url.startsWith("/") || url.startsWith("#")) return true;
+  try {
+    return ["http:", "https:", "mailto:", "tel:"].includes(
+      new URL(url).protocol
+    );
+  } catch {
+    return false;
+  }
+};
+
+const locationLabel = (location: Spotlight["location"]) =>
+  location ? [location.name, location.street].filter(Boolean).join(", ") : "";
+
 const ExternalLinkCard = ({ label, url }: { label: string; url: string }) => {
+  const safe = isSafeHref(url);
   let host = "";
   try {
     host = new URL(url).hostname.replace(/^www\./, "");
@@ -49,9 +64,13 @@ const ExternalLinkCard = ({ label, url }: { label: string; url: string }) => {
         <div className={searchResultsStyles.titleContainer}>
           <div>
             <h3 className={searchResultsStyles.title}>
-              <a href={url} className={searchResultsStyles.titleLink}>
-                {label}
-              </a>
+              {safe ? (
+                <a href={url} className={searchResultsStyles.titleLink}>
+                  {label}
+                </a>
+              ) : (
+                label
+              )}
             </h3>
             {host && (
               <div className={searchResultsStyles.serviceOf}>{host}</div>
@@ -62,28 +81,19 @@ const ExternalLinkCard = ({ label, url }: { label: string; url: string }) => {
           </div>
         </div>
       </div>
-      <div className={`${searchResultsStyles.sideLinks} no-print`}>
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href={url}
-          className={`${searchResultsStyles.icon} ${searchResultsStyles["icon-popout"]}`}
-          aria-label={`Visit ${label} (opens in new tab)`}
-        />
-      </div>
+      {safe && (
+        <div className={`${searchResultsStyles.sideLinks} no-print`}>
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href={url}
+            className={`${searchResultsStyles.icon} ${searchResultsStyles["icon-popout"]}`}
+            aria-label={`Visit ${label} (opens in new tab)`}
+          />
+        </div>
+      )}
     </div>
   );
-};
-
-const isSafeHref = (url: string) => {
-  if (url.startsWith("/") || url.startsWith("#")) return true;
-  try {
-    return ["http:", "https:", "mailto:", "tel:"].includes(
-      new URL(url).protocol
-    );
-  } catch {
-    return false;
-  }
 };
 
 const SafeLink = ({
@@ -98,9 +108,7 @@ const SpotlightHeader = ({ spotlight }: { spotlight: Spotlight }) => {
   const { title, description, image, event_date, location, link } = spotlight;
   const imageAttributes = image?.data?.attributes;
   const websiteUrl = link?.url && isSafeHref(link.url) ? link.url : null;
-  const locationText = location
-    ? [location.name, location.street].filter(Boolean).join(", ")
-    : "";
+  const locationText = locationLabel(location);
   const directionsUrl =
     location?.latitude && location?.longitude
       ? `https://www.google.com/maps/dir/?api=1&destination=${location.latitude},${location.longitude}`
@@ -108,7 +116,7 @@ const SpotlightHeader = ({ spotlight }: { spotlight: Spotlight }) => {
 
   return (
     <div className={styles.header}>
-      <div className={styles.headerText}>
+      <div>
         <p className={styles.eyebrow}>Spotlight</p>
         <h1 className={styles.title}>{title}</h1>
         <div className={styles.description}>
@@ -181,9 +189,7 @@ const SpotlightItems = ({
       <SpotlightLocationMarker
         lat={location.latitude}
         lng={location.longitude}
-        label={`Spotlight location: ${[location.name, location.street]
-          .filter(Boolean)
-          .join(", ")}`}
+        label={`Spotlight location: ${locationLabel(location)}`}
       />
     ) : null;
   const hits = entries.flatMap((entry) =>

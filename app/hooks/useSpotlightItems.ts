@@ -3,7 +3,10 @@ import fetcher from "utils/fetcher";
 import { getTypesenseProvider } from "../search/providers/typesense/TypesenseProvider";
 import type { Address, SearchHit } from "../search/types";
 import type { SpotlightItem } from "models/Strapi";
-import { SF_OPEN_DATA_ENDPOINTS } from "./SFOpenData/constants";
+import {
+  SF_OPEN_DATA_ENDPOINTS,
+  SF_OPEN_DATA_SWR_CONFIG,
+} from "./SFOpenData/constants";
 import { buildFieldInFilter, buildSoQLUrl } from "./SFOpenData/soqlUtils";
 import type {
   SFLocation,
@@ -98,31 +101,34 @@ const loadSpotlightItems = async (
   const locationById = new Map(locations.map((l) => [l.id, l]));
   const inDistrict = (location: SFLocation) =>
     !district || location.supervisor_district === String(district);
-  const usable = (list: SFLocation[]) =>
-    list.filter((l) => l.latitude && l.longitude && inDistrict(l));
 
   const provider = getTypesenseProvider();
   const entries: SpotlightEntry[] = [];
+  const added = new Set<string>();
 
   const addResource = (
-    base: Omit<SearchHit, "_geoloc" | "locations" | "addressDisplay">,
+    base: Omit<SearchHit, "_geoloc" | "locations">,
     itemLocations: SFLocation[]
   ) => {
-    const kept = usable(itemLocations);
+    // Staff can list the same resource twice. It is shown once.
+    if (added.has(base.id)) return;
+    const kept = itemLocations.filter(inDistrict);
     // With a district set, resources with no location in it are left out.
     if (district && kept.length === 0) return;
-    const doc = { ...base, addresses: kept.map(toAddress) };
+    added.add(base.id);
+    // Every location has an address. Only those with coordinates get a pin.
+    const pinned = kept.filter((l) => l.latitude && l.longitude);
     entries.push({
       kind: "resource",
       hit: {
-        ...doc,
+        ...base,
+        addresses: kept.map(toAddress),
         _geoloc: { lat: 0, lng: 0 },
         locations: provider.extractLocationsFromGeoloc(
-          kept.map((l) => [Number(l.latitude), Number(l.longitude)]),
+          pinned.map((l) => [Number(l.latitude), Number(l.longitude)]),
           entries.length + 1,
-          doc.addresses
+          pinned.map(toAddress)
         ),
-        addressDisplay: provider.computeAddressDisplay(doc),
       },
     });
   };
@@ -141,6 +147,7 @@ const loadSpotlightItems = async (
       addResource(
         {
           id: `service-${service.id}`,
+          path: `/services/${service.id}`,
           type: "service",
           service_id: service.id as unknown as number,
           name: service.name,
@@ -161,6 +168,7 @@ const loadSpotlightItems = async (
     addResource(
       {
         id: `organization-${organization.id}`,
+        path: `/organizations/${organization.id}`,
         type: "organization" as SearchHit["type"],
         name: organization.name,
         description: organization.description,
@@ -179,7 +187,8 @@ export function useSpotlightItems(
 ) {
   const { data, error, isLoading } = useSWR(
     items ? ["spotlight-items", JSON.stringify(items), district ?? null] : null,
-    () => loadSpotlightItems(items as SpotlightItem[], district ?? null)
+    () => loadSpotlightItems(items as SpotlightItem[], district ?? null),
+    SF_OPEN_DATA_SWR_CONFIG
   );
   return { data: data ?? null, error, isLoading };
 }

@@ -31,10 +31,11 @@
   > .content {
     grid-area: 1 / 1;
     justify-self: end;
-    width: 100%;
+    width: calc(100% - #{$general-spacing-lg});
 
     @media screen and (max-width: $break-tablet-s) {
       justify-self: stretch;
+      width: 100%;
     }
   }
 }
@@ -97,8 +98,11 @@
   padding: 0;
   list-style: none;
 
-  @media screen and (max-width: $break-tablet-s) {
+  @media screen and (max-width: $break-tablet-l) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media screen and (max-width: $break-tablet-s) {
     gap: 8px;
   }
 }
@@ -133,8 +137,9 @@
   }
 }
 
-.cardActive {
-  border: 2px solid $color-brand-dark;
+.card.cardActive {
+  border-color: $color-brand-dark;
+  box-shadow: inset 0 0 0 1px $color-brand-dark;
   background: $orange-50;
 }
 

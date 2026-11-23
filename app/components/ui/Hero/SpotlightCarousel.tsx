@@ -27,20 +27,21 @@ export const SpotlightCarousel = ({
   // carousel.
   const [paused, setPaused] = useState(prefersReducedMotion);
   const [hovered, setHovered] = useState(false);
-  const touchStartX = useRef<number | null>(null);
+  const touchStart = useRef<{ x: number; y: number } | null>(null);
 
   const count = spotlights.length;
-  const current = spotlights[Math.min(index, count - 1)];
+  const active = Math.min(index, count - 1);
+  const current = spotlights[active];
   const rotating = count > 1 && !paused && !hovered;
 
   useEffect(() => {
     if (!rotating) return undefined;
     const timer = window.setTimeout(
-      () => setIndex((i) => (i + 1) % count),
+      () => setIndex((active + 1) % count),
       ROTATE_MS
     );
     return () => window.clearTimeout(timer);
-  }, [rotating, index, count]);
+  }, [rotating, active, count]);
 
   const show = (next: number) => setIndex((next + count) % count);
 
@@ -57,13 +58,19 @@ export const SpotlightCarousel = ({
   };
 
   const onTouchEnd = (event: React.TouchEvent) => {
-    if (touchStartX.current === null) return;
-    const dx = event.changedTouches[0].clientX - touchStartX.current;
-    touchStartX.current = null;
-    if (Math.abs(dx) >= SWIPE_PX) show(index + (dx < 0 ? 1 : -1));
+    if (!touchStart.current) return;
+    const dx = event.changedTouches[0].clientX - touchStart.current.x;
+    const dy = event.changedTouches[0].clientY - touchStart.current.y;
+    touchStart.current = null;
+    if (Math.abs(dx) >= SWIPE_PX && Math.abs(dx) > Math.abs(dy)) {
+      show(active + (dx < 0 ? 1 : -1));
+    }
   };
 
-  const image = current.image?.data?.attributes?.url ?? "";
+  const image = (current.image?.data?.attributes?.url ?? "").replace(
+    /["\\\n]/g,
+    encodeURIComponent
+  );
 
   return (
     // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- the handlers only pause rotation
@@ -78,9 +85,12 @@ export const SpotlightCarousel = ({
     >
       <div
         className={classNames(heroStyles.hero, styles.hero)}
-        style={{ backgroundImage: `url(${image})` }}
+        style={{ backgroundImage: `url("${image}")` }}
         onTouchStart={(e) => {
-          touchStartX.current = e.touches[0].clientX;
+          touchStart.current = {
+            x: e.touches[0].clientX,
+            y: e.touches[0].clientY,
+          };
         }}
         onTouchEnd={onTouchEnd}
       >
@@ -98,11 +108,11 @@ export const SpotlightCarousel = ({
             <div
               key={spotlight.slug}
               className={classNames(heroStyles.content, styles.content, {
-                [styles.hiddenSlide]: i !== index,
+                [styles.hiddenSlide]: i !== active,
               })}
               aria-roledescription="slide"
               aria-label={`${i + 1} of ${count}`}
-              aria-hidden={i !== index}
+              aria-hidden={i !== active}
               role="group"
             >
               <h2 className={classNames(heroStyles.title, styles.title)}>
@@ -133,8 +143,8 @@ export const SpotlightCarousel = ({
           <div className={styles.cardsRow}>
             <button
               type="button"
-              className={classNames(styles.arrow, styles.arrowPrevious)}
-              onClick={() => show(index - 1)}
+              className={styles.arrow}
+              onClick={() => show(active - 1)}
               aria-label="Previous spotlight"
             >
               <span className="fas fa-chevron-left" aria-hidden="true" />
@@ -145,10 +155,10 @@ export const SpotlightCarousel = ({
                   <button
                     type="button"
                     className={classNames(styles.card, {
-                      [styles.cardActive]: i === index,
+                      [styles.cardActive]: i === active,
                     })}
                     onClick={() => show(i)}
-                    aria-current={i === index ? "true" : undefined}
+                    aria-current={i === active ? "true" : undefined}
                   >
                     {spotlight.image?.data?.attributes?.url && (
                       <img
@@ -164,8 +174,8 @@ export const SpotlightCarousel = ({
             </ul>
             <button
               type="button"
-              className={classNames(styles.arrow, styles.arrowNext)}
-              onClick={() => show(index + 1)}
+              className={styles.arrow}
+              onClick={() => show(active + 1)}
               aria-label="Next spotlight"
             >
               <span className="fas fa-chevron-right" aria-hidden="true" />

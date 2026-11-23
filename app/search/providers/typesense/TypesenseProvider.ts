@@ -234,7 +234,7 @@ export class TypesenseProvider implements ISearchProvider {
    * Compute a display string for the address based on the addresses array.
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  computeAddressDisplay(hit: any): string {
+  private computeAddressDisplay(hit: any): string {
     const addresses: Address[] | undefined = hit.addresses;
     if (!addresses || addresses.length === 0) {
       return "No address found";

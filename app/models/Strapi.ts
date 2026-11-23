@@ -15,7 +15,6 @@ import {
   LogoResponse,
   NavigationMenuResponse,
   SpotlightItemResponse,
-  SpotlightLocationResponse,
   SpotlightResponse,
   StrapiDatumResponse,
   TwoColumnContentBlockResponse,
@@ -40,7 +39,6 @@ export interface Image extends ImageResponse {}
 export interface Event extends EventResponse {}
 export interface Spotlight extends SpotlightResponse {}
 export type SpotlightItem = SpotlightItemResponse;
-export interface SpotlightLocation extends SpotlightLocationResponse {}
 
 export function extractNavigationMenusFromNavigationResponse(
   navigationResponse: HeaderResponse | null

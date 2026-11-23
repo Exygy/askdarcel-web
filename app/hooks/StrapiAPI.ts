@@ -40,10 +40,12 @@ export function useFooterData() {
   return useStrapiHook<FooterResponse>("footer?populate[links][populate]=*");
 }
 
+// useSpotlightsData requests the same path, so SWR sends one request for both.
+const HOMEPAGE_PATH =
+  "home-page?populate[hero][populate]=*&populate[two_column_content_block][populate][media][populate]=*&populate[featured_spotlight][fields][0]=slug&populate[more_spotlights][fields][0]=slug";
+
 export function useHomepageData() {
-  return useStrapiHook<HomepageResponse>(
-    "home-page?populate[hero][populate]=*&populate[two_column_content_block][populate][media][populate]=*"
-  );
+  return useStrapiHook<HomepageResponse>(HOMEPAGE_PATH);
 }
 
 export function useContentPageData(title: string) {
@@ -149,11 +151,9 @@ export function useSpotlightData(slug: string) {
 // order staff set on the Home Page, then any others, newest first.
 export function useSpotlightsData() {
   const list = useStrapiHook<SpotlightResponse>(
-    "spotlights?populate[image]=*&sort=createdAt:desc&pagination[pageSize]=100"
+    "spotlights?fields[0]=title&fields[1]=slug&fields[2]=short_description&fields[3]=display_start&fields[4]=display_end&populate[image]=*&sort=createdAt:desc&pagination[pageSize]=100"
   );
-  const order = useStrapiHook<HomepageSpotlightsResponse>(
-    "home-page?populate[featured_spotlight][fields][0]=slug&populate[more_spotlights][fields][0]=slug"
-  );
+  const order = useStrapiHook<HomepageSpotlightsResponse>(HOMEPAGE_PATH);
 
   const homepage = Array.isArray(order.data) ? null : order.data?.attributes;
   const featuredSlug =
@@ -174,12 +174,16 @@ export function useSpotlightsData() {
       .sort((a, b) => rank(a.slug) - rank(b.slug))
     : null;
 
-  return {
-    data: spotlights,
-    featuredSlug,
-    error: list.error,
-    isLoading: list.isLoading || order.isLoading,
-  };
+  const isLoading = list.isLoading || order.isLoading;
+  // The fetcher doesn't reject on an error status. Strapi then sends
+  // { data: null, error }, which leaves list.data null.
+  const error =
+    list.error ??
+    (!isLoading && !spotlights
+      ? new Error("Spotlights could not be loaded")
+      : undefined);
+
+  return { data: spotlights, error, isLoading };
 }
 
 export function formatEventData(
