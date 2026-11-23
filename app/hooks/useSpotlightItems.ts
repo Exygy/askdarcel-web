@@ -54,17 +54,17 @@ const loadSpotlightItems = async (
 
   const [services, serviceAtLocations] = serviceIds.length
     ? await Promise.all([
-      fetchWhere<SFService>(
-        SF_OPEN_DATA_ENDPOINTS.services,
-        buildFieldInFilter("id", serviceIds),
-        serviceIds.length
-      ),
-      fetchWhere<SFServiceAtLocation>(
-        SF_OPEN_DATA_ENDPOINTS.serviceAtLocation,
-        buildFieldInFilter("service_id", serviceIds),
-        1000
-      ),
-    ])
+        fetchWhere<SFService>(
+          SF_OPEN_DATA_ENDPOINTS.services,
+          buildFieldInFilter("id", serviceIds),
+          serviceIds.length
+        ),
+        fetchWhere<SFServiceAtLocation>(
+          SF_OPEN_DATA_ENDPOINTS.serviceAtLocation,
+          buildFieldInFilter("service_id", serviceIds),
+          1000
+        ),
+      ])
     : [[], []];
 
   const allOrganizationIds = Array.from(
@@ -72,28 +72,28 @@ const loadSpotlightItems = async (
   );
   const locationFilters = [
     serviceAtLocations.length > 0 &&
-    buildFieldInFilter(
-      "id",
-      serviceAtLocations.map((link) => link.location_id)
-    ),
+      buildFieldInFilter(
+        "id",
+        serviceAtLocations.map((link) => link.location_id)
+      ),
     organizationIds.length > 0 &&
-    buildFieldInFilter("organization_id", organizationIds),
+      buildFieldInFilter("organization_id", organizationIds),
   ].filter(Boolean);
 
   const [organizations, locations] = await Promise.all([
     allOrganizationIds.length
       ? fetchWhere<SFOrganization>(
-        SF_OPEN_DATA_ENDPOINTS.organizations,
-        buildFieldInFilter("id", allOrganizationIds),
-        allOrganizationIds.length
-      )
+          SF_OPEN_DATA_ENDPOINTS.organizations,
+          buildFieldInFilter("id", allOrganizationIds),
+          allOrganizationIds.length
+        )
       : [],
     locationFilters.length
       ? fetchWhere<SFLocation>(
-        SF_OPEN_DATA_ENDPOINTS.locations,
-        locationFilters.join(" OR "),
-        1000
-      )
+          SF_OPEN_DATA_ENDPOINTS.locations,
+          locationFilters.join(" OR "),
+          1000
+        )
       : [],
   ]);
 

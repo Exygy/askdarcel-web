@@ -169,9 +169,9 @@ export function useSpotlightsData() {
 
   const spotlights = Array.isArray(list.data)
     ? list.data
-      .map((datum) => datum.attributes)
-      .filter((spotlight) => isSpotlightOnDisplay(spotlight))
-      .sort((a, b) => rank(a.slug) - rank(b.slug))
+        .map((datum) => datum.attributes)
+        .filter((spotlight) => isSpotlightOnDisplay(spotlight))
+        .sort((a, b) => rank(a.slug) - rank(b.slug))
     : null;
 
   const isLoading = list.isLoading || order.isLoading;
@@ -189,8 +189,8 @@ export function useSpotlightsData() {
 export function formatEventData(
   data:
     | {
-      data: StrapiDatumResponse<EventResponse>;
-    }
+        data: StrapiDatumResponse<EventResponse>;
+      }
     | undefined
 ) {
   return {
@@ -382,11 +382,11 @@ export interface ContentPageResponse extends BaseDatumAttributesResponse {
   masthead: string;
   content_block: Array<
     | (SingleColumnContentBlockResponse & {
-      __component: "content.single-column-content-block";
-    })
+        __component: "content.single-column-content-block";
+      })
     | (TwoColumnContentBlockResponse & {
-      __component: "content.single-column-content-block";
-    })
+        __component: "content.single-column-content-block";
+      })
   >;
 }
 
@@ -467,16 +467,16 @@ export interface SpotlightLocationResponse {
 export type SpotlightItemResponse =
   | { id: number; __component: "spotlight.service-item"; service_id: string }
   | {
-    id: number;
-    __component: "spotlight.organization-item";
-    organization_id: string;
-  }
+      id: number;
+      __component: "spotlight.organization-item";
+      organization_id: string;
+    }
   | {
-    id: number;
-    __component: "spotlight.external-link";
-    label: string;
-    url: string;
-  };
+      id: number;
+      __component: "spotlight.external-link";
+      label: string;
+      url: string;
+    };
 
 export interface SpotlightResponse extends BaseDatumAttributesResponse {
   title: string;
