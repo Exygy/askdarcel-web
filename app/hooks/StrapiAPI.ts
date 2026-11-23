@@ -145,11 +145,48 @@ export function useSpotlightData(slug: string) {
   };
 }
 
+// Spotlights on the site: featured first, then the others in the
+// order staff set on the Home Page, then any others, newest first.
+export function useSpotlightsData() {
+  const list = useStrapiHook<SpotlightResponse>(
+    "spotlights?populate[image]=*&sort=createdAt:desc&pagination[pageSize]=100"
+  );
+  const order = useStrapiHook<HomepageSpotlightsResponse>(
+    "home-page?populate[featured_spotlight][fields][0]=slug&populate[more_spotlights][fields][0]=slug"
+  );
+
+  const homepage = Array.isArray(order.data) ? null : order.data?.attributes;
+  const featuredSlug =
+    homepage?.featured_spotlight?.data?.attributes.slug ?? null;
+  const orderedSlugs = [
+    featuredSlug,
+    ...(homepage?.more_spotlights?.data ?? []).map((s) => s.attributes.slug),
+  ].filter((slug): slug is string => !!slug);
+  const rank = (slug: string) => {
+    const index = orderedSlugs.indexOf(slug);
+    return index === -1 ? orderedSlugs.length : index;
+  };
+
+  const spotlights = Array.isArray(list.data)
+    ? list.data
+      .map((datum) => datum.attributes)
+      .filter((spotlight) => isSpotlightOnDisplay(spotlight))
+      .sort((a, b) => rank(a.slug) - rank(b.slug))
+    : null;
+
+  return {
+    data: spotlights,
+    featuredSlug,
+    error: list.error,
+    isLoading: list.isLoading || order.isLoading,
+  };
+}
+
 export function formatEventData(
   data:
     | {
-        data: StrapiDatumResponse<EventResponse>;
-      }
+      data: StrapiDatumResponse<EventResponse>;
+    }
     | undefined
 ) {
   return {
@@ -341,11 +378,11 @@ export interface ContentPageResponse extends BaseDatumAttributesResponse {
   masthead: string;
   content_block: Array<
     | (SingleColumnContentBlockResponse & {
-        __component: "content.single-column-content-block";
-      })
+      __component: "content.single-column-content-block";
+    })
     | (TwoColumnContentBlockResponse & {
-        __component: "content.single-column-content-block";
-      })
+      __component: "content.single-column-content-block";
+    })
   >;
 }
 
@@ -426,16 +463,16 @@ export interface SpotlightLocationResponse {
 export type SpotlightItemResponse =
   | { id: number; __component: "spotlight.service-item"; service_id: string }
   | {
-      id: number;
-      __component: "spotlight.organization-item";
-      organization_id: string;
-    }
+    id: number;
+    __component: "spotlight.organization-item";
+    organization_id: string;
+  }
   | {
-      id: number;
-      __component: "spotlight.external-link";
-      label: string;
-      url: string;
-    };
+    id: number;
+    __component: "spotlight.external-link";
+    label: string;
+    url: string;
+  };
 
 export interface SpotlightResponse extends BaseDatumAttributesResponse {
   title: string;
@@ -450,6 +487,11 @@ export interface SpotlightResponse extends BaseDatumAttributesResponse {
   link: LinkResponse | null;
   supervisor_district: number | null;
   items: SpotlightItemResponse[];
+}
+
+interface HomepageSpotlightsResponse {
+  featured_spotlight: StrapiObjectResponse<Pick<SpotlightResponse, "slug">>;
+  more_spotlights: StrapiArrayResponse<Pick<SpotlightResponse, "slug">>;
 }
 
 export interface AddressResponse {
