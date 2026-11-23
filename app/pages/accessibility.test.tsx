@@ -39,6 +39,7 @@ jest.mock("hooks/StrapiAPI", () => {
   return {
     useHomepageData: () => ({ data: HOME_PAGE_DATA.data, isLoading: false }),
     useHomePageFeaturedResourcesData: () => ({ data: [], isLoading: false }),
+    useSpotlightsData: () => ({ data: [], isLoading: false }),
     useFaqPageData: () => ({
       data: {
         attributes: {

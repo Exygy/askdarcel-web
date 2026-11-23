@@ -11,6 +11,8 @@ import { BackButton } from "components/ui/BackButton";
 import { SearchHeaderSection } from "components/SearchAndBrowse/Header/SearchHeaderSection";
 import { PageNotFoundPage } from "pages/PageNotFoundPage/PageNotFoundPage";
 import { EventDetailPage } from "pages/EventDetailPage/EventDetailPage";
+import { SpotlightPage } from "pages/SpotlightPage/SpotlightPage";
+import { SpotlightsPage } from "pages/SpotlightsPage/SpotlightsPage";
 
 export const Router = () => {
   return (
@@ -75,6 +77,8 @@ export const Router = () => {
           </>
         }
       />
+      <Route path="/spotlights" element={<SpotlightsPage />} />
+      <Route path="/spotlights/:slug" element={<SpotlightPage />} />
       <Route
         path="/terms-of-service"
         element={<ContentPage pageName="Terms of Service" />}

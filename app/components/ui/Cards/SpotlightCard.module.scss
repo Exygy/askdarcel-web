@@ -1,0 +1,72 @@
+@import "../../../styles/utils/_helpers.scss";
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: $white;
+  border: 1px solid $gray-200;
+  border-radius: $rounded-md;
+
+  &:focus-within {
+    outline: 3px solid $black;
+    outline-offset: 2px;
+  }
+
+  &:hover {
+    background: $surface-secondary;
+  }
+}
+
+.image {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 16px;
+}
+
+.eyebrow {
+  color: $color-brand-dark;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.title {
+  font-size: 1.125rem;
+  line-height: 125%;
+
+  a {
+    color: $text-primary;
+
+    &:hover {
+      text-decoration: none;
+    }
+
+    &:focus-visible {
+      outline: none;
+    }
+
+    // The whole card is the link.
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+    }
+  }
+}
+
+.description {
+  color: $gray-600;
+  font-size: 14px;
+  line-height: 150%;
+}

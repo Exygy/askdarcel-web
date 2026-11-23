@@ -14,6 +14,8 @@ import {
   LinkResponse,
   LogoResponse,
   NavigationMenuResponse,
+  SpotlightItemResponse,
+  SpotlightResponse,
   StrapiDatumResponse,
   TwoColumnContentBlockResponse,
 } from "hooks/StrapiAPI";
@@ -35,6 +37,8 @@ export interface NavigationMenu
 export interface CalendarEvent extends CalendarEventResponse {}
 export interface Image extends ImageResponse {}
 export interface Event extends EventResponse {}
+export interface Spotlight extends SpotlightResponse {}
+export type SpotlightItem = SpotlightItemResponse;
 
 export function extractNavigationMenusFromNavigationResponse(
   navigationResponse: HeaderResponse | null

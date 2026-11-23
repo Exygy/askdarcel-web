@@ -40,10 +40,12 @@ export function useFooterData() {
   return useStrapiHook<FooterResponse>("footer?populate[links][populate]=*");
 }
 
+// useSpotlightsData requests the same path, so SWR sends one request for both.
+const HOMEPAGE_PATH =
+  "home-page?populate[hero][populate]=*&populate[two_column_content_block][populate][media][populate]=*&populate[featured_spotlight][fields][0]=slug&populate[more_spotlights][fields][0]=slug";
+
 export function useHomepageData() {
-  return useStrapiHook<HomepageResponse>(
-    "home-page?populate[hero][populate]=*&populate[two_column_content_block][populate][media][populate]=*"
-  );
+  return useStrapiHook<HomepageResponse>(HOMEPAGE_PATH);
 }
 
 export function useContentPageData(title: string) {
@@ -117,6 +119,71 @@ export function useEventData(eventId: string) {
     error,
     isLoading,
   };
+}
+
+const SPOTLIGHT_POPULATE =
+  "populate[image]=*&populate[event_date]=*&populate[location]=*&populate[link]=*&populate[items]=*";
+
+// A spotlight is on the site from display_start to display_end. Either one
+// can be empty.
+export const isSpotlightOnDisplay = (
+  spotlight: SpotlightResponse,
+  now: Date = new Date()
+) =>
+  (!spotlight.display_start || new Date(spotlight.display_start) <= now) &&
+  (!spotlight.display_end || new Date(spotlight.display_end) > now);
+
+export function useSpotlightData(slug: string) {
+  const { data, error, isLoading } = useStrapiHook<SpotlightResponse>(
+    `spotlights?filters[slug][$eq]=${encodeURIComponent(
+      slug
+    )}&${SPOTLIGHT_POPULATE}`
+  );
+  const spotlight = Array.isArray(data) ? data[0]?.attributes : undefined;
+  return {
+    data: spotlight && isSpotlightOnDisplay(spotlight) ? spotlight : null,
+    error,
+    isLoading,
+  };
+}
+
+// Spotlights on the site: featured first, then the others in the
+// order staff set on the Home Page, then any others, newest first.
+export function useSpotlightsData() {
+  const list = useStrapiHook<SpotlightResponse>(
+    "spotlights?fields[0]=title&fields[1]=slug&fields[2]=short_description&fields[3]=display_start&fields[4]=display_end&populate[image]=*&sort=createdAt:desc&pagination[pageSize]=100"
+  );
+  const order = useStrapiHook<HomepageSpotlightsResponse>(HOMEPAGE_PATH);
+
+  const homepage = Array.isArray(order.data) ? null : order.data?.attributes;
+  const featuredSlug =
+    homepage?.featured_spotlight?.data?.attributes.slug ?? null;
+  const orderedSlugs = [
+    featuredSlug,
+    ...(homepage?.more_spotlights?.data ?? []).map((s) => s.attributes.slug),
+  ].filter((slug): slug is string => !!slug);
+  const rank = (slug: string) => {
+    const index = orderedSlugs.indexOf(slug);
+    return index === -1 ? orderedSlugs.length : index;
+  };
+
+  const spotlights = Array.isArray(list.data)
+    ? list.data
+        .map((datum) => datum.attributes)
+        .filter((spotlight) => isSpotlightOnDisplay(spotlight))
+        .sort((a, b) => rank(a.slug) - rank(b.slug))
+    : null;
+
+  const isLoading = list.isLoading || order.isLoading;
+  // The fetcher doesn't reject on an error status. Strapi then sends
+  // { data: null, error }, which leaves list.data null.
+  const error =
+    list.error ??
+    (!isLoading && !spotlights
+      ? new Error("Spotlights could not be loaded")
+      : undefined);
+
+  return { data: spotlights, error, isLoading };
 }
 
 export function formatEventData(
@@ -386,6 +453,49 @@ interface CategoryResponse {
 
 interface EligibilityResponse {
   label: string;
+}
+
+export interface SpotlightLocationResponse {
+  id: number;
+  name: string | null;
+  street: string;
+  zipcode: string;
+  latitude: number | null;
+  longitude: number | null;
+}
+
+export type SpotlightItemResponse =
+  | { id: number; __component: "spotlight.service-item"; service_id: string }
+  | {
+      id: number;
+      __component: "spotlight.organization-item";
+      organization_id: string;
+    }
+  | {
+      id: number;
+      __component: "spotlight.external-link";
+      label: string;
+      url: string;
+    };
+
+export interface SpotlightResponse extends BaseDatumAttributesResponse {
+  title: string;
+  slug: string;
+  description: RootNode[];
+  short_description: string | null;
+  image: StrapiObjectResponse<ImageResponse>;
+  display_start: string | null;
+  display_end: string | null;
+  event_date: CalendarEventResponse | null;
+  location: SpotlightLocationResponse | null;
+  link: LinkResponse | null;
+  supervisor_district: number | null;
+  items: SpotlightItemResponse[];
+}
+
+interface HomepageSpotlightsResponse {
+  featured_spotlight: StrapiObjectResponse<Pick<SpotlightResponse, "slug">>;
+  more_spotlights: StrapiArrayResponse<Pick<SpotlightResponse, "slug">>;
 }
 
 export interface AddressResponse {

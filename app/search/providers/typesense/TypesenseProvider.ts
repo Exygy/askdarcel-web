@@ -251,7 +251,7 @@ export class TypesenseProvider implements ISearchProvider {
    * Optionally attaches the corresponding address to each location (index-aligned).
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private extractLocationsFromGeoloc(
+  extractLocationsFromGeoloc(
     locationsField: any,
     resultIndex: number,
     addresses?: Address[]

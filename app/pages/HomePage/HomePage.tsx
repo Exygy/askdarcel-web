@@ -1,9 +1,11 @@
 import React from "react";
 import Hero from "components/ui/Hero/Hero";
+import { SpotlightCarousel } from "components/ui/Hero/SpotlightCarousel";
 import { CategorySection } from "components/ui/Section/CategorySection";
 import {
   useHomepageData,
   useHomePageFeaturedResourcesData,
+  useSpotlightsData,
 } from "hooks/StrapiAPI";
 import { Homepage, StrapiDatum } from "models/Strapi";
 import { EventCalendar } from "components/ui/Calendar";
@@ -21,11 +23,14 @@ export const HomePage = () => {
     isLoading: featuredResourcesAreLoading,
   } = useHomePageFeaturedResourcesData();
 
+  const { data: spotlights, isLoading: spotlightsAreLoading } =
+    useSpotlightsData();
+
   const homepageDataRes = homepageData as StrapiDatum<Homepage>;
 
   const homePageDataAttrs = homepageDataRes?.attributes;
 
-  if (homepageDataIsLoading) {
+  if (homepageDataIsLoading || spotlightsAreLoading) {
     return null;
   }
 
@@ -36,13 +41,17 @@ export const HomePage = () => {
       <h1 className="sr-only" data-testid={"homepage-title"}>
         Homepage
       </h1>
-      {hero && (
-        <Hero
-          backgroundImage={hero.background_image.data?.attributes.url ?? ""}
-          title={hero.title}
-          description={hero.description}
-          buttons={hero.buttons}
-        />
+      {spotlights && spotlights.length > 0 ? (
+        <SpotlightCarousel spotlights={spotlights.slice(0, 4)} />
+      ) : (
+        hero && (
+          <Hero
+            backgroundImage={hero.background_image.data?.attributes.url ?? ""}
+            title={hero.title}
+            description={hero.description}
+            buttons={hero.buttons}
+          />
+        )
       )}
       <span id="browse-services">
         <CategorySection />
